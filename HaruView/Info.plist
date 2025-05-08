@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSCalendarsFullAccessUsageDescription</key>
+	<string>앱에서 캘린더에 접근하기 위해 권한이 필요합니다.</string>
+	<key>NSRemindersFullAccessUsageDescription</key>
+	<string>앱에서 미리알림에 접근하기 위해 권한이 필요합니다.</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>RobotoSerif_28pt-Bold.ttf</string>
+		<string>Pretendard-Bold.otf</string>
+		<string>Pretendard-Regular.otf</string>
+		<string>Pretendard-SemiBold.otf</string>
+		<string>Museum-Medium.otf</string>
+		<string>Museum-Bold.otf</string>
+		<string>PlusJakartaSans-Regular.ttf</string>
+		<string>PlusJakartaSans-Bold.ttf</string>
+	</array>
+</dict>
+</plist>
