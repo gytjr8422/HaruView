@@ -31,7 +31,9 @@ struct HaruTextField: View {
                 Button(action: {
                     text = ""
                 }) {
-                    Image("clear")
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.system(size: 16))
+                        .foregroundStyle(Color(hexCode: "A76545"))
                 }
                 .padding(.trailing, 10)
                 .transition(.scale)

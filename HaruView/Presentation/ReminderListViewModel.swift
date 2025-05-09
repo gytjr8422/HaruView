@@ -53,6 +53,21 @@ final class ReminderListViewModel: ObservableObject, @preconcurrency ReminderLis
     // MARK: - Sorting helper
     private func reminderSortRule(_ a: Reminder, _ b: Reminder) -> Bool {
         if a.isCompleted != b.isCompleted { return !a.isCompleted } // incomplete first
+        
+        let aPriority = a.priority == 0 ? Int.max : a.priority
+        let bPriority = b.priority == 0 ? Int.max : b.priority
+
+        if aPriority != bPriority {
+            return aPriority < bPriority // 숫자가 작을수록 앞에
+        }
+        
+        let aHasTime = a.due != nil
+        let bHasTime = b.due != nil
+        
+        if aHasTime != bHasTime {
+            return aHasTime
+        }
+        
         let da = a.due ?? .distantFuture
         let db = b.due ?? .distantFuture
         return da != db ? da < db : a.title < b.title
