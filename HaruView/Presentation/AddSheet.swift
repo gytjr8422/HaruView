@@ -10,62 +10,189 @@ import SwiftUI
 struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var vm: VM
+    @Namespace private var indicatorNS
+
+    // local selection synced to vm.mode
+    @State private var selected: AddSheetMode = .event
     
-    init(vm: VM) {
-        _vm = StateObject(wrappedValue: vm)
-    }
-    
+    @State private var showDiscardAlert = false
+
+    init(vm: VM) { _vm = StateObject(wrappedValue: vm) }
+
     var body: some View {
         NavigationStack {
-            Form {
-                Picker("종류", selection: $vm.mode) {
-                    ForEach(AddSheetMode.allCases) { Text($0.rawValue).tag($0) }
+            VStack(spacing: 0) {
+                headerFilterView
+                TabView(selection: $selected) {
+                    eventPage.tag(AddSheetMode.event)
+                    reminderPage.tag(AddSheetMode.reminder)
                 }
-                Section(header: Text("제목")) {
-                    TextField("제목 입력", text: $vm.title)
-                }
-                if vm.mode == .event {
-                    Section(header: Text("시작")) {
-                        DatePicker("", selection: $vm.startDate, displayedComponents: [.date, .hourAndMinute])
-                    }
-                    Section(header: Text("종료")) {
-                        DatePicker("", selection: $vm.endDate, displayedComponents: [.date, .hourAndMinute])
-                    }
-                } else {
-                    Section(header: Text("마감일")) {
-                        DatePicker("", selection: $vm.dueDate, displayedComponents: [.date])
-                    }
-                }
-                if let error = vm.error {
-                    Section { Text("⚠️ 오류: \(error.localizedDescription)").foregroundColor(.red) }
+                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+                .onChange(of: selected) { _, newValue in
+                    vm.mode = newValue
                 }
             }
-            .navigationTitle("새 항목 추가")
-            .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    if vm.isSaving {
-                        ProgressView()
-                    } else {
-                        Button("저장") {
-                            Task {
-                                await vm.save()
-                                if vm.error == nil {
-                                    dismiss()
-                                }
-                            }
+            .background(Color(hexCode: "FFFCF5"))
+            .toolbar { leadingToolbar; toolbarTitle; saveToolbar }
+            .navigationBarTitleDisplayMode(.inline)
+            .confirmationDialog("작성 내용이 저장되지 않습니다.", isPresented: $showDiscardAlert, titleVisibility: .visible) {
+                Button("저장 안 하고 닫기", role: .destructive) { dismiss() }
+                Button("계속 작성", role: .cancel) { }
+            }
+        }
+        .interactiveDismissDisabled(isDirty || vm.isSaving)
+        .onAppear { selected = vm.mode }
+    }
+    
+    private var isDirty: Bool {
+        !vm.title.isEmpty ||
+        (vm.mode == .event && !Calendar.current.isDate(vm.startDate, equalTo: Date(), toGranularity: .minute))
+    }
+
+    // MARK: Header -----------------------------------------------------------
+    private var headerFilterView: some View {
+        HStack(spacing: 0) {
+            ForEach(AddSheetMode.allCases) { seg in
+                VStack(spacing: 4) {
+                    Text(seg.rawValue)
+                        .font(.pretendardBold(size: 16))
+                        .foregroundStyle(selected == seg ? Color(hexCode: "A76545") : .secondary)
+                    ZStack {
+                        Capsule().fill(Color.clear).frame(height: 3)
+                        if selected == seg {
+                            Capsule()
+                                .fill(Color(hexCode: "A76545"))
+                                .frame(height: 3)
+                                .matchedGeometryEffect(id: "indicator", in: indicatorNS)
                         }
-                        .disabled(vm.title.isEmpty)
                     }
                 }
-                
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("취소") {
-                        dismiss()
-                    }
+                .frame(maxWidth: .infinity)
+                .contentShape(.rect)
+                .onTapGesture {
+                    withAnimation(.interactiveSpring(response: 0.4)) { selected = seg }
                 }
             }
         }
-        .interactiveDismissDisabled(vm.isSaving)
+        .padding(.horizontal)
+        .padding(.top, 12)
+    }
+
+    // MARK: Pages ------------------------------------------------------------
+    private var commonTitleField: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("제목").font(.pretendardBold(size: 15)).foregroundStyle(.secondary)
+            HaruTextField(text: $vm.title, placeholder: "제목 입력")
+        }
+    }
+
+    private var eventPage: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                commonTitleField
+                
+                Toggle("하루 종일", isOn: $vm.isAllDay)
+                                .toggleStyle(SwitchToggleStyle(tint: Color(hexCode: "234E70")))
+                                .font(.pretendardBold(size: 15))
+                                .padding(.top, 4)
+                
+                dateTimePicker(title: "시작", date: $vm.startDate)
+                
+                if !vm.isAllDay {
+                    // All‑Day 가 아닐 때만 종료시간 표시
+                    dateTimePicker(title: "종료",
+                                   date: $vm.endDate,
+                                   min: vm.startDate)
+                }
+                
+                footerError
+            }
+            .padding(20)
+        }
+    }
+
+    private var reminderPage: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                commonTitleField
+                datePicker(title: "마감일", date: $vm.dueDate)
+                footerError
+            }
+            .padding(20)
+        }
+    }
+
+    // MARK: Components -------------------------------------------------------
+    private func dateTimePicker(title: String,
+                                date: Binding<Date>,
+                                min: Date? = nil) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title)
+                .font(.pretendardBold(size: 15))
+                .foregroundStyle(.secondary)
+
+            if let min {    // 종료 피커처럼 최소값이 있을 때
+                DatePicker("", selection: date, in: min..., displayedComponents: [.date, .hourAndMinute])
+                    .labelsHidden()
+            } else {        // 시작 피커
+                DatePicker("", selection: date, displayedComponents: [.date, .hourAndMinute])
+                    .labelsHidden()
+            }
+        }
+    }
+
+    private func datePicker(title: String, date: Binding<Date>) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title).font(.pretendardBold(size: 15)).foregroundStyle(.secondary)
+            DatePicker("", selection: date, displayedComponents: [.date, .hourAndMinute])
+                .labelsHidden()
+        }
+    }
+
+    private var footerError: some View {
+        Group {
+            if let e = vm.error {
+                Text("⚠️ 오류: \(e.localizedDescription)")
+                    .font(.jakartaRegular(size: 14))
+                    .foregroundColor(.red)
+            }
+        }
+    }
+
+    // MARK: Save Toolbar -----------------------------------------------------
+    private var leadingToolbar: some ToolbarContent {
+        ToolbarItem(placement: .cancellationAction) {
+            Button {
+                if isDirty { showDiscardAlert = true } else { dismiss() }
+            } label: {
+                Text("취소")
+                    .font(.pretendardRegular(size: 16))
+                    .foregroundStyle(.red)
+            }
+
+        }
+    }
+    
+    private var saveToolbar: some ToolbarContent {
+        ToolbarItemGroup(placement: .confirmationAction) {
+            if vm.isSaving { ProgressView() }
+            else {
+                Button("저장") {
+                    Task {
+                        await vm.save()
+                        if vm.error == nil { dismiss() }
+                    }
+                }
+                .disabled(vm.title.isEmpty)
+            }
+        }
+    }
+    
+    private var toolbarTitle: some ToolbarContent {
+        ToolbarItem(placement: .principal) {
+            Text("\(selected.rawValue) 추가")
+                
+        }
     }
 }
 
@@ -78,6 +205,7 @@ private class MockAddVM: AddSheetViewModelProtocol {
     @Published var dueDate: Date = .now
     @Published var error: TodayBoardError? = nil
     @Published var isSaving: Bool = false
+    @Published var isAllDay: Bool = false
     
     func save() async {}
 }

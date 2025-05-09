@@ -21,6 +21,7 @@ protocol AddSheetViewModelProtocol: ObservableObject {
     var dueDate: Date { get set }
     var error: TodayBoardError? { get }
     var isSaving: Bool { get }
+    var isAllDay: Bool { get set }
     
     func save() async
 }
@@ -38,6 +39,17 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
     // Outputs
     @Published var error: TodayBoardError?
     @Published var isSaving: Bool = false
+    
+    @Published var isAllDay: Bool = false {
+        didSet {
+            // 하루 종일 → 시작 00:00, 종료 23:59 로 맞춤
+            guard mode == .event else { return }
+            if isAllDay {
+                startDate = Calendar.current.startOfDay(for: startDate)
+                endDate   = Calendar.current.date(bySettingHour: 23, minute: 59, second: 0, of: startDate)!
+            }
+        }
+    }
     
     private let addEvent: AddEventUseCase
     private let reminderRepository: ReminderRepositoryProtocol
@@ -68,6 +80,12 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
             break
         case .failure(let error):
             self.error = error
+        }
+    }
+    
+    func clampEndIfNeeded() {
+        if endDate < startDate {
+            endDate = startDate.addingTimeInterval(60)      // 최소 30분 뒤
         }
     }
 }

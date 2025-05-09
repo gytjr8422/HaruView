@@ -285,7 +285,6 @@ struct ReminderCard: View {
             }
         }
         .padding()
-//        .cornerRadius(12)
     }
 }
 
