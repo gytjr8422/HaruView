@@ -84,26 +84,27 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
 
     // MARK: Pages ------------------------------------------------------------
     private var commonTitleField: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 15) {
             Text("제목")
-                .font(.pretendardBold(size: 15))
-                .foregroundStyle(.secondary)
+                .font(.pretendardBold(size: 17))
             HaruTextField(text: $vm.title, placeholder: "제목 입력")
         }
     }
 
     private var eventPage: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 15) {
+            VStack(alignment: .leading, spacing: 20) {
                 commonTitleField
                 
                 HStack {
+                    Text("날짜는 이틀 후까지만 선택 가능합니다.")
+                        .font(.pretendardRegular(size: 13))
+                        .foregroundStyle(Color(hexCode: "A76545"))
                     Spacer()
                     Text("하루 종일")
                         .font(.pretendardSemiBold(size: 16))
                     Toggle("", isOn: $vm.isAllDay)
                         .toggleStyle(HaruToggleStyle())
-                        .font(.pretendardBold(size: 15))
                         .padding(.horizontal, 5)
                 }
                 
@@ -116,6 +117,7 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                     
                     if !vm.isAllDay {
                         timePicker(time: $vm.startDate)
+                            .animation(.easeIn, value: 10)
                     }
                 }
                 
@@ -128,6 +130,7 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                         dateTimePicker(date: $vm.endDate,
                                        min: vm.startDate)
                     }
+                    .animation(.easeIn, value: 10)
                 }
 
                 footerError
@@ -138,14 +141,33 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
 
     private var reminderPage: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(alignment: .leading, spacing: 20) {
                 commonTitleField
+                
                 HStack {
+                    if vm.isDueExist {
+                        Text("날짜는 이틀 후까지만 선택 가능합니다.")
+                            .font(.pretendardRegular(size: 13))
+                            .foregroundStyle(Color(hexCode: "A76545"))
+                    }
+                    Spacer()
                     Text("날짜/시간")
-                        .font(.pretendardSemiBold(size: 18))
-                        .padding(.trailing, 10)
-                    dateTimePicker(date: $vm.startDate, min: minDate)
+                        .font(.pretendardSemiBold(size: 16))
+                    Toggle("", isOn: $vm.isDueExist)
+                        .toggleStyle(HaruToggleStyle())
+                        .padding(.horizontal, 5)
                 }
+                
+                if vm.isDueExist {
+                    HStack {
+                        Text("날짜/시간")
+                            .font(.pretendardSemiBold(size: 18))
+                            .padding(.trailing, 10)
+                        dateTimePicker(date: $vm.startDate, min: minDate)
+                    }
+                    .animation(.easeIn, value: 10)
+                }
+                
                 footerError
             }
             .padding(20)
@@ -208,7 +230,7 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                 if isDirty { showDiscardAlert = true } else { dismiss() }
             } label: {
                 Text("취소")
-                    .font(.pretendardRegular(size: 16))
+                    .font(.pretendardSemiBold(size: 16))
                     .foregroundStyle(.red)
             }
 
@@ -219,11 +241,15 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
         ToolbarItemGroup(placement: .confirmationAction) {
             if vm.isSaving { ProgressView() }
             else {
-                Button("저장") {
+                Button {
                     Task {
                         await vm.save()
                         if vm.error == nil { dismiss() }
                     }
+                } label: {
+                    Text("저장")
+                        .font(.pretendardSemiBold(size: 16))
+                        .foregroundStyle(vm.title.isEmpty ? .secondary : Color(hexCode: "A76545"))
                 }
                 .disabled(vm.title.isEmpty)
             }
@@ -262,6 +288,7 @@ struct HaruToggleStyle: ToggleStyle {
 
 #if DEBUG
 private class MockAddVM: AddSheetViewModelProtocol {
+    
     @Published var mode: AddSheetMode = .event
     @Published var title: String = ""
     @Published var startDate: Date = .now
@@ -270,6 +297,7 @@ private class MockAddVM: AddSheetViewModelProtocol {
     @Published var error: TodayBoardError? = nil
     @Published var isSaving: Bool = false
     @Published var isAllDay: Bool = false
+    @Published var isDueExist: Bool = true
     
     func save() async {}
 }

@@ -22,6 +22,7 @@ protocol AddSheetViewModelProtocol: ObservableObject {
     var error: TodayBoardError? { get }
     var isSaving: Bool { get }
     var isAllDay: Bool { get set }
+    var isDueExist: Bool { get set }
     
     func save() async
 }
@@ -48,6 +49,12 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
                 startDate = Calendar.current.startOfDay(for: startDate)
                 endDate   = Calendar.current.date(bySettingHour: 23, minute: 59, second: 0, of: startDate)!
             }
+        }
+    }
+    
+    @Published var isDueExist: Bool = true {
+        didSet {
+            if !isDueExist { dueDate = nil }
         }
     }
     
