@@ -40,6 +40,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                 .sheet(isPresented: $showAddSheet) {
                     AddSheet(vm: di.makeAddSheetVM())
                         .onDisappear { vm.refresh(.storeChange) }
+                        .presentationDetents([.fraction(0.6)])
                 }
         }
         .task { vm.load() }
@@ -143,13 +144,13 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
             Button(action: { showAddSheet.toggle() }) {
                 Image(systemName: "plus")
                     .foregroundStyle(Color(hexCode: "A76545"))
-                    .font(.system(size: 15))
+                    .font(.pretendardSemiBold(size: 15))
                     .padding(.horizontal, 18)
                     .padding(.vertical, 3)
                     .overlay {
                         Capsule()
-                            .stroke(Color(hexCode: "A76545").opacity(0.5),
-                                   lineWidth: 1)
+                            .stroke(Color(hexCode: "A76545").opacity(1),
+                                   lineWidth: 2)
                     }
             }
             .padding(.trailing, 12)

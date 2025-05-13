@@ -18,7 +18,7 @@ protocol AddSheetViewModelProtocol: ObservableObject {
     var title: String { get set }
     var startDate: Date { get set }
     var endDate: Date { get set }
-    var dueDate: Date { get set }
+    var dueDate: Date? { get set }
     var error: TodayBoardError? { get }
     var isSaving: Bool { get }
     var isAllDay: Bool { get set }
@@ -34,7 +34,7 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
     @Published var title: String = ""
     @Published var startDate: Date = .now
     @Published var endDate: Date = Calendar.current.date(byAdding: .hour, value: 1, to: .now)!
-    @Published var dueDate: Date = .now
+    @Published var dueDate: Date? = nil
     
     // Outputs
     @Published var error: TodayBoardError?
