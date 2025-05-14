@@ -93,7 +93,11 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                     }
                     
                     VStack(spacing: 8) {
-                        ForEach(vm.state.overview.events.prefix(5)) { EventCard(event: $0)
+                        if vm.state.overview.events.isEmpty {
+                            emptyEventView
+                        } else {
+                            ForEach(vm.state.overview.events.prefix(5)) { EventCard(event: $0)
+                            }
                         }
                     }
                     .padding(.bottom, 16)
@@ -116,15 +120,19 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                     }
                     
                     VStack(spacing: 0) {
-                        ForEach(vm.state.overview.reminders.prefix(5)) { rem in
-                            ReminderCard(reminder: rem) {
-                                Task { await vm.toggleReminder(id: rem.id) }
-                            }
-                            
-                            if vm.state.overview.reminders.prefix(5).last != rem {
-                                Divider()
-                                    .padding(.horizontal, 16)
-                                    .background(Color.gray.opacity(0.1))
+                        if vm.state.overview.reminders.isEmpty {
+                            emptyReminderView
+                        } else {
+                            ForEach(vm.state.overview.reminders.prefix(5)) { rem in
+                                ReminderCard(reminder: rem) {
+                                    Task { await vm.toggleReminder(id: rem.id) }
+                                }
+                                
+                                if vm.state.overview.reminders.prefix(5).last != rem {
+                                    Divider()
+                                        .padding(.horizontal, 16)
+                                        .background(Color.gray.opacity(0.1))
+                                }
                             }
                         }
                     }
@@ -178,6 +186,37 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
             .padding(.horizontal, 10)
         }
     }
+    
+    
+    // MARK: - EmptyView-----------
+    private var emptyEventView: some View {
+        HStack {
+            Spacer()
+            Text("오늘 일정이 없습니다.")
+                .font(.pretendardSemiBold(size: 17))
+                .padding(.vertical, 16)
+            Spacer()
+        }
+        .background(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(Color(hexCode: "FFFCF5"))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color(hexCode: "6E5C49").opacity(0.2), lineWidth: 1)
+        )
+    }
+    
+    private var emptyReminderView: some View {
+        HStack {
+            Spacer()
+            Text("오늘 할 일이 없습니다.")
+                .font(.pretendardSemiBold(size: 17))
+            Spacer()
+        }
+        .padding(.vertical, 6)
+    }
+    
 }
 
 
