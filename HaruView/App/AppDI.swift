@@ -56,6 +56,10 @@ final class DIContainer {
                             reminders: eventKitRepository)
     }
     
+    func makeToggleReminderUseCase() -> ToggleReminderUseCase {
+        ToggleReminderUseCase(repo: eventKitRepository)
+    }
+    
     // MARK: - ViewModels
     @MainActor
     func makeHomeVM() -> HomeViewModel {
@@ -67,12 +71,15 @@ final class DIContainer {
     
     @MainActor
     func makeEventListVM() -> EventListViewModel {
-        EventListViewModel(repo: eventKitRepository)
+        EventListViewModel(fetchToday: makeFetchTodayOverViewUseCase(),
+                           deleteObject: makeDeleteEventUseCase())
     }
     
     @MainActor
     func makeReminderListVM() -> ReminderListViewModel {
-        ReminderListViewModel(repo: eventKitRepository)
+        ReminderListViewModel(fetchToday: makeFetchTodayOverViewUseCase(),
+                              toggleReminder: makeToggleReminderUseCase(),
+                              deleteObject: makeDeleteEventUseCase())
     }
     
     @MainActor

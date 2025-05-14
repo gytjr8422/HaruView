@@ -76,10 +76,22 @@ struct AddReminderUseCase {
 }
 
 
+struct ToggleReminderUseCase {
+    private let repo: ReminderRepositoryProtocol
+    
+    init(repo: ReminderRepositoryProtocol) {
+        self.repo = repo
+    }
+    
+    func callAsFunction(_ id: String) async -> Result<Void, TodayBoardError> {
+        await repo.toggle(id: id)
+    }
+}
+
 
 /// 일정, 미리알림 삭제 유스케이스 (공통)
 struct DeleteObjectUseCase {
-    public enum ObjectKind {
+    enum ObjectKind {
         case event(String)
         case reminder(String)
     }

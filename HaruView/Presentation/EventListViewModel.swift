@@ -20,28 +20,27 @@ final class EventListViewModel: ObservableObject, @preconcurrency EventListViewM
     @Published var events: [Event] = []
     @Published var error: TodayBoardError?
     
-    private let repo: EventRepositoryProtocol?
+    private let fetchToday: FetchTodayOverviewUseCase
+    private let deleteObject: DeleteObjectUseCase
     
-    init(repo: EventRepositoryProtocol) {
-        self.repo = repo
+    init(fetchToday: FetchTodayOverviewUseCase, deleteObject: DeleteObjectUseCase) {
+        self.fetchToday = fetchToday
+        self.deleteObject = deleteObject
     }
     
     func load() {
-        guard let repo else { return }
         Task {
-            switch await repo.fetchEvent() {
-            case .success(let events): self.events = events
+            switch await fetchToday() {
+            case .success(let overview): self.events = overview.events
             case .failure(let error): self.error = error
             }
         }
     }
     
     func delete(id: String) {
-        if let repo {
-            Task {
-                if case .success = await repo.deleteEvent(id: id) {
-                    events.removeAll { $0.id == id }
-                }
+        Task {
+            if case .success = await deleteObject(DeleteObjectUseCase.ObjectKind.event(id)) {
+                events.removeAll { $0.id == id }
             }
         }
     }

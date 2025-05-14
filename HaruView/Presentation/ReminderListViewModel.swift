@@ -20,16 +20,20 @@ final class ReminderListViewModel: ObservableObject, @preconcurrency ReminderLis
     @Published var reminders: [Reminder] = []
     @Published var error: TodayBoardError?
     
-    private let repo: ReminderRepositoryProtocol
+    private let fetchToday: FetchTodayOverviewUseCase
+    private let toggleReminder: ToggleReminderUseCase
+    private let deleteObject: DeleteObjectUseCase
     
-    init(repo: ReminderRepositoryProtocol) {
-        self.repo = repo
+    init(fetchToday: FetchTodayOverviewUseCase, toggleReminder: ToggleReminderUseCase, deleteObject: DeleteObjectUseCase) {
+        self.fetchToday = fetchToday
+        self.toggleReminder = toggleReminder
+        self.deleteObject = deleteObject
     }
     
     func load() {
         Task {
-            switch await repo.fetchReminder() {
-            case .success(let reminders): self.reminders = reminders
+            switch await fetchToday() {
+            case .success(let overview): self.reminders = overview.reminders
             case .failure(let error): self.error = error
             }
         }
@@ -40,13 +44,21 @@ final class ReminderListViewModel: ObservableObject, @preconcurrency ReminderLis
     }
     
     func toggleReminder(id: String) async {
-        let res = await repo.toggle(id: id)
+        let res = await toggleReminder(id)
         guard case .success = res,
               let idx = reminders.firstIndex(where: { $0.id == id }) else { return }
 
         withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
             reminders[idx].isCompleted.toggle()
             reminders.sort(by: reminderSortRule)
+        }
+    }
+    
+    func delete(id: String) async {
+        Task {
+            if case .success = await deleteObject(DeleteObjectUseCase.ObjectKind.reminder(id)) {
+                reminders.removeAll { $0.id == id }
+            }
         }
     }
     
