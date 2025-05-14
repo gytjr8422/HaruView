@@ -108,7 +108,11 @@ final class EventKitService {
         let reminder = EKReminder(eventStore: store)
         reminder.title = input.title
         if let due = input.due {
-            reminder.dueDateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: due)
+            if input.includesTime {
+                reminder.dueDateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: due)
+            } else {
+                reminder.dueDateComponents = Calendar.current.dateComponents([.year, .month, .day], from: due)
+            }
         }
         reminder.calendar = store.defaultCalendarForNewReminders()
         do {

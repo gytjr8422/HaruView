@@ -43,6 +43,7 @@ struct EventEdit {
 struct ReminderInput {
     let title: String
     let due: Date?
+    let includesTime: Bool
 }
 
 struct ReminderEdit {

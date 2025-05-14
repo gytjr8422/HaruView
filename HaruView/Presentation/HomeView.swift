@@ -81,7 +81,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                             .foregroundStyle(.secondary)
                         Spacer()
                         
-                        if vm.state.overview.events.count > 2 {
+                        if vm.state.overview.events.count > 4 {
                             Button {
                                 showEventSheet.toggle()
                             } label: {
@@ -104,7 +104,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                             .foregroundStyle(.secondary)
                         Spacer()
                         
-                        if vm.state.overview.reminders.count > 3 {
+                        if vm.state.overview.reminders.count > 5 {
                             Button {
                                 showReminderSheet.toggle()
                             } label: {
@@ -119,6 +119,12 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                         ForEach(vm.state.overview.reminders.prefix(5)) { rem in
                             ReminderCard(reminder: rem) {
                                 Task { await vm.toggleReminder(id: rem.id) }
+                            }
+                            
+                            if vm.state.overview.reminders.prefix(5).last != rem {
+                                Divider()
+                                    .padding(.horizontal, 16)
+                                    .background(Color.gray.opacity(0.1))
                             }
                         }
                     }
@@ -143,17 +149,17 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
         ToolbarItem(placement: .navigationBarTrailing) {
             Button(action: { showAddSheet.toggle() }) {
                 Image(systemName: "plus")
-                    .foregroundStyle(Color(hexCode: "FFFCF5"))
+                    .foregroundStyle(Color(hexCode: "A76545"))
                     .font(.system(size: 15, weight: .bold))
                     .padding(.horizontal, 20)
                     .padding(.vertical, 3.5)
-                    .background(Color(hexCode: "A76545"))
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-//                    .overlay {
-//                        RoundedRectangle(cornerRadius: 10)
-//                            .stroke(Color(hexCode: "A76545").opacity(1),
-//                                   lineWidth: 2)
-//                    }
+//                    .background(Color(hexCode: "A76545"))
+//                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color(hexCode: "A76545").opacity(1),
+                                   lineWidth: 2)
+                    }
             }
             .padding(.trailing, 12)
         }

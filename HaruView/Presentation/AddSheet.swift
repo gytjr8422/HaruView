@@ -145,28 +145,30 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                 commonTitleField
                 
                 HStack {
-                    if vm.isDueExist {
-                        Text("날짜는 이틀 후까지만 선택 가능합니다.")
-                            .font(.pretendardRegular(size: 13))
-                            .foregroundStyle(Color(hexCode: "A76545"))
-                    }
+                    Text("날짜는 이틀 후까지만 선택 가능합니다.")
+                        .font(.pretendardRegular(size: 13))
+                        .foregroundStyle(Color(hexCode: "A76545"))
+                    
                     Spacer()
-                    Text("날짜/시간")
+                    
+                    Text("시간")
                         .font(.pretendardSemiBold(size: 16))
-                    Toggle("", isOn: $vm.isDueExist)
+                    Toggle("", isOn: $vm.includeTime)
                         .toggleStyle(HaruToggleStyle())
                         .padding(.horizontal, 5)
                 }
                 
-                if vm.isDueExist {
-                    HStack {
-                        Text("날짜/시간")
-                            .font(.pretendardSemiBold(size: 18))
-                            .padding(.trailing, 10)
-                        dateTimePicker(date: $vm.startDate, min: minDate)
+                HStack {
+                    Text(vm.includeTime ? "날짜/시간" : "날짜")
+                        .font(.pretendardSemiBold(size: 18))
+                        .padding(.trailing, 10)
+                    datePicker(date: $vm.dueDate, min: minDate)
+                    
+                    if vm.includeTime {
+                        timePicker(time: $vm.dueDate)
                     }
-                    .animation(.easeIn, value: 10)
                 }
+                .animation(.easeIn, value: 10)
                 
                 footerError
             }
@@ -249,7 +251,7 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                 } label: {
                     Text("저장")
                         .font(.pretendardSemiBold(size: 16))
-                        .foregroundStyle(vm.title.isEmpty ? .secondary : Color(hexCode: "A76545"))
+                        .foregroundStyle(vm.title.isEmpty ? .secondary : Color.blue.opacity(0.8))
                 }
                 .disabled(vm.title.isEmpty)
             }
@@ -268,7 +270,7 @@ struct HaruToggleStyle: ToggleStyle {
     func makeBody(configuration: Self.Configuration) -> some View {
         HStack {
             RoundedRectangle(cornerRadius: 20)
-                .fill(configuration.isOn ? Color(hexCode: "A76545"): Color.gray)
+                .fill(configuration.isOn ? Color(hexCode: "9BC4CB"): Color.gray)
                 .frame(width: 46, height: 24)
                 .overlay(
                     Circle()
@@ -293,11 +295,11 @@ private class MockAddVM: AddSheetViewModelProtocol {
     @Published var title: String = ""
     @Published var startDate: Date = .now
     @Published var endDate: Date = .now
-    @Published var dueDate: Date? = .now
+    @Published var dueDate: Date = .now
     @Published var error: TodayBoardError? = nil
     @Published var isSaving: Bool = false
     @Published var isAllDay: Bool = false
-    @Published var isDueExist: Bool = true
+    @Published var includeTime: Bool = true
     
     func save() async {}
 }

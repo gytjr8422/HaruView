@@ -18,11 +18,11 @@ protocol AddSheetViewModelProtocol: ObservableObject {
     var title: String { get set }
     var startDate: Date { get set }
     var endDate: Date { get set }
-    var dueDate: Date? { get set }
+    var dueDate: Date { get set }
     var error: TodayBoardError? { get }
     var isSaving: Bool { get }
     var isAllDay: Bool { get set }
-    var isDueExist: Bool { get set }
+    var includeTime: Bool { get set }
     
     func save() async
 }
@@ -35,8 +35,7 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
     @Published var title: String = ""
     @Published var startDate: Date = .now
     @Published var endDate: Date = Calendar.current.date(byAdding: .hour, value: 1, to: .now)!
-    @Published var dueDate: Date? = nil
-    
+    @Published var dueDate: Date = .now
     // Outputs
     @Published var error: TodayBoardError?
     @Published var isSaving: Bool = false
@@ -52,11 +51,7 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
         }
     }
     
-    @Published var isDueExist: Bool = true {
-        didSet {
-            if !isDueExist { dueDate = nil }
-        }
-    }
+    @Published var includeTime: Bool = true
     
     private let addEvent: AddEventUseCase
     private let reminderRepository: ReminderRepositoryProtocol
@@ -75,7 +70,7 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
             let result = await addEvent(.init(title: title, start: startDate, end: endDate))
             handle(result)
         case .reminder:
-            let result = await reminderRepository.add(.init(title: title, due: dueDate))
+            let result = await reminderRepository.add(.init(title: title, due: dueDate, includesTime: includeTime))
             handle(result)
         }
         isSaving = false
