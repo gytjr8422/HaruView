@@ -39,4 +39,8 @@ extension Font {
     static func jakartaBold(size: CGFloat) -> Font {
         .custom("PlusJakartaSans-Bold", size: size)
     }
+    
+    static func bookkMyungjoBold(size: CGFloat) -> Font {
+        .custom("BookkMyungjo-Bd", size: size)
+    }
 }

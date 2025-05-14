@@ -49,7 +49,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
         }
         .refreshable { vm.refresh(.userTap) }
         
-////        .onAppear {
+//        .onAppear {
 //            for family in UIFont.familyNames {
 //                print("Family: \(family)")
 //                for name in UIFont.fontNames(forFamilyName: family) {
@@ -143,15 +143,17 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
         ToolbarItem(placement: .navigationBarTrailing) {
             Button(action: { showAddSheet.toggle() }) {
                 Image(systemName: "plus")
-                    .foregroundStyle(Color(hexCode: "A76545"))
-                    .font(.pretendardSemiBold(size: 15))
-                    .padding(.horizontal, 18)
-                    .padding(.vertical, 3)
-                    .overlay {
-                        Capsule()
-                            .stroke(Color(hexCode: "A76545").opacity(1),
-                                   lineWidth: 2)
-                    }
+                    .foregroundStyle(Color(hexCode: "FFFCF5"))
+                    .font(.system(size: 15, weight: .bold))
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 3.5)
+                    .background(Color(hexCode: "A76545"))
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+//                    .overlay {
+//                        RoundedRectangle(cornerRadius: 10)
+//                            .stroke(Color(hexCode: "A76545").opacity(1),
+//                                   lineWidth: 2)
+//                    }
             }
             .padding(.trailing, 12)
         }
