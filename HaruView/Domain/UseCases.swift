@@ -62,6 +62,19 @@ struct EditEventUseCase {
     }
 }
 
+/// 미리알림 추가 유스케이스
+struct AddReminderUseCase {
+    private let repo: ReminderRepositoryProtocol
+    
+    init(repo: ReminderRepositoryProtocol) {
+        self.repo = repo
+    }
+    
+    func callAsFunction(_ input: ReminderInput) async -> Result<Void, TodayBoardError> {
+        await repo.add(input)
+    }
+}
+
 
 
 /// 일정, 미리알림 삭제 유스케이스 (공통)

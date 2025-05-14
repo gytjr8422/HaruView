@@ -28,13 +28,15 @@ final class HomeViewModel: ObservableObject, @preconcurrency HomeViewModelProtoc
     private var cancellable: AnyCancellable?
     private var cancellables = Set<AnyCancellable>()
     private let fetchToday: FetchTodayOverviewUseCase
+    private let deleteObject: DeleteObjectUseCase
     private let reminderRepo: ReminderRepositoryProtocol
     private let service:   EventKitService
     private var task: Task<Void, Never>?
     
     
-    init(fetchToday: FetchTodayOverviewUseCase, reminderRepo: ReminderRepositoryProtocol, service: EventKitService) {
+    init(fetchToday: FetchTodayOverviewUseCase, deleteObject: DeleteObjectUseCase, reminderRepo: ReminderRepositoryProtocol, service: EventKitService) {
         self.fetchToday = fetchToday
+        self.deleteObject = deleteObject
         self.reminderRepo = reminderRepo
         self.service = service
 //        startDateWatcher()

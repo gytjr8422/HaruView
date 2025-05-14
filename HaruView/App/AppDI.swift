@@ -43,10 +43,24 @@ final class DIContainer {
                                   weather: weatherRepository)
     }
     
+    func makeAddEventUseCase() -> AddEventUseCase {
+        AddEventUseCase(repo: eventKitRepository)
+    }
+    
+    func makeAddReminderUseCase() -> AddReminderUseCase {
+        AddReminderUseCase(repo: eventKitRepository)
+    }
+    
+    func makeDeleteEventUseCase() -> DeleteObjectUseCase {
+        DeleteObjectUseCase(events: eventKitRepository,
+                            reminders: eventKitRepository)
+    }
+    
     // MARK: - ViewModels
     @MainActor
     func makeHomeVM() -> HomeViewModel {
         HomeViewModel(fetchToday: makeFetchTodayOverViewUseCase(),
+                      deleteObject: makeDeleteEventUseCase(),
                       reminderRepo: eventKitRepository,
                       service: eventKitService)
     }
@@ -63,8 +77,8 @@ final class DIContainer {
     
     @MainActor
     func makeAddSheetVM() -> AddSheetViewModel {
-        AddSheetViewModel(addEvent: AddEventUseCase(repo: eventKitRepository),
-                          reminderRepository: eventKitRepository)
+        AddSheetViewModel(addEvent: makeAddEventUseCase(),
+                          addReminder: makeAddReminderUseCase())
     }
 
     func makeDetailVM(for item: DetailItem) -> DetailSheetViewModel {

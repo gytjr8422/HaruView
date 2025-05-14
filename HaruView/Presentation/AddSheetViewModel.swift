@@ -54,11 +54,11 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
     @Published var includeTime: Bool = true
     
     private let addEvent: AddEventUseCase
-    private let reminderRepository: ReminderRepositoryProtocol
+    private let addReminder: AddReminderUseCase
     
-    init(addEvent: AddEventUseCase, reminderRepository: ReminderRepositoryProtocol) {
+    init(addEvent: AddEventUseCase, addReminder: AddReminderUseCase) {
         self.addEvent = addEvent
-        self.reminderRepository = reminderRepository
+        self.addReminder = addReminder
     }
     
     func save() async {
@@ -70,7 +70,7 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
             let result = await addEvent(.init(title: title, start: startDate, end: endDate))
             handle(result)
         case .reminder:
-            let result = await reminderRepository.add(.init(title: title, due: dueDate, includesTime: includeTime))
+            let result = await addReminder(.init(title: title, due: dueDate, includesTime: includeTime))
             handle(result)
         }
         isSaving = false
