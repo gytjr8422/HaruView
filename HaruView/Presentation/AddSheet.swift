@@ -11,6 +11,7 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var vm: VM
     @Namespace private var indicatorNS
+    @FocusState private var isTextFieldFocused: Bool
 
     private var minDate: Date { Calendar.current.startOfDay(for: .now) }
     private var maxDate: Date { Calendar.current.date(byAdding: .day, value: 2, to: minDate)! }
@@ -46,6 +47,11 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
         }
         .interactiveDismissDisabled(isDirty || vm.isSaving)
         .onAppear { selected = vm.mode }
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                isTextFieldFocused = true
+            }
+        }
     }
     
     private var isDirty: Bool {
@@ -88,6 +94,7 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
             Text("제목")
                 .font(.pretendardBold(size: 17))
             HaruTextField(text: $vm.title, placeholder: "제목 입력")
+                .focused($isTextFieldFocused)
         }
     }
 

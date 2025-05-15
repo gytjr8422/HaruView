@@ -64,11 +64,15 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
         if vm.state.isLoading {
             ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
         } else if let error = vm.state.error {
-            VStack {
-                Text("오류: \(error.localizedDescription)")
-                Button("다시 시도") { vm.load() }
+            if error == .accessDenied {
+                accessDeniedView
+            } else {
+                VStack {
+                    Text("오류: \(error.localizedDescription)")
+                    Button("다시 시도") { vm.load() }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else {
             ScrollView(showsIndicators: false) {
                 VStack {
@@ -185,22 +189,24 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
     
     private var addButton: some ToolbarContent {
         ToolbarItem(placement: .navigationBarTrailing) {
-            Button(action: { showAddSheet.toggle() }) {
-                Image(systemName: "plus")
-                    .foregroundStyle(Color(hexCode: "A76545"))
-                    .font(.system(size: 15, weight: .bold))
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 3.5)
-                    .background(Color(hexCode: "C2966B").opacity(0.09))
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(Color(hexCode: "C2966B").opacity(0.09),
-                                   lineWidth: 1)
-                            .shadow(radius: 10)
-                    }
+            if vm.state.error == nil {
+                Button(action: { showAddSheet.toggle() }) {
+                    Image(systemName: "plus")
+                        .foregroundStyle(Color(hexCode: "A76545"))
+                        .font(.system(size: 15, weight: .bold))
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 3.5)
+                        .background(Color(hexCode: "C2966B").opacity(0.09))
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color(hexCode: "C2966B").opacity(0.09),
+                                        lineWidth: 1)
+                                .shadow(radius: 10)
+                        }
+                }
+                .padding(.trailing, 12)
             }
-            .padding(.trailing, 12)
         }
     }
     
@@ -245,7 +251,32 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                 .font(.pretendardSemiBold(size: 17))
             Spacer()
         }
-        .padding(.vertical, 6)
+        .padding(.vertical, 12)
+    }
+    
+    private var accessDeniedView: some View {
+        HStack {
+            Spacer()
+            VStack(spacing: 20) {
+                Spacer()
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .font(.system(size: 40))
+                    .foregroundColor(.orange)
+                
+                Text("캘린더·미리알림 접근 권한이 꺼져 있어\n앱을 사용할 수 없습니다.")
+                    .multilineTextAlignment(.center)
+                    .font(.pretendardRegular(size: 16))
+                
+                Button("설정에서 권한 허용하기") {
+                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(url)
+                    }
+                }
+                .buttonStyle(.borderedProminent)
+                Spacer()
+            }
+            Spacer()
+        }
     }
     
 }

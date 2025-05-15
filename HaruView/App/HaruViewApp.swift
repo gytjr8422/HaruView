@@ -40,21 +40,21 @@ struct HaruViewApp: App {
     }
     
     // MARK: - Bootstrap
-    @MainActor
-    private func bootstrapOnce() async {
-        guard !didBootstrap else { return }
-        didBootstrap = true
-        
-        _ = await di.eventKitService.requestAccess(.writeOnly)
-        
-        if EKEventStore.authorizationStatus(for: .event) == .notDetermined {
-            _ = await di.eventKitService.requestAccess(.full)
-        }
-        
-        await scheduleDailyReminder()
-        
-        preloadInterstitalAd()
-    }
+//    @MainActor
+//    private func bootstrapOnce() async {
+//        guard !didBootstrap else { return }
+//        didBootstrap = true
+//        
+//        _ = await di.eventKitService.requestAccess(.writeOnly)
+//        
+//        if EKEventStore.authorizationStatus(for: .event) == .notDetermined {
+//            _ = await di.eventKitService.requestAccess(.full)
+//        }
+//        
+//        await scheduleDailyReminder()
+//        
+//        preloadInterstitalAd()
+//    }
     
     private func scheduleDailyReminder() async {
         let center = UNUserNotificationCenter.current()

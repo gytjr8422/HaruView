@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import EventKit
 
 // MARK: ‑ UseCases
 
@@ -23,6 +24,10 @@ struct FetchTodayOverviewUseCase {
     
     func callAsFunction() async -> Result<TodayOverview, TodayBoardError> {
         // 동시 작업 시작
+        guard EKEventStore.authorizationStatus(for: .event) == .fullAccess &&
+                EKEventStore.authorizationStatus(for: .reminder) == .fullAccess
+        else { return .failure(.accessDenied) }
+        
         async let eRes = self.events.fetchEvent()
         async let rRes = self.reminders.fetchReminder()
         async let wRes = self.weather.fetchWeather()
