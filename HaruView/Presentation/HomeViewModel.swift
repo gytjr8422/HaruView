@@ -14,6 +14,7 @@ protocol HomeViewModelProtocol: ObservableObject {
     func load()
     func refresh(_ kind: RefreshKind)
     func toggleReminder(id: String) async
+    func deleteObject(_ kind: DeleteObjectUseCase.ObjectKind) async
 }
 
 enum RefreshKind {
@@ -106,6 +107,15 @@ final class HomeViewModel: ObservableObject, @preconcurrency HomeViewModelProtoc
                 state.overview.reminders[idx] = updated
                 state.overview.reminders.sort(by: reminderSortRule)
             }
+        }
+    }
+    
+    func deleteObject(_ kind: DeleteObjectUseCase.ObjectKind) async {
+        switch kind {
+        case .event(let id):
+            let _ = await deleteObject(.event(id))
+        case .reminder(let id):
+            let _ = await deleteObject(.reminder(id))
         }
     }
     

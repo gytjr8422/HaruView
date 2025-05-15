@@ -96,7 +96,22 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                         if vm.state.overview.events.isEmpty {
                             emptyEventView
                         } else {
-                            ForEach(vm.state.overview.events.prefix(5)) { EventCard(event: $0)
+                            ForEach(vm.state.overview.events.prefix(5)) { event in
+                                EventCard(event: event)
+                                    .contextMenu {
+                                        Button(role: .destructive) {
+                                            Task {
+                                                await vm.deleteObject(.event(event.id))
+                                            }
+                                        } label: {
+                                            Label {
+                                                Text("삭제").font(Font.pretendardRegular(size: 14))
+                                            } icon: {
+                                                Image(systemName: "trash")
+                                            }
+
+                                        }
+                                    }
                             }
                         }
                     }
@@ -126,6 +141,21 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                             ForEach(vm.state.overview.reminders.prefix(5)) { rem in
                                 ReminderCard(reminder: rem) {
                                     Task { await vm.toggleReminder(id: rem.id) }
+                                }
+                                .contextMenu {
+                                    Button(role: .destructive) {
+                                        Task {
+                                            await vm.deleteObject(.reminder(rem.id))
+                                        }
+                                    } label: {
+                                        Label {
+                                            Text("삭제")
+                                                .font(Font.pretendardRegular(size: 14))
+                                        } icon: {
+                                            Image(systemName: "trash")
+                                        }
+
+                                    }
                                 }
                                 
                                 if vm.state.overview.reminders.prefix(5).last != rem {
@@ -252,6 +282,7 @@ final class MockHomeVM: HomeViewModelProtocol {
     func load() {}
     func refresh(_ kind: RefreshKind) {}
     func toggleReminder(id: String) async { }
+    func deleteObject(_ kind: DeleteObjectUseCase.ObjectKind) async { }
 }
 
 #Preview {

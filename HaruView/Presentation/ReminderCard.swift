@@ -53,7 +53,9 @@ struct ReminderCard: View {
                     .foregroundStyle(Color(hexCode: "2E2514").opacity(0.8))
             }
         }
-        .padding()
+        .contentShape(Rectangle())
+        .padding(.vertical, 14)
+        .padding(.horizontal, 16)
     }
 }
 
