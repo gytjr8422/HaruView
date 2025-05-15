@@ -59,6 +59,6 @@ struct ReminderCard: View {
     }
 }
 
-//#Preview {
-//    ReminderCard()
-//}
+#Preview {
+    ReminderCard(reminder: Reminder(id: "", title: "타이틀", due: Date(), isCompleted: false, priority: 0), onToggle: {} )
+}

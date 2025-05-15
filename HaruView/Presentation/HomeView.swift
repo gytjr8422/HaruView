@@ -191,12 +191,13 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                     .font(.system(size: 15, weight: .bold))
                     .padding(.horizontal, 20)
                     .padding(.vertical, 3.5)
-//                    .background(Color(hexCode: "A76545"))
-//                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .background(Color(hexCode: "C2966B").opacity(0.09))
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
                     .overlay {
                         RoundedRectangle(cornerRadius: 10)
-                            .stroke(Color(hexCode: "A76545").opacity(1),
-                                   lineWidth: 2)
+                            .stroke(Color(hexCode: "C2966B").opacity(0.09),
+                                   lineWidth: 1)
+                            .shadow(radius: 10)
                     }
             }
             .padding(.trailing, 12)

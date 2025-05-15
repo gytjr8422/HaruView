@@ -97,9 +97,15 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                 commonTitleField
                 
                 HStack {
-                    Text("날짜는 이틀 후까지만 선택 가능합니다.")
-                        .font(.pretendardRegular(size: 13))
-                        .foregroundStyle(Color(hexCode: "A76545"))
+                    if Calendar.current.compare(vm.startDate, to: .now, toGranularity: .day) == .orderedDescending {
+                        Text("내일/모레 일정은 홈에서 보이지 않아요!")
+                            .font(.pretendardRegular(size: 13))
+                            .foregroundStyle(Color(hexCode: "A76545"))
+                    } else {
+                        Text("날짜는 이틀 후까지만 선택 가능합니다.")
+                            .font(.pretendardRegular(size: 13))
+                            .foregroundStyle(Color(hexCode: "A76545"))
+                    }
                     Spacer()
                     Text("하루 종일")
                         .font(.pretendardSemiBold(size: 16))
@@ -114,10 +120,12 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                         .padding(.trailing, 10)
                     
                     datePicker(date: $vm.startDate, min: minDate)
+                        .frame(width: 120, alignment: .trailing)
+                        .environment(\.locale, Locale(identifier: "ko_KR"))
                     
                     if !vm.isAllDay {
                         timePicker(time: $vm.startDate)
-                            .animation(.easeIn, value: 10)
+                            .environment(\.locale, Locale(identifier: "ko_KR"))
                     }
                 }
                 
@@ -126,11 +134,18 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                         Text("종료")
                             .font(.pretendardSemiBold(size: 18))
                             .padding(.trailing, 10)
+                        
+                        datePicker(date: $vm.endDate, min: vm.startDate)
+                            .frame(width: 120, alignment: .trailing)
+                            .environment(\.locale, Locale(identifier: "ko_KR"))
+                        
+                        timePicker(time: $vm.endDate, min: vm.startDate)
+                                .environment(\.locale, Locale(identifier: "ko_KR"))
 
-                        dateTimePicker(date: $vm.endDate,
-                                       min: vm.startDate)
+//                        dateTimePicker(date: $vm.endDate,
+//                                       min: vm.startDate)
+//                        .environment(\.locale, Locale(identifier: "ko_KR"))
                     }
-                    .animation(.easeIn, value: 10)
                 }
 
                 footerError
@@ -145,9 +160,15 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                 commonTitleField
                 
                 HStack {
-                    Text("날짜는 이틀 후까지만 선택 가능합니다.")
-                        .font(.pretendardRegular(size: 13))
-                        .foregroundStyle(Color(hexCode: "A76545"))
+                    if Calendar.current.compare(vm.dueDate, to: .now, toGranularity: .day) == .orderedDescending {
+                        Text("내일/모레 할 일은 홈에서 보이지 않아요!")
+                            .font(.pretendardRegular(size: 13))
+                            .foregroundStyle(Color(hexCode: "A76545"))
+                    } else {
+                        Text("날짜는 이틀 후까지만 선택 가능합니다.")
+                            .font(.pretendardRegular(size: 13))
+                            .foregroundStyle(Color(hexCode: "A76545"))
+                    }
                     
                     Spacer()
                     
@@ -162,10 +183,14 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                     Text(vm.includeTime ? "날짜/시간" : "날짜")
                         .font(.pretendardSemiBold(size: 18))
                         .padding(.trailing, 10)
+                    
                     datePicker(date: $vm.dueDate, min: minDate)
+                        .frame(width: 120, alignment: .trailing)
+                        .environment(\.locale, Locale(identifier: "ko_KR"))
                     
                     if vm.includeTime {
-                        timePicker(time: $vm.dueDate)
+                        timePicker(time: $vm.dueDate, min: .now)
+                            .environment(\.locale, Locale(identifier: "ko_KR"))
                     }
                 }
                 .animation(.easeIn, value: 10)
@@ -191,27 +216,23 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     }
     
     private func datePicker(date: Binding<Date>,
-                                min: Date? = nil) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            if let min {    // 종료 피커처럼 최소값이 있을 때
-                DatePicker("", selection: date, in: min...maxDate, displayedComponents: [.date])
-                    .labelsHidden()
-            } else {        // 시작 
-                DatePicker("", selection: date, displayedComponents: [.date])
-                    .labelsHidden()
-            }
+                            min: Date? = nil) -> some View {
+        if let min {
+            DatePicker("", selection: date, in: min...maxDate, displayedComponents: [.date])
+                .labelsHidden()
+        } else {
+            DatePicker("", selection: date, displayedComponents: [.date])
+                .labelsHidden()
         }
     }
     
     private func timePicker(time: Binding<Date>, min: Date? = nil) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            if let min {    // 종료 피커처럼 최소값이 있을 때
-                DatePicker("", selection: time, in: min...maxDate, displayedComponents: [.hourAndMinute])
-                    .labelsHidden()
-            } else {        // 시작
-                DatePicker("", selection: time, displayedComponents: [.hourAndMinute])
-                    .labelsHidden()
-            }
+        if let min {    // 종료 피커처럼 최소값이 있을 때
+            DatePicker("", selection: time, in: min...maxDate, displayedComponents: [.hourAndMinute])
+                .labelsHidden()
+        } else {        // 시작
+            DatePicker("", selection: time, displayedComponents: [.hourAndMinute])
+                .labelsHidden()
         }
     }
 
