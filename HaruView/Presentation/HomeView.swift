@@ -194,8 +194,8 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                     Image(systemName: "plus")
                         .foregroundStyle(Color(hexCode: "A76545"))
                         .font(.system(size: 15, weight: .bold))
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 3.5)
+                        .padding(.horizontal, 25)
+                        .padding(.vertical, 4)
                         .background(Color(hexCode: "C2966B").opacity(0.09))
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                         .overlay {
@@ -205,7 +205,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                                 .shadow(radius: 10)
                         }
                 }
-                .padding(.trailing, 12)
+                .padding(.trailing, 6)
             }
         }
     }
