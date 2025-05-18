@@ -14,7 +14,6 @@ struct HaruViewApp: App {
     
     @State private var didBootstrap: Bool = false
     @State private var showAdd: Bool = false
-    @State private var selectedItem: DetailItem?
     
     private let di = DIContainer.shared
     
@@ -26,12 +25,6 @@ struct HaruViewApp: App {
         WindowGroup {
             HomeView(vm: DIContainer.shared.makeHomeVM())
                 .environment(\.di, .shared)
-                .sheet(isPresented: $showAdd) {
-                    AddSheet(vm: di.makeAddSheetVM())
-                }
-                .sheet(item: $selectedItem) { item in
-                    DetailSheet(vm: di.makeDetailVM(for: item))
-                }
                 .task {
                     guard !didBootstrap else { return }
                     didBootstrap = true

@@ -15,6 +15,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
     @State private var showEventSheet: Bool = false
     @State private var showReminderSheet: Bool = false
     @State private var showAddSheet: Bool = false
+    @State private var showToast: Bool = false
     
     init(vm: VM) {
         _vm = StateObject(wrappedValue: vm)
@@ -22,30 +23,43 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
     
     var body: some View {
         NavigationStack {
-            content
-                .toolbar {
-                    dateView
-                    addButton
-                }
-                .navigationBarTitleDisplayMode(.inline)
-                .background(Color(hexCode: "FFFCF5"))
-                .sheet(isPresented: $showEventSheet) {
-                    EventListSheet(vm: di.makeEventListVM())
-                        .presentationDetents([.fraction(0.75), .fraction(1.0)])
-                }
-                .sheet(isPresented: $showReminderSheet) {
-                    ReminderListSheet(vm: di.makeReminderListVM())
-                        .presentationDetents([.fraction(0.75), .fraction(1.0)])
-                }
-                .sheet(isPresented: $showAddSheet) {
-                    AddSheet(vm: di.makeAddSheetVM())
+            ZStack {
+                content
+                    .toolbar {
+                        dateView
+                        addButton
+                    }
+                    .navigationBarTitleDisplayMode(.inline)
+                    .background(Color(hexCode: "FFFCF5"))
+                    .sheet(isPresented: $showEventSheet) {
+                        EventListSheet(vm: di.makeEventListVM())
+                            .presentationDetents([.fraction(0.75), .fraction(1.0)])
+                    }
+                    .sheet(isPresented: $showReminderSheet) {
+                        ReminderListSheet(vm: di.makeReminderListVM())
+                            .presentationDetents([.fraction(0.75), .fraction(1.0)])
+                    }
+                    .sheet(isPresented: $showAddSheet) {
+                        AddSheet(vm: di.makeAddSheetVM()) {
+                            showToast = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                showToast = false
+                            }
+                        }
                         .onDisappear { vm.refresh(.storeChange) }
                         .presentationDetents([.fraction(0.6)])
+                    }
+                
+                if showToast {
+                    ToastView()
+                        .animation(.easeInOut, value: showToast)
+                        .transition(.opacity)
                 }
+            }
         }
         .task { vm.load() }
         .onChange(of: phase) {
-            if phase == .active { vm.load() }
+            if phase == .active { vm.refresh(.storeChange) }
         }
         .refreshable { vm.refresh(.userTap) }
         
@@ -118,6 +132,12 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                                     }
                             }
                         }
+                        
+                        // 네이티브 광고
+                        NativeAdBanner()
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 60)
+                            .padding(.top, 5)
                     }
                     .padding(.bottom, 16)
                     
@@ -309,6 +329,20 @@ private struct WeatherCard: View {
     
     private func iconName(for condition: Weather.Condition) -> String {
         switch condition { case .clear: "sun.max.fill"; case .cloudy: "cloud.fill"; case .rain: "cloud.rain.fill"; case .snow: "snow"; case .thunder: "cloud.bolt.rain.fill" }
+    }
+}
+
+private struct ToastView: View {
+    var body: some View {
+        Text("저장이 완료되었습니다.")
+            .font(.pretendardSemiBold(size: 14))
+            .foregroundStyle(Color.white)
+            .padding(10)
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .opacity(0.85)
+            )
+            .transition(.move(edge: .top).combined(with: .opacity))
     }
 }
 

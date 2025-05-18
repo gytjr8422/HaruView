@@ -25,7 +25,7 @@ final class AdManager: NSObject, ObservableObject, FullScreenContentDelegate {
     // MARK: Config (로컬 빈도 캡)
     private struct LocalFrequency {
         static let window: TimeInterval = 10 * 60           // 10 분
-        static let maxCount             = 1                 // 최대 1 회
+        static let maxCount = 1                             // 최대 1 회
 
         private static let keyTime   = "ad_last_shown"
         private static let keyCount  = "ad_shown_count"

@@ -9,19 +9,22 @@ import SwiftUI
 
 struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var vm: VM
     @Namespace private var indicatorNS
     @FocusState private var isTextFieldFocused: Bool
-
+    
+    @StateObject private var vm: VM
+    var onSave: () -> Void
+    
     private var minDate: Date { Calendar.current.startOfDay(for: .now) }
     private var maxDate: Date { Calendar.current.date(byAdding: .day, value: 2, to: minDate)! }
     
-    // local selection synced to vm.mode
     @State private var selected: AddSheetMode = .event
-    
     @State private var showDiscardAlert = false
 
-    init(vm: VM) { _vm = StateObject(wrappedValue: vm) }
+    init(vm: VM, onSave: @escaping () -> Void) {
+        _vm = StateObject(wrappedValue: vm)
+        self.onSave = onSave
+    }
 
     var body: some View {
         NavigationStack {
@@ -274,7 +277,10 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                 Button {
                     Task {
                         await vm.save()
-                        if vm.error == nil { dismiss() }
+                        if vm.error == nil {
+                            dismiss()
+                            onSave()
+                        }
                     }
                 } label: {
                     Text("저장")
@@ -289,7 +295,6 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     private var toolbarTitle: some ToolbarContent {
         ToolbarItem(placement: .principal) {
             Text("\(selected.rawValue) 추가")
-                
         }
     }
 }
@@ -333,6 +338,6 @@ private class MockAddVM: AddSheetViewModelProtocol {
 }
 
 #Preview {
-    AddSheet(vm: MockAddVM())
+    AddSheet(vm: MockAddVM(), onSave: {})
 }
 #endif
