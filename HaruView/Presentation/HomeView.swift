@@ -45,7 +45,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
         }
         .task { vm.load() }
         .onChange(of: phase) {
-            if phase == .active { vm.refresh(.storeChange) }
+            if phase == .active { vm.load() }
         }
         .refreshable { vm.refresh(.userTap) }
         
@@ -190,7 +190,19 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
     private var addButton: some ToolbarContent {
         ToolbarItem(placement: .navigationBarTrailing) {
             if vm.state.error == nil {
-                Button(action: { showAddSheet.toggle() }) {
+                Button {
+                    // 1) 광고가 있으면 먼저 보여주고
+                    if let root = UIApplication.shared.connectedScenes
+                        .compactMap({ ($0 as? UIWindowScene)?.keyWindow })
+                        .first?.rootViewController {
+                        AdManager.shared.show(from: root) {
+                            // 2) 광고 닫힌 뒤 AddSheet 열기
+                            showAddSheet = true
+                        }
+                    } else {
+                        showAddSheet = true
+                    }
+                } label: {
                     Image(systemName: "plus")
                         .foregroundStyle(Color(hexCode: "A76545"))
                         .font(.system(size: 15, weight: .bold))

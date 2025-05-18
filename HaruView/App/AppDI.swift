@@ -25,7 +25,7 @@ final class DIContainer {
     @MainActor
     func bootstrapPermissions() async {
         // 일정·미리알림 “쓰기 전용” 권한 먼저 요청
-        _ = await eventKitService.requestAccess(.writeOnly)
+        _ = await eventKitService.requestAccess(.full)
         // 2단계: HomeView 첫 로드 직전 읽기 권한 확인
         if case .denied = EKEventStore.authorizationStatus(for: .event) {
             _ = await eventKitService.requestAccess(.full)

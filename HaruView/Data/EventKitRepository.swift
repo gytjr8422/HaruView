@@ -27,7 +27,7 @@ final class EventKitRepository: EventRepositoryProtocol, ReminderRepositoryProto
         let wideEnd = cal.date(byAdding: .day, value: 7, to: windowEnd)!
         
         let ekResult = service.fetchEventsBetween(wideStart, wideEnd)
-        dump(ekResult)
+//        dump(ekResult)
         return ekResult.map { events in
             events
                 .filter { $0.endDate > windowStart && $0.startDate < windowEnd && $0.calendar.title != "대한민국 공휴일"}
@@ -62,7 +62,7 @@ final class EventKitRepository: EventRepositoryProtocol, ReminderRepositoryProto
         let todayStart = cal.startOfDay(for: Date())
         let todayEnd   = cal.date(byAdding: .day, value: 1, to: todayStart)!
         let ekRes = await service.fetchRemindersBetween(todayStart, todayEnd)
-        dump(ekRes)
+//        dump(ekRes)
         return ekRes.map { rems in
             rems
                 .filter { rem in        // dueDate가 없거나 오늘 범위면 포함

@@ -10,12 +10,17 @@ import EventKit
 
 @main
 struct HaruViewApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     @State private var didBootstrap: Bool = false
     @State private var showAdd: Bool = false
     @State private var selectedItem: DetailItem?
     
     private let di = DIContainer.shared
+    
+    init() {
+        _ = AdManager.shared
+    }
     
     var body: some Scene {
         WindowGroup {
@@ -38,23 +43,6 @@ struct HaruViewApp: App {
                 }
         }
     }
-    
-    // MARK: - Bootstrap
-//    @MainActor
-//    private func bootstrapOnce() async {
-//        guard !didBootstrap else { return }
-//        didBootstrap = true
-//        
-//        _ = await di.eventKitService.requestAccess(.writeOnly)
-//        
-//        if EKEventStore.authorizationStatus(for: .event) == .notDetermined {
-//            _ = await di.eventKitService.requestAccess(.full)
-//        }
-//        
-//        await scheduleDailyReminder()
-//        
-//        preloadInterstitalAd()
-//    }
     
     private func scheduleDailyReminder() async {
         let center = UNUserNotificationCenter.current()
@@ -89,4 +77,16 @@ struct HaruViewApp: App {
     private func preloadInterstitalAd() {
         /* TODO: integrate GoogleMobileAds SDK */
     }
+}
+
+
+import GoogleMobileAds
+
+final class AppDelegate: NSObject, UIApplicationDelegate {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        MobileAds.shared.start(completionHandler: nil)
+        MobileAds.shared.requestConfiguration.testDeviceIdentifiers = ["4ECABE1C-80B0-4475-B992-651D240F36ED"]
+        return true
+    }
+     
 }
