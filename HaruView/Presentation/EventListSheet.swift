@@ -22,6 +22,20 @@ struct EventListSheet<VM: EventListViewModelProtocol>: View {
                 VStack {
                     ForEach(vm.events) { event in
                         EventCard(event: event)
+                            .contextMenu {
+                                Button(role: .destructive) {
+                                    Task {
+                                        await vm.delete(id: event.id)
+                                    }
+                                } label: {
+                                    Label {
+                                        Text("삭제").font(Font.pretendardRegular(size: 14))
+                                    } icon: {
+                                        Image(systemName: "trash")
+                                    }
+
+                                }
+                            }
                     }
                 }
                 .padding(16)

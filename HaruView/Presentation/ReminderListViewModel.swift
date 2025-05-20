@@ -13,6 +13,7 @@ protocol ReminderListViewModelProtocol: ObservableObject {
     func load()
     func refresh()
     func toggleReminder(id: String) async
+    func delete(id: String) async
 }
 
 @MainActor
@@ -55,10 +56,8 @@ final class ReminderListViewModel: ObservableObject, @preconcurrency ReminderLis
     }
     
     func delete(id: String) async {
-        Task {
-            if case .success = await deleteObject(DeleteObjectUseCase.ObjectKind.reminder(id)) {
-                reminders.removeAll { $0.id == id }
-            }
+        if case .success = await deleteObject(DeleteObjectUseCase.ObjectKind.reminder(id)) {
+            reminders.removeAll { $0.id == id }
         }
     }
     

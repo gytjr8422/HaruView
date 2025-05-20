@@ -26,6 +26,20 @@ struct ReminderListSheet<VM: ReminderListViewModelProtocol>: View {
                                 await vm.toggleReminder(id: reminder.id)
                             }
                         }
+                        .contextMenu {
+                            Button(role: .destructive) {
+                                Task {
+                                    await vm.delete(id: reminder.id)
+                                }
+                            } label: {
+                                Label {
+                                    Text("삭제").font(Font.pretendardRegular(size: 14))
+                                } icon: {
+                                    Image(systemName: "trash")
+                                }
+                                
+                            }
+                        }
                         
                         if vm.reminders.last != reminder {
                             Divider()

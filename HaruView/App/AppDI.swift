@@ -24,24 +24,14 @@ final class DIContainer {
     // MARK: - 권한 요청
     @MainActor
     func bootstrapPermissions() async {
-//        // 일정·미리알림 “쓰기 전용” 권한 먼저 요청
-//        _ = await eventKitService.requestAccess(.writeOnly)
-//        // 2단계: HomeView 첫 로드 직전 읽기 권한 확인
-//        if case .denied = EKEventStore.authorizationStatus(for: .event) {
-//            _ = await eventKitService.requestAccess(.full)
-//        }
-//        
-//        if case .denied = EKEventStore.authorizationStatus(for: .reminder) {
-//            _ = await eventKitService.requestAccess(.full)
-//        }
         switch await eventKitService.requestAccess(.writeOnly) {
         case .success: break
-        case .failure(let _): return
+        case .failure(_): return
         }
         
         switch await eventKitService.requestAccess(.full) {
         case .success: break
-        case .failure(let _): return
+        case .failure(_): return
         }
     }
     

@@ -10,7 +10,7 @@ import Foundation
 protocol EventListViewModelProtocol: ObservableObject {
     var events: [Event] { get }
     func load()
-    func delete(id: String)
+    func delete(id: String) async
     func refresh()
 }
 
@@ -37,11 +37,9 @@ final class EventListViewModel: ObservableObject, @preconcurrency EventListViewM
         }
     }
     
-    func delete(id: String) {
-        Task {
-            if case .success = await deleteObject(DeleteObjectUseCase.ObjectKind.event(id)) {
-                events.removeAll { $0.id == id }
-            }
+    func delete(id: String) async {
+        if case .success = await deleteObject(DeleteObjectUseCase.ObjectKind.event(id)) {
+            events.removeAll { $0.id == id }
         }
     }
     
