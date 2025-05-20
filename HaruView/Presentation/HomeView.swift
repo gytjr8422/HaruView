@@ -29,10 +29,17 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                     content
                         .toolbar {
                             dateView
-                            addButton
+                            if permission.eventState == .granted {
+                                addButton
+                            }
                         }
                         .navigationBarTitleDisplayMode(.inline)
                         .background(Color(hexCode: "FFFCF5"))
+                        .refreshable { vm.refresh(.userTap) }
+                        .task { vm.load() }
+                        .onChange(of: phase) {
+                            if phase == .active { vm.refresh(.storeChange) }
+                        }
                         .sheet(isPresented: $showEventSheet) {
                             EventListSheet(vm: di.makeEventListVM())
                                 .presentationDetents([.fraction(0.75), .fraction(1.0)])
@@ -62,11 +69,6 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                 .animation(.easeInOut, value: permission.isAllGranted)
             }
         }
-        .task { vm.load() }
-        .onChange(of: phase) {
-            if phase == .active { vm.refresh(.storeChange) }
-        }
-        .refreshable { vm.refresh(.userTap) }
         
 //        .onAppear {
 //            for family in UIFont.familyNames {

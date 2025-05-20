@@ -109,14 +109,16 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                 HStack {
                     if Calendar.current.compare(vm.startDate, to: .now, toGranularity: .day) == .orderedDescending {
                         Text("내일/모레 일정은 홈에서 보이지 않아요!")
-                            .font(.pretendardRegular(size: 13))
-                            .foregroundStyle(Color(hexCode: "A76545"))
+                            .font(.pretendardRegular(size: 14))
+                            .foregroundStyle(Color.red)
                     } else {
                         Text("날짜는 이틀 후까지만 선택 가능합니다.")
-                            .font(.pretendardRegular(size: 13))
+                            .font(.pretendardRegular(size: 14))
                             .foregroundStyle(Color(hexCode: "A76545"))
                     }
+                    
                     Spacer()
+                    
                     Text("하루 종일")
                         .font(.pretendardSemiBold(size: 16))
                     Toggle("", isOn: $vm.isAllDay)
@@ -172,11 +174,11 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                 HStack {
                     if Calendar.current.compare(vm.dueDate, to: .now, toGranularity: .day) == .orderedDescending {
                         Text("내일/모레 할 일은 홈에서 보이지 않아요!")
-                            .font(.pretendardRegular(size: 13))
-                            .foregroundStyle(Color(hexCode: "A76545"))
+                            .font(.pretendardRegular(size: 14))
+                            .foregroundStyle(Color.red)
                     } else {
                         Text("날짜는 이틀 후까지만 선택 가능합니다.")
-                            .font(.pretendardRegular(size: 13))
+                            .font(.pretendardRegular(size: 14))
                             .foregroundStyle(Color(hexCode: "A76545"))
                     }
                     
