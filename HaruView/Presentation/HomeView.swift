@@ -11,6 +11,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
     @Environment(\.scenePhase) private var phase
     @Environment(\.di) private var di
     @StateObject private var vm: VM
+    @StateObject private var permission = CalendarPermissionStore()
     
     @State private var showEventSheet: Bool = false
     @State private var showReminderSheet: Bool = false
@@ -24,37 +25,41 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                content
-                    .toolbar {
-                        dateView
-                        addButton
-                    }
-                    .navigationBarTitleDisplayMode(.inline)
-                    .background(Color(hexCode: "FFFCF5"))
-                    .sheet(isPresented: $showEventSheet) {
-                        EventListSheet(vm: di.makeEventListVM())
-                            .presentationDetents([.fraction(0.75), .fraction(1.0)])
-                    }
-                    .sheet(isPresented: $showReminderSheet) {
-                        ReminderListSheet(vm: di.makeReminderListVM())
-                            .presentationDetents([.fraction(0.75), .fraction(1.0)])
-                    }
-                    .sheet(isPresented: $showAddSheet) {
-                        AddSheet(vm: di.makeAddSheetVM()) {
-                            showToast = true
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                showToast = false
-                            }
+                Group {
+                    content
+                        .toolbar {
+                            dateView
+                            addButton
                         }
-                        .onDisappear { vm.refresh(.storeChange) }
-                        .presentationDetents([.fraction(0.6)])
+                        .navigationBarTitleDisplayMode(.inline)
+                        .background(Color(hexCode: "FFFCF5"))
+                        .sheet(isPresented: $showEventSheet) {
+                            EventListSheet(vm: di.makeEventListVM())
+                                .presentationDetents([.fraction(0.75), .fraction(1.0)])
+                        }
+                        .sheet(isPresented: $showReminderSheet) {
+                            ReminderListSheet(vm: di.makeReminderListVM())
+                                .presentationDetents([.fraction(0.75), .fraction(1.0)])
+                        }
+                        .sheet(isPresented: $showAddSheet) {
+                            AddSheet(vm: di.makeAddSheetVM()) {
+                                showToast = true
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                    showToast = false
+                                }
+                            }
+                            .onDisappear { vm.refresh(.storeChange) }
+                            .presentationDetents([.fraction(0.6)])
+                        }
+                    
+                    
+                    if showToast {
+                        ToastView()
+                            .animation(.easeInOut, value: showToast)
+                            .transition(.opacity)
                     }
-                
-                if showToast {
-                    ToastView()
-                        .animation(.easeInOut, value: showToast)
-                        .transition(.opacity)
                 }
+                .animation(.easeInOut, value: permission.isAllGranted)
             }
         }
         .task { vm.load() }
@@ -77,135 +82,147 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
     private var content: some View {
         if vm.state.isLoading {
             ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
-        } else if let error = vm.state.error {
-            if error == .accessDenied {
-                accessDeniedView
-            } else {
-                VStack {
-                    Text("오류: \(error.localizedDescription)")
-                    Button("다시 시도") { vm.load() }
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
         } else {
             ScrollView(showsIndicators: false) {
                 VStack {
                     WeatherCard(weather: vm.state.overview.weather)
-                        .padding(.bottom, 16)
+                        .padding(.bottom, 10)
                     
-                    HStack {
-                        Text("오늘의 일정")
-                            .font(.pretendardBold(size: 17))
-                            .foregroundStyle(.secondary)
-                        Spacer()
-                        
-                        if vm.state.overview.events.count > 4 {
-                            Button {
-                                showEventSheet.toggle()
-                            } label: {
-                                Text("전체 보기")
-                                    .font(.jakartaRegular(size: 14))
-                                    .foregroundStyle(Color(hexCode: "A76545"))
-                            }
-                        }
+                    if permission.isAllGranted {
+                        eventListView
+                        reminderListView
+                    } else {
+                        accessDeniedView
                     }
-                    
-                    VStack(spacing: 8) {
-                        if vm.state.overview.events.isEmpty {
-                            emptyEventView
-                        } else {
-                            ForEach(vm.state.overview.events.prefix(5)) { event in
-                                EventCard(event: event)
-                                    .contextMenu {
-                                        Button(role: .destructive) {
-                                            Task {
-                                                await vm.deleteObject(.event(event.id))
-                                            }
-                                        } label: {
-                                            Label {
-                                                Text("삭제").font(Font.pretendardRegular(size: 14))
-                                            } icon: {
-                                                Image(systemName: "trash")
-                                            }
 
-                                        }
-                                    }
-                            }
-                        }
-                        
-                        // 네이티브 광고
-                        NativeAdBanner()
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 60)
-                            .padding(.top, 5)
-                    }
-                    .padding(.bottom, 16)
-                    
-                    HStack {
-                        Text("할 일")
-                            .font(.pretendardBold(size: 17))
-                            .foregroundStyle(.secondary)
-                        Spacer()
-                        
-                        if vm.state.overview.reminders.count > 5 {
-                            Button {
-                                showReminderSheet.toggle()
-                            } label: {
-                                Text("전체 보기")
-                                    .font(.jakartaRegular(size: 14))
-                                    .foregroundStyle(Color(hexCode: "A76545"))
-                            }
-                        }
-                    }
-                    
-                    VStack(spacing: 0) {
-                        if vm.state.overview.reminders.isEmpty {
-                            emptyReminderView
-                        } else {
-                            ForEach(vm.state.overview.reminders.prefix(5)) { rem in
-                                ReminderCard(reminder: rem) {
-                                    Task { await vm.toggleReminder(id: rem.id) }
-                                }
-                                .contextMenu {
-                                    Button(role: .destructive) {
-                                        Task {
-                                            await vm.deleteObject(.reminder(rem.id))
-                                        }
-                                    } label: {
-                                        Label {
-                                            Text("삭제")
-                                                .font(Font.pretendardRegular(size: 14))
-                                        } icon: {
-                                            Image(systemName: "trash")
-                                        }
-
-                                    }
-                                }
-                                
-                                if vm.state.overview.reminders.prefix(5).last != rem {
-                                    Divider()
-                                        .padding(.horizontal, 16)
-                                        .background(Color.gray.opacity(0.1))
-                                }
-                            }
-                        }
-                    }
-                    .padding(.vertical, 6)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .fill(Color(hexCode: "C2966B").opacity(0.09))
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                                .stroke(Color(hexCode: "C2966B").opacity(0.5),
-                                       lineWidth: 1)
-                    )
-                    
                 }
                 .padding(.horizontal, 20)
             }
         }
     }
+    
+    @ViewBuilder
+    private var eventListView: some View {
+        
+        // 네이티브 광고
+        NativeAdBanner()
+            .frame(maxWidth: .infinity)
+            .frame(height: 60)
+            .padding(.top, 10)
+            .padding(.bottom, 10)
+            .padding(.horizontal, 10)
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color(hexCode: "6E5C49").opacity(0.2), lineWidth: 1)
+            )
+        
+        HStack {
+            Text("오늘의 일정")
+                .font(.pretendardBold(size: 17))
+                .foregroundStyle(.secondary)
+            Spacer()
+            
+            if vm.state.overview.events.count > 4 {
+                Button {
+                    showEventSheet.toggle()
+                } label: {
+                    Text("전체 보기")
+                        .font(.jakartaRegular(size: 14))
+                        .foregroundStyle(Color(hexCode: "A76545"))
+                }
+            }
+        }
+        .padding(.top, 10)
+        
+        VStack(spacing: 8) {
+            if vm.state.overview.events.isEmpty {
+                emptyEventView
+            } else {
+                ForEach(vm.state.overview.events.prefix(5)) { event in
+                    EventCard(event: event)
+                        .contextMenu {
+                            Button(role: .destructive) {
+                                Task {
+                                    await vm.deleteObject(.event(event.id))
+                                }
+                            } label: {
+                                Label {
+                                    Text("삭제").font(Font.pretendardRegular(size: 14))
+                                } icon: {
+                                    Image(systemName: "trash")
+                                }
+
+                            }
+                        }
+                }
+            }
+        }
+        .padding(.bottom, 16)
+    }
+    
+    @ViewBuilder
+    private var reminderListView: some View {
+        HStack {
+            Text("할 일")
+                .font(.pretendardBold(size: 17))
+                .foregroundStyle(.secondary)
+            Spacer()
+            
+            if vm.state.overview.reminders.count > 5 {
+                Button {
+                    showReminderSheet.toggle()
+                } label: {
+                    Text("전체 보기")
+                        .font(.jakartaRegular(size: 14))
+                        .foregroundStyle(Color(hexCode: "A76545"))
+                }
+            }
+        }
+        
+        VStack(spacing: 0) {
+            if vm.state.overview.reminders.isEmpty {
+                emptyReminderView
+            } else {
+                ForEach(vm.state.overview.reminders.prefix(5)) { rem in
+                    ReminderCard(reminder: rem) {
+                        Task { await vm.toggleReminder(id: rem.id) }
+                    }
+                    .contextMenu {
+                        Button(role: .destructive) {
+                            Task {
+                                await vm.deleteObject(.reminder(rem.id))
+                            }
+                        } label: {
+                            Label {
+                                Text("삭제")
+                                    .font(Font.pretendardRegular(size: 14))
+                            } icon: {
+                                Image(systemName: "trash")
+                            }
+
+                        }
+                    }
+                    
+                    if vm.state.overview.reminders.prefix(5).last != rem {
+                        Divider()
+                            .padding(.horizontal, 16)
+                            .background(Color.gray.opacity(0.1))
+                    }
+                }
+            }
+        }
+        .padding(.vertical, 6)
+        .background(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(Color(hexCode: "C2966B").opacity(0.09))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color(hexCode: "C2966B").opacity(0.5),
+                           lineWidth: 1)
+        )
+    }
+    
     
     private var addButton: some ToolbarContent {
         ToolbarItem(placement: .navigationBarTrailing) {
@@ -241,7 +258,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
             }
         }
     }
-    
+
     
     private var dateView: some ToolbarContent {
         let dateStr = DateFormatterFactory.koreanDateWithDayFormatter().string(from: vm.today)
@@ -290,12 +307,15 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
         HStack {
             Spacer()
             VStack(spacing: 20) {
-                Spacer()
-                Image(systemName: "exclamationmark.triangle.fill")
+                Image(systemName: "calendar.badge.exclamationmark")
                     .font(.system(size: 40))
                     .foregroundColor(.orange)
                 
-                Text("캘린더·미리알림 접근 권한이 꺼져 있어\n앱을 사용할 수 없습니다.")
+                Text("오늘의 일정과 할 일을 보려면")
+                    .multilineTextAlignment(.center)
+                    .font(.pretendardRegular(size: 16))
+                
+                Text("캘린더와 미리알림 접근 권한이 필요해요.")
                     .multilineTextAlignment(.center)
                     .font(.pretendardRegular(size: 16))
                 
@@ -305,10 +325,12 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                     }
                 }
                 .buttonStyle(.borderedProminent)
-                Spacer()
             }
             Spacer()
         }
+        .padding(20)
+        .background(Color.gray.opacity(0.1))
+        .cornerRadius(12)
     }
     
 }
