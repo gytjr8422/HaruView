@@ -92,6 +92,12 @@ final class DIContainer {
                              deleteObject: DeleteObjectUseCase(events: eventKitRepository, reminders: eventKitRepository),
                              reminderRepository: eventKitRepository)
     }
+    
+    // MARK: - Repositories
+    func makeWeatherRepo() -> WeatherRepositoryProtocol {
+        WeatherKitRepository(service: WeatherKitService(),
+                             locationProvider: { try await LocationProvider.shared.current()})
+    }
 }
 
 private struct DIKey: EnvironmentKey {
