@@ -87,7 +87,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
         } else {
             ScrollView(showsIndicators: false) {
                 VStack {
-                    WeatherCard(weather: vm.state.overview.weather)
+                    WeatherCard(snapshot: vm.state.overview.weather)
                         .padding(.bottom, 10)
                     
                     if permission.isAllGranted {
@@ -335,25 +335,6 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
         .cornerRadius(12)
     }
     
-}
-
-
-private struct WeatherCard: View {
-    let weather: Weather
-    
-    var body: some View {
-        HStack {
-            Image(systemName: iconName(for: weather.condition))
-            Text("\(weather.temperature.value, specifier: "%.0f")°C – \(weather.condition.rawValue)")
-        }
-        .padding(16)
-        .frame(maxWidth: .infinity)
-        .background(Color(.secondarySystemBackground)).cornerRadius(12)
-    }
-    
-    private func iconName(for condition: Weather.Condition) -> String {
-        switch condition { case .clear: "sun.max.fill"; case .cloudy: "cloud.fill"; case .rain: "cloud.rain.fill"; case .snow: "snow"; case .thunder: "cloud.bolt.rain.fill" }
-    }
 }
 
 private struct ToastView: View {

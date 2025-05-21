@@ -23,7 +23,7 @@ protocol ReminderRepositoryProtocol {
 }
 
 protocol WeatherRepositoryProtocol {
-    func fetchWeather() async -> Result<Weather, TodayBoardError>
+    func fetchWeather() async -> Result<WeatherSnapshot, TodayBoardError>
 }
 
 // MARK: - DTOs
