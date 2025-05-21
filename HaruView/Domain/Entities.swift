@@ -35,7 +35,6 @@ struct WeatherSnapshot: Equatable {
     let humidity:        Double               // 0–1
     let precipitation:   Double               // mm/h
     let windSpeed:       Double               // m/s
-    let airQualityIndex: Int?                 // 0–500
     let condition:       Condition            // 상위 카테고리
     let symbolName:      String               // WeatherKit 원본
     let updatedAt:       Date
@@ -195,7 +194,6 @@ struct TodayOverview: Equatable {
             humidity: 0.65,
             precipitation: 0.0,
             windSpeed: 3.2,
-            airQualityIndex: 42,
             condition: .clear,
             symbolName: "sun.max",
             updatedAt: Date()

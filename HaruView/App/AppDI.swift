@@ -115,7 +115,6 @@ private struct MockWeatherRepository: WeatherRepositoryProtocol {
             humidity: 0.65,              // 65% 습도
             precipitation: 0.0,          // 강수량 0mm
             windSpeed: 3.2,              // 초속 3.2m 바람
-            airQualityIndex: 42,         // 공기질 지수 42 (보통)
             condition: .mostlyClear,     // 대체로 맑음
             symbolName: "sun.max",       // SF Symbol 이름
             updatedAt: Date()            // 현재 시간
