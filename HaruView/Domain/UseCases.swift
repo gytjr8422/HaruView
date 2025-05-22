@@ -10,32 +10,29 @@ import EventKit
 
 // MARK: ‑ UseCases
 
-/// 통합 홈 카드 데이터를 제공하는 유스케이스.
+/// 일정/미리알림 카드 데이터를 제공하는 유스케이스.
 struct FetchTodayOverviewUseCase {
-    private let events: EventRepositoryProtocol
+    private let events:    EventRepositoryProtocol
     private let reminders: ReminderRepositoryProtocol
-    private let weather: WeatherRepositoryProtocol
-    
-    init(events: EventRepositoryProtocol, reminders: ReminderRepositoryProtocol, weather: WeatherRepositoryProtocol) {
-        self.events = events
+
+    init(events: EventRepositoryProtocol,
+         reminders: ReminderRepositoryProtocol) {
+        self.events    = events
         self.reminders = reminders
-        self.weather = weather
     }
-    
+
     func callAsFunction() async -> Result<TodayOverview, TodayBoardError> {
-        // 동시 작업 시작
-        guard EKEventStore.authorizationStatus(for: .event) == .fullAccess &&
-                EKEventStore.authorizationStatus(for: .reminder) == .fullAccess
+        guard EKEventStore.authorizationStatus(for: .event)    == .fullAccess,
+              EKEventStore.authorizationStatus(for: .reminder) == .fullAccess
         else { return .failure(.accessDenied) }
-        
-        async let eRes = self.events.fetchEvent()
-        async let rRes = self.reminders.fetchReminder()
-        async let wRes = self.weather.fetchWeather()
-        
-        switch (await eRes, await rRes, await wRes) {
-        case let (.success(e), .success(r), .success(w)):
-            return .success(.init(events: e, reminders: r, weather: w))
-        case (.failure(let err), _, _), (_, .failure(let err), _), (_, _, .failure(let err)):
+
+        async let eRes = events.fetchEvent()
+        async let rRes = reminders.fetchReminder()
+
+        switch (await eRes, await rRes) {
+        case let (.success(e), .success(r)):
+            return .success(.init(events: e, reminders: r))
+        case (.failure(let err), _), (_, .failure(let err)):
             return .failure(err)
         }
     }
@@ -77,6 +74,16 @@ struct AddReminderUseCase {
     
     func callAsFunction(_ input: ReminderInput) async -> Result<Void, TodayBoardError> {
         await repo.add(input)
+    }
+}
+
+struct FetchTodayWeatherUseCase {
+    private let repo: WeatherRepositoryProtocol
+    
+    init(repo: WeatherRepositoryProtocol) { self.repo = repo }
+
+    func callAsFunction() async -> Result<TodayWeather, TodayBoardError> {
+        await repo.fetchWeather()
     }
 }
 

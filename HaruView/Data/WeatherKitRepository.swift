@@ -10,22 +10,29 @@ import CoreLocation
 import WeatherKit
 
 struct WeatherKitRepository: WeatherRepositoryProtocol {
-   private let service: WeatherKitService
-   private let locProvider: () async throws -> CLLocation
 
-   init(service: WeatherKitService = WeatherKitService(),
-               locationProvider: @escaping () async throws -> CLLocation) {
-       self.service = service
-       self.locProvider = locationProvider
-   }
+    let service: WeatherKitService
+    let locationProvider: () async throws -> CLLocation
 
-   func fetchWeather() async -> Result<WeatherSnapshot, TodayBoardError> {
-       do {
-           let loc = try await locProvider()
-           let snap = try await service.snapshot(for: loc)
-           return .success(snap)
-       } catch {
-           return .failure(.networkError)
-       }
-   }
+    /// 서울 시청(37.5665, 126.9780) 좌표
+    private let seoul = CLLocation(latitude: 37.5665, longitude: 126.9780)
+
+    func fetchWeather() async -> Result<TodayWeather, TodayBoardError> {
+        do {
+            let loc           = try await locationProvider()
+            let (snap, place) = try await service.snapshotWithPlace(for: loc)
+            print("🌤 temp=\(snap.temperature)°C  place=\(place)")
+            return .success(.init(snapshot: snap, placeName: place))
+
+        } catch {
+            do {
+                let (snap, _) = try await service.snapshotWithPlace(for: seoul)
+                print("🌤 temp=\(snap.temperature)°C  place=서울이다!!")
+                return .success(.init(snapshot: snap, placeName: "서울"))
+            } catch {
+                print("실패!!!!!!!")
+                return .failure(.networkError)
+            }
+        }
+    }
 }

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct WeatherCard: View {
     let snapshot: WeatherSnapshot
+    let place: String
     
     // 배경색에 따라 적절한 전경색 반환
     private var foregroundColor: Color {
@@ -60,6 +61,8 @@ struct WeatherCard: View {
 
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 2) {
+                    Text(place)
+                        .font(.pretendardBold(size: 15))
                     Image(systemName: snapshot.symbolName)
                         .font(.system(size: 36, weight: .light))
                     Text(snapshot.condition.rawValue)
@@ -93,5 +96,5 @@ struct WeatherCard: View {
         condition: .mostlyClear,     // 대체로 맑음
         symbolName: "sun.max",       // SF Symbol 이름
         updatedAt: Date()            // 현재 시간
-    ))
+    ), place: " ")
 }

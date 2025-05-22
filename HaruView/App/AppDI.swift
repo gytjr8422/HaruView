@@ -17,9 +17,11 @@ final class DIContainer {
     lazy var eventKitService = EventKitService()
     private lazy var eventKitRepository = EventKitRepository(service: eventKitService)
     
-    // TODO:
-    private lazy var weatherRepository = MockWeatherRepository()
-
+    private lazy var weatherRepository: WeatherRepositoryProtocol = {
+        WeatherKitRepository(service: WeatherKitService(),
+                             locationProvider: { try await LocationProvider.shared.current() })
+    }()
+    
     
     // MARK: - 권한 요청
     @MainActor
@@ -38,8 +40,7 @@ final class DIContainer {
     // MARK: - Use Cases
     func makeFetchTodayOverViewUseCase() -> FetchTodayOverviewUseCase {
         FetchTodayOverviewUseCase(events: eventKitRepository,
-                                  reminders: eventKitRepository,
-                                  weather: weatherRepository)
+                                  reminders: eventKitRepository)
     }
     
     func makeAddEventUseCase() -> AddEventUseCase {
@@ -59,10 +60,16 @@ final class DIContainer {
         ToggleReminderUseCase(repo: eventKitRepository)
     }
     
+    func makeFetchTodayWeatherUseCase() -> FetchTodayWeatherUseCase {
+        FetchTodayWeatherUseCase(repo: weatherRepository)
+    }
+
+    
     // MARK: - ViewModels
     @MainActor
     func makeHomeVM() -> HomeViewModel {
-        HomeViewModel(fetchToday: makeFetchTodayOverViewUseCase(),
+        HomeViewModel(fetchData: makeFetchTodayOverViewUseCase(),
+                      fetchWeather: makeFetchTodayWeatherUseCase(),
                       deleteObject: makeDeleteEventUseCase(),
                       reminderRepo: eventKitRepository,
                       service: eventKitService)
@@ -92,12 +99,6 @@ final class DIContainer {
                              deleteObject: DeleteObjectUseCase(events: eventKitRepository, reminders: eventKitRepository),
                              reminderRepository: eventKitRepository)
     }
-    
-    // MARK: - Repositories
-    func makeWeatherRepo() -> WeatherRepositoryProtocol {
-        WeatherKitRepository(service: WeatherKitService(),
-                             locationProvider: { try await LocationProvider.shared.current()})
-    }
 }
 
 private struct DIKey: EnvironmentKey {
@@ -115,15 +116,16 @@ extension EnvironmentValues {
 // MARK: - Mock WeatherRepository (placeholder)
 
 private struct MockWeatherRepository: WeatherRepositoryProtocol {
-    func fetchWeather() async -> Result<WeatherSnapshot, TodayBoardError> {
-        .success(WeatherSnapshot(
+    func fetchWeather() async -> Result<TodayWeather, TodayBoardError> {
+        .success(TodayWeather(snapshot: WeatherSnapshot(
             temperature: 23.5,           // 섭씨 23.5도
             humidity: 0.65,              // 65% 습도
             precipitation: 0.0,          // 강수량 0mm
             windSpeed: 3.2,              // 초속 3.2m 바람
             condition: .mostlyClear,     // 대체로 맑음
             symbolName: "sun.max",       // SF Symbol 이름
-            updatedAt: Date()            // 현재 시간
-        ))
+            updatedAt: Date()),          // 현재 시간
+            placeName: "")
+        )
     }
 }

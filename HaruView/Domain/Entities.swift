@@ -170,36 +170,22 @@ extension WeatherSnapshot.Condition {
 
 
 
-// MARK: - 한눈 요약
+// MARK: - 한눈 요약(일정/미리알림)
 struct TodayOverview: Equatable {
     let events: [Event]
     var reminders: [Reminder]
-    let weather: WeatherSnapshot
     
     static let placeholder = TodayOverview(
-        events: [Event(id: "1111", title: "WWDC 컨퍼런스 참석", start: Calendar.current.startOfDay(for: Date()), end: Date.at(hour: 23, minute: 59)!, calendarTitle: "집", calendarColor: CGColor(gray: 0.9, alpha: 0.9), location: "Apple Campus"),
-                 Event(id: "1113", title: "운동", start: Date(), end: Date(), calendarTitle: "운동장", calendarColor: CGColor(gray: 0.9, alpha: 0.9), location: ""),
-                 Event(id: "1115", title: "코딩", start: Date(), end: Date(), calendarTitle: "집", calendarColor: CGColor(gray: 0.9, alpha: 0.9), location: ""),
-                 Event(id: "1116", title: "공부하기", start: Date(), end: Date(), calendarTitle: "집", calendarColor: CGColor(gray: 0.9, alpha: 0.9), location: ""),
-                 Event(id: "1117", title: "친구 만나기", start: Date(), end: Date(), calendarTitle: "카페", calendarColor: CGColor(gray: 0.9, alpha: 0.9), location: ""),
-                 Event(id: "1118", title: "재택근무", start: Date(), end: Date(), calendarTitle: "집", calendarColor: CGColor(gray: 0.9, alpha: 0.9), location: "")],
-        reminders: [Reminder(id: "1112", title: "원두 주문하기", due: nil, isCompleted: false, priority: 0),
-                    Reminder(id: "1114", title: "약국 가기", due: Date(), isCompleted: true, priority: 1),
-                    Reminder(id: "1119", title: "미리보기", due: Date(), isCompleted: false, priority: 9),
-                    Reminder(id: "1120", title: "책 읽기", due: nil, isCompleted: false, priority: 0),
-                    Reminder(id: "1121", title: "병원 가기", due: Date(), isCompleted: false, priority: 5),
-                    Reminder(id: "1122", title: "설거지 하기", due: nil, isCompleted: false, priority: 0)],
-        weather: .init(
-            temperature: 23.5,
-            humidity: 0.65,
-            precipitation: 0.0,
-            windSpeed: 3.2,
-            condition: .clear,
-            symbolName: "sun.max",
-            updatedAt: Date()
-        )
+        events: [],
+        reminders: []
     )
 }
+
+struct TodayWeather {
+    let snapshot:  WeatherSnapshot
+    let placeName: String
+}
+
 
 extension Date {
     /// 주어진 날짜(기본: 오늘)의 특정 시각을 생성

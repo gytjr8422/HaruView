@@ -11,6 +11,8 @@ import Combine
 protocol HomeViewModelProtocol: ObservableObject {
     var state: HomeState { get }
     var today: Date { get }
+    var weather: TodayWeather? { get }
+    var weatherError: TodayBoardError? { get }
     func load()
     func refresh(_ kind: RefreshKind)
     func toggleReminder(id: String) async
@@ -25,18 +27,22 @@ enum RefreshKind {
 final class HomeViewModel: ObservableObject, @preconcurrency HomeViewModelProtocol {
     @Published private(set) var state = HomeState()
     @Published private(set) var today: Date = Date()
+    @Published var weather: TodayWeather?
+    @Published var weatherError: TodayBoardError?
     
     private var cancellable: AnyCancellable?
     private var cancellables = Set<AnyCancellable>()
-    private let fetchToday: FetchTodayOverviewUseCase
+    private let fetchData: FetchTodayOverviewUseCase
+    private let fetchWeather: FetchTodayWeatherUseCase
     private let deleteObject: DeleteObjectUseCase
     private let reminderRepo: ReminderRepositoryProtocol
     private let service:   EventKitService
     private var task: Task<Void, Never>?
     
     
-    init(fetchToday: FetchTodayOverviewUseCase, deleteObject: DeleteObjectUseCase, reminderRepo: ReminderRepositoryProtocol, service: EventKitService) {
-        self.fetchToday = fetchToday
+    init(fetchData: FetchTodayOverviewUseCase, fetchWeather: FetchTodayWeatherUseCase, deleteObject: DeleteObjectUseCase, reminderRepo: ReminderRepositoryProtocol, service: EventKitService) {
+        self.fetchData = fetchData
+        self.fetchWeather = fetchWeather
         self.deleteObject = deleteObject
         self.reminderRepo = reminderRepo
         self.service = service
@@ -46,34 +52,33 @@ final class HomeViewModel: ObservableObject, @preconcurrency HomeViewModelProtoc
     
     /// 최초 또는 full reload
     func load() {
-        task?.cancel()
         state.isLoading = true
-        state.error = nil
-        
-        task = Task { [weak self] in
-            guard let self else { return }
-            let result = await fetchToday()
-            await MainActor.run {
-                self.state.isLoading = false
-                switch result {
-                case .success(let overview):
-                    self.state.overview = overview
-                case .failure(let err):
-                    self.state.error = err
-                }
+        Task {
+            switch await fetchData() {
+            case .success(let ov):
+                state.overview = ov
+            case .failure(let err):
+                state.error = err
+            }
+            state.isLoading = false
+        }
+        loadWeather()
+    }
+    
+    func loadWeather() {
+        Task {
+            switch await fetchWeather() {
+            case .success(let tw):
+                await MainActor.run { self.weather = tw }
+            case .failure(let err):
+                await MainActor.run { self.weatherError = err }
             }
         }
     }
     
     /// 시스템 EventKit 변경 등 외부 알림으로 호출
     func refresh(_ kind: RefreshKind = .userTap) {
-        Task {
-            let result = await fetchToday()
-            switch result {
-            case .success(let overview): state.overview = overview
-            case .failure(let err): state.error = err
-            }
-        }
+        load()
     }
     
     /// 날짜 감시 함수
