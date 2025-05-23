@@ -29,7 +29,6 @@ struct HaruViewApp: App {
                     guard !didBootstrap else { return }
                     didBootstrap = true
                     await DIContainer.shared.bootstrapPermissions()
-                    preloadInterstitalAd()
                 }
                 .onOpenURL { url in
                     handleDeepLink(url)
@@ -64,11 +63,6 @@ struct HaruViewApp: App {
         if url.scheme == "haruview", url.host == "add" {
             showAdd = true
         }
-    }
-    
-    // MARK: - Placeholder for Ad Preload
-    private func preloadInterstitalAd() {
-        /* TODO: integrate GoogleMobileAds SDK */
     }
 }
 

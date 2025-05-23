@@ -89,7 +89,8 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                 VStack {
                     if let tw = vm.weather {
                         WeatherCard(snapshot: tw.snapshot, place: tw.placeName)
-                            .padding(.vertical, 10)
+                            .padding(.top, 5)
+                            .padding(.bottom, 10)
                     }
                     
                     if permission.isAllGranted {
@@ -111,10 +112,8 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
         // 네이티브 광고
         NativeAdBanner()
             .frame(maxWidth: .infinity)
-            .frame(height: 60)
-            .padding(.top, 10)
-            .padding(.bottom, 10)
-            .padding(.horizontal, 10)
+            .frame(height: 65)
+            .padding(10)
             .background(
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(Color(hexCode: "6E5C49").opacity(0.2), lineWidth: 1)

@@ -46,27 +46,30 @@ final class HomeViewModel: ObservableObject, @preconcurrency HomeViewModelProtoc
         self.deleteObject = deleteObject
         self.reminderRepo = reminderRepo
         self.service = service
-//        startDateWatcher()
+        startDateWatcher()
         bindStoreChange()
     }
     
     /// 최초 또는 full reload
     func load() {
-        state.isLoading = true
-        Task {
+        task?.cancel() // 기존 task 취소
+        task = Task {
+            state.isLoading = true
+            defer { state.isLoading = false }
+            
             switch await fetchData() {
             case .success(let ov):
                 state.overview = ov
             case .failure(let err):
                 state.error = err
             }
-            state.isLoading = false
         }
         loadWeather()
     }
     
     func loadWeather() {
-        Task {
+        task?.cancel() // 기존 task 취소
+        task = Task {
             switch await fetchWeather() {
             case .success(let tw):
                 await MainActor.run { self.weather = tw }
@@ -105,20 +108,23 @@ final class HomeViewModel: ObservableObject, @preconcurrency HomeViewModelProtoc
     
     func toggleReminder(id: String) async {
         let res = await reminderRepo.toggle(id: id)
-        guard case .success = res else { return }
-        
-        if let idx = state.overview.reminders.firstIndex(where: { $0.id == id }) {
-            var updated = state.overview.reminders[idx]
-            updated = Reminder(id: updated.id,
-                               title: updated.title,
-                               due: updated.due,
-                               isCompleted: !updated.isCompleted,
-                               priority: updated.priority)
-            
-            withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
-                state.overview.reminders[idx] = updated
-                state.overview.reminders.sort(by: reminderSortRule)
+        switch res {
+        case .success:
+            if let idx = state.overview.reminders.firstIndex(where: { $0.id == id }) {
+                var updated = state.overview.reminders[idx]
+                updated = Reminder(id: updated.id,
+                                 title: updated.title,
+                                 due: updated.due,
+                                 isCompleted: !updated.isCompleted,
+                                 priority: updated.priority)
+                
+                withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
+                    state.overview.reminders[idx] = updated
+                    state.overview.reminders.sort(by: reminderSortRule)
+                }
             }
+        case .failure(let error):
+            state.error = error
         }
     }
     

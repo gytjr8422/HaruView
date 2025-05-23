@@ -8,8 +8,6 @@
 	<string>앱에서 캘린더에 접근하기 위해 권한이 필요합니다.</string>
 	<key>NSRemindersFullAccessUsageDescription</key>
 	<string>앱에서 미리알림에 접근하기 위해 권한이 필요합니다.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>날씨 정보를 가져오기 위해 위치 정보가 필요합니다.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>RobotoSerif_28pt-Bold.ttf</string>
