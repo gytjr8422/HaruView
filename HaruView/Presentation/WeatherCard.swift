@@ -11,78 +11,95 @@ struct WeatherCard: View {
     let snapshot: WeatherSnapshot
     let place: String
     
-    // 배경색에 따라 적절한 전경색 반환
-    private var foregroundColor: Color {
-        let isDarkBackground = isDarkBackground(for: snapshot.condition)
-        return isDarkBackground ? .white : .black
+    private var foreground: Color {
+        isDarkBackground ? .white : .black
     }
-    
-    // 어두운 배경인지 확인하는 함수
-    private func isDarkBackground(for condition: WeatherSnapshot.Condition) -> Bool {
-        switch condition {
-        case .clear, .mostlyClear:
-            // 시간에 따라 배경이 다름
-            let calendar = Calendar.current
-            let hour = calendar.component(.hour, from: snapshot.updatedAt)
-            let isDay = hour >= 6 && hour < 18
-            let isEdge = (hour >= 6 && hour < 7) || (hour >= 17 && hour < 18)
-            
-            if isEdge {
-                return false // 일출/일몰 시간은 밝은 배경
-            }
-            return !isDay // 밤에는 어두운 배경
-            
-        case .partlyCloudy, .mostlyCloudy:
-            // 시간에 따라 배경이 다름
-            let calendar = Calendar.current
-            let hour = calendar.component(.hour, from: snapshot.updatedAt)
-            let isDay = hour >= 6 && hour < 18
-            return !isDay // 밤에는 어두운 배경
-            
-        case .thunderstorms, .hurricane, .tropicalStorm:
-            return true // 항상 어두운 배경
-            
-        case .rain, .drizzle, .showers:
-            // 시간에 따라 배경이 다름
-            let calendar = Calendar.current
-            let hour = calendar.component(.hour, from: snapshot.updatedAt)
-            let isDay = hour >= 6 && hour < 18
-            return !isDay // 밤에는 어두운 배경
-            
-        default:
-            return false // 나머지는 밝은 배경으로 간주
+    private var isDarkBackground: Bool {
+        let h = Calendar.current.component(.hour, from: snapshot.updatedAt)
+        let isDay  = (6..<18).contains(h)
+        let isEdge = (6..<7).contains(h) || (17..<18).contains(h)
+
+        switch snapshot.condition {
+        case .clear, .mostlyClear: return !(isDay || isEdge)
+        case .partlyCloudy, .mostlyCloudy,
+             .rain, .drizzle, .showers:        return !isDay
+        case .thunderstorms:                   return true
+        default:                               return false
         }
     }
 
+    // MARK: - Body
     var body: some View {
         ZStack {
-            snapshot.condition.background(for: snapshot.updatedAt)
+            snapshot.condition
+                .background(for: snapshot.updatedAt)
                 .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
 
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(place)
-                        .font(.pretendardBold(size: 15))
-                    Image(systemName: snapshot.symbolName)
-                        .font(.system(size: 36, weight: .light))
-                    Text(snapshot.condition.rawValue)
-                        .font(.pretendardBold(size: 18))
-                }
-                Spacer()
-                VStack(alignment: .trailing, spacing: 4) {
-                    Text("\(snapshot.temperature, specifier: "%.1f")°C")
-                        .font(.system(size: 36, weight: .semibold))
-                    HStack(spacing: 12) {
-                        Label("\(snapshot.humidity*100, specifier:"%.0f")%", systemImage: "humidity")
-                        Label("\(snapshot.windSpeed, specifier:"%.1f")m/s", systemImage: "wind")
+            VStack(alignment: .leading, spacing: 16) {
+
+                // 상단 요약
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text(place)
+                            .font(.pretendardBold(size: 15))
+                        VStack {
+                            Spacer()
+                            HStack(alignment: .center) {
+                                Image(systemName: snapshot.symbolName)
+                                    .font(.system(size: 36, weight: .light))
+                                Text(snapshot.condition.localizedDescription)
+                                    .font(.pretendardBold(size: 18))
+                            }
+                            Spacer()
+                        }
                     }
-                    .font(.pretendardRegular(size: 13))
+                    Spacer()
+                    VStack(alignment: .trailing, spacing: 2) {
+                        Text("\(snapshot.temperature, specifier: "%.0f")°")
+                            .font(.system(size: 36, weight: .semibold))
+                        Text("최고: \(snapshot.tempMax, specifier: "%.0f")°  최저: \(snapshot.tempMin, specifier: "%.0f")°")
+                            .font(.pretendardRegular(size: 13))
+                        HStack {
+                            Text("습도: \(snapshot.humidity*100 , specifier: "%.0f")%")
+                                .font(.pretendardRegular(size: 13))
+                            Text("바람: \(snapshot.windSpeed, specifier: "%.0f")m/s")
+                                .font(.pretendardRegular(size: 13))
+                        }
+                        
+                    }
+                }
+
+                // 6-시간 예보
+                if !snapshot.hourlies.isEmpty {
+                    HStack {
+                        ForEach(snapshot.hourlies) { h in
+                            VStack(spacing: 4) {
+                                Text(hourLabel(h.date))
+                                    .font(.caption2)
+                                Image(systemName: h.symbol)
+                                    .resizable() // 크기 조절을 위해 필요
+                                    .scaledToFit() // 비율 유지
+                                    .frame(height: 15)
+                                Text("\(h.temperature, specifier: "%.0f")°")
+                                    .font(.caption2)
+                            }
+                            .frame(maxWidth: .infinity)
+                        }
+                    }
                 }
             }
-            .foregroundStyle(foregroundColor) // 계산된 전경색 적용
+            .foregroundStyle(foreground)
             .padding(20)
         }
-        .frame(maxWidth: .infinity, minHeight: 120)
+        .frame(maxWidth: .infinity, minHeight: 160)
+    }
+
+    // MARK: - Formatter
+    private func hourLabel(_ date: Date) -> String {
+        let fmt = DateFormatter()
+        fmt.locale = Locale(identifier: "ko_KR")
+        fmt.dateFormat = "a h시"           // “오후 3시”
+        return fmt.string(from: date)
     }
 }
 
@@ -95,6 +112,9 @@ struct WeatherCard: View {
         windSpeed: 3.2,              // 초속 3.2m 바람
         condition: .mostlyClear,     // 대체로 맑음
         symbolName: "sun.max",       // SF Symbol 이름
-        updatedAt: Date()            // 현재 시간
+        updatedAt: Date(),           // 현재 시간
+        hourlies: [],
+        tempMax: 27,
+        tempMin: 16
     ), place: " ")
 }

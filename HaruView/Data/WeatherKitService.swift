@@ -10,64 +10,86 @@ import CoreLocation
 
 final class WeatherKitService {
 
-    private let ws = WeatherService.shared
-    private let geocoder = CLGeocoder()
-    
-    // 최대 재시도 횟수
-    private let maxRetries = 3
-    // 재시도 간격 (초)
-    private let retryInterval: TimeInterval = 2
+    private let ws        = WeatherService.shared
+    private let geocoder  = CLGeocoder()
 
-    fileprivate func snapshot(for location: CLLocation) async throws -> WeatherSnapshot {
+    // 재시도
+    private let maxRetries      = 3
+    private let retryInterval   : TimeInterval = 2      // 초
+
+    fileprivate func snapshot(for loc: CLLocation) async throws -> WeatherSnapshot {
+
         var lastError: Error?
-        
-        // 최대 3번까지 재시도
+
         for attempt in 1...maxRetries {
             do {
-                let cur = try await ws.weather(for: location, including: .current)
+                // 동시 요청 → current, hourly, daily
+                async let cur  = ws.weather(for: loc, including: .current)
+                async let hrly = ws.weather(for: loc, including: .hourly)
+                async let daily = ws.weather(for: loc, including: .daily)
+
+                let (current, hourly, dailyForecast) = try await (cur, hrly, daily)
+
+                // 6시간 예보
+                let next6 = hourly.forecast.prefix(6).map {
+                    HourlyForecast(date: $0.date,
+                                   symbol: $0.symbolName,
+                                   temperature: $0.temperature.converted(to: .celsius).value)
+                }
+
+                // 최고·최저 (오늘)
+                let today = dailyForecast.forecast.first
+                let tMax = today?.highTemperature
+                    .converted(to: .celsius).value ?? current.temperature.value
+                let tMin = today?.lowTemperature
+                    .converted(to: .celsius).value ?? current.temperature.value
+
                 return WeatherSnapshot(
-                    temperature: cur.temperature.converted(to: .celsius).value,
-                    humidity: cur.humidity,
-                    precipitation: cur.precipitationIntensity.value,
-                    windSpeed: cur.wind.speed.converted(to: .metersPerSecond).value,
-                    condition: .init(apiName: cur.condition.description),
-                    symbolName: cur.symbolName,
-                    updatedAt: cur.date)
+                    temperature: current.temperature.converted(to: .celsius).value,
+                    humidity:    current.humidity,
+                    precipitation: current.precipitationIntensity.value,     // mm/h
+                    windSpeed:   current.wind.speed
+                        .converted(to: .metersPerSecond).value,
+                    condition:   .init(apiName: current.condition.description),
+                    symbolName:  current.symbolName,
+                    updatedAt:   current.date,
+                    hourlies:    Array(next6),
+                    tempMax:     tMax,
+                    tempMin:     tMin
+                )
             } catch {
                 lastError = error
                 if attempt < maxRetries {
-                    try await Task.sleep(nanoseconds: UInt64(retryInterval * 1_000_000_000))
+                    try await Task.sleep(for: .seconds(retryInterval))
                 }
             }
         }
-        
         throw WeatherError.fetchFailed(lastError)
     }
 
-    func snapshotWithPlace(for location: CLLocation) async throws -> (WeatherSnapshot, String) {
-        async let snap = snapshot(for: location)
-        async let placemark = geocoder.reverseGeocodeLocation(location).first
+    // MARK: snapshot + 지역명
+    func snapshotWithPlace(for loc: CLLocation) async throws -> (WeatherSnapshot,String) {
 
-        let (weather, pm) = try await (snap, placemark)
+        async let snap  = snapshot(for: loc)
+        async let place = geocoder.reverseGeocodeLocation(loc).first
 
-        // 지역명: 시/구, 동
-        let place = [pm?.locality, pm?.subLocality]
+        let (weather, pm) = try await (snap, place)
+
+        let name = [pm?.locality, pm?.subLocality]      // “도시 구/동”
             .compactMap { $0 }
             .joined(separator: " ")
-        
-        return (weather, place)
+
+        return (weather, name.isEmpty ? "알 수 없음" : name)
     }
-    
+
+    // MARK: - Error
     enum WeatherError: LocalizedError {
         case fetchFailed(Error?)
-        
         var errorDescription: String? {
             switch self {
-            case .fetchFailed(let error):
-                if let error = error {
-                    return "날씨 정보를 가져오는데 실패했습니다: \(error.localizedDescription)"
-                }
-                return "날씨 정보를 가져오는데 실패했습니다."
+            case .fetchFailed(let e):
+                return e == nil ? "날씨 정보를 가져오는데 실패했습니다."
+                                : "날씨 정보를 가져오는데 실패했습니다: \(e!.localizedDescription)"
             }
         }
     }

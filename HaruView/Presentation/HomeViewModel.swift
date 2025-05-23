@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import CoreLocation
 
 protocol HomeViewModelProtocol: ObservableObject {
     var state: HomeState { get }
@@ -23,89 +24,123 @@ enum RefreshKind {
     case userTap, storeChange
 }
 
+
 @MainActor
 final class HomeViewModel: ObservableObject, @preconcurrency HomeViewModelProtocol {
+
+    // MARK: - Published State
     @Published private(set) var state = HomeState()
-    @Published private(set) var today: Date = Date()
+    @Published private(set) var today = Date()
     @Published var weather: TodayWeather?
     @Published var weatherError: TodayBoardError?
-    
-    private var cancellable: AnyCancellable?
-    private var cancellables = Set<AnyCancellable>()
-    private let fetchData: FetchTodayOverviewUseCase
+
+    // MARK: - DI
+    private let fetchData:    FetchTodayOverviewUseCase
     private let fetchWeather: FetchTodayWeatherUseCase
     private let deleteObject: DeleteObjectUseCase
     private let reminderRepo: ReminderRepositoryProtocol
-    private let service:   EventKitService
-    private var task: Task<Void, Never>?
-    
-    
-    init(fetchData: FetchTodayOverviewUseCase, fetchWeather: FetchTodayWeatherUseCase, deleteObject: DeleteObjectUseCase, reminderRepo: ReminderRepositoryProtocol, service: EventKitService) {
-        self.fetchData = fetchData
+    private let service:      EventKitService
+
+    // MARK: - Tasks & Combine
+    private var dataTask:    Task<Void,Never>?
+    private var weatherTask: Task<Void,Never>?
+    private var cancellables = Set<AnyCancellable>()
+
+    // MARK: - Init
+    init(fetchData:    FetchTodayOverviewUseCase,
+         fetchWeather: FetchTodayWeatherUseCase,
+         deleteObject: DeleteObjectUseCase,
+         reminderRepo: ReminderRepositoryProtocol,
+         service:      EventKitService) {
+
+        self.fetchData    = fetchData
         self.fetchWeather = fetchWeather
         self.deleteObject = deleteObject
         self.reminderRepo = reminderRepo
-        self.service = service
+        self.service      = service
+
         startDateWatcher()
         bindStoreChange()
+        bindLocationStatus()
     }
-    
-    /// 최초 또는 full reload
+
+    // MARK: - Load
+    /// 최초 호출
     func load() {
-        task?.cancel() // 기존 task 취소
-        task = Task {
-            state.isLoading = true
-            defer { state.isLoading = false }
-            
-            switch await fetchData() {
-            case .success(let ov):
-                state.overview = ov
-            case .failure(let err):
-                state.error = err
-            }
-        }
+        loadOverview()
         loadWeather()
     }
-    
+
+    private func loadOverview() {
+        dataTask?.cancel()
+        dataTask = Task {
+            state.isLoading = true
+            defer { state.isLoading = false }
+
+            switch await fetchData() {
+            case .success(let ov): state.overview = ov
+            case .failure(let err): state.error  = err
+            }
+        }
+    }
+
     func loadWeather() {
-        task?.cancel() // 기존 task 취소
-        task = Task {
+        weatherTask?.cancel()
+        weatherTask = Task {
             switch await fetchWeather() {
             case .success(let tw):
-                await MainActor.run { self.weather = tw }
+                await MainActor.run {
+                    weather = tw
+                    weatherError = nil
+                }
             case .failure(let err):
-                await MainActor.run { self.weatherError = err }
+                await MainActor.run { weatherError = err }
             }
         }
     }
-    
-    /// 시스템 EventKit 변경 등 외부 알림으로 호출
+
+    /// Pull-to-refresh, ScenePhase 등
     func refresh(_ kind: RefreshKind = .userTap) {
-        Task {
-            switch await fetchData() {
-            case .success(let ov):
-                state.overview = ov
-            case .failure(let err):
-                state.error = err
-            }
-        }
+        loadOverview()
+        loadWeather()
     }
-    
-    /// 날짜 감시 함수
+
+    // MARK: - Bindings
+    private func bindLocationStatus() {
+        LocationProvider.shared.$status
+            .removeDuplicates()
+            .sink { [weak self] status in
+                guard let self else { return }
+                switch status {
+                case .authorizedAlways, .authorizedWhenInUse,
+                     .denied, .restricted:
+                    self.loadWeather()            // 권한 변할 때마다
+                default: break
+                }
+            }
+            .store(in: &cancellables)
+    }
+
     private func startDateWatcher() {
-        cancellable = Timer
-            .publish(every: 60, on: .main, in: .common)
+        Timer.publish(every: 60, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in
                 guard let self else { return }
-                let now = Date()
-                if !Calendar.current.isDate(now, inSameDayAs: self.today) {
-                    self.today = now
-                    self.refresh()
+                if !Calendar.current.isDate(Date(), inSameDayAs: today) {
+                    today = Date(); refresh(.storeChange)
                 }
             }
+            .store(in: &cancellables)
     }
-    
+
+    private func bindStoreChange() {
+        service.changePublisher
+            .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
+            .sink { [weak self] in self?.refresh(.storeChange) }
+            .store(in: &cancellables)
+    }
+
+    // MARK: - Reminder
     func toggleReminder(id: String) async {
         let res = await reminderRepo.toggle(id: id)
         switch res {
@@ -141,14 +176,5 @@ final class HomeViewModel: ObservableObject, @preconcurrency HomeViewModelProtoc
         if a.isCompleted != b.isCompleted { return !a.isCompleted }       // 미완료 먼저
         let da = a.due ?? .distantFuture, db = b.due ?? .distantFuture
         return da != db ? da < db : a.title < b.title
-    }
-    
-    /// 데이터 변경 알림 함수
-    private func bindStoreChange() {
-        service.changePublisher
-            .debounce(for: .milliseconds(300), scheduler: RunLoop.main) // 과다 알림 완충
-            .receive(on: RunLoop.main)
-            .sink { [weak self] in self?.refresh(.storeChange) }
-            .store(in: &cancellables)
     }
 }

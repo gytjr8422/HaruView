@@ -124,7 +124,10 @@ private struct MockWeatherRepository: WeatherRepositoryProtocol {
             windSpeed: 3.2,              // 초속 3.2m 바람
             condition: .mostlyClear,     // 대체로 맑음
             symbolName: "sun.max",       // SF Symbol 이름
-            updatedAt: Date()),          // 현재 시간
+            updatedAt: Date(),
+            hourlies: [],
+            tempMax: 27,
+            tempMin: 17),          // 현재 시간
             placeName: "")
         )
     }
