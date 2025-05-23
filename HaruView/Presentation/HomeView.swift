@@ -89,7 +89,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                 VStack {
                     if let tw = vm.weather {
                         WeatherCard(snapshot: tw.snapshot, place: tw.placeName)
-                            .padding(.bottom, 10)
+                            .padding(.vertical, 10)
                     }
                     
                     if permission.isAllGranted {

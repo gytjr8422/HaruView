@@ -78,7 +78,14 @@ final class HomeViewModel: ObservableObject, @preconcurrency HomeViewModelProtoc
     
     /// 시스템 EventKit 변경 등 외부 알림으로 호출
     func refresh(_ kind: RefreshKind = .userTap) {
-        load()
+        Task {
+            switch await fetchData() {
+            case .success(let ov):
+                state.overview = ov
+            case .failure(let err):
+                state.error = err
+            }
+        }
     }
     
     /// 날짜 감시 함수

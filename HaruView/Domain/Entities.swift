@@ -30,7 +30,7 @@ struct Reminder: Identifiable, Equatable {
 
 
 // MARK: - 날씨
-struct WeatherSnapshot: Equatable {
+struct WeatherSnapshot: Codable, Equatable {
     let temperature:     Double               // °C
     let humidity:        Double               // 0–1
     let precipitation:   Double               // mm/h
@@ -39,7 +39,7 @@ struct WeatherSnapshot: Equatable {
     let symbolName:      String               // WeatherKit 원본
     let updatedAt:       Date
     
-    enum Condition: String {
+    enum Condition: String, Codable {
         case clear, mostlyClear, partlyCloudy, mostlyCloudy, cloudy
         case rain, drizzle, showers
         case snow, flurries
@@ -122,7 +122,7 @@ extension WeatherSnapshot.Condition {
             if isEdge {
                 return LinearGradient(colors: [hex("FFD6A5"), hex("FFB5A7")], startPoint: .top, endPoint: .bottom)
             }
-            return isDay ? LinearGradient(colors: [hex("FDF6E3")], startPoint: .top, endPoint: .bottom)
+            return isDay ? LinearGradient(colors: [hex("E1F3FF"), hex("A0D8EF")], startPoint: .top, endPoint: .bottom)
                          : LinearGradient(colors: [hex("1C1F33")], startPoint: .top, endPoint: .bottom)
         
         // 구름 관련 케이스
