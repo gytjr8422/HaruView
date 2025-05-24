@@ -56,7 +56,6 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                                 }
                             }
                             .onDisappear { vm.refresh(.storeChange) }
-                            .presentationDetents([.fraction(0.6)])
                         }
                     
                     

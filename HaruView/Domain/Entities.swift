@@ -212,6 +212,154 @@ extension WeatherSnapshot.Condition {
     }
 }
 
+extension WeatherSnapshot.Condition {
+    func symbolName(for date: Date = Date()) -> String {
+        let isDay = Calendar.current.component(.hour, from: date) >= 6 &&
+                    Calendar.current.component(.hour, from: date) < 18
+
+        switch self {
+        case .clear, .mostlyClear:
+            return isDay ? "sun.max" : "moon.stars"
+
+        case .partlyCloudy, .mostlyCloudy:
+            return isDay ? "cloud.sun" : "cloud.moon"
+
+        case .cloudy:
+            return "cloud"
+
+        case .rain, .showers, .drizzle:
+            return "cloud.rain"
+
+        case .snow, .flurries:
+            return "cloud.snow"
+
+        case .thunderstorms:
+            return "cloud.bolt.rain"
+
+        case .foggy:
+            return "cloud.fog"
+
+        case .haze:
+            return isDay ? "sun.haze" : "moon.haze"
+
+        case .smoke:
+            return "smoke"
+
+        case .windy, .breezy:
+            return "wind"
+
+        case .hot:
+            return "thermometer.sun"
+
+        case .cold:
+            return "thermometer.snowflake"
+
+        case .blizzard:
+            return "wind.snow"
+
+        case .hurricane, .tropicalStorm:
+            return "hurricane"
+        }
+    }
+}
+
+struct SymbolColorTheme {
+    let renderingMode: SymbolRenderingMode
+    let styles: [Color] // 순서대로 계층에 대응됨
+}
+
+extension WeatherSnapshot.Condition {
+    func symbolTheme(for date: Date = Date()) -> SymbolColorTheme {
+        switch self {
+        case .clear, .mostlyClear:
+            return .init(renderingMode: .monochrome,
+                         styles: [Color(hexCode: "FDB813")]) // 햇빛 노란색
+
+        case .partlyCloudy, .mostlyCloudy:
+            return .init(renderingMode: .palette,
+                         styles: [Color.gray, Color(hexCode: "FDB813")]) // 구름 + 해
+
+        case .cloudy:
+            return .init(renderingMode: .monochrome,
+                         styles: [Color(hexCode: "9CA3AF")])
+
+        case .rain, .drizzle, .showers:
+            return .init(renderingMode: .monochrome,
+                         styles: [Color(hexCode: "5DADE2")])
+
+        case .snow, .flurries:
+            return .init(renderingMode: .monochrome,
+                         styles: [Color(hexCode: "6EC1E4")])
+
+        case .thunderstorms:
+            return .init(renderingMode: .palette,
+                         styles: [Color.gray, Color(hexCode: "F4D03F"), Color(hexCode: "3498DB")]) // 구름, 번개, 비
+
+        case .foggy:
+            return .init(renderingMode: .monochrome,
+                         styles: [Color(hexCode: "AAB2BD")])
+
+        case .haze:
+            return .init(renderingMode: .monochrome,
+                         styles: [Color(hexCode: "F4C27A")])
+
+        case .smoke:
+            return .init(renderingMode: .monochrome,
+                         styles: [Color(hexCode: "B0B0B0")])
+
+        case .windy, .breezy:
+            return .init(renderingMode: .monochrome,
+                         styles: [Color(hexCode: "58D68D")])
+
+        case .hot:
+            return .init(renderingMode: .monochrome,
+                         styles: [Color(hexCode: "FF5733")]) // 붉은 오렌지
+
+        case .cold:
+            return .init(renderingMode: .monochrome,
+                         styles: [Color(hexCode: "3498DB")]) // 차가운 파랑
+
+        case .blizzard:
+            return .init(renderingMode: .monochrome,
+                         styles: [Color(hexCode: "AED6F1")])
+
+        case .hurricane, .tropicalStorm:
+            return .init(renderingMode: .monochrome,
+                         styles: [Color(hexCode: "5DADE2")])
+        }
+    }
+}
+
+extension String {
+    func withFillIfAvailable() -> String {
+        let fillableSymbols: Set<String> = [
+            "sun.max",
+            "moon.stars",
+            "cloud",
+            "cloud.sun",
+            "cloud.moon",
+            "cloud.rain",
+            "cloud.snow",
+            "cloud.bolt.rain",
+            "cloud.fog",
+            "cloud.drizzle",
+            "cloud.sun.rain",
+            "cloud.moon.rain",
+            "sun.haze",
+            "moon.haze",
+            "thermometer.sun",
+            "thermometer.snowflake",
+            "wind.snow",
+            "hurricane",
+            "smoke",
+            "wind"
+        ]
+        
+        guard !self.hasSuffix(".fill") else { return self }
+        let fillable: Set<String> = fillableSymbols
+        return fillable.contains(self) ? self + ".fill" : self
+    }
+}
 
 
 // MARK: - 한눈 요약(일정/미리알림)

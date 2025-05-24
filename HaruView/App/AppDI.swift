@@ -93,12 +93,6 @@ final class DIContainer {
         AddSheetViewModel(addEvent: makeAddEventUseCase(),
                           addReminder: makeAddReminderUseCase())
     }
-
-    func makeDetailVM(for item: DetailItem) -> DetailSheetViewModel {
-        DetailSheetViewModel(item: item,
-                             deleteObject: DeleteObjectUseCase(events: eventKitRepository, reminders: eventKitRepository),
-                             reminderRepository: eventKitRepository)
-    }
 }
 
 private struct DIKey: EnvironmentKey {

@@ -45,8 +45,12 @@ struct WeatherCard: View {
                         VStack {
                             Spacer()
                             HStack(alignment: .center) {
-                                Image(systemName: snapshot.symbolName)
-                                    .font(.system(size: 36, weight: .light))
+                                Image(systemName: snapshot.condition.symbolName(for: Date()).withFillIfAvailable())
+                                    .font(.system(size: 36))
+                                    .symbolRenderingMode(snapshot.condition.symbolTheme(for: Date()).renderingMode)
+                                    .foregroundStyle(snapshot.condition.symbolTheme(for: Date()).styles[0],
+                                                     snapshot.condition.symbolTheme(for: Date()).styles[safe: 1],
+                                                     snapshot.condition.symbolTheme(for: Date()).styles[safe: 2])
                                 Text(snapshot.condition.localizedDescription)
                                     .font(.pretendardBold(size: 18))
                             }
@@ -75,13 +79,15 @@ struct WeatherCard: View {
                         ForEach(snapshot.hourlies) { h in
                             VStack(spacing: 4) {
                                 Text(hourLabel(h.date))
-                                    .font(.caption2)
+                                    .font(.pretendardRegular(size: 11))
+                                    .lineLimit(1)
+                                    .fixedSize(horizontal: true, vertical: false) // 수평만 고정
                                 Image(systemName: h.symbol)
                                     .resizable() // 크기 조절을 위해 필요
                                     .scaledToFit() // 비율 유지
-                                    .frame(height: 15)
+                                    .frame(height: 16)
                                 Text("\(h.temperature, specifier: "%.0f")°")
-                                    .font(.caption2)
+                                    .font(.pretendardRegular(size: 11))
                             }
                             .frame(maxWidth: .infinity)
                         }
@@ -117,4 +123,10 @@ struct WeatherCard: View {
         tempMax: 27,
         tempMin: 16
     ), place: " ")
+}
+
+extension Array {
+    subscript(safe index: Index) -> Element {
+        indices.contains(index) ? self[index] : self[0] // fallback to first color
+    }
 }
