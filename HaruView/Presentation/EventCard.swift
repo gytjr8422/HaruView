@@ -72,7 +72,3 @@ struct EventCard: View {
         DateFormatter.localizedString(from: date, dateStyle: .none, timeStyle: .short)
     }
 }
-
-//#Preview {
-//    EventCard()
-//}

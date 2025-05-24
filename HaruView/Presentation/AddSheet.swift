@@ -11,13 +11,13 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     @Environment(\.dismiss) private var dismiss
     @Namespace private var indicatorNS
     @FocusState private var isTextFieldFocused: Bool
-    
+
     @StateObject private var vm: VM
     var onSave: () -> Void
-    
+
     private var minDate: Date { Calendar.current.startOfDay(for: .now) }
     private var maxDate: Date { Calendar.current.date(byAdding: .day, value: 2, to: minDate)! }
-    
+
     @State private var selected: AddSheetMode = .event
     @State private var showDiscardAlert = false
 
@@ -32,34 +32,30 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                 headerFilterView
                 TabView(selection: $selected) {
                     eventPage.tag(AddSheetMode.event)
-                    
                     reminderPage.tag(AddSheetMode.reminder)
                 }
-                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-                .onChange(of: selected) { _, newValue in
-                    vm.mode = newValue
-                }
+                .tabViewStyle(.page(indexDisplayMode: .never))
+                .onChange(of: selected) { _, newValue in vm.mode = newValue }
             }
             .background(Color(hexCode: "FFFCF5"))
             .toolbar { leadingToolbar; toolbarTitle; saveToolbar }
             .navigationBarTitleDisplayMode(.inline)
-            .confirmationDialog("작성 내용이 저장되지 않습니다.", isPresented: $showDiscardAlert, titleVisibility: .visible) {
+            .confirmationDialog("작성 내용이 저장되지 않습니다.",
+                                isPresented: $showDiscardAlert) {
                 Button("저장 안 하고 닫기", role: .destructive) { dismiss() }
-                Button("계속 작성", role: .cancel) { }
+                Button("계속 작성", role: .cancel) {}
             }
         }
         .interactiveDismissDisabled(isDirty || vm.isSaving)
-        .onAppear { selected = vm.mode }
         .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                isTextFieldFocused = true
-            }
+            selected = vm.mode
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { isTextFieldFocused = true }
         }
     }
-    
+
+    // MARK: Dirty Check
     private var isDirty: Bool {
-        !vm.title.isEmpty ||
-        (vm.mode == .event && !Calendar.current.isDate(vm.startDate, equalTo: Date(), toGranularity: .minute))
+        !vm.currentTitle.isEmpty || (vm.mode == .event && vm.startDate > Date())
     }
 
     // MARK: Header -----------------------------------------------------------
@@ -82,21 +78,18 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                 }
                 .frame(maxWidth: .infinity)
                 .contentShape(.rect)
-                .onTapGesture {
-                    withAnimation(.interactiveSpring(response: 0.4)) { selected = seg }
-                }
+                .onTapGesture { withAnimation(.spring()) { selected = seg } }
             }
         }
         .padding(.horizontal)
         .padding(.top, 12)
     }
 
-    // MARK: Pages ------------------------------------------------------------
+    // MARK: 공통 Title Field --------------------------------------------------
     private var commonTitleField: some View {
         VStack(alignment: .leading, spacing: 15) {
-            Text("제목")
-                .font(.pretendardBold(size: 17))
-            HaruTextField(text: $vm.title, placeholder: "제목 입력")
+            Text("제목").font(.pretendardBold(size: 17))
+            HaruTextField(text: $vm.currentTitle, placeholder: "제목 입력")
                 .focused($isTextFieldFocused)
         }
     }
@@ -261,35 +254,25 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     // MARK: Save Toolbar -----------------------------------------------------
     private var leadingToolbar: some ToolbarContent {
         ToolbarItem(placement: .cancellationAction) {
-            Button {
-                if isDirty { showDiscardAlert = true } else { dismiss() }
-            } label: {
-                Text("취소")
-                    .font(.pretendardSemiBold(size: 16))
-                    .foregroundStyle(.red.opacity(0.8))
+            Button { isDirty ? (showDiscardAlert = true) : dismiss() } label: {
+                Text("취소").font(.pretendardSemiBold(size: 16)).foregroundColor(.red.opacity(0.8))
             }
-
         }
     }
     
     private var saveToolbar: some ToolbarContent {
-        ToolbarItemGroup(placement: .confirmationAction) {
-            if vm.isSaving { ProgressView() }
-            else {
+        ToolbarItem(placement: .confirmationAction) {
+            if vm.isSaving { ProgressView() } else {
                 Button {
                     Task {
                         await vm.save()
-                        if vm.error == nil {
-                            dismiss()
-                            onSave()
-                        }
+                        if vm.error == nil { dismiss(); onSave() }
                     }
                 } label: {
-                    Text("저장")
-                        .font(.pretendardSemiBold(size: 16))
-                        .foregroundStyle(vm.title.isEmpty ? .secondary : Color.blue.opacity(0.8))
+                    Text("저장").font(.pretendardSemiBold(size: 16))
+                        .foregroundColor(vm.currentTitle.isEmpty ? .secondary : Color.blue.opacity(0.8))
                 }
-                .disabled(vm.title.isEmpty)
+                .disabled(vm.currentTitle.isEmpty)
             }
         }
     }
@@ -325,6 +308,8 @@ private struct HaruToggleStyle: ToggleStyle {
 
 #if DEBUG
 private class MockAddVM: AddSheetViewModelProtocol {
+    var currentTitle: String = ""
+    
     
     @Published var mode: AddSheetMode = .event
     @Published var title: String = ""
