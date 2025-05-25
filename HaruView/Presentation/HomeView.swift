@@ -10,6 +10,9 @@ import SwiftUI
 struct HomeView<VM: HomeViewModelProtocol>: View {
     @Environment(\.scenePhase) private var phase
     @Environment(\.di) private var di
+    @AppStorage("didShowDeleteHint") private var didShowHint = false
+    @State private var showHint = false
+    
     @StateObject private var vm: VM
     @StateObject private var permission = CalendarPermissionStore()
     
@@ -17,6 +20,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
     @State private var showReminderSheet: Bool = false
     @State private var showAddSheet: Bool = false
     @State private var showToast: Bool = false
+    @State private var adHeight: CGFloat = 0
     
     init(vm: VM) {
         _vm = StateObject(wrappedValue: vm)
@@ -66,6 +70,16 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                     }
                 }
                 .animation(.easeInOut, value: permission.isAllGranted)
+                
+                if permission.isAllGranted {
+                    deleteHintOverlay()
+                }
+            }
+            .animation(.easeInOut, value: showHint)
+        }
+        .onAppear {
+            if !didShowHint {
+                showHint = true      // 오버레이 표시
             }
         }
         
@@ -98,6 +112,19 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                     } else {
                         accessDeniedView
                     }
+                    
+                    if !showAddSheet {
+                        // 네이티브 광고
+                        NativeAdBanner(height: $adHeight)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: adHeight == 0 ? 180 : adHeight)   // 로드 전엔 임시 높이
+                            .padding(10)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color(hexCode: "6E5C49").opacity(0.2), lineWidth: 1)
+                            )
+                            .padding(.top, 10)
+                    }
 
                 }
                 .padding(.horizontal, 20)
@@ -107,16 +134,6 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
     
     @ViewBuilder
     private var eventListView: some View {
-        
-        // 네이티브 광고
-        NativeAdBanner()
-            .frame(maxWidth: .infinity)
-            .frame(height: 65)
-            .padding(10)
-            .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(Color(hexCode: "6E5C49").opacity(0.2), lineWidth: 1)
-            )
         
         HStack {
             Text("오늘의 일정")
@@ -276,7 +293,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
     }
     
     
-    // MARK: - EmptyView-----------
+    // MARK: - EmptyView
     private var emptyEventView: some View {
         HStack {
             Spacer()
@@ -333,6 +350,32 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
         .padding(20)
         .background(Color.gray.opacity(0.1))
         .cornerRadius(12)
+    }
+    
+    @ViewBuilder
+    private func deleteHintOverlay() -> some View {
+        if showHint {
+            Color.black.opacity(0.55)       // Dim background
+                .ignoresSafeArea()
+                .overlay(
+                    VStack(spacing: 16) {
+                        Image(systemName: "hand.tap")
+                            .font(.system(size: 48))
+                            .foregroundStyle(.white)
+                        Text("항목을 **길게 눌러** 삭제할 수 있어요!")
+                            .multilineTextAlignment(.center)
+                            .font(.pretendardBold(size: 18))
+                            .foregroundStyle(.white)
+                        Button("확인") {
+                            withAnimation { showHint = false; didShowHint = true }
+                        }
+                        .padding(.horizontal,32).padding(.vertical,10)
+                        .background(.white.opacity(0.9))
+                        .clipShape(Capsule())
+                    }
+                )
+                .transition(.opacity.combined(with: .scale))
+        }
     }
     
 }
