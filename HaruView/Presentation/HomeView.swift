@@ -95,9 +95,10 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
     
     @ViewBuilder
     private var content: some View {
-        if vm.state.isLoading {
-            ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
-        } else {
+        ZStack {
+            if vm.state.isLoading {
+                ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
             ScrollView(showsIndicators: false) {
                 VStack {
                     if let tw = vm.weather {
@@ -125,7 +126,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                             )
                             .padding(.top, 10)
                     }
-
+                    
                 }
                 .padding(.horizontal, 20)
             }

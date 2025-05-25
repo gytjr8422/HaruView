@@ -146,10 +146,6 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                         
                         timePicker(time: $vm.endDate, min: vm.startDate)
                                 .environment(\.locale, Locale(identifier: "ko_KR"))
-
-//                        dateTimePicker(date: $vm.endDate,
-//                                       min: vm.startDate)
-//                        .environment(\.locale, Locale(identifier: "ko_KR"))
                     }
                 }
 

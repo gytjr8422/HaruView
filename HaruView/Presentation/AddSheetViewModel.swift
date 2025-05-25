@@ -42,11 +42,31 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
     @Published var currentTitle: String = "" {
         didSet { titles[mode] = currentTitle }
     }
-    @Published var startDate: Date = .now
+    @Published var startDate: Date = .now {
+        didSet { clampEndIfNeeded() }
+    }
     @Published var endDate  : Date = Calendar.current.date(byAdding: .hour, value: 1, to: .now)!
     @Published var dueDate  : Date = .now
 
-    @Published var isAllDay: Bool = false
+    @Published var isAllDay: Bool = false {
+        didSet {
+            if isAllDay {
+                // 시작 시간을 00:00으로 설정
+                let calendar = Calendar.current
+                var components = calendar.dateComponents([.year, .month, .day], from: startDate)
+                components.hour = 0
+                components.minute = 0
+                startDate = calendar.date(from: components)!
+                
+                // 종료 시간을 23:59로 설정
+                components = calendar.dateComponents([.year, .month, .day], from: endDate)
+                components.hour = 23
+                components.minute = 59
+                endDate = calendar.date(from: components)!
+            }
+        }
+    }
+    
     @Published var includeTime: Bool = true
 
     @Published var error: TodayBoardError?
@@ -64,7 +84,11 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
     }
 
     func save() async {
-        isSaving = true; defer { isSaving = false }
+        isSaving = true
+        error = nil
+        
+        if mode == .event { clampEndIfNeeded() }
+        
         switch mode {
         case .event:
             let res = await addEvent(.init(title: titles[.event] ?? "", start: startDate, end: endDate))
@@ -72,6 +96,17 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
         case .reminder:
             let res = await addReminder(.init(title: titles[.reminder] ?? "", due: dueDate, includesTime: includeTime))
             handle(res)
+        }
+        
+        isSaving = false
+    }
+    
+    private func clampEndIfNeeded() {
+        guard !isAllDay else { return }
+
+        let minInterval: TimeInterval = 60
+        if endDate < startDate.addingTimeInterval(minInterval) {
+            endDate = startDate.addingTimeInterval(minInterval)
         }
     }
 
