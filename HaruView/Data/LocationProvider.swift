@@ -28,67 +28,50 @@ final class LocationProvider: NSObject, ObservableObject, @preconcurrency CLLoca
         return m
     }()
     
-    private var cont: CheckedContinuation<CLLocation, Error>?
-    private var isWaitingForLocation = false  // 🔧 추가: 상태 추적
+    private var stateTask: Task<CLLocation, Error>?
+    private let ttl: TimeInterval = 30 * 60
+    private var isWaitingForLocation = false
     
     // 위치 정보 갱신 간격 (30분)
     private let locationUpdateInterval: TimeInterval = 30 * 60
 
     // MARK: – Public API
     func current() async throws -> CLLocation {
-        // 캐시된 위치 확인
-        if let loc = lastLocation,
-           let lastUpdate = lastUpdateTime,
-           Date().timeIntervalSince(lastUpdate) < locationUpdateInterval {
+        // 캐시가 유효하면 즉시 반환
+        if let loc  = lastLocation,
+           let time = lastUpdateTime,
+           Date().timeIntervalSince(time) < ttl {
             return loc
         }
 
-        return try await withCheckedThrowingContinuation { c in
-            // 🔧 중복 요청 방지
-            guard cont == nil else {
-                c.resume(throwing: LocationError.alreadyRequesting)
-                return
-            }
-            
-            cont = c
-            isWaitingForLocation = true  // 🔧 상태 설정
-            manager.delegate = self
+        // 이미 진행중 Task가 있으면 재사용
+        if let task = stateTask { return try await task.value }
 
-            switch manager.authorizationStatus {
-            case .notDetermined:
-                manager.requestWhenInUseAuthorization()
-                
-            case .authorizedWhenInUse, .authorizedAlways:
-                manager.requestLocation()
-                
-            case .denied, .restricted:
-                // 🔧 즉시 처리하지 않고 delegate에 맡김
-                finishWithError(LocationError.denied)
-                
-            @unknown default:
-                finishWithError(LocationError.denied)
+        // 새 Task 생성
+        let task = Task { () throws -> CLLocation in
+            try await withCheckedThrowingContinuation { cont in
+                self.startRequest(cont: cont)
             }
         }
+        stateTask = task
+        defer { stateTask = nil }
+        return try await task.value
     }
 
     // MARK: – Private Helpers
-    private func finishWithLocation(_ location: CLLocation) {
-        guard isWaitingForLocation, let c = cont else { return }
-        
-        lastLocation = location
-        lastUpdateTime = Date()
-        
-        cont = nil
-        isWaitingForLocation = false
-        c.resume(returning: location)
-    }
-    
-    private func finishWithError(_ error: Error) {
-        guard isWaitingForLocation, let c = cont else { return }
-        
-        cont = nil
-        isWaitingForLocation = false
-        c.resume(throwing: error)
+    private var continuation: CheckedContinuation<CLLocation, Error>?
+    private func startRequest(cont: CheckedContinuation<CLLocation, Error>) {
+        continuation = cont
+        manager.delegate = self
+
+        switch manager.authorizationStatus {
+        case .authorizedAlways, .authorizedWhenInUse:
+            manager.requestLocation()
+        case .notDetermined:
+            manager.requestWhenInUseAuthorization()
+        default:
+            cont.resume(throwing: LocationError.denied)
+        }
     }
 
     // MARK: – CLLocationManagerDelegate
@@ -104,7 +87,10 @@ final class LocationProvider: NSObject, ObservableObject, @preconcurrency CLLoca
             }
 
         case .denied, .restricted:
-            finishWithError(LocationError.denied)
+            lastLocation    = nil
+            lastUpdateTime  = nil
+            continuation?.resume(throwing: LocationError.denied)
+            continuation = nil
 
         default:
             break
@@ -112,12 +98,13 @@ final class LocationProvider: NSObject, ObservableObject, @preconcurrency CLLoca
     }
 
     func locationManager(_ m: CLLocationManager, didUpdateLocations locs: [CLLocation]) {
-        guard let loc = locs.last else { return }
-        finishWithLocation(loc)
+        guard let loc = locs.last, let c = continuation else { return }
+        lastLocation = loc; lastUpdateTime = Date()
+        continuation = nil; c.resume(returning: loc)
     }
 
     func locationManager(_ m: CLLocationManager, didFailWithError e: Error) {
-        finishWithError(e)
+        continuation?.resume(throwing: e); continuation = nil
     }
 
     enum LocationError: LocalizedError {
