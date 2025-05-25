@@ -29,14 +29,17 @@ final class WeatherKitService {
                 async let daily = ws.weather(for: loc, including: .daily)
 
                 let (current, hourly, dailyForecast) = try await (cur, hrly, daily)
-
+                
                 // 6시간 예보
-                let next6 = hourly.forecast.prefix(6).map {
-                    HourlyForecast(date: $0.date,
-                                   symbol: $0.symbolName,
-                                   temperature: $0.temperature.converted(to: .celsius).value)
-                }
-
+                let now = Date()
+                let next6 = hourly.forecast
+                    .filter { $0.date > now }  // 현재 시간 이후의 데이터만 필터링
+                    .prefix(6)  // 최대 6개
+                    .map {
+                        HourlyForecast(date: $0.date,
+                                      symbol: $0.symbolName,
+                                      temperature: $0.temperature.converted(to: .celsius).value)
+                    }
                 // 최고·최저 (오늘)
                 let today = dailyForecast.forecast.first
                 let tMax = today?.highTemperature

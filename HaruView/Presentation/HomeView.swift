@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreLocation
 
 struct HomeView<VM: HomeViewModelProtocol>: View {
     @Environment(\.scenePhase) private var phase
@@ -43,6 +44,11 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                         .task { vm.load() }
                         .onChange(of: phase) {
                             if phase == .active { vm.refresh(.storeChange) }
+                        }
+                        .onChange(of: permission.isAllGranted) { _, isGranted in
+                            if isGranted {
+                                vm.refresh(.storeChange)
+                            }
                         }
                         .sheet(isPresented: $showEventSheet) {
                             EventListSheet(vm: di.makeEventListVM())
@@ -105,6 +111,26 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                         WeatherCard(snapshot: tw.snapshot, place: tw.placeName)
                             .padding(.top, 5)
                             .padding(.bottom, 10)
+                    } else {
+                        WeatherCard(snapshot: WeatherSnapshot(
+                            temperature: 0,           // 섭씨 23.5도
+                            humidity: 0,              // 65% 습도
+                            precipitation: 0.0,          // 강수량 0mm
+                            windSpeed: 0,              // 초속 3.2m 바람
+                            condition: .mostlyClear,     // 대체로 맑음
+                            symbolName: "sun.max",       // SF Symbol 이름
+                            updatedAt: Date(),           // 현재 시간
+                            hourlies: [],
+                            tempMax: 0,
+                            tempMin: 0
+                        ), place: "로딩 중..")
+                        .overlay {
+                            ProgressView()
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .background(Color.gray)
+                                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                        }
+                            
                     }
                     
                     if permission.isAllGranted {
@@ -118,7 +144,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                         // 네이티브 광고
                         NativeAdBanner(height: $adHeight)
                             .frame(maxWidth: .infinity)
-                            .frame(height: adHeight == 0 ? 180 : adHeight)   // 로드 전엔 임시 높이
+                            .frame(height: adHeight == 0 ? 200 : adHeight)   // 로드 전엔 임시 높이
                             .padding(10)
                             .background(
                                 RoundedRectangle(cornerRadius: 10)

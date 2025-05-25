@@ -22,9 +22,10 @@ struct FetchTodayOverviewUseCase {
     }
 
     func callAsFunction() async -> Result<TodayOverview, TodayBoardError> {
-        guard EKEventStore.authorizationStatus(for: .event)    == .fullAccess,
-              EKEventStore.authorizationStatus(for: .reminder) == .fullAccess
-        else { return .failure(.accessDenied) }
+        if EKEventStore.authorizationStatus(for: .event) != .fullAccess ||
+           EKEventStore.authorizationStatus(for: .reminder) != .fullAccess {
+            return .success(.placeholder)
+        }
 
         async let eRes = events.fetchEvent()
         async let rRes = reminders.fetchReminder()
