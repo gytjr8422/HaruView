@@ -34,7 +34,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                     content
                         .toolbar {
                             dateView
-                            if permission.eventState == .granted {
+                            if permission.eventState == .granted && permission.reminderState == .granted {
                                 addButton
                             }
                         }

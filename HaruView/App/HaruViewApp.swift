@@ -30,38 +30,6 @@ struct HaruViewApp: App {
                     didBootstrap = true
                     await DIContainer.shared.bootstrapPermissions()
                 }
-                .onOpenURL { url in
-                    handleDeepLink(url)
-                }
-        }
-    }
-    
-    private func scheduleDailyReminder() async {
-        let center = UNUserNotificationCenter.current()
-        let granted = try? await center.requestAuthorization(options: [.alert, .badge, .sound])
-        guard granted == true else { return }
-        center.removePendingNotificationRequests(withIdentifiers: ["daily_open"])
-        
-        var date = DateComponents()
-        date.hour = 8
-        date.minute = 0
-        
-        let trigger = UNCalendarNotificationTrigger(dateMatching: date, repeats: true)
-        let content = UNMutableNotificationContent()
-        content.title = "하루뷰"
-        content.body = "카드를 잠금 해제하려면 앱을 열어보세요!"
-        
-        let req = UNNotificationRequest(identifier: "daily_open", content: content, trigger: trigger)
-        do {
-            try await center.add(req)
-        } catch {
-            print("Failed to schedule daily reminder: \(error)")
-        }
-    }
-    
-    private func handleDeepLink(_ url: URL) {
-        if url.scheme == "haruview", url.host == "add" {
-            showAdd = true
         }
     }
 }
