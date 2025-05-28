@@ -16,23 +16,19 @@ final class EventKitService {
     enum AccessMode { case writeOnly, full }
     
     func requestAccess(_ mode: AccessMode) async -> Result<Void, TodayBoardError> {
-        switch mode {
-        case .writeOnly:
-            do {
+        do {
+            switch mode {
+            case .writeOnly:
                 try await store.requestWriteOnlyAccessToEvents()
                 try await store.requestFullAccessToReminders()
-                return .success(())
-            } catch {
-                return .failure(.accessDenied)
-            }
-        case .full:
-            do {
+            case .full:
                 try await store.requestFullAccessToEvents()
                 try await store.requestFullAccessToReminders()
-                return .success(())
-            } catch {
-                return .failure(.accessDenied)
             }
+            return .success(())
+        } catch {
+            print("Permission request failed: \(error)")
+            return .failure(.accessDenied)
         }
     }
     

@@ -41,7 +41,9 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                         .navigationBarTitleDisplayMode(.inline)
                         .background(Color(hexCode: "FFFCF5"))
                         .refreshable { vm.refresh(.userTap) }
-                        .task { vm.load() }
+                        .task {
+                            await requestPermissions()
+                        }
                         .onChange(of: phase) {
                             if phase == .active { vm.refresh(.storeChange) }
                         }
@@ -312,7 +314,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
         return ToolbarItem(placement: .principal) {
             HStack {
                 Text(dateStr)
-                    .font(.museumBold(size: 18))
+                    .font(.museumBold(size: 19))
                 Spacer()
             }
             .padding(.horizontal, 10)
@@ -361,7 +363,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                     .multilineTextAlignment(.center)
                     .font(.pretendardRegular(size: 16))
                 
-                Text("캘린더와 미리알림 접근 권한이 필요해요.")
+                Text("캘린더와 미리알림 모두 접근 권한이 필요해요.")
                     .multilineTextAlignment(.center)
                     .font(.pretendardRegular(size: 16))
                 
@@ -405,6 +407,18 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
         }
     }
     
+    private func requestPermissions() async {
+        // 1. 캘린더 권한 요청
+        await permission.requestEvents()
+        // 2. 미리알림 권한 요청
+        await permission.requestReminders()
+        
+        // 권한이 모두 부여되었는지 확인
+        if permission.isAllGranted {
+            // 데이터 로드
+            vm.load()
+        }
+    }
 }
 
 private struct ToastView: View {

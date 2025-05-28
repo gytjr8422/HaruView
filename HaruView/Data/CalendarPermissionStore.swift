@@ -47,16 +47,21 @@ final class CalendarPermissionStore: ObservableObject {
             .store(in: &bag)
     }
 
-    func requestEvents() {
-        store.requestFullAccessToEvents { [weak self] _, _ in
-            // completion도 메인 스레드에서 상태 반영
-            Task { @MainActor in self?.refreshStatus() }
+    func requestEvents() async {
+        do {
+            try await store.requestFullAccessToEvents()
+            await MainActor.run { self.refreshStatus() }
+        } catch {
+            print("Calendar permission request failed: \(error)")
         }
     }
 
-    func requestReminders() {
-        store.requestFullAccessToReminders { [weak self] _, _ in
-            Task { @MainActor in self?.refreshStatus() }
+    func requestReminders() async {
+        do {
+            try await store.requestFullAccessToReminders()
+            await MainActor.run { self.refreshStatus() }
+        } catch {
+            print("Reminder permission request failed: \(error)")
         }
     }
 

@@ -26,14 +26,17 @@ final class DIContainer {
     // MARK: - 권한 요청
     @MainActor
     func bootstrapPermissions() async {
+        // 1. 캘린더 writeOnly 권한 요청
         switch await eventKitService.requestAccess(.writeOnly) {
-        case .success: break
-        case .failure(_): return
-        }
-        
-        switch await eventKitService.requestAccess(.full) {
-        case .success: break
-        case .failure(_): return
+        case .success:
+            // 2. 캘린더 full 권한 요청
+            switch await eventKitService.requestAccess(.full) {
+            case .success: break
+            case .failure(let error):
+                print("Full access request failed: \(error)")
+            }
+        case .failure(let error):
+            print("Write-only access request failed: \(error)")
         }
     }
     

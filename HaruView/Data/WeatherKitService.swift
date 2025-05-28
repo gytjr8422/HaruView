@@ -47,8 +47,6 @@ final class WeatherKitService {
                 let tMin = today?.lowTemperature
                     .converted(to: .celsius).value ?? current.temperature.value
                 
-                print(current.condition)
-
                 return WeatherSnapshot(
                     temperature: current.temperature.converted(to: .celsius).value,
                     humidity:    current.humidity,
