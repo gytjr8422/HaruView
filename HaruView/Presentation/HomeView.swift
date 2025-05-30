@@ -112,7 +112,6 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                     if let tw = vm.weather {
                         WeatherCard(snapshot: tw.snapshot, place: tw.placeName)
                             .padding(.top, 5)
-                            .padding(.bottom, 10)
                     } else {
                         WeatherCard(snapshot: WeatherSnapshot(
                             temperature: 0,           // 섭씨 23.5도
@@ -134,6 +133,8 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                         }
                             
                     }
+                    
+                    weatherAttributionView
                     
                     if permission.isAllGranted {
                         eventListView
@@ -180,7 +181,6 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                 }
             }
         }
-        .padding(.top, 10)
         
         VStack(spacing: 8) {
             if vm.state.overview.events.isEmpty {
@@ -269,6 +269,21 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                     .stroke(Color(hexCode: "C2966B").opacity(0.5),
                            lineWidth: 1)
         )
+    }
+    
+    private var weatherAttributionView: some View {
+        HStack {
+            Spacer()
+            HStack(spacing: 5) {
+                Text("Weather data by Apple Weather")
+                    .font(.pretendardRegular(size: 11))
+                    .foregroundColor(.secondary)
+                Link("출처 및 법적 고지", destination: URL(string: "https://weatherkit.apple.com/legal-attribution.html")!)
+                    .font(.pretendardSemiBold (size: 11))
+                    .foregroundStyle(Color(hexCode: "A76545"))
+            }
+            .padding([.bottom, .trailing], 8)
+        }
     }
     
     
