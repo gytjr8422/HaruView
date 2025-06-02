@@ -275,10 +275,10 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
         HStack {
             Spacer()
             HStack(spacing: 5) {
-                Text("Weather data by Apple Weather")
-                    .font(.pretendardRegular(size: 11))
-                    .foregroundColor(.secondary)
-                Link("출처 및 법적 고지", destination: URL(string: "https://weatherkit.apple.com/legal-attribution.html")!)
+//                Text(" Weather")
+//                    .font(.pretendardRegular(size: 11))
+//                    .foregroundColor(.secondary)
+                Link(" 날씨", destination: URL(string: "https://weatherkit.apple.com/legal-attribution.html")!)
                     .font(.pretendardSemiBold (size: 11))
                     .foregroundStyle(Color(hexCode: "A76545"))
             }
