@@ -103,7 +103,7 @@ final class LocationProvider: NSObject, ObservableObject, @preconcurrency CLLoca
 
     enum LocationError: LocalizedError {
         case denied
-        case alreadyRequesting  // 🔧 추가
+        case alreadyRequesting
         
         var errorDescription: String? {
             switch self {

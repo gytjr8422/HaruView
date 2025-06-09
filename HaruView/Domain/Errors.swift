@@ -55,7 +55,7 @@ enum NetworkError: Error {
         case .serverError(let statusCode):
             "서버에러 \(statusCode)"
         case .requestFailed(let message):
-            "서벼 요청 실패 \(message)"
+            "서버 요청 실패 \(message)"
         }
     }
 }

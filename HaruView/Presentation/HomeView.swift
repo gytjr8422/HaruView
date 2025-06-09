@@ -329,7 +329,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
         return ToolbarItem(placement: .principal) {
             HStack {
                 Text(dateStr)
-                    .font(.museumBold(size: 19))
+                    .font(.museumMedium(size: 19))
                 Spacer()
             }
             .padding(.horizontal, 10)

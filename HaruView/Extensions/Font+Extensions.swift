@@ -25,11 +25,11 @@ extension Font {
     }
     
     static func museumBold(size: CGFloat) -> Font {
-        .custom("MuseumClassicMedium", size: size)
+        .custom("MuseumClassicBold", size: size)
     }
     
     static func museumMedium(size: CGFloat) -> Font {
-        .custom("MuseumClassicBold", size: size)
+        .custom("MuseumClassicMedium", size: size)
     }
     
     static func jakartaRegular(size: CGFloat) -> Font {
