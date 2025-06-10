@@ -13,9 +13,9 @@ final class AdManager: NSObject, ObservableObject, FullScreenContentDelegate {
     static let shared = AdManager()
     
     #if DEBUG
-    private let unitID = "ca-app-pub-3940256099942544/4411468910" // 테스트 ID
+    private let unitID = "ca-app-pub-3940256099942544/1033173712" // 테스트 ID
     #else
-    private let unitID = "ca-app-pub-2709183664449693~4583141590"
+    private let unitID = "ca-app-pub-2709183664449693/2685953604"
     #endif
     private var interstitial: InterstitialAd?
     private var onDismiss: (() -> Void)?           // 광고 종료 후 실행

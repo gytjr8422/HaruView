@@ -16,9 +16,9 @@ struct NativeAdBanner: UIViewRepresentable {
     @Binding var height: CGFloat
 
     #if DEBUG
-    private let unitID = "ca-app-pub-3940256099942544/3986624511"         // 테스트
+    private let unitID = "ca-app-pub-3940256099942544/2247696110"         // 테스트
     #else
-    private let unitID = "ca-app-pub-2709183664449693/4583141590"
+    private let unitID = "ca-app-pub-2709183664449693/1890138459"
     #endif
 
     func makeCoordinator() -> Coordinator { Coordinator(self) }
