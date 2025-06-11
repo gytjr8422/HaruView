@@ -129,7 +129,8 @@ final class EventKitRepository: EventRepositoryProtocol, ReminderRepositoryProto
               end: ek.endDate,
               calendarTitle: ek.calendar.title,
               calendarColor: ek.calendar.cgColor,
-              location: ek.location)
+              location: ek.location,
+              notes: ek.notes)
     }
     
     private static func mapReminder(_ rem: EKReminder) -> Reminder {

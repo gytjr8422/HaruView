@@ -17,6 +17,7 @@ struct Event: Identifiable, Equatable {
     let calendarTitle: String
     let calendarColor: CGColor
     let location: String?
+    let notes: String?
 }
 
 // MARK: - 미리알림
