@@ -324,7 +324,10 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
 
     
     private var dateView: some ToolbarContent {
-        let dateStr = DateFormatterFactory.koreanDateWithDayFormatter().string(from: vm.today)
+        let formatter = Locale.current.languageCode == "ko"
+        ? DateFormatterFactory.koreanDateWithDayFormatter()
+        : DateFormatterFactory.englishDateWithDayFormatter()
+        let dateStr = formatter.string(from: vm.today)
         
         return ToolbarItem(placement: .principal) {
             HStack {

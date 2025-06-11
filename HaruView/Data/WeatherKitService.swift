@@ -91,8 +91,9 @@ final class WeatherKitService {
         var errorDescription: String? {
             switch self {
             case .fetchFailed(let e):
-                return e == nil ? "날씨 정보를 가져오는데 실패했습니다."
-                                : "날씨 정보를 가져오는데 실패했습니다: \(e!.localizedDescription)"
+                return e == nil
+                ? String(localized: "날씨 정보를 가져오는데 실패했습니다.")
+                : String(format: NSLocalizedString("날씨 정보를 가져오는데 실패했습니다: %@", comment: ""), e!.localizedDescription)
             }
         }
     }

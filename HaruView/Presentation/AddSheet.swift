@@ -126,11 +126,11 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                     
                     datePicker(date: $vm.startDate, min: minDate)
                         .frame(width: 120, alignment: .trailing)
-                        .environment(\.locale, Locale(identifier: "ko_KR"))
+                        .environment(\.locale, Locale.current.languageCode == "ko" ? Locale(identifier: "ko_KR") : Locale(identifier: "en_US"))
                     
                     if !vm.isAllDay {
                         timePicker(time: $vm.startDate)
-                            .environment(\.locale, Locale(identifier: "ko_KR"))
+                            .environment(\.locale, Locale.current.languageCode == "ko" ? Locale(identifier: "ko_KR") : Locale(identifier: "en_US"))
                     }
                 }
                 
@@ -142,10 +142,10 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                         
                         datePicker(date: $vm.endDate, min: vm.startDate)
                             .frame(width: 120, alignment: .trailing)
-                            .environment(\.locale, Locale(identifier: "ko_KR"))
+                            .environment(\.locale, Locale.current.languageCode == "ko" ? Locale(identifier: "ko_KR") : Locale(identifier: "en_US"))
                         
                         timePicker(time: $vm.endDate, min: vm.startDate)
-                                .environment(\.locale, Locale(identifier: "ko_KR"))
+                                .environment(\.locale, Locale.current.languageCode == "ko" ? Locale(identifier: "ko_KR") : Locale(identifier: "en_US"))
                     }
                 }
 
@@ -187,11 +187,11 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                     
                     datePicker(date: $vm.dueDate, min: minDate)
                         .frame(width: 120, alignment: .trailing)
-                        .environment(\.locale, Locale(identifier: "ko_KR"))
+                        .environment(\.locale, Locale.current.languageCode == "ko" ? Locale(identifier: "ko_KR") : Locale(identifier: "en_US"))
                     
                     if vm.includeTime {
                         timePicker(time: $vm.dueDate, min: .now)
-                            .environment(\.locale, Locale(identifier: "ko_KR"))
+                            .environment(\.locale, Locale.current.languageCode == "ko" ? Locale(identifier: "ko_KR") : Locale(identifier: "en_US"))
                     }
                 }
                 .animation(.easeIn, value: 10)
@@ -240,7 +240,7 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     private var footerError: some View {
         Group {
             if let e = vm.error {
-                Text("⚠️ 오류: \(e.localizedDescription)")
+                Text(String(format: NSLocalizedString("⚠️ 오류: %@", comment: ""), e.localizedDescription))
                     .font(.jakartaRegular(size: 14))
                     .foregroundColor(.red)
             }
