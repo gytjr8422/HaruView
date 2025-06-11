@@ -4,17 +4,6 @@
     "" : {
 
     },
-    "(제목 없음)" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "(No Title)"
-          }
-        }
-      }
-    },
     "%.0f°" : {
       "localizations" : {
         "en" : {
@@ -357,6 +346,16 @@
         }
       }
     },
+    "제목 입력" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter title"
+          }
+        }
+      }
+    },
     "종료" : {
       "localizations" : {
         "en" : {
@@ -418,7 +417,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Task"
+            "value" : "To-Do"
           }
         }
       }

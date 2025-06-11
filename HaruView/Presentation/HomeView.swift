@@ -324,7 +324,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
 
     
     private var dateView: some ToolbarContent {
-        let formatter = Locale.current.languageCode == "ko"
+        let formatter = Locale.current.language.languageCode?.identifier == "ko"
         ? DateFormatterFactory.koreanDateWithDayFormatter()
         : DateFormatterFactory.englishDateWithDayFormatter()
         let dateStr = formatter.string(from: vm.today)
@@ -332,7 +332,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
         return ToolbarItem(placement: .principal) {
             HStack {
                 Text(dateStr)
-                    .font(.museumMedium(size: 19))
+                    .font(Locale.current.language.languageCode?.identifier == "ko" ? .museumMedium(size: 19) : .robotoSerifBold(size: 19))
                 Spacer()
             }
             .padding(.horizontal, 10)

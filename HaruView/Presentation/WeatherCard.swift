@@ -103,7 +103,7 @@ struct WeatherCard: View {
     // MARK: - Formatter
     private func hourLabel(_ date: Date) -> String {
         let fmt = DateFormatter()
-        if Locale.current.languageCode == "ko" {
+        if Locale.current.language.languageCode?.identifier == "ko" {
             fmt.locale = Locale(identifier: "ko_KR")
             fmt.dateFormat = "a h시"
         } else {

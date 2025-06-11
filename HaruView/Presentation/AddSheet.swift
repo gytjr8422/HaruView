@@ -63,7 +63,7 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
         HStack(spacing: 0) {
             ForEach(AddSheetMode.allCases) { seg in
                 VStack(spacing: 4) {
-                    Text(seg.rawValue)
+                    Text(seg.localized)
                         .font(.pretendardBold(size: 16))
                         .foregroundStyle(selected == seg ? Color(hexCode: "A76545") : .secondary)
                     ZStack {
@@ -89,7 +89,7 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     private var commonTitleField: some View {
         VStack(alignment: .leading, spacing: 15) {
             Text("제목").font(.pretendardBold(size: 17))
-            HaruTextField(text: $vm.currentTitle, placeholder: "제목 입력")
+            HaruTextField(text: $vm.currentTitle, placeholder: String(localized: "제목 입력"))
                 .focused($isTextFieldFocused)
         }
     }
@@ -126,11 +126,11 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                     
                     datePicker(date: $vm.startDate, min: minDate)
                         .frame(width: 120, alignment: .trailing)
-                        .environment(\.locale, Locale.current.languageCode == "ko" ? Locale(identifier: "ko_KR") : Locale(identifier: "en_US"))
+                        .environment(\.locale, Locale.current.language.languageCode?.identifier == "ko" ? Locale(identifier: "ko_KR") : Locale(identifier: "en_US"))
                     
                     if !vm.isAllDay {
                         timePicker(time: $vm.startDate)
-                            .environment(\.locale, Locale.current.languageCode == "ko" ? Locale(identifier: "ko_KR") : Locale(identifier: "en_US"))
+                            .environment(\.locale, Locale.current.language.languageCode?.identifier == "ko" ? Locale(identifier: "ko_KR") : Locale(identifier: "en_US"))
                     }
                 }
                 
@@ -138,14 +138,14 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                     HStack(spacing: 5) {
                         Text("종료")
                             .font(.pretendardSemiBold(size: 18))
-                            .padding(.trailing, 10)
+                            .padding(.trailing, Locale.current.language.languageCode?.identifier == "ko" ? 10 : 20)
                         
                         datePicker(date: $vm.endDate, min: vm.startDate)
                             .frame(width: 120, alignment: .trailing)
-                            .environment(\.locale, Locale.current.languageCode == "ko" ? Locale(identifier: "ko_KR") : Locale(identifier: "en_US"))
+                            .environment(\.locale, Locale.current.language.languageCode?.identifier == "ko" ? Locale(identifier: "ko_KR") : Locale(identifier: "en_US"))
                         
                         timePicker(time: $vm.endDate, min: vm.startDate)
-                                .environment(\.locale, Locale.current.languageCode == "ko" ? Locale(identifier: "ko_KR") : Locale(identifier: "en_US"))
+                                .environment(\.locale, Locale.current.language.languageCode?.identifier == "ko" ? Locale(identifier: "ko_KR") : Locale(identifier: "en_US"))
                     }
                 }
 
@@ -187,11 +187,11 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                     
                     datePicker(date: $vm.dueDate, min: minDate)
                         .frame(width: 120, alignment: .trailing)
-                        .environment(\.locale, Locale.current.languageCode == "ko" ? Locale(identifier: "ko_KR") : Locale(identifier: "en_US"))
+                        .environment(\.locale, Locale.current.language.languageCode?.identifier == "ko" ? Locale(identifier: "ko_KR") : Locale(identifier: "en_US"))
                     
                     if vm.includeTime {
                         timePicker(time: $vm.dueDate, min: .now)
-                            .environment(\.locale, Locale.current.languageCode == "ko" ? Locale(identifier: "ko_KR") : Locale(identifier: "en_US"))
+                            .environment(\.locale, Locale.current.language.languageCode?.identifier == "ko" ? Locale(identifier: "ko_KR") : Locale(identifier: "en_US"))
                     }
                 }
                 .animation(.easeIn, value: 10)
@@ -275,7 +275,7 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     
     private var toolbarTitle: some ToolbarContent {
         ToolbarItem(placement: .principal) {
-            Text("\(selected.rawValue) 추가")
+            Text(String(format: NSLocalizedString("%@ 추가", comment: ""), selected.localized))
         }
     }
 }

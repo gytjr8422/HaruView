@@ -112,35 +112,68 @@ struct WeatherSnapshot: Codable, Equatable {
         }
         
         var localizedDescription: String {
-            switch self {
-            case .clear:            return "맑음"
-            case .mostlyClear:      return "대체로 맑음"
-            case .partlyCloudy:     return "부분적으로 흐림"
-            case .mostlyCloudy:     return "대체로 흐림"
-            case .cloudy:           return "흐림"
+            if Locale.current.language.languageCode?.identifier == "ko" {
+                switch self {
+                case .clear:            return "맑음"
+                case .mostlyClear:      return "대체로 맑음"
+                case .partlyCloudy:     return "부분적으로 흐림"
+                case .mostlyCloudy:     return "대체로 흐림"
+                case .cloudy:           return "흐림"
 
-            case .rain:             return "비"
-            case .drizzle:          return "이슬비"
-            case .showers:          return "소나기"
+                case .rain:             return "비"
+                case .drizzle:          return "이슬비"
+                case .showers:          return "소나기"
 
-            case .snow:             return "눈"
-            case .flurries:         return "눈 날림"
+                case .snow:             return "눈"
+                case .flurries:         return "눈 날림"
 
-            case .thunderstorms:    return "뇌우"
+                case .thunderstorms:    return "뇌우"
 
-            case .foggy:            return "안개"
-            case .haze:             return "실안개"
-            case .smoke:            return "연기"
+                case .foggy:            return "안개"
+                case .haze:             return "실안개"
+                case .smoke:            return "연기"
 
-            case .windy:            return "강한 바람"
-            case .breezy:           return "산들바람"
+                case .windy:            return "강한 바람"
+                case .breezy:           return "산들바람"
 
-            case .hot:              return "무더위"
-            case .cold:             return "한파"
+                case .hot:              return "무더위"
+                case .cold:             return "한파"
 
-            case .blizzard:         return "눈보라"
-            case .hurricane:        return "허리케인"
-            case .tropicalStorm:    return "열대폭풍"
+                case .blizzard:         return "눈보라"
+                case .hurricane:        return "허리케인"
+                case .tropicalStorm:    return "열대폭풍"
+                }
+            } else {
+                switch self {
+                case .clear:            return "Clear"
+                case .mostlyClear:      return "Mostly Clear"
+                case .partlyCloudy:     return "Partly Cloudy"
+                case .mostlyCloudy:     return "Mostly Cloudy"
+                case .cloudy:           return "Cloudy"
+
+                case .rain:             return "Rain"
+                case .drizzle:          return "Drizzle"
+                case .showers:          return "Showers"
+
+                case .snow:             return "Snow"
+                case .flurries:         return "Flurries"
+
+                case .thunderstorms:    return "Thunderstorms"
+
+                case .foggy:            return "Fog"
+                case .haze:             return "Haze"
+                case .smoke:            return "Smoke"
+
+                case .windy:            return "Windy"
+                case .breezy:           return "Breezy"
+
+                case .hot:              return "Hot"
+                case .cold:             return "Cold"
+
+                case .blizzard:         return "Blizzard"
+                case .hurricane:        return "Hurricane"
+                case .tropicalStorm:    return "Tropical Storm"
+                }
             }
         }
     }

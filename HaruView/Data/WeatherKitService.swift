@@ -74,9 +74,13 @@ final class WeatherKitService {
     func snapshotWithPlace(for loc: CLLocation) async throws -> (WeatherSnapshot,String) {
 
         async let snap  = snapshot(for: loc)
-        async let place = geocoder.reverseGeocodeLocation(loc).first
+        async let placeMarks = geocoder.reverseGeocodeLocation(
+            loc,
+            preferredLocale: Locale(identifier: Locale.current.language.languageCode?.identifier == "ko" ? "ko_KR" : "en_US")
+        )
 
-        let (weather, pm) = try await (snap, place)
+        let (weather, pms) = try await (snap, placeMarks)
+        let pm = pms.first
 
         let name = [pm?.locality, pm?.subLocality]      // “도시 구/동”
             .compactMap { $0 }
