@@ -105,7 +105,7 @@
 				};
 			};
 			buildConfigurationList = CE6B84FC2DC12F8800F2D1BC /* Build configuration list for PBXProject "HaruView" */;
-			developmentRegion = en;
+			developmentRegion = ko;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
@@ -289,6 +289,7 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSCalendarsUsageDescription = "앱에서 캘린더에 접근하기 위해 권한이 필요합니다.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "날씨 정보를 가져오기 위해 위치 정보가 필요합니다.";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "맞춤형 광고 제공 및 광고 성과 측정을 위해 사용자 활동을 추적합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -332,6 +333,7 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSCalendarsUsageDescription = "앱에서 캘린더에 접근하기 위해 권한이 필요합니다.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "날씨 정보를 가져오기 위해 위치 정보가 필요합니다.";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "맞춤형 광고 제공 및 광고 성과 측정을 위해 사용자 활동을 추적합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

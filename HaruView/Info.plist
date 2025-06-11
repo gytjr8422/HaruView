@@ -10,18 +10,6 @@
 	<string>하루 일정을 한눈에 보여주고, 새로운 이벤트를 캘린더에 추가할 수 있도록 캘린더 접근 권한이 필요합니다.</string>
 	<key>NSRemindersFullAccessUsageDescription</key>
 	<string>오늘의 할 일을 정리하고, 새로운 미리알림을 추가할 수 있도록 미리알림 접근 권한이 필요합니다.</string>
-	<key>UIAppFonts</key>
-	<array>
-		<string>RobotoSerif_28pt-Bold.ttf</string>
-		<string>Pretendard-Bold.otf</string>
-		<string>Pretendard-Regular.otf</string>
-		<string>Pretendard-SemiBold.otf</string>
-		<string>Museum-Medium.otf</string>
-		<string>Museum-Bold.otf</string>
-		<string>PlusJakartaSans-Regular.ttf</string>
-		<string>PlusJakartaSans-Bold.ttf</string>
-		<string>BookkMyungjo_Bold.ttf</string>
-	</array>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>
@@ -221,7 +209,17 @@
 			<string>3qcr597p9d.skadnetwork</string>
 		</dict>
 	</array>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>맞춤형 광고 제공 및 광고 성과 측정을 위해 사용자 활동을 추적합니다.</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>RobotoSerif_28pt-Bold.ttf</string>
+		<string>Pretendard-Bold.otf</string>
+		<string>Pretendard-Regular.otf</string>
+		<string>Pretendard-SemiBold.otf</string>
+		<string>Museum-Medium.otf</string>
+		<string>Museum-Bold.otf</string>
+		<string>PlusJakartaSans-Regular.ttf</string>
+		<string>PlusJakartaSans-Bold.ttf</string>
+		<string>BookkMyungjo_Bold.ttf</string>
+	</array>
 </dict>
 </plist>
