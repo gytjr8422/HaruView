@@ -59,14 +59,14 @@ struct WeatherCard: View {
                     }
                     Spacer()
                     VStack(alignment: .trailing, spacing: 2) {
-                        Text("\(snapshot.temperature, specifier: "%.0f")°")
+                        Text(String(format: NSLocalizedString("%.0f°", comment: ""), snapshot.temperature))
                             .font(.system(size: 36, weight: .semibold))
-                        Text("최고: \(snapshot.tempMax, specifier: "%.0f")°  최저: \(snapshot.tempMin, specifier: "%.0f")°")
+                        Text(String(format: NSLocalizedString("최고: %.0f°  최저: %.0f°", comment: ""), snapshot.tempMax, snapshot.tempMin))
                             .font(.pretendardRegular(size: 13))
                         HStack {
-                            Text("습도: \(snapshot.humidity*100 , specifier: "%.0f")%")
+                            Text(String(format: NSLocalizedString("습도: %.0f%%", comment: ""), snapshot.humidity*100))
                                 .font(.pretendardRegular(size: 13))
-                            Text("바람: \(snapshot.windSpeed, specifier: "%.0f")m/s")
+                            Text(String(format: NSLocalizedString("바람: %.0fm/s", comment: ""), snapshot.windSpeed))
                                 .font(.pretendardRegular(size: 13))
                         }
                         
@@ -103,8 +103,13 @@ struct WeatherCard: View {
     // MARK: - Formatter
     private func hourLabel(_ date: Date) -> String {
         let fmt = DateFormatter()
-        fmt.locale = Locale(identifier: "ko_KR")
-        fmt.dateFormat = "a h시"           // “오후 3시”
+        if Locale.current.languageCode == "ko" {
+            fmt.locale = Locale(identifier: "ko_KR")
+            fmt.dateFormat = "a h시"
+        } else {
+            fmt.locale = Locale(identifier: "en_US")
+            fmt.dateFormat = "ha"
+        }
         return fmt.string(from: date)
     }
 }

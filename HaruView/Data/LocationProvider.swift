@@ -108,9 +108,9 @@ final class LocationProvider: NSObject, ObservableObject, @preconcurrency CLLoca
         var errorDescription: String? {
             switch self {
             case .denied:
-                return "위치 정보 접근이 거부되었습니다. 날씨 정보를 가져오기 위해 설정에서 위치 권한을 허용해주세요."
+                return String(localized: "위치 정보 접근이 거부되었습니다. 날씨 정보를 가져오기 위해 설정에서 위치 권한을 허용해주세요.")
             case .alreadyRequesting:
-                return "이미 위치 정보를 요청 중입니다."
+                return String(localized: "이미 위치 정보를 요청 중입니다.")
             }
         }
     }
