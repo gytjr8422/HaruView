@@ -138,7 +138,7 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                     HStack(spacing: 5) {
                         Text("종료")
                             .font(.pretendardSemiBold(size: 18))
-                            .padding(.trailing, Locale.current.language.languageCode?.identifier == "ko" ? 10 : 20)
+                            .padding(.trailing, Locale.current.language.languageCode?.identifier == "ko" ? 10 : 22)
                         
                         datePicker(date: $vm.endDate, min: vm.startDate)
                             .frame(width: 120, alignment: .trailing)

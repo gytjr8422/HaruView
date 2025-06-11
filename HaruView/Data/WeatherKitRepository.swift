@@ -60,7 +60,8 @@ struct WeatherKitRepository: WeatherRepositoryProtocol {
     private func cacheKey(for loc: CLLocation) -> String {
         let lat = Int(loc.coordinate.latitude  * 100)   // 1 km 그리드
         let lon = Int(loc.coordinate.longitude * 100)
-        return "weatherCache_\(lat)_\(lon)"
+        let lang = Locale.current.language.languageCode?.identifier ?? "en"
+        return "weatherCache_\(lat)_\(lon)_\(lang)"
     }
 
     private func saveCache(key: String, snap: WeatherSnapshot, place: String) {
