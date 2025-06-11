@@ -36,12 +36,16 @@ struct HaruViewApp: App {
 
 
 import GoogleMobileAds
+import AppTrackingTransparency
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         MobileAds.shared.start(completionHandler: nil)
-//        MobileAds.shared.requestConfiguration.testDeviceIdentifiers = ["4ECABE1C-80B0-4475-B992-651D240F36ED"]
-        MobileAds.shared.start(completionHandler: nil)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            ATTrackingManager.requestTrackingAuthorization { status in
+
+            }
+        }
         return true
     }
      

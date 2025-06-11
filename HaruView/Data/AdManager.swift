@@ -53,7 +53,12 @@ final class AdManager: NSObject, ObservableObject, FullScreenContentDelegate {
 
     func show(from vc: UIViewController, completion: (() -> Void)? = nil) {
         guard LocalFrequency.canShow else { completion?(); return }
-        guard let ad = interstitial else { completion?(); return }
+        guard let ad = interstitial else {
+            // 광고가 없다면 로드를 시도
+            Task { await loadNext() }
+            completion?()
+            return
+        }
 
         ad.fullScreenContentDelegate = self
         ad.present(from: vc)
@@ -72,6 +77,13 @@ final class AdManager: NSObject, ObservableObject, FullScreenContentDelegate {
     }
 
     private func loadNext() async {
-        interstitial = try? await InterstitialAd.load(with: unitID, request: Request())
+        do {
+            interstitial = try await InterstitialAd.load(with: unitID, request: Request())
+        } catch {
+            print("Interstitial load fail:", error.localizedDescription)
+            // 일정 시간 후 재시도
+            try? await Task.sleep(for: .seconds(5))
+            await loadNext()
+        }
     }
 }
