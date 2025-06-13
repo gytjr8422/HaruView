@@ -12,14 +12,16 @@ struct NativeAdBanner: UIViewRepresentable {
 
     // MARK: - Public
 
-    /// 광고 높이를 외부(View)로 전달 —  광고가 로드된 뒤 실제 intrinsicHeight 로 갱신됩니다.
+    /// 광고 높이를 외부(View)로 전달 —  광고가 로드된 뒤 실제 intrinsicHeight 로 갱신
     @Binding var height: CGFloat
 
-    #if DEBUG
-    private let unitID = "ca-app-pub-3940256099942544/2247696110"         // 테스트
-    #else
-    private let unitID = "ca-app-pub-2709183664449693/1890138459"
-    #endif
+    private let unitID: String = {
+        #if DEBUG
+        return "ca-app-pub-3940256099942544/2247696110" // 테스트 ID
+        #else
+        return "ca-app-pub-2709183664449693/1890138459" // 배포용 ID
+        #endif
+    }()
 
     func makeCoordinator() -> Coordinator { Coordinator(self) }
 
@@ -134,6 +136,10 @@ struct NativeAdBanner: UIViewRepresentable {
 
         func adLoader(_ loader: AdLoader, didFailToReceiveAdWithError error: Error) {
             print("Native ad load fail:", error.localizedDescription)
+            // 실패 시 재시도 로직 추가
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                self.loader?.load(Request())
+            }
         }
     }
 }

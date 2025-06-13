@@ -12,11 +12,14 @@ import GoogleMobileAds
 final class AdManager: NSObject, ObservableObject, FullScreenContentDelegate {
     static let shared = AdManager()
     
-    #if DEBUG
-    private let unitID = "ca-app-pub-3940256099942544/1033173712" // 테스트 ID
-    #else
-    private let unitID = "ca-app-pub-2709183664449693/2685953604"
-    #endif
+    private let unitID: String = {
+        #if DEBUG
+        return "ca-app-pub-3940256099942544/1033173712" // 테스트 ID
+        #else
+        return "ca-app-pub-2709183664449693/2685953604" // 배포용 ID
+        #endif
+    }()
+    
     private var interstitial: InterstitialAd?
     private var onDismiss: (() -> Void)?           // 광고 종료 후 실행
 
