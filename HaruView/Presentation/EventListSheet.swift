@@ -10,7 +10,9 @@ import SwiftUI
 struct EventListSheet<VM: EventListViewModelProtocol>: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.scenePhase) private var phase
+    @Environment(\.di) private var di
     @StateObject var vm: VM
+    @State private var editingEvent: Event?
     
     init(vm: VM) {
         _vm = StateObject(wrappedValue: vm)
@@ -23,6 +25,15 @@ struct EventListSheet<VM: EventListViewModelProtocol>: View {
                     ForEach(vm.events) { event in
                         EventCard(event: event)
                             .contextMenu {
+                                Button {
+                                    editingEvent = event
+                                } label: {
+                                    Label {
+                                        Text("편집").font(Font.pretendardRegular(size: 14))
+                                    } icon: {
+                                        Image(systemName: "pencil")
+                                    }
+                                }
                                 Button(role: .destructive) {
                                     Task {
                                         await vm.delete(id: event.id)
@@ -50,6 +61,11 @@ struct EventListSheet<VM: EventListViewModelProtocol>: View {
             if phase == .active { vm.refresh() }
         }
         .refreshable { vm.refresh() }
+        .sheet(item: $editingEvent) { event in
+            AddSheet(vm: di.makeEditSheetVM(event: event)) {
+                vm.refresh()
+            }
+        }
     }
     
     private var navigationTitleView: some ToolbarContent {

@@ -78,6 +78,19 @@ struct AddReminderUseCase {
     }
 }
 
+/// 미리알림 수정 유스케이스
+struct EditReminderUseCase {
+    private let repo: ReminderRepositoryProtocol
+
+    init(repo: ReminderRepositoryProtocol) {
+        self.repo = repo
+    }
+
+    func callAsFunction(_ edit: ReminderEdit) async -> Result<Void, TodayBoardError> {
+        await repo.update(edit)
+    }
+}
+
 struct FetchTodayWeatherUseCase {
     private let repo: WeatherRepositoryProtocol
     

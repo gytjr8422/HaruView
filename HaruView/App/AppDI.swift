@@ -49,9 +49,17 @@ final class DIContainer {
     func makeAddEventUseCase() -> AddEventUseCase {
         AddEventUseCase(repo: eventKitRepository)
     }
+
+    func makeEditEventUseCase() -> EditEventUseCase {
+        EditEventUseCase(repo: eventKitRepository)
+    }
     
     func makeAddReminderUseCase() -> AddReminderUseCase {
         AddReminderUseCase(repo: eventKitRepository)
+    }
+
+    func makeEditReminderUseCase() -> EditReminderUseCase {
+        EditReminderUseCase(repo: eventKitRepository)
     }
     
     func makeDeleteEventUseCase() -> DeleteObjectUseCase {
@@ -95,6 +103,20 @@ final class DIContainer {
     func makeAddSheetVM() -> AddSheetViewModel {
         AddSheetViewModel(addEvent: makeAddEventUseCase(),
                           addReminder: makeAddReminderUseCase())
+    }
+
+    @MainActor
+    func makeEditSheetVM(event: Event) -> EditSheetViewModel {
+        EditSheetViewModel(event: event,
+                           editEvent: makeEditEventUseCase(),
+                           editReminder: makeEditReminderUseCase())
+    }
+
+    @MainActor
+    func makeEditSheetVM(reminder: Reminder) -> EditSheetViewModel {
+        EditSheetViewModel(reminder: reminder,
+                           editEvent: makeEditEventUseCase(),
+                           editReminder: makeEditReminderUseCase())
     }
 }
 

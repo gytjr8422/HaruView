@@ -10,7 +10,9 @@ import SwiftUI
 struct ReminderListSheet<VM: ReminderListViewModelProtocol>: View {
     @Environment(\.scenePhase) private var phase
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.di) private var di
     @StateObject var vm: VM
+    @State private var editingReminder: Reminder?
     
     init(vm: VM) {
         _vm = StateObject(wrappedValue: vm)
@@ -27,6 +29,15 @@ struct ReminderListSheet<VM: ReminderListViewModelProtocol>: View {
                             }
                         }
                         .contextMenu {
+                            Button {
+                                editingReminder = reminder
+                            } label: {
+                                Label {
+                                    Text("편집").font(Font.pretendardRegular(size: 14))
+                                } icon: {
+                                    Image(systemName: "pencil")
+                                }
+                            }
                             Button(role: .destructive) {
                                 Task {
                                     await vm.delete(id: reminder.id)
@@ -58,6 +69,11 @@ struct ReminderListSheet<VM: ReminderListViewModelProtocol>: View {
             if phase == .active { vm.refresh() }
         }
         .refreshable { vm.refresh() }
+        .sheet(item: $editingReminder) { rem in
+            AddSheet(vm: di.makeEditSheetVM(reminder: rem)) {
+                vm.refresh()
+            }
+        }
     }
     
     private var navigationTitleView: some ToolbarContent {

@@ -29,13 +29,22 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                headerFilterView
-                TabView(selection: $selected) {
-                    eventPage.tag(AddSheetMode.event)
-                    reminderPage.tag(AddSheetMode.reminder)
+                if !vm.isEdit { headerFilterView }
+
+                if vm.isEdit {
+                    if vm.mode == .event {
+                        eventPage
+                    } else {
+                        reminderPage
+                    }
+                } else {
+                    TabView(selection: $selected) {
+                        eventPage.tag(AddSheetMode.event)
+                        reminderPage.tag(AddSheetMode.reminder)
+                    }
+                    .tabViewStyle(.page(indexDisplayMode: .never))
+                    .onChange(of: selected) { _, newValue in vm.mode = newValue }
                 }
-                .tabViewStyle(.page(indexDisplayMode: .never))
-                .onChange(of: selected) { _, newValue in vm.mode = newValue }
             }
             .background(Color(hexCode: "FFFCF5"))
             .toolbar { leadingToolbar; toolbarTitle; saveToolbar }
@@ -275,7 +284,8 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     
     private var toolbarTitle: some ToolbarContent {
         ToolbarItem(placement: .principal) {
-            Text(String(format: NSLocalizedString("%@ 추가", comment: ""), selected.localized))
+            let key = vm.isEdit ? "%@ 편집" : "%@ 추가"
+            Text(String(format: NSLocalizedString(key, comment: ""), vm.mode.localized))
         }
     }
 }
@@ -304,6 +314,8 @@ private struct HaruToggleStyle: ToggleStyle {
 
 #if DEBUG
 private class MockAddVM: AddSheetViewModelProtocol {
+    var isEdit: Bool = false
+    
     var currentTitle: String = ""
     
     

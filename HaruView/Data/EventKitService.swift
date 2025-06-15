@@ -118,6 +118,27 @@ final class EventKitService {
             return .failure(.saveFailed)
         }
     }
+
+    func updateReminder(_ edit: ReminderEdit) -> Result<Void, TodayBoardError> {
+        guard let reminder = store.calendarItem(withIdentifier: edit.id) as? EKReminder else {
+            return .failure(.notFound)
+        }
+        reminder.title = edit.title
+        reminder.dueDateComponents = nil
+        if let due = edit.due {
+            if edit.includesTime {
+                reminder.dueDateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: due)
+            } else {
+                reminder.dueDateComponents = Calendar.current.dateComponents([.year, .month, .day], from: due)
+            }
+        }
+        do {
+            try store.save(reminder, commit: true)
+            return .success(())
+        } catch {
+            return .failure(.saveFailed)
+        }
+    }
     
     func toggleReminder(id: String) -> Result<Void, TodayBoardError> {
         guard let reminder = store.calendarItem(withIdentifier: id) as? EKReminder else {
