@@ -314,6 +314,8 @@ private struct HaruToggleStyle: ToggleStyle {
 
 #if DEBUG
 private class MockAddVM: AddSheetViewModelProtocol {
+    var isEdit: Bool = false
+    
     var currentTitle: String = ""
     
     

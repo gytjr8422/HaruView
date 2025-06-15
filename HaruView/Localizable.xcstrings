@@ -15,6 +15,7 @@
       }
     },
     "%@ 추가" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -398,6 +399,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Both calendar and reminder permissions are required."
+          }
+        }
+      }
+    },
+    "편집" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit"
           }
         }
       }
