@@ -13,6 +13,7 @@ struct ReminderListSheet<VM: ReminderListViewModelProtocol>: View {
     @Environment(\.di) private var di
     @StateObject var vm: VM
     @State private var editingReminder: Reminder?
+    @State private var showToast: Bool = false
     
     init(vm: VM) {
         _vm = StateObject(wrappedValue: vm)
@@ -72,7 +73,12 @@ struct ReminderListSheet<VM: ReminderListViewModelProtocol>: View {
         .sheet(item: $editingReminder) { rem in
             AddSheet(vm: di.makeEditSheetVM(reminder: rem)) {
                 vm.refresh()
+                showToast = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) { showToast = false }
             }
+        }
+        .overlay(alignment: .top) {
+            if showToast { ToastView().transition(.opacity) }
         }
     }
     
@@ -93,6 +99,20 @@ struct ReminderListSheet<VM: ReminderListViewModelProtocol>: View {
                     .foregroundStyle(Color(hexCode: "A76545"))
             }
         }
+    }
+}
+
+private struct ToastView: View {
+    var body: some View {
+        Text("저장이 완료되었습니다.")
+            .font(.pretendardSemiBold(size: 14))
+            .foregroundStyle(Color.white)
+            .padding(10)
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .opacity(0.85)
+            )
+            .transition(.move(edge: .top).combined(with: .opacity))
     }
 }
 

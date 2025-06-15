@@ -29,6 +29,7 @@ protocol AddSheetViewModelProtocol: ObservableObject {
     var error: TodayBoardError? { get }
     var isSaving: Bool { get }
     var isEdit: Bool { get }
+    var hasChanges: Bool { get }
 
     func save() async
 }
@@ -74,6 +75,9 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
     @Published var error: TodayBoardError?
     @Published var isSaving: Bool = false
     var isEdit: Bool { false }
+    var hasChanges: Bool {
+        !currentTitle.isEmpty || (mode == .event && startDate > Date())
+    }
 
     private var titles: [AddSheetMode:String] = [.event:"", .reminder:""]
 

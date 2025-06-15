@@ -20,6 +20,30 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
     @Published var isSaving: Bool = false
 
     var isEdit: Bool { true }
+    private let originalTitle: String
+    private let originalStart: Date
+    private let originalEnd: Date
+    private let originalDue: Date?
+    private let originalAllDay: Bool
+    private let originalIncludeTime: Bool
+    var hasChanges: Bool {
+        switch mode {
+        case .event:
+            return currentTitle != originalTitle ||
+                   startDate != originalStart ||
+                   endDate != originalEnd ||
+                   isAllDay != originalAllDay
+        case .reminder:
+            if currentTitle != originalTitle { return true }
+            if includeTime != originalIncludeTime { return true }
+            if includeTime {
+                if let origDue = originalDue { return dueDate != origDue }
+                return true
+            } else {
+                return originalIncludeTime
+            }
+        }
+    }
 
     private var titles: [AddSheetMode:String] = [.event:"", .reminder:""]
 
@@ -42,6 +66,12 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
             self.isAllDay = true
         }
         titles[.event] = event.title
+        self.originalTitle = event.title
+        self.originalStart = event.start
+        self.originalEnd = event.end
+        self.originalAllDay = self.isAllDay
+        self.originalDue = nil
+        self.originalIncludeTime = false
     }
 
     init(reminder: Reminder, editEvent: EditEventUseCase, editReminder: EditReminderUseCase) {
@@ -53,6 +83,12 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
         if let due = reminder.due { self.dueDate = due }
         self.includeTime = reminder.due != nil
         titles[.reminder] = reminder.title
+        self.originalTitle = reminder.title
+        self.originalStart = .now
+        self.originalEnd = .now
+        self.originalAllDay = false
+        self.originalDue = reminder.due
+        self.originalIncludeTime = reminder.due != nil
     }
 
     func save() async {

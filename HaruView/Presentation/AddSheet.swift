@@ -49,10 +49,10 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
             .background(Color(hexCode: "FFFCF5"))
             .toolbar { leadingToolbar; toolbarTitle; saveToolbar }
             .navigationBarTitleDisplayMode(.inline)
-            .confirmationDialog("작성 내용이 저장되지 않습니다.",
+            .confirmationDialog(vm.isEdit ? "변경사항을 저장하지 않을까요?" : "작성 내용이 저장되지 않습니다.",
                                 isPresented: $showDiscardAlert) {
-                Button("저장 안 하고 닫기", role: .destructive) { dismiss() }
-                Button("계속 작성", role: .cancel) {}
+                Button(vm.isEdit ? "변경사항 저장 안 하고 닫기" : "저장 안 하고 닫기", role: .destructive) { dismiss() }
+                Button(vm.isEdit ? "계속 편집" : "계속 작성", role: .cancel) {}
             }
         }
         .interactiveDismissDisabled(isDirty || vm.isSaving)
@@ -64,7 +64,7 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
 
     // MARK: Dirty Check
     private var isDirty: Bool {
-        !vm.currentTitle.isEmpty || (vm.mode == .event && vm.startDate > Date())
+        vm.hasChanges
     }
 
     // MARK: Header -----------------------------------------------------------
@@ -314,7 +314,9 @@ private struct HaruToggleStyle: ToggleStyle {
 
 #if DEBUG
 private class MockAddVM: AddSheetViewModelProtocol {
-    var isEdit: Bool = false
+    var isEdit: Bool { false }
+    var hasChanges: Bool { true }
+
     
     var currentTitle: String = ""
     
