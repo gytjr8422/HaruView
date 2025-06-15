@@ -111,6 +111,10 @@ final class EventKitRepository: EventRepositoryProtocol, ReminderRepositoryProto
     func add(_ input: ReminderInput) async -> Result<Void, TodayBoardError> {
         service.addReminder(input)
     }
+
+    func update(_ edit: ReminderEdit) async -> Result<Void, TodayBoardError> {
+        service.updateReminder(edit)
+    }
     
     func toggle(id: String) async -> Result<Void, TodayBoardError> {
         service.toggleReminder(id: id)

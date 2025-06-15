@@ -20,6 +20,8 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
     @State private var showEventSheet: Bool = false
     @State private var showReminderSheet: Bool = false
     @State private var showAddSheet: Bool = false
+    @State private var editingEvent: Event?
+    @State private var editingReminder: Reminder?
     @State private var showToast: Bool = false
     @State private var adHeight: CGFloat = 0
     
@@ -68,6 +70,16 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                                 }
                             }
                             .onDisappear { vm.refresh(.storeChange) }
+                        }
+                        .sheet(item: $editingEvent) { event in
+                            AddSheet(vm: di.makeEditSheetVM(event: event)) {
+                                vm.refresh(.storeChange)
+                            }
+                        }
+                        .sheet(item: $editingReminder) { rem in
+                            AddSheet(vm: di.makeEditSheetVM(reminder: rem)) {
+                                vm.refresh(.storeChange)
+                            }
                         }
                     
                     
@@ -189,6 +201,15 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                 ForEach(vm.state.overview.events.prefix(5)) { event in
                     EventCard(event: event)
                         .contextMenu {
+                            Button {
+                                editingEvent = event
+                            } label: {
+                                Label {
+                                    Text("편집").font(Font.pretendardRegular(size: 14))
+                                } icon: {
+                                    Image(systemName: "pencil")
+                                }
+                            }
                             Button(role: .destructive) {
                                 Task {
                                     await vm.deleteObject(.event(event.id))
@@ -236,6 +257,16 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                         Task { await vm.toggleReminder(id: rem.id) }
                     }
                     .contextMenu {
+                        Button {
+                            editingReminder = rem
+                        } label: {
+                            Label {
+                                Text("편집")
+                                    .font(Font.pretendardRegular(size: 14))
+                            } icon: {
+                                Image(systemName: "pencil")
+                            }
+                        }
                         Button(role: .destructive) {
                             Task {
                                 await vm.deleteObject(.reminder(rem.id))

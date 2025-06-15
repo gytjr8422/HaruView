@@ -18,6 +18,7 @@ protocol EventRepositoryProtocol {
 protocol ReminderRepositoryProtocol {
     func fetchReminder() async -> Result<[Reminder], TodayBoardError>
     func add(_ input: ReminderInput) async -> Result<Void, TodayBoardError>
+    func update(_ edit: ReminderEdit) async -> Result<Void, TodayBoardError>
     func toggle(id: String) async -> Result<Void, TodayBoardError>
     func deleteReminder(id: String) async -> Result<Void, TodayBoardError>
 }
@@ -47,6 +48,8 @@ struct ReminderInput {
 }
 
 struct ReminderEdit {
+    let id: String
     let title: String
     let due: Date?
+    let includesTime: Bool
 }

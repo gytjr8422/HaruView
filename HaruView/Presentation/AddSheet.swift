@@ -275,7 +275,8 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     
     private var toolbarTitle: some ToolbarContent {
         ToolbarItem(placement: .principal) {
-            Text(String(format: NSLocalizedString("%@ 추가", comment: ""), selected.localized))
+            let key = vm.isEdit ? "%@ 편집" : "%@ 추가"
+            Text(String(format: NSLocalizedString(key, comment: ""), selected.localized))
         }
     }
 }
