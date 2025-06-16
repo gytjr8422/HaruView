@@ -13,6 +13,7 @@ struct EventListSheet<VM: EventListViewModelProtocol>: View {
     @Environment(\.di) private var di
     @StateObject var vm: VM
     @State private var editingEvent: Event?
+    @State private var showToast: Bool = false
     
     init(vm: VM) {
         _vm = StateObject(wrappedValue: vm)
@@ -63,9 +64,22 @@ struct EventListSheet<VM: EventListViewModelProtocol>: View {
         .refreshable { vm.refresh() }
         .sheet(item: $editingEvent) { event in
             AddSheet(vm: di.makeEditSheetVM(event: event)) {
+                showToast = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    showToast = false
+                }
                 vm.refresh()
             }
         }
+        .overlay(
+            Group {
+                if showToast {
+                    ToastView()
+                        .animation(.easeInOut, value: showToast)
+                        .transition(.opacity)
+                }
+            }
+        )
     }
     
     private var navigationTitleView: some ToolbarContent {
@@ -84,6 +98,19 @@ struct EventListSheet<VM: EventListViewModelProtocol>: View {
                     .font(.pretendardRegular(size: 16))
                     .foregroundStyle(Color(hexCode: "A76545"))
             }
+        }
+    }
+    private struct ToastView: View {
+        var body: some View {
+            Text("저장이 완료되었습니다.")
+                .font(.pretendardSemiBold(size: 14))
+                .foregroundStyle(Color.white)
+                .padding(10)
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .opacity(0.85)
+                )
+                .transition(.move(edge: .top).combined(with: .opacity))
         }
     }
 
