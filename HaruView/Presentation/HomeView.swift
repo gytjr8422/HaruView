@@ -73,11 +73,19 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                         }
                         .sheet(item: $editingEvent) { event in
                             AddSheet(vm: di.makeEditSheetVM(event: event)) {
+                                showToast = true
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                    showToast = false
+                                }
                                 vm.refresh(.storeChange)
                             }
                         }
                         .sheet(item: $editingReminder) { rem in
                             AddSheet(vm: di.makeEditSheetVM(reminder: rem)) {
+                                showToast = true
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                    showToast = false
+                                }
                                 vm.refresh(.storeChange)
                             }
                         }
