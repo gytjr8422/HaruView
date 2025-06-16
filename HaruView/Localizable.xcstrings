@@ -15,12 +15,23 @@
       }
     },
     "%@ 추가" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Add %@"
+          }
+        }
+      }
+    },
+    "%@ 편집" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit %@"
           }
         }
       }
