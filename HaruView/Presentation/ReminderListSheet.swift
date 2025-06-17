@@ -89,7 +89,7 @@ struct ReminderListSheet<VM: ReminderListViewModelProtocol>: View {
             }
         )
     }
-    
+
     private var navigationTitleView: some ToolbarContent {
         ToolbarItem(placement: .principal) {
             Text("오늘 할 일")
@@ -109,7 +109,6 @@ struct ReminderListSheet<VM: ReminderListViewModelProtocol>: View {
         }
     }
 
-    
     private struct ToastView: View {
         var body: some View {
             Text("저장이 완료되었습니다.")
@@ -123,7 +122,6 @@ struct ReminderListSheet<VM: ReminderListViewModelProtocol>: View {
                 .transition(.move(edge: .top).combined(with: .opacity))
         }
     }
-        
 }
 
 

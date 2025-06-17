@@ -448,7 +448,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                         Image(systemName: "hand.tap")
                             .font(.system(size: 48))
                             .foregroundStyle(.white)
-                        Text("항목을 **길게 눌러** 삭제할 수 있어요!")
+                        Text("항목을 **길게 눌러** 수정/삭제할 수 있어요!")
                             .multilineTextAlignment(.center)
                             .font(.pretendardBold(size: 18))
                             .foregroundStyle(.white)

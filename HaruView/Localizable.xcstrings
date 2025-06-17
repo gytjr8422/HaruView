@@ -56,6 +56,16 @@
         }
       }
     },
+    "계속 편집" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue Editing"
+          }
+        }
+      }
+    },
     "날씨 정보를 가져오는데 실패했습니다: %@" : {
       "localizations" : {
         "en" : {
@@ -424,6 +434,26 @@
         }
       }
     },
+    "편집 내용이 저장되지 않습니다." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changes won’t be saved."
+          }
+        }
+      }
+    },
+    "편집 취소하기" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discard Changes"
+          }
+        }
+      }
+    },
     "하루 종일" : {
       "localizations" : {
         "en" : {
@@ -444,12 +474,12 @@
         }
       }
     },
-    "항목을 **길게 눌러** 삭제할 수 있어요!" : {
+    "항목을 **길게 눌러** 수정/삭제할 수 있어요!" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Long-press an item to delete it!"
+            "value" : "Long-press an item to edit/delete it!"
           }
         }
       }
