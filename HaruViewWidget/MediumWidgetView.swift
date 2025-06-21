@@ -47,11 +47,11 @@ struct MediumWidgetView: View {
                                     if !event.isAllDay {
                                         Text(event.startDate, style: .time)
                                             .font(.jakartaRegular(size: 11))
-                                            .foregroundColor(.secondary)
+                                            .foregroundColor(.gray)
                                     } else {
                                         Text("하루 종일")
                                             .font(.jakartaRegular(size: 9))
-                                            .foregroundColor(.secondary)
+                                            .foregroundColor(.gray)
                                     }
                                 }
                                 Spacer()
@@ -87,7 +87,7 @@ struct MediumWidgetView: View {
                                 // 토글 가능한 체크박스
                                 Button(intent: ToggleReminderIntent(reminderId: reminder.id)) {
                                     Image(systemName: reminder.isCompleted ? "checkmark.circle.fill" : "circle")
-                                        .foregroundColor(reminder.isCompleted ? Color(hexCode: "A76545") : .secondary)
+                                        .foregroundColor(reminder.isCompleted ? Color(hexCode: "A76545") : .gray)
                                         .font(.system(size: 20))
                                 }
                                 .buttonStyle(.plain)
@@ -96,7 +96,7 @@ struct MediumWidgetView: View {
                                     .font(.pretendardSemiBold(size: 13))
                                     .lineLimit(1)
                                     .strikethrough(reminder.isCompleted)
-                                    .foregroundColor(reminder.isCompleted ? .secondary : Color(hexCode: "40392B"))
+                                    .foregroundColor(reminder.isCompleted ? .gray : Color(hexCode: "40392B"))
                             }
                             
                             if index < entry.reminders.prefix(3).count - 1 {

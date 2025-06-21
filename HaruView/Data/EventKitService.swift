@@ -8,6 +8,7 @@
 import Foundation
 import EventKit
 import Combine
+import WidgetKit
 
 final class EventKitService {
     private let store = EKEventStore()
@@ -70,6 +71,10 @@ final class EventKitService {
         event.calendar = store.defaultCalendarForNewEvents
         do {
             try store.save(event, span: .thisEvent)
+            // 위젯 새로고침
+            Task { @MainActor in
+                WidgetRefreshService.shared.refreshWithDebounce()
+            }
             return .success(())
         } catch {
             return .failure(.saveFailed)
@@ -83,6 +88,10 @@ final class EventKitService {
         event.endDate = edit.end
         do {
             try store.save(event, span: .thisEvent)
+            // 위젯 새로고침
+            Task { @MainActor in
+                WidgetRefreshService.shared.refreshWithDebounce()
+            }
             return .success(())
         } catch {
             return .failure(.saveFailed)
@@ -93,6 +102,10 @@ final class EventKitService {
         guard let event = store.event(withIdentifier: id) else { return .failure(.notFound) }
         do {
             try store.remove(event, span: .thisEvent, commit: true)
+            // 위젯 새로고침
+            Task { @MainActor in
+                WidgetRefreshService.shared.refreshWithDebounce()
+            }
             return .success(())
         } catch {
             return .failure(.saveFailed)
@@ -113,6 +126,10 @@ final class EventKitService {
         reminder.calendar = store.defaultCalendarForNewReminders()
         do {
             try store.save(reminder, commit: true)
+            // 위젯 새로고침
+            Task { @MainActor in
+                WidgetRefreshService.shared.refreshWithDebounce()
+            }
             return .success(())
         } catch {
             return .failure(.saveFailed)
@@ -134,6 +151,10 @@ final class EventKitService {
         }
         do {
             try store.save(reminder, commit: true)
+            // 위젯 새로고침
+            Task { @MainActor in
+                WidgetRefreshService.shared.refreshWithDebounce()
+            }
             return .success(())
         } catch {
             return .failure(.saveFailed)
@@ -147,6 +168,10 @@ final class EventKitService {
         reminder.isCompleted.toggle()
         do {
             try store.save(reminder, commit: true)
+            // 위젯 새로고침
+            Task { @MainActor in
+                WidgetRefreshService.shared.refreshWithDebounce()
+            }
             return .success(())
         } catch {
             return .failure(.saveFailed)
@@ -159,6 +184,10 @@ final class EventKitService {
         }
         do {
             try store.remove(reminder, commit: true)
+            // 위젯 새로고침
+            Task { @MainActor in
+                WidgetRefreshService.shared.refreshWithDebounce()
+            }
             return .success(())
         } catch {
             return .failure(.saveFailed)

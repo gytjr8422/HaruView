@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import EventKit
+import WidgetKit
 
 
 final class DIContainer {
@@ -31,7 +32,9 @@ final class DIContainer {
         case .success:
             // 2. 캘린더 full 권한 요청
             switch await eventKitService.requestAccess(.full) {
-            case .success: break
+            case .success:
+                // 권한 획득 후 위젯 새로고침
+                WidgetRefreshService.shared.refreshWithDebounce()
             case .failure(let error):
                 print("Full access request failed: \(error)")
             }

@@ -8,6 +8,7 @@
 import SwiftUI
 import Combine
 import CoreLocation
+import WidgetKit
 
 protocol HomeViewModelProtocol: ObservableObject {
     var state: HomeState { get }
@@ -136,7 +137,11 @@ final class HomeViewModel: ObservableObject, @preconcurrency HomeViewModelProtoc
     private func bindStoreChange() {
         service.changePublisher
             .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
-            .sink { [weak self] in self?.refresh(.storeChange) }
+            .sink { [weak self] in
+                self?.refresh(.storeChange)
+                // EventKit 변경 시 위젯도 새로고침
+                WidgetRefreshService.shared.refreshWithDebounce()
+            }
             .store(in: &cancellables)
     }
 
@@ -158,6 +163,8 @@ final class HomeViewModel: ObservableObject, @preconcurrency HomeViewModelProtoc
                     state.overview.reminders.sort(by: reminderSortRule)
                 }
             }
+            // 위젯 새로고침 (이미 EventKitService에서 처리되지만 추가 보장)
+            WidgetRefreshService.shared.refreshWithDebounce()
         case .failure(let error):
             state.error = error
         }
@@ -166,9 +173,17 @@ final class HomeViewModel: ObservableObject, @preconcurrency HomeViewModelProtoc
     func deleteObject(_ kind: DeleteObjectUseCase.ObjectKind) async {
         switch kind {
         case .event(let id):
-            let _ = await deleteObject(.event(id))
+            let result = await deleteObject(.event(id))
+            if case .success = result {
+                // 위젯 새로고침 (이미 EventKitService에서 처리되지만 추가 보장)
+                WidgetRefreshService.shared.refreshWithDebounce()
+            }
         case .reminder(let id):
-            let _ = await deleteObject(.reminder(id))
+            let result = await deleteObject(.reminder(id))
+            if case .success = result {
+                // 위젯 새로고침 (이미 EventKitService에서 처리되지만 추가 보장)
+                WidgetRefreshService.shared.refreshWithDebounce()
+            }
         }
     }
     
