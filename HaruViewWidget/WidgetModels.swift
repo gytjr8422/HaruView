@@ -1,3 +1,11 @@
+//
+//  WidgetModels.swift
+//  WidgetModels
+//
+//  Created by 김효석 on 6/20/25.
+//
+
+
 import Foundation
 import WidgetKit
 

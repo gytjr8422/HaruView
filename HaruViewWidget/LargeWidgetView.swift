@@ -1,3 +1,11 @@
+//
+//  LargeWidgetView.swift
+//  LargeWidgetView
+//
+//  Created by 김효석 on 6/20/25.
+//
+
+
 import SwiftUI
 
 struct LargeWidgetView: View {
@@ -143,7 +151,6 @@ struct LargeWidgetView: View {
             }
             Spacer()
         }
-        .padding(16)
     }
     
     private func priorityColor(_ priority: Int) -> Color {

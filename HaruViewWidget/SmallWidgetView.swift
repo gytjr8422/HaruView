@@ -1,3 +1,10 @@
+//
+//  SmallWidgetView.swift
+//  SmallWidgetView
+//
+//  Created by 김효석 on 6/20/25.
+//
+
 import SwiftUI
 
 struct SmallWidgetView: View {

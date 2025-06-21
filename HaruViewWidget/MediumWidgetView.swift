@@ -1,4 +1,12 @@
+//
+//  MediumWidgetView.swift
+//  MediumWidgetView
+//
+//  Created by 김효석 on 6/20/25.
+//
+
 import SwiftUI
+import AppIntents
 
 struct MediumWidgetView: View {
     let entry: Provider.Entry
@@ -16,6 +24,7 @@ struct MediumWidgetView: View {
                             .font(.pretendardBold(size: 11))
                             .foregroundColor(Color(hexCode: "40392B"))
                     }
+                    
                     if entry.events.isEmpty {
                         Text("일정이 없습니다")
                             .font(.pretendardRegular(size: 11))
@@ -28,11 +37,13 @@ struct MediumWidgetView: View {
                                     .fill(Color(hexCode: "A76545"))
                                     .frame(width: 4)
                                     .frame(maxHeight: 25)
+                                
                                 VStack(alignment: .leading) {
                                     Text(event.title)
                                         .font(.pretendardBold(size: 13))
                                         .lineLimit(1)
                                         .foregroundColor(Color(hexCode: "40392B"))
+                                    
                                     if !event.isAllDay {
                                         Text(event.startDate, style: .time)
                                             .font(.jakartaRegular(size: 11))
@@ -48,10 +59,12 @@ struct MediumWidgetView: View {
                         }
                     }
                 }
+                
                 // 구분선
                 Rectangle()
                     .fill(Color(hexCode: "6E5C49").opacity(0.2))
                     .frame(width: 1, height: .infinity)
+                
                 // 할 일 섹션
                 VStack(alignment: .leading, spacing: 6) {
                     HStack(spacing: 3) {
@@ -62,6 +75,7 @@ struct MediumWidgetView: View {
                             .font(.pretendardSemiBold(size: 10))
                             .foregroundColor(Color(hexCode: "40392B"))
                     }
+                    
                     if entry.reminders.isEmpty {
                         Text("할 일이 없습니다")
                             .font(.pretendardRegular(size: 11))
@@ -70,15 +84,21 @@ struct MediumWidgetView: View {
                     } else {
                         ForEach(Array(entry.reminders.prefix(3).enumerated()), id: \.offset) { index, reminder in
                             HStack {
-                                Image(systemName: reminder.isCompleted ? "checkmark.circle.fill" : "circle")
-                                    .foregroundColor(reminder.isCompleted ? Color(hexCode: "A76545") : .secondary)
-                                    .font(.system(size: 20))
+                                // 토글 가능한 체크박스
+                                Button(intent: ToggleReminderIntent(reminderId: reminder.id)) {
+                                    Image(systemName: reminder.isCompleted ? "checkmark.circle.fill" : "circle")
+                                        .foregroundColor(reminder.isCompleted ? Color(hexCode: "A76545") : .secondary)
+                                        .font(.system(size: 20))
+                                }
+                                .buttonStyle(.plain)
+                                
                                 Text(reminder.title)
                                     .font(.pretendardSemiBold(size: 13))
                                     .lineLimit(1)
                                     .strikethrough(reminder.isCompleted)
                                     .foregroundColor(reminder.isCompleted ? .secondary : Color(hexCode: "40392B"))
                             }
+                            
                             if index < entry.reminders.prefix(3).count - 1 {
                                 Divider()
                             }
@@ -89,4 +109,4 @@ struct MediumWidgetView: View {
             }
         }
     }
-} 
+}

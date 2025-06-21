@@ -1,3 +1,10 @@
+//
+//  Provider.swift
+//  Provider
+//
+//  Created by 김효석 on 6/20/25.
+//
+
 import WidgetKit
 import EventKit
 import Foundation

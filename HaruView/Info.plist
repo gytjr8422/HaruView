@@ -7,9 +7,9 @@
 	<key>GADNativeAdValidatorEnabled</key>
 	<string>false</string>
 	<key>NSCalendarsFullAccessUsageDescription</key>
-	<string>하루 일정을 한눈에 보여주고, 새로운 이벤트를 캘린더에 추가할 수 있도록 캘린더 접근 권한이 필요합니다.</string>
+	<string>하루 일정을 앱과 위젯에서 한눈에 보여주고, 새로운 이벤트를 캘린더에 추가할 수 있도록 캘린더 접근 권한이 필요합니다.</string>
 	<key>NSRemindersFullAccessUsageDescription</key>
-	<string>오늘의 할 일을 정리하고, 새로운 미리알림을 추가할 수 있도록 미리알림 접근 권한이 필요합니다.</string>
+	<string>오늘의 할 일을 앱과 위젯에서 정리하고, 새로운 미리알림을 추가할 수 있도록 미리알림 접근 권한이 필요합니다.</string>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>
