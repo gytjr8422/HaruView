@@ -7,53 +7,76 @@
 
 import WidgetKit
 import SwiftUI
+import EventKit
+import AppIntents
 
-struct Provider: AppIntentTimelineProvider {
-    func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), configuration: ConfigurationAppIntent())
+// MARK: - Font Extensions
+extension Font {
+    static func robotoSerifBold(size: CGFloat) -> Font {
+        .custom("RobotoSerif28pt-Bold", size: size)
     }
 
-    func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> SimpleEntry {
-        SimpleEntry(date: Date(), configuration: configuration)
+    static func pretendardBold(size: CGFloat) -> Font {
+        .custom("Pretendard-Bold", size: size)
+    }
+
+    static func pretendardSemiBold(size: CGFloat) -> Font {
+        .custom("Pretendard-SemiBold", size: size)
+    }
+
+    static func pretendardRegular(size: CGFloat) -> Font {
+        .custom("Pretendard-Regular", size: size)
     }
     
-    func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<SimpleEntry> {
-        var entries: [SimpleEntry] = []
-
-        // Generate a timeline consisting of five entries an hour apart, starting from the current date.
-        let currentDate = Date()
-        for hourOffset in 0 ..< 5 {
-            let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = SimpleEntry(date: entryDate, configuration: configuration)
-            entries.append(entry)
-        }
-
-        return Timeline(entries: entries, policy: .atEnd)
+    static func museumBold(size: CGFloat) -> Font {
+        .custom("MuseumClassicBold", size: size)
     }
-
-//    func relevances() async -> WidgetRelevances<ConfigurationAppIntent> {
-//        // Generate a list containing the contexts this widget is relevant in.
-//    }
+    
+    static func museumMedium(size: CGFloat) -> Font {
+        .custom("MuseumClassicMedium", size: size)
+    }
+    
+    static func jakartaRegular(size: CGFloat) -> Font {
+        .custom("PlusJakartaSans-Regular", size: size)
+    }
+    
+    static func jakartaBold(size: CGFloat) -> Font {
+        .custom("PlusJakartaSans-Bold", size: size)
+    }
+    
+    static func bookkMyungjoBold(size: CGFloat) -> Font {
+        .custom("BookkMyungjo-Bd", size: size)
+    }
 }
 
-struct SimpleEntry: TimelineEntry {
-    let date: Date
-    let configuration: ConfigurationAppIntent
-}
 
-struct HaruViewWidgetEntryView : View {
+
+// MARK: - Widget Views
+
+struct HaruViewWidgetEntryView: View {
     var entry: Provider.Entry
-
+    @Environment(\.widgetFamily) var family
+    
     var body: some View {
-        VStack {
-            Text("Time:")
-            Text(entry.date, style: .time)
-
-            Text("Favorite Emoji:")
-            Text(entry.configuration.favoriteEmoji)
+        ZStack {
+            // 앱과 동일한 배경색
+            Color(hexCode: "FFFCF5")
+            
+            switch family {
+            case .systemSmall:
+                SmallWidgetView(entry: entry)
+            case .systemMedium:
+                MediumWidgetView(entry: entry)
+            case .systemLarge:
+                LargeWidgetView(entry: entry)
+            default:
+                SmallWidgetView(entry: entry)
+            }
         }
     }
 }
+
+// MARK: - Widget Configuration
 
 struct HaruViewWidget: Widget {
     let kind: String = "HaruViewWidget"
@@ -61,9 +84,11 @@ struct HaruViewWidget: Widget {
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
             HaruViewWidgetEntryView(entry: entry)
-                .containerBackground(.fill.tertiary, for: .widget)
+                .containerBackground(Color(hexCode: "FFFCF5"), for: .widget)
         }
         .configurationDisplayName("하루뷰 Widget")
+        .description("오늘의 캘린더 일정과 미리알림을 한눈에 확인하세요")
+        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }
 }
 
@@ -81,9 +106,19 @@ extension ConfigurationAppIntent {
     }
 }
 
-#Preview(as: .systemSmall) {
+#Preview(as: .systemMedium) {
     HaruViewWidget()
 } timeline: {
-    SimpleEntry(date: .now, configuration: .smiley)
-    SimpleEntry(date: .now, configuration: .starEyes)
+    SimpleEntry(date: .now, configuration: .smiley,
+                events: [
+                    CalendarEvent(title: "팀 미팅", startDate: Date(), endDate: Date().addingTimeInterval(3600), isAllDay: false),
+                    CalendarEvent(title: "점심 약속", startDate: Date().addingTimeInterval(3600), endDate: Date().addingTimeInterval(7200), isAllDay: false),
+                    CalendarEvent(title: "팀 미팅", startDate: Date(), endDate: Date().addingTimeInterval(3600), isAllDay: false),
+                    CalendarEvent(title: "점심 약속", startDate: Date().addingTimeInterval(3600), endDate: Date().addingTimeInterval(7200), isAllDay: false)
+                ],
+                reminders: [
+                    ReminderItem(id: "1", title: "프로젝트 마감", dueDate: Date(), priority: 1, isCompleted: false),
+                    ReminderItem(id: "1", title: "프로젝트2 시작", dueDate: Date(), priority: 1, isCompleted: false)
+                ])
+    SimpleEntry(date: .now, configuration: .starEyes, events: [], reminders: [])
 }
