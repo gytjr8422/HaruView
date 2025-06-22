@@ -16,14 +16,14 @@ struct MediumWidgetView: View {
             HStack(alignment: .top) {
                 // 일정 섹션
                 VStack(alignment: .leading, spacing: 6) {
-                    HStack(spacing: 3) {
-                        Image(systemName: "calendar")
-                            .foregroundColor(Color(hexCode: "A76545"))
-                            .font(.system(size: 10))
-                        Text("일정")
-                            .font(.pretendardBold(size: 11))
-                            .foregroundColor(Color(hexCode: "40392B"))
-                    }
+//                    HStack(spacing: 3) {
+//                        Image(systemName: "calendar")
+//                            .foregroundColor(Color(hexCode: "A76545"))
+//                            .font(.system(size: 10))
+//                        Text("일정")
+//                            .font(.pretendardBold(size: 11))
+//                            .foregroundColor(Color(hexCode: "40392B"))
+//                    }
                     
                     if entry.events.isEmpty {
                         Text("일정이 없습니다")
@@ -31,7 +31,7 @@ struct MediumWidgetView: View {
                             .foregroundColor(.secondary)
                             .padding(.vertical, 4)
                     } else {
-                        ForEach(Array(entry.events.prefix(3).enumerated()), id: \.offset) { index, event in
+                        ForEach(Array(entry.events.prefix(4).enumerated()), id: \.offset) { index, event in
                             HStack {
                                 RoundedRectangle(cornerRadius: 5)
                                     .fill(Color(hexCode: "A76545"))
@@ -67,14 +67,14 @@ struct MediumWidgetView: View {
                 
                 // 할 일 섹션
                 VStack(alignment: .leading, spacing: 6) {
-                    HStack(spacing: 3) {
-                        Image(systemName: "checklist")
-                            .foregroundColor(Color(hexCode: "C2966B"))
-                            .font(.system(size: 10))
-                        Text("할 일")
-                            .font(.pretendardSemiBold(size: 10))
-                            .foregroundColor(Color(hexCode: "40392B"))
-                    }
+//                    HStack(spacing: 3) {
+//                        Image(systemName: "checklist")
+//                            .foregroundColor(Color(hexCode: "C2966B"))
+//                            .font(.system(size: 10))
+//                        Text("할 일")
+//                            .font(.pretendardSemiBold(size: 10))
+//                            .foregroundColor(Color(hexCode: "40392B"))
+//                    }
                     
                     if entry.reminders.isEmpty {
                         Text("할 일이 없습니다")
@@ -82,7 +82,7 @@ struct MediumWidgetView: View {
                             .foregroundColor(.secondary)
                             .padding(.vertical, 4)
                     } else {
-                        ForEach(Array(entry.reminders.prefix(3).enumerated()), id: \.offset) { index, reminder in
+                        ForEach(Array(entry.reminders.prefix(4).enumerated()), id: \.offset) { index, reminder in
                             HStack {
                                 // 토글 가능한 체크박스
                                 Button(intent: ToggleReminderIntent(reminderId: reminder.id)) {
@@ -99,7 +99,7 @@ struct MediumWidgetView: View {
                                     .foregroundColor(reminder.isCompleted ? .gray : Color(hexCode: "40392B"))
                             }
                             
-                            if index < entry.reminders.prefix(3).count - 1 {
+                            if index < entry.reminders.prefix(4).count - 1 {
                                 Divider()
                             }
                         }
