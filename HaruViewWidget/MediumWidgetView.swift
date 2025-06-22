@@ -16,14 +16,6 @@ struct MediumWidgetView: View {
             HStack(alignment: .top) {
                 // 일정 섹션
                 VStack(alignment: .leading, spacing: 6) {
-//                    HStack(spacing: 3) {
-//                        Image(systemName: "calendar")
-//                            .foregroundColor(Color(hexCode: "A76545"))
-//                            .font(.system(size: 10))
-//                        Text("일정")
-//                            .font(.pretendardBold(size: 11))
-//                            .foregroundColor(Color(hexCode: "40392B"))
-//                    }
                     
                     if entry.events.isEmpty {
                         Text("일정이 없습니다")
@@ -67,14 +59,6 @@ struct MediumWidgetView: View {
                 
                 // 할 일 섹션
                 VStack(alignment: .leading, spacing: 6) {
-//                    HStack(spacing: 3) {
-//                        Image(systemName: "checklist")
-//                            .foregroundColor(Color(hexCode: "C2966B"))
-//                            .font(.system(size: 10))
-//                        Text("할 일")
-//                            .font(.pretendardSemiBold(size: 10))
-//                            .foregroundColor(Color(hexCode: "40392B"))
-//                    }
                     
                     if entry.reminders.isEmpty {
                         Text("할 일이 없습니다")

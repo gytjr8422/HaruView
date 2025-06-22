@@ -17,12 +17,12 @@ struct Provider: AppIntentTimelineProvider {
     }
 
     func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> SimpleEntry {
-        let (events, reminders) = await fetchCalendarData()
+        let (events, reminders) = await fetchCalendarData(for: context.family)
         return SimpleEntry(date: Date(), configuration: configuration, events: events, reminders: reminders)
     }
     
     func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<SimpleEntry> {
-        let (events, reminders) = await fetchCalendarData()
+        let (events, reminders) = await fetchCalendarData(for: context.family)
         let currentDate = Date()
         
         var entries: [SimpleEntry] = []
@@ -37,7 +37,7 @@ struct Provider: AppIntentTimelineProvider {
         return Timeline(entries: entries, policy: .atEnd)
     }
     
-    func fetchCalendarData() async -> ([CalendarEvent], [ReminderItem]) {
+    func fetchCalendarData(for family: WidgetFamily) async -> ([CalendarEvent], [ReminderItem]) {
         // EventKit 권한 확인
         let status = EKEventStore.authorizationStatus(for: .event)
         let reminderStatus = EKEventStore.authorizationStatus(for: .reminder)
@@ -47,40 +47,53 @@ struct Provider: AppIntentTimelineProvider {
         
         // 캘린더 이벤트 가져오기
         if status == .fullAccess {
-            events = await fetchTodayEvents()
+            events = await fetchTodayEvents(for: family)
         }
         
         // 미리알림 가져오기
         if reminderStatus == .fullAccess {
-            reminders = await fetchTodayReminders()
+            reminders = await fetchTodayReminders(for: family)
         }
         
         return (events, reminders)
     }
     
-    func fetchTodayEvents() async -> [CalendarEvent] {
-        let startOfDay = Calendar.current.startOfDay(for: Date())
-        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
-        
-        let predicate = eventStore.predicateForEvents(withStart: startOfDay, end: endOfDay, calendars: nil)
-        let ekEvents = eventStore.events(matching: predicate)
-        
-        // 앱과 동일한 정렬 로직 적용
-        let sortedEvents = ekEvents
-            .filter { $0.calendar.title != "대한민국 공휴일" }
-            .map { event in
-                CalendarEvent(
-                    title: event.title ?? "제목 없음",
-                    startDate: event.startDate,
-                    endDate: event.endDate,
-                    isAllDay: event.isAllDay
-                )
-            }
-            .sorted(by: eventSortRule)
-            .prefix(4) // 최대 4개까지
-        
-        return Array(sortedEvents)
-    }
+    func fetchTodayEvents(for family: WidgetFamily) async -> [CalendarEvent] {
+         let startOfDay = Calendar.current.startOfDay(for: Date())
+         let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
+         
+         let predicate = eventStore.predicateForEvents(withStart: startOfDay, end: endOfDay, calendars: nil)
+         let ekEvents = eventStore.events(matching: predicate)
+         
+         // 위젯 크기별 최대 개수 설정
+         let maxCount: Int
+         switch family {
+         case .systemSmall:
+             maxCount = 4
+         case .systemMedium:
+             maxCount = 4
+         case .systemLarge:
+             maxCount = 9  // Large 위젯에서는 8개까지
+         default:
+             maxCount = 4
+         }
+         
+         // 앱과 동일한 정렬 로직 적용
+         let sortedEvents = ekEvents
+             .filter { $0.calendar.title != "대한민국 공휴일" }
+             .map { event in
+                 CalendarEvent(
+                     title: event.title ?? "제목 없음",
+                     startDate: event.startDate,
+                     endDate: event.endDate,
+                     isAllDay: event.isAllDay
+                 )
+             }
+             .sorted(by: eventSortRule)
+             .prefix(maxCount)
+         
+         return Array(sortedEvents)
+     }
     
     // 앱과 동일한 일정 정렬 규칙
     func eventSortRule(_ a: CalendarEvent, _ b: CalendarEvent) -> Bool {
@@ -91,49 +104,61 @@ struct Provider: AppIntentTimelineProvider {
         return a.startDate < b.startDate             // 둘 다 동일 상태면 시작 시간
     }
     
-    func fetchTodayReminders() async -> [ReminderItem] {
-        return await withCheckedContinuation { continuation in
-            // 앱과 동일한 방식: 모든 미리알림을 가져온 후 필터링
-            let incPred = eventStore.predicateForIncompleteReminders(withDueDateStarting: nil, ending: nil, calendars: nil)
-            let cmpPred = eventStore.predicateForCompletedReminders(withCompletionDateStarting: nil, ending: nil, calendars: nil)
-            
-            var bucket: [EKReminder] = []
-            eventStore.fetchReminders(matching: incPred) { inc in
-                bucket.append(contentsOf: inc ?? [])
-                self.eventStore.fetchReminders(matching: cmpPred) { comp in
-                    bucket.append(contentsOf: comp ?? [])
-                    
-                    // 오늘과 겹치는지 필터링 (앱과 동일한 로직)
-                    let todayStart = Calendar.current.startOfDay(for: Date())
-                    let todayEnd = Calendar.current.date(byAdding: .day, value: 1, to: todayStart)!
-                    
-                    let filtered = bucket.filter { rem in
-                        guard let due = rem.dueDateComponents?.date else { return true }
-                        return due >= todayStart && due < todayEnd
-                    }
-                    
-                    let reminderItems = filtered
-                        .map { reminder in
-                            // 앱과 동일한 매핑 로직 적용
-                            let hasTime = reminder.dueDateComponents?.hour != nil || reminder.dueDateComponents?.minute != nil
-                            let due = hasTime ? reminder.dueDateComponents?.date : nil
-                            
-                            return ReminderItem(
-                                id: reminder.calendarItemIdentifier,
-                                title: reminder.title ?? "제목 없음",
-                                dueDate: due, // 시간이 없으면 nil로 설정
-                                priority: reminder.priority,
-                                isCompleted: reminder.isCompleted
-                            )
+    func fetchTodayReminders(for family: WidgetFamily) async -> [ReminderItem] {
+            return await withCheckedContinuation { continuation in
+                // 위젯 크기별 최대 개수 설정
+                let maxCount: Int
+                switch family {
+                case .systemSmall:
+                    maxCount = 4
+                case .systemMedium:
+                    maxCount = 4
+                case .systemLarge:
+                    maxCount = 9  // Large 위젯에서는 8개까지
+                default:
+                    maxCount = 4
+                }
+                
+                let incPred = eventStore.predicateForIncompleteReminders(withDueDateStarting: nil, ending: nil, calendars: nil)
+                let cmpPred = eventStore.predicateForCompletedReminders(withCompletionDateStarting: nil, ending: nil, calendars: nil)
+                
+                var bucket: [EKReminder] = []
+                eventStore.fetchReminders(matching: incPred) { inc in
+                    bucket.append(contentsOf: inc ?? [])
+                    self.eventStore.fetchReminders(matching: cmpPred) { comp in
+                        bucket.append(contentsOf: comp ?? [])
+                        
+                        // 오늘과 겹치는지 필터링 (앱과 동일한 로직)
+                        let todayStart = Calendar.current.startOfDay(for: Date())
+                        let todayEnd = Calendar.current.date(byAdding: .day, value: 1, to: todayStart)!
+                        
+                        let filtered = bucket.filter { rem in
+                            guard let due = rem.dueDateComponents?.date else { return true }
+                            return due >= todayStart && due < todayEnd
                         }
-                        .sorted(by: reminderSortRule)
-                        .prefix(4) // 최대 4개까지
-                    
-                    continuation.resume(returning: Array(reminderItems))
+                        
+                        let reminderItems = filtered
+                            .map { reminder in
+                                // 앱과 동일한 매핑 로직 적용
+                                let hasTime = reminder.dueDateComponents?.hour != nil || reminder.dueDateComponents?.minute != nil
+                                let due = hasTime ? reminder.dueDateComponents?.date : nil
+                                
+                                return ReminderItem(
+                                    id: reminder.calendarItemIdentifier,
+                                    title: reminder.title ?? "제목 없음",
+                                    dueDate: due, // 시간이 없으면 nil로 설정
+                                    priority: reminder.priority,
+                                    isCompleted: reminder.isCompleted
+                                )
+                            }
+                            .sorted(by: reminderSortRule)
+                            .prefix(maxCount)
+                        
+                        continuation.resume(returning: Array(reminderItems))
+                    }
                 }
             }
         }
-    }
     
     // 앱과 동일한 미리알림 정렬 규칙
     func reminderSortRule(_ a: ReminderItem, _ b: ReminderItem) -> Bool {

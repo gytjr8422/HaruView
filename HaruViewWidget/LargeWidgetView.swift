@@ -31,7 +31,7 @@ struct LargeWidgetView: View {
                             .foregroundColor(.secondary)
                             .padding(.vertical, 4)
                     } else {
-                        ForEach(Array(entry.events.prefix(7).enumerated()), id: \.offset) { index, event in
+                        ForEach(Array(entry.events.prefix(9).enumerated()), id: \.offset) { index, event in
                             HStack {
                                 RoundedRectangle(cornerRadius: 5)
                                     .fill(Color(hexCode: "A76545"))
@@ -82,7 +82,7 @@ struct LargeWidgetView: View {
                             .foregroundColor(.secondary)
                             .padding(.vertical, 4)
                     } else {
-                        ForEach(Array(entry.reminders.prefix(8).enumerated()), id: \.offset) { index, reminder in
+                        ForEach(Array(entry.reminders.prefix(9).enumerated()), id: \.offset) { index, reminder in
                             HStack {
                                 // 토글 가능한 체크박스
                                 Button(intent: ToggleReminderIntent(reminderId: reminder.id)) {
@@ -99,7 +99,7 @@ struct LargeWidgetView: View {
                                     .foregroundColor(reminder.isCompleted ? .gray : Color(hexCode: "40392B"))
                             }
                             
-                            if index < entry.reminders.prefix(8) .count - 1 {
+                            if index < entry.reminders.prefix(9) .count - 1 {
                                 Divider()
                             }
                         }
