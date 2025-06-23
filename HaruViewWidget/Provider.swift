@@ -25,16 +25,11 @@ struct Provider: AppIntentTimelineProvider {
         let (events, reminders) = await fetchCalendarData(for: context.family)
         let currentDate = Date()
         
-        var entries: [SimpleEntry] = []
+        let entry = SimpleEntry(date: currentDate, configuration: configuration, events: events, reminders: reminders)
         
-        // 현재 시간부터 다음 4시간까지 1시간 간격으로 업데이트
-        for hourOffset in 0..<4 {
-            let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = SimpleEntry(date: entryDate, configuration: configuration, events: events, reminders: reminders)
-            entries.append(entry)
-        }
-
-        return Timeline(entries: entries, policy: .atEnd)
+        let nextUpdateDate = Calendar.current.date(byAdding: .minute, value: 5, to: currentDate)!
+        
+        return Timeline(entries: [entry], policy: .after(nextUpdateDate))
     }
     
     func fetchCalendarData(for family: WidgetFamily) async -> ([CalendarEvent], [ReminderItem]) {

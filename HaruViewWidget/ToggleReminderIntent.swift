@@ -23,7 +23,6 @@ struct ToggleReminderIntent: AppIntent {
     }
     
     func perform() async throws -> some IntentResult {
-        print("🔄 ToggleReminderIntent started for ID: \(reminderId)")
         
         // EventKit을 사용하여 실제 미리알림 토글
         let eventStore = EKEventStore()
@@ -31,40 +30,34 @@ struct ToggleReminderIntent: AppIntent {
         // 권한 확인
         let status = EKEventStore.authorizationStatus(for: .reminder)
         guard status == .fullAccess else {
-            print("❌ Permission denied for reminders")
             throw IntentError.permissionDenied
         }
         
         // 미리알림 찾기
         guard let reminder = eventStore.calendarItem(withIdentifier: reminderId) as? EKReminder else {
-            print("❌ Reminder not found: \(reminderId)")
             throw IntentError.reminderNotFound
         }
-        
-        let wasCompleted = reminder.isCompleted
         
         // 완료 상태 토글
         reminder.isCompleted.toggle()
         
-        print("🔄 Toggling reminder '\(reminder.title ?? "Unknown")' from \(wasCompleted) to \(reminder.isCompleted)")
-        
         // 저장
         do {
             try eventStore.save(reminder, commit: true)
-            print("✅ Reminder saved successfully")
             
-            // invalidatableContent를 사용하므로 부분 업데이트가 즉시 발생
-            // 2초 후 전체 위젯 새로고침으로 정렬 실행
-            Task {
-                try? await Task.sleep(for: .seconds(2))
-                await MainActor.run {
-                    WidgetCenter.shared.reloadTimelines(ofKind: "HaruViewWidget")
-                    print("🔄 Widget reloaded for sorting")
-                }
+            // 즉시 모든 위젯 새로고침 (여러 위젯이 있을 때 동기화를 위해)
+            await MainActor.run {
+                // 1. 특정 위젯 타입만 새로고침 (더 효율적)
+                WidgetCenter.shared.reloadTimelines(ofKind: "HaruViewWidget")
+                
+                // 2. 만약 위 방법이 충분하지 않다면, 모든 위젯 새로고침
+                WidgetCenter.shared.reloadAllTimelines()
             }
             
+            // EventKit 변경 알림 발송 (앱과 위젯 간 동기화)
+            NotificationCenter.default.post(name: .EKEventStoreChanged, object: nil)
+            
         } catch {
-            print("❌ Failed to save reminder: \(error)")
             throw IntentError.saveFailed
         }
         
