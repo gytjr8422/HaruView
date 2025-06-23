@@ -71,15 +71,15 @@ final class EventKitService {
         event.calendar = store.defaultCalendarForNewEvents
         do {
             try store.save(event, span: .thisEvent)
-            // 위젯 새로고침
             Task { @MainActor in
-                WidgetRefreshService.shared.refreshWithDebounce()
+                WidgetRefreshService.shared.forceRefresh()
             }
             return .success(())
         } catch {
             return .failure(.saveFailed)
         }
     }
+
     
     func update(_ edit: EventEdit) -> Result<Void, TodayBoardError> {
         guard let event = store.event(withIdentifier: edit.id) else { return .failure(.notFound) }
@@ -88,9 +88,8 @@ final class EventKitService {
         event.endDate = edit.end
         do {
             try store.save(event, span: .thisEvent)
-            // 위젯 새로고침
             Task { @MainActor in
-                WidgetRefreshService.shared.refreshWithDebounce()
+                WidgetRefreshService.shared.forceRefresh()
             }
             return .success(())
         } catch {
@@ -102,9 +101,8 @@ final class EventKitService {
         guard let event = store.event(withIdentifier: id) else { return .failure(.notFound) }
         do {
             try store.remove(event, span: .thisEvent, commit: true)
-            // 위젯 새로고침
             Task { @MainActor in
-                WidgetRefreshService.shared.refreshWithDebounce()
+                WidgetRefreshService.shared.forceRefresh()
             }
             return .success(())
         } catch {

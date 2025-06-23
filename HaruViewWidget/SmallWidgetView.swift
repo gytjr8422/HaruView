@@ -32,7 +32,7 @@ struct SmallEventsWidget: View {
                     .foregroundColor(.gray)
                     .padding(.vertical, 4)
             } else {
-                ForEach(Array(entry.events.prefix(3).enumerated()), id: \.offset) { index, event in
+                ForEach(Array(entry.events.prefix(4).enumerated()), id: \.offset) { index, event in
                     let isPast = event.endDate < Date()
                     
                     HStack {
@@ -62,6 +62,7 @@ struct SmallEventsWidget: View {
                                     .opacity(isPast ? 0.5 : 1)
                             }
                         }
+                        
                         Spacer()
                     }
                 }
@@ -76,14 +77,6 @@ struct SmallRemindersWidget: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-//            HStack(spacing: 3) {
-//                Image(systemName: "checklist")
-//                    .foregroundColor(Color(hexCode: "C2966B"))
-//                    .font(.system(size: 10))
-//                Text("할 일")
-//                    .font(.pretendardSemiBold(size: 10))
-//                    .foregroundColor(Color(hexCode: "40392B"))
-//            }
             
             if entry.reminders.isEmpty {
                 Text("할 일이 없습니다")
@@ -91,7 +84,7 @@ struct SmallRemindersWidget: View {
                     .foregroundColor(.gray)
                     .padding(.vertical, 4)
             } else {
-                ForEach(Array(entry.reminders.prefix(3).enumerated()), id: \.offset) { index, reminder in
+                ForEach(Array(entry.reminders.prefix(4).enumerated()), id: \.offset) { index, reminder in
                     HStack(spacing: 2) {
                         // 토글 가능한 체크박스
                         Button(intent: ToggleReminderIntent(reminderId: reminder.id)) {
@@ -107,14 +100,13 @@ struct SmallRemindersWidget: View {
                             .strikethrough(reminder.isCompleted)
                             .foregroundColor(reminder.isCompleted ? .gray : Color(hexCode: "40392B"))
                     }
+                    .offset(x: -8)
                     
-                    if index < entry.reminders.prefix(3).count - 1 {
+                    if index < entry.reminders.prefix(4).count - 1 {
                         Divider()
                     }
                 }
             }
-            
-            Spacer()
         }
     }
 } 

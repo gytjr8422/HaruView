@@ -82,6 +82,7 @@
       }
     },
     "위젯에서 할 일의 완료 상태를 전환합니다." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -90,6 +91,9 @@
           }
         }
       }
+    },
+    "위젯에서 할 일의 완료 상태를 토글합니다." : {
+
     },
     "일정" : {
       "localizations" : {

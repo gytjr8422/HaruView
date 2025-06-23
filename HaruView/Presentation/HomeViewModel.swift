@@ -104,6 +104,7 @@ final class HomeViewModel: ObservableObject, @preconcurrency HomeViewModelProtoc
     func refresh(_ kind: RefreshKind = .userTap) {
         loadOverview()
         loadWeather()
+        WidgetRefreshService.shared.forceRefresh()
     }
 
     // MARK: - Bindings
