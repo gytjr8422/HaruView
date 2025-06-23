@@ -74,21 +74,22 @@ struct MediumWidgetView: View {
                             .foregroundColor(.gray)
                             .padding(.vertical, 4)
                     } else {
-                        ForEach(Array(entry.reminders.prefix(4).enumerated()), id: \.offset) { index, reminder in
+                        ForEach(Array(entry.reminders.prefix(4).enumerated()), id: \.element.id) { index, reminder in
                             HStack(spacing: 2) {
-                                // 토글 가능한 체크박스
-                                Button(intent: ToggleReminderIntent(reminderId: reminder.id)) {
-                                    Image(systemName: reminder.isCompleted ? "checkmark.circle.fill" : "circle")
-                                        .foregroundColor(reminder.isCompleted ? Color(hexCode: "A76545") : .gray)
-                                        .font(.system(size: 20))
+                                // 토글 가능한 체크박스 - invalidatableContent 사용
+                                Toggle(isOn: reminder.isCompleted, intent: ToggleReminderIntent(reminderId: reminder.id)) {
+                                    EmptyView()
                                 }
-                                .buttonStyle(.plain)
+                                .toggleStyle(CheckboxToggleStyle())
+                                .invalidatableContent()
+                                .frame(width: 24, height: 24)
                                 
                                 Text(reminder.title)
                                     .font(.pretendardSemiBold(size: 13))
                                     .lineLimit(1)
                                     .strikethrough(reminder.isCompleted)
                                     .foregroundColor(reminder.isCompleted ? .gray : Color(hexCode: "40392B"))
+                                    .invalidatableContent()
                             }
                             
                             if index < entry.reminders.prefix(4).count - 1 {
@@ -100,5 +101,15 @@ struct MediumWidgetView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
+    }
+}
+
+// MARK: - Custom Checkbox Toggle Style
+struct CheckboxToggleStyle: ToggleStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        Image(systemName: configuration.isOn ? "checkmark.circle.fill" : "circle")
+            .foregroundColor(configuration.isOn ? Color(hexCode: "A76545") : .gray)
+            .font(.system(size: 20))
+            .contentTransition(.symbolEffect(.replace))
     }
 }

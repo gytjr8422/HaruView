@@ -53,8 +53,15 @@ struct ToggleReminderIntent: AppIntent {
             try eventStore.save(reminder, commit: true)
             print("✅ Reminder saved successfully")
             
-            // 🚀 모든 위젯을 즉시 새로고침
-            await refreshAllWidgets()
+            // invalidatableContent를 사용하므로 부분 업데이트가 즉시 발생
+            // 2초 후 전체 위젯 새로고침으로 정렬 실행
+            Task {
+                try? await Task.sleep(for: .seconds(2))
+                await MainActor.run {
+                    WidgetCenter.shared.reloadTimelines(ofKind: "HaruViewWidget")
+                    print("🔄 Widget reloaded for sorting")
+                }
+            }
             
         } catch {
             print("❌ Failed to save reminder: \(error)")
@@ -62,36 +69,6 @@ struct ToggleReminderIntent: AppIntent {
         }
         
         return .result()
-    }
-    
-    // MARK: - 위젯 새로고침 로직
-    @MainActor
-    private func refreshAllWidgets() {
-        print("🔄 Refreshing all widgets after reminder toggle...")
-        
-        // 1. 즉시 새로고침
-        WidgetCenter.shared.reloadTimelines(ofKind: "HaruViewWidget")
-        
-        // 2. 조금 후 다시 새로고침 (iOS 시스템 지연 대응)
-        Task {
-            try? await Task.sleep(for: .seconds(0.2))
-            WidgetCenter.shared.reloadTimelines(ofKind: "HaruViewWidget")
-            print("🔄 Secondary widget refresh completed")
-        }
-        
-        // 3. 모든 위젯 새로고침도 시도
-        Task {
-            try? await Task.sleep(for: .seconds(0.5))
-            WidgetCenter.shared.reloadAllTimelines()
-            print("🔄 All widgets refresh completed")
-        }
-        
-        // 4. 최종 새로고침 (확실하게!)
-        Task {
-            try? await Task.sleep(for: .seconds(1.0))
-            WidgetCenter.shared.reloadTimelines(ofKind: "HaruViewWidget")
-            print("🔄 Final widget refresh completed")
-        }
     }
 }
 

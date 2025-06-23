@@ -72,6 +72,7 @@ struct SmallEventsWidget: View {
     }
 }
 
+
 struct SmallRemindersWidget: View {
     let entry: Provider.Entry
     
@@ -84,21 +85,22 @@ struct SmallRemindersWidget: View {
                     .foregroundColor(.gray)
                     .padding(.vertical, 4)
             } else {
-                ForEach(Array(entry.reminders.prefix(4).enumerated()), id: \.offset) { index, reminder in
+                ForEach(Array(entry.reminders.prefix(4).enumerated()), id: \.element.id) { index, reminder in
                     HStack(spacing: 2) {
-                        // 토글 가능한 체크박스
-                        Button(intent: ToggleReminderIntent(reminderId: reminder.id)) {
-                            Image(systemName: reminder.isCompleted ? "checkmark.circle.fill" : "circle")
-                                .foregroundColor(reminder.isCompleted ? Color(hexCode: "A76545") : .gray)
-                                .font(.system(size: 20))
+                        // 토글 가능한 체크박스 - invalidatableContent 사용
+                        Toggle(isOn: reminder.isCompleted, intent: ToggleReminderIntent(reminderId: reminder.id)) {
+                            EmptyView()
                         }
-                        .buttonStyle(.plain)
+                        .toggleStyle(CheckboxToggleStyle())
+                        .invalidatableContent()
+                        .frame(width: 24, height: 24)
                         
                         Text(reminder.title)
                             .font(.pretendardSemiBold(size: 13))
                             .lineLimit(1)
                             .strikethrough(reminder.isCompleted)
                             .foregroundColor(reminder.isCompleted ? .gray : Color(hexCode: "40392B"))
+                            .invalidatableContent()
                     }
                     .offset(x: -8)
                     
@@ -109,4 +111,4 @@ struct SmallRemindersWidget: View {
             }
         }
     }
-} 
+}
