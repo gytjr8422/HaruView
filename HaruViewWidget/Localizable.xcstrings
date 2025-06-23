@@ -1,0 +1,176 @@
+{
+  "sourceLanguage" : "ko",
+  "strings" : {
+    "A an example control that runs a timer." : {
+
+    },
+    "Off" : {
+
+    },
+    "On" : {
+
+    },
+    "Reminder ID" : {
+
+    },
+    "Start a timer" : {
+
+    },
+    "Start Timer" : {
+
+    },
+    "Timer" : {
+
+    },
+    "Timer is running" : {
+
+    },
+    "Timer Name" : {
+
+    },
+    "Timer Name Configuration" : {
+
+    },
+    "오늘의 미리알림을 표시합니다" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Displays today’s reminders"
+          }
+        }
+      }
+    },
+    "오늘의 일정과 미리알림을 표시하는 위젯입니다." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This widget shows today’s events and reminders."
+          }
+        }
+      }
+    },
+    "오늘의 캘린더 일정과 미리알림을 한눈에 확인하세요" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check today’s calendar events and reminders at a glance."
+          }
+        }
+      }
+    },
+    "오늘의 캘린더 일정을 표시합니다" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Displays today’s calendar events"
+          }
+        }
+      }
+    },
+    "위젯 타입" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Widget Type"
+          }
+        }
+      }
+    },
+    "위젯에서 할 일의 완료 상태를 전환합니다." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toggle a task’s completion status from the widget."
+          }
+        }
+      }
+    },
+    "일정" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Events"
+          }
+        }
+      }
+    },
+    "일정이 없습니다" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No events"
+          }
+        }
+      }
+    },
+    "하루 종일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All day"
+          }
+        }
+      }
+    },
+    "하루뷰 Widget" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haru Widget"
+          }
+        }
+      }
+    },
+    "하루뷰 설정" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haru Settings"
+          }
+        }
+      }
+    },
+    "할 일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To-Dos"
+          }
+        }
+      }
+    },
+    "할 일 토글" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toggle Task"
+          }
+        }
+      }
+    },
+    "할 일이 없습니다" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No tasks"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

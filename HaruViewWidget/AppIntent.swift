@@ -32,10 +32,6 @@ struct ConfigurationAppIntent: WidgetConfigurationIntent {
     // 위젯 타입 (Small 위젯에서만 사용)
     @Parameter(title: "위젯 타입", default: .events)
     var widgetType: WidgetType
-    
-    // 즐겨찾는 이모지 (일정이 없을 때 표시)
-    @Parameter(title: "즐겨찾는 이모지", default: "😊")
-    var favoriteEmoji: String
 }
 
 // MARK: - Convenience Initializers

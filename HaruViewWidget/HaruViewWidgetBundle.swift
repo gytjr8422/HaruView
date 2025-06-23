@@ -12,6 +12,5 @@ import SwiftUI
 struct HaruViewWidgetBundle: WidgetBundle {
     var body: some Widget {
         HaruViewWidget()
-        HaruViewWidgetControl()
     }
 }

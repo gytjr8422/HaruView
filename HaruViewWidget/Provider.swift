@@ -59,41 +59,48 @@ struct Provider: AppIntentTimelineProvider {
     }
     
     func fetchTodayEvents(for family: WidgetFamily) async -> [CalendarEvent] {
-         let startOfDay = Calendar.current.startOfDay(for: Date())
-         let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
-         
-         let predicate = eventStore.predicateForEvents(withStart: startOfDay, end: endOfDay, calendars: nil)
-         let ekEvents = eventStore.events(matching: predicate)
-         
-         // 위젯 크기별 최대 개수 설정
-         let maxCount: Int
-         switch family {
-         case .systemSmall:
-             maxCount = 4
-         case .systemMedium:
-             maxCount = 4
-         case .systemLarge:
-             maxCount = 9  // Large 위젯에서는 8개까지
-         default:
-             maxCount = 4
-         }
-         
-         // 앱과 동일한 정렬 로직 적용
-         let sortedEvents = ekEvents
-             .filter { $0.calendar.title != "대한민국 공휴일" }
-             .map { event in
-                 CalendarEvent(
-                     title: event.title ?? "제목 없음",
-                     startDate: event.startDate,
-                     endDate: event.endDate,
-                     isAllDay: event.isAllDay
-                 )
-             }
-             .sorted(by: eventSortRule)
-             .prefix(maxCount)
-         
-         return Array(sortedEvents)
-     }
+        let startOfDay = Calendar.current.startOfDay(for: Date())
+        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
+        
+        let predicate = eventStore.predicateForEvents(withStart: startOfDay, end: endOfDay, calendars: nil)
+        let ekEvents = eventStore.events(matching: predicate)
+        
+        // 위젯 크기별 최대 개수 설정
+        let maxCount: Int
+        switch family {
+        case .systemSmall:
+            maxCount = 4
+        case .systemMedium:
+            maxCount = 4
+        case .systemLarge:
+            maxCount = 9
+        default:
+            maxCount = 4
+        }
+        
+        // 앱과 동일한 정렬 로직 적용
+        let sortedEvents = ekEvents
+            .filter { $0.calendar.title != "대한민국 공휴일" }
+            .map { event in
+                // 하루 종일 이벤트 감지 로직 (앱과 동일)
+                let compsStart = Calendar.current.dateComponents([.hour, .minute], from: event.startDate)
+                let compsEnd = Calendar.current.dateComponents([.hour, .minute], from: event.endDate)
+                let isAllDayDetected = Calendar.current.isDate(event.startDate, inSameDayAs: event.endDate) &&
+                                     compsStart.hour == 0 && compsStart.minute == 0 &&
+                                     compsEnd.hour == 23 && compsEnd.minute == 59
+                
+                return CalendarEvent(
+                    title: event.title ?? "제목 없음",
+                    startDate: event.startDate,
+                    endDate: event.endDate,
+                    isAllDay: event.isAllDay || isAllDayDetected  // EKEvent의 isAllDay 또는 시간 기반 감지
+                )
+            }
+            .sorted(by: eventSortRule)
+            .prefix(maxCount)
+        
+        return Array(sortedEvents)
+    }
     
     // 앱과 동일한 일정 정렬 규칙
     func eventSortRule(_ a: CalendarEvent, _ b: CalendarEvent) -> Bool {

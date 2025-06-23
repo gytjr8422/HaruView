@@ -20,30 +20,37 @@ struct MediumWidgetView: View {
                     if entry.events.isEmpty {
                         Text("일정이 없습니다")
                             .font(.pretendardRegular(size: 11))
-                            .foregroundColor(.secondary)
+                            .foregroundColor(.gray)
                             .padding(.vertical, 4)
                     } else {
                         ForEach(Array(entry.events.prefix(4).enumerated()), id: \.offset) { index, event in
+                            let isPast = event.endDate < Date()
+                            
                             HStack {
                                 RoundedRectangle(cornerRadius: 5)
                                     .fill(Color(hexCode: "A76545"))
                                     .frame(width: 4)
                                     .frame(maxHeight: 25)
+                                    .opacity(isPast ? 0.5 : 1)
                                 
                                 VStack(alignment: .leading) {
                                     Text(event.title)
                                         .font(.pretendardBold(size: 13))
                                         .lineLimit(1)
                                         .foregroundColor(Color(hexCode: "40392B"))
+                                        .strikethrough(isPast)
+                                        .opacity(isPast ? 0.5 : 1)
                                     
                                     if !event.isAllDay {
                                         Text(event.startDate, style: .time)
                                             .font(.jakartaRegular(size: 11))
                                             .foregroundColor(.gray)
+                                            .opacity(isPast ? 0.5 : 1)
                                     } else {
                                         Text("하루 종일")
                                             .font(.jakartaRegular(size: 9))
                                             .foregroundColor(.gray)
+                                            .opacity(isPast ? 0.5 : 1)
                                     }
                                 }
                                 Spacer()
@@ -51,6 +58,7 @@ struct MediumWidgetView: View {
                         }
                     }
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
                 
                 // 구분선
                 Rectangle()
@@ -63,11 +71,11 @@ struct MediumWidgetView: View {
                     if entry.reminders.isEmpty {
                         Text("할 일이 없습니다")
                             .font(.pretendardRegular(size: 11))
-                            .foregroundColor(.secondary)
+                            .foregroundColor(.gray)
                             .padding(.vertical, 4)
                     } else {
                         ForEach(Array(entry.reminders.prefix(4).enumerated()), id: \.offset) { index, reminder in
-                            HStack {
+                            HStack(spacing: 2) {
                                 // 토글 가능한 체크박스
                                 Button(intent: ToggleReminderIntent(reminderId: reminder.id)) {
                                     Image(systemName: reminder.isCompleted ? "checkmark.circle.fill" : "circle")

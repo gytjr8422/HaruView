@@ -10,7 +10,7 @@ import EventKit
 
 struct ToggleReminderIntent: AppIntent {
     static var title: LocalizedStringResource = "할 일 토글"
-    static var description = IntentDescription("위젯에서 할 일의 완료 상태를 토글합니다.")
+    static var description = IntentDescription("위젯에서 할 일의 완료 상태를 전환합니다.")
     
     @Parameter(title: "Reminder ID")
     var reminderId: String
