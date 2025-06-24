@@ -5,10 +5,12 @@
 //  Created by 김효석 on 6/17/25.
 //
 
+#if canImport(ControlWidget) && os(iOS)
 import AppIntents
 import SwiftUI
 import WidgetKit
 
+@available(iOSApplicationExtension 18.0, *)
 struct HaruViewWidgetControl: ControlWidget {
     static let kind: String = "com.hskim.HaruView.HaruViewWidget"
 
@@ -30,6 +32,7 @@ struct HaruViewWidgetControl: ControlWidget {
     }
 }
 
+@available(iOSApplicationExtension 18.0, *)
 extension HaruViewWidgetControl {
     struct Value {
         var isRunning: Bool
@@ -48,6 +51,7 @@ extension HaruViewWidgetControl {
     }
 }
 
+@available(iOSApplicationExtension 18.0, *)
 struct TimerConfiguration: ControlConfigurationIntent {
     static let title: LocalizedStringResource = "Timer Name Configuration"
 
@@ -55,6 +59,7 @@ struct TimerConfiguration: ControlConfigurationIntent {
     var timerName: String
 }
 
+@available(iOSApplicationExtension 18.0, *)
 struct StartTimerIntent: SetValueIntent {
     static let title: LocalizedStringResource = "Start a timer"
 
@@ -75,3 +80,4 @@ struct StartTimerIntent: SetValueIntent {
         return .result()
     }
 }
+#endif

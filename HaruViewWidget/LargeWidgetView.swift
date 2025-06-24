@@ -92,13 +92,25 @@ struct LargeWidgetView: View {
                     } else {
                         ForEach(Array(entry.reminders.prefix(9).enumerated()), id: \.element.id) { index, reminder in
                             HStack(spacing: 2) {
-                                // 토글 가능한 체크박스 - invalidatableContent 사용
-                                Toggle(isOn: reminder.isCompleted, intent: ToggleReminderIntent(reminderId: reminder.id)) {
-                                    EmptyView()
+                                // iOS 18에서는 Toggle, iOS 17에서는 Button 사용
+                                if #available(iOS 18, *) {
+                                    Toggle(isOn: reminder.isCompleted, intent: ToggleReminderIntent(reminderId: reminder.id)) {
+                                        EmptyView()
+                                    }
+                                    .toggleStyle(CheckboxToggleStyle())
+                                    .invalidatableContent()
+                                    .frame(width: 24, height: 24)
+                                } else {
+                                    Button(intent: ToggleReminderIntent(reminderId: reminder.id)) {
+                                        Image(systemName: reminder.isCompleted ? "checkmark.circle.fill" : "circle")
+                                            .foregroundColor(reminder.isCompleted ? Color(hexCode: "A76545") : .gray)
+                                            .font(.system(size: 20))
+                                            .contentTransition(.symbolEffect(.replace))
+                                    }
+                                    .buttonStyle(.plain)
+                                    .invalidatableContent()
+                                    .frame(width: 24, height: 24)
                                 }
-                                .toggleStyle(CheckboxToggleStyle())
-                                .invalidatableContent()
-                                .frame(width: 24, height: 24)
                                 
                                 Text(reminder.title)
                                     .font(.pretendardSemiBold(size: 13))
