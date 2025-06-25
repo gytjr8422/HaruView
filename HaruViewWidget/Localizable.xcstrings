@@ -1,34 +1,7 @@
 {
   "sourceLanguage" : "ko",
   "strings" : {
-    "A an example control that runs a timer." : {
-
-    },
-    "Off" : {
-
-    },
-    "On" : {
-
-    },
     "Reminder ID" : {
-
-    },
-    "Start a timer" : {
-
-    },
-    "Start Timer" : {
-
-    },
-    "Timer" : {
-
-    },
-    "Timer is running" : {
-
-    },
-    "Timer Name" : {
-
-    },
-    "Timer Name Configuration" : {
 
     },
     "오늘의 미리알림을 표시합니다" : {

@@ -46,6 +46,24 @@
         }
       }
     },
+    "1시간" : {
+
+    },
+    "1시간 30분" : {
+
+    },
+    "2시간" : {
+
+    },
+    "15분" : {
+
+    },
+    "30분" : {
+
+    },
+    "Reminder ID" : {
+
+    },
     "계속 작성" : {
       "localizations" : {
         "en" : {
@@ -267,6 +285,16 @@
         }
       }
     },
+    "위젯에서 할 일의 완료 상태를 토글합니다." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toggle the completion status of a to-do item from the widget."
+          }
+        }
+      }
+    },
     "위치 정보 접근이 거부되었습니다. 날씨 정보를 가져오기 위해 설정에서 위치 권한을 허용해주세요." : {
       "localizations" : {
         "en" : {
@@ -470,6 +498,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "To-Do"
+          }
+        }
+      }
+    },
+    "할 일 토글" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toggle To-Do"
           }
         }
       }

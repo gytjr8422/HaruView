@@ -43,7 +43,10 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                         reminderPage.tag(AddSheetMode.reminder)
                     }
                     .tabViewStyle(.page(indexDisplayMode: .never))
-                    .onChange(of: selected) { _, newValue in vm.mode = newValue }
+                    .onChange(of: selected) { _, newValue in
+                        vm.mode = newValue
+                        isTextFieldFocused = false
+                    }
                 }
             }
             .background(Color(hexCode: "FFFCF5"))
@@ -105,7 +108,7 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
 
     private var eventPage: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
+            VStack(spacing: 20) {
                 commonTitleField
                 
                 HStack {
@@ -128,39 +131,21 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                         .padding(.horizontal, 5)
                 }
                 
-                HStack(spacing: 4.5) {
-                    Text(vm.isAllDay ? "날짜" : "시작")
-                        .font(.pretendardSemiBold(size: 18))
-                        .padding(.trailing, 10)
-                    
-                    datePicker(date: $vm.startDate, min: minDate)
-                        .frame(width: 120, alignment: .trailing)
-                        .environment(\.locale, Locale.current.language.languageCode?.identifier == "ko" ? Locale(identifier: "ko_KR") : Locale(identifier: "en_US"))
-                    
-                    if !vm.isAllDay {
-                        timePicker(time: $vm.startDate)
-                            .environment(\.locale, Locale.current.language.languageCode?.identifier == "ko" ? Locale(identifier: "ko_KR") : Locale(identifier: "en_US"))
-                    }
-                }
-                
-                if !vm.isAllDay {
-                    HStack(spacing: 5) {
-                        Text("종료")
-                            .font(.pretendardSemiBold(size: 18))
-                            .padding(.trailing, Locale.current.language.languageCode?.identifier == "ko" ? 10 : 22)
-                        
-                        datePicker(date: $vm.endDate, min: vm.startDate)
-                            .frame(width: 120, alignment: .trailing)
-                            .environment(\.locale, Locale.current.language.languageCode?.identifier == "ko" ? Locale(identifier: "ko_KR") : Locale(identifier: "en_US"))
-                        
-                        timePicker(time: $vm.endDate, min: vm.startDate)
-                                .environment(\.locale, Locale.current.language.languageCode?.identifier == "ko" ? Locale(identifier: "ko_KR") : Locale(identifier: "en_US"))
-                    }
-                }
+                InlineDateTimePicker(
+                    startDate: $vm.startDate,
+                    endDate: $vm.endDate,
+                    isAllDay: $vm.isAllDay,
+                    isTextFieldFocused: $isTextFieldFocused,
+                    minDate: Calendar.current.startOfDay(for: Date()),
+                    maxDate: Calendar.current.date(byAdding: .day, value: 2, to: Date()) ?? Date()
+                )
 
                 footerError
             }
             .padding(20)
+            .contentShape(Rectangle()) // 터치 영역을 전체 VStack으로 지정
+            .onTapGesture { isTextFieldFocused = false }
+
         }
     }
 
