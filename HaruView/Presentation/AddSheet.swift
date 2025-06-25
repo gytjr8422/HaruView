@@ -167,32 +167,22 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                     
                     Spacer()
                     
-                    Text("시간")
-                        .font(.pretendardSemiBold(size: 16))
-                    Toggle("", isOn: $vm.includeTime)
-                        .toggleStyle(HaruToggleStyle())
-                        .padding(.horizontal, 5)
                 }
                 
                 HStack {
-                    Text(vm.includeTime ? "날짜/시간" : "날짜")
-                        .font(.pretendardSemiBold(size: 18))
-                        .padding(.trailing, 10)
-                    
-                    datePicker(date: $vm.dueDate, min: minDate)
-                        .frame(width: 120, alignment: .trailing)
-                        .environment(\.locale, Locale.current.language.languageCode?.identifier == "ko" ? Locale(identifier: "ko_KR") : Locale(identifier: "en_US"))
-                    
-                    if vm.includeTime {
-                        timePicker(time: $vm.dueDate, min: .now)
-                            .environment(\.locale, Locale.current.language.languageCode?.identifier == "ko" ? Locale(identifier: "ko_KR") : Locale(identifier: "en_US"))
-                    }
+                    ReminderDueDatePicker(dueDate: $vm.dueDate,
+                                          includeTime: $vm.includeTime,
+                                          isTextFieldFocused: $isTextFieldFocused,
+                                          minDate: minDate,
+                                          maxDate: maxDate)
                 }
                 .animation(.easeIn, value: 10)
                 
                 footerError
             }
             .padding(20)
+            .contentShape(Rectangle())
+            .onTapGesture { isTextFieldFocused = false }
         }
     }
 

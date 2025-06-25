@@ -105,6 +105,7 @@
       }
     },
     "날짜" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -115,6 +116,7 @@
       }
     },
     "날짜/시간" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -164,6 +166,12 @@
         }
       }
     },
+    "마감" : {
+
+    },
+    "마감일" : {
+
+    },
     "바람: %.0fm/s" : {
       "localizations" : {
         "en" : {
@@ -205,6 +213,7 @@
       }
     },
     "시간" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
