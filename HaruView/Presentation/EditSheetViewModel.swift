@@ -13,9 +13,9 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
     @Published var currentTitle: String = "" { didSet { titles[mode] = currentTitle } }
     @Published var startDate: Date = .now { didSet { clampEndIfNeeded() } }
     @Published var endDate: Date = Calendar.current.date(byAdding: .hour, value: 1, to: .now)!
-    @Published var dueDate: Date = .now
+    @Published var dueDate: Date? = nil  // Optional로 변경
     @Published var isAllDay: Bool = false
-    @Published var includeTime: Bool = true
+    @Published var includeTime: Bool = false
     @Published var error: TodayBoardError?
     @Published var isSaving: Bool = false
 
@@ -77,7 +77,7 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
         self.originalReminder = reminder
         self.mode = .reminder
         self.currentTitle = reminder.title
-        if let due = reminder.due { self.dueDate = due }
+        self.dueDate = reminder.due  // Optional이므로 직접 할당
         self.includeTime = reminder.due != nil
         titles[.reminder] = reminder.title
     }
@@ -111,4 +111,3 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
         if case .failure(let err) = result { self.error = err }
     }
 }
-

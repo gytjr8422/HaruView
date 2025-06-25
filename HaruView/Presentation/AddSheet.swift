@@ -131,7 +131,7 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                         .padding(.horizontal, 5)
                 }
                 
-                InlineDateTimePicker(
+                EventDateTimePicker(
                     startDate: $vm.startDate,
                     endDate: $vm.endDate,
                     isAllDay: $vm.isAllDay,
@@ -155,7 +155,7 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                 commonTitleField
                 
                 HStack {
-                    if Calendar.current.compare(vm.dueDate, to: .now, toGranularity: .day) == .orderedDescending {
+                    if let dueDate = vm.dueDate, Calendar.current.compare(dueDate, to: .now, toGranularity: .day) == .orderedDescending {
                         Text("내일/모레 할 일은 홈에서 보이지 않아요!")
                             .font(.pretendardRegular(size: 14))
                             .foregroundStyle(Color.red)
@@ -187,39 +187,6 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     }
 
     // MARK: Components -------------------------------------------------------
-    private func dateTimePicker(date: Binding<Date>,
-                                min: Date? = nil) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            if let min {    // 종료 피커처럼 최소값이 있을 때
-                DatePicker("", selection: date, in: min...maxDate, displayedComponents: [.date, .hourAndMinute])
-                    .labelsHidden()
-            } else {        // 시작 피커
-                DatePicker("", selection: date, displayedComponents: [.date, .hourAndMinute])
-                    .labelsHidden()
-            }
-        }
-    }
-    
-    private func datePicker(date: Binding<Date>,
-                            min: Date? = nil) -> some View {
-        if let min {
-            DatePicker("", selection: date, in: min...maxDate, displayedComponents: [.date])
-                .labelsHidden()
-        } else {
-            DatePicker("", selection: date, displayedComponents: [.date])
-                .labelsHidden()
-        }
-    }
-    
-    private func timePicker(time: Binding<Date>, min: Date? = nil) -> some View {
-        if let min {    // 종료 피커처럼 최소값이 있을 때
-            DatePicker("", selection: time, in: min...maxDate, displayedComponents: [.hourAndMinute])
-                .labelsHidden()
-        } else {        // 시작
-            DatePicker("", selection: time, displayedComponents: [.hourAndMinute])
-                .labelsHidden()
-        }
-    }
 
     private var footerError: some View {
         Group {
@@ -300,11 +267,11 @@ private class MockAddVM: AddSheetViewModelProtocol {
     @Published var title: String = ""
     @Published var startDate: Date = .now
     @Published var endDate: Date = .now
-    @Published var dueDate: Date = .now
+    @Published var dueDate: Date? = nil  // Optional로 변경
     @Published var error: TodayBoardError? = nil
     @Published var isSaving: Bool = false
     @Published var isAllDay: Bool = false
-    @Published var includeTime: Bool = true
+    @Published var includeTime: Bool = false
     
     func save() async {}
 }

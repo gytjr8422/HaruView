@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct InlineDateTimePicker: View {
+struct EventDateTimePicker: View {
     @Binding var startDate: Date
     @Binding var endDate: Date
     @Binding var isAllDay: Bool
@@ -599,7 +599,7 @@ struct CustomTimePicker: UIViewRepresentable {
 }
 
 // MARK: - Preview
-#Preview("Inline DateTime Picker - iPhone Style") {
+#Preview("Event DateTime Picker - iPhone Style") {
     struct PreviewWrapper: View {
         @State private var startDate = Date()
         @State private var endDate = Calendar.current.date(byAdding: .hour, value: 12, to: Date()) ?? Date()
@@ -624,7 +624,7 @@ struct CustomTimePicker: UIViewRepresentable {
                         }
                         .padding(.horizontal, 20)
                         
-                        InlineDateTimePicker(
+                        EventDateTimePicker(
                             startDate: $startDate,
                             endDate: $endDate,
                             isAllDay: $isAllDay,

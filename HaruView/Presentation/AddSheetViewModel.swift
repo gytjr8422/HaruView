@@ -21,7 +21,7 @@ protocol AddSheetViewModelProtocol: ObservableObject {
 
     var startDate: Date { get set }
     var endDate: Date { get set }
-    var dueDate: Date { get set }
+    var dueDate: Date? { get set }  // Optional로 변경
 
     var isAllDay: Bool { get set }
     var includeTime: Bool { get set }
@@ -49,7 +49,7 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
         didSet { clampEndIfNeeded() }
     }
     @Published var endDate  : Date = Calendar.current.date(byAdding: .hour, value: 1, to: .now)!
-    @Published var dueDate  : Date = .now
+    @Published var dueDate  : Date? = nil  // Optional로 변경
 
     @Published var isAllDay: Bool = false {
         didSet {
@@ -70,7 +70,7 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
         }
     }
     
-    @Published var includeTime: Bool = true
+    @Published var includeTime: Bool = false  // 기본값을 false로 변경
 
     @Published var error: TodayBoardError?
     @Published var isSaving: Bool = false
@@ -80,7 +80,7 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
         case .event:
             return !currentTitle.isEmpty || startDate > Date()
         case .reminder:
-            return !currentTitle.isEmpty
+            return !currentTitle.isEmpty || dueDate != nil
         }
     }
 

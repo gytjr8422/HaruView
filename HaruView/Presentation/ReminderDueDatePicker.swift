@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct ReminderDueDatePicker: View {
-    @Binding var dueDate: Date
+    @Binding var dueDate: Date?  // Optional로 변경
     @Binding var includeTime: Bool
     @State private var selectedMode: DueDateMode = .none
     @State private var selectedField: DateTimeField? = nil
+    @State private var internalDate: Date = Date()  // 내부용 Date
     
     var isTextFieldFocused: FocusState<Bool>.Binding
     var minDate: Date
@@ -72,7 +73,7 @@ struct ReminderDueDatePicker: View {
                         isTextFieldFocused.wrappedValue = false
                     }) {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(formatDateWithDay(dueDate))
+                            Text(formatDateWithDay(internalDate))
                                 .font(.pretendardRegular(size: 15))
                                 .foregroundColor(.secondary)
                             
@@ -85,7 +86,7 @@ struct ReminderDueDatePicker: View {
                                 }
                             } else {
                                 HStack(alignment: .bottom, spacing: 3) {
-                                    Text(formatTime(dueDate))
+                                    Text(formatTime(internalDate))
                                         .font(.system(size: 25, weight: .light))
                                         .foregroundColor(selectedField == .dueDate ? Color(hexCode: "A76545") : .primary)
                                     Text("마감")
@@ -115,7 +116,7 @@ struct ReminderDueDatePicker: View {
                     // 피커 영역
                     VStack(spacing: 0) {
                         CustomDateTimePicker(
-                            date: $dueDate,
+                            date: $internalDate,
                             minDate: minDate,
                             maxDate: maxDate,
                             isAllDay: selectedMode == .dateOnly
@@ -128,20 +129,22 @@ struct ReminderDueDatePicker: View {
         }
         .background(Color.clear)
         .onAppear {
-            initializeMode()
+            initializeState()
         }
-        .onChange(of: includeTime) { _, newValue in
-            if selectedMode != .none {
-                selectedMode = newValue ? .dateTime : .dateOnly
-            }
+        .onChange(of: internalDate) { _, newValue in
+            updateDueDateFromInternal()
+        }
+        .onChange(of: dueDate) { _, newValue in
+            updateInternalFromDueDate()
         }
     }
     
-    private func initializeMode() {
-        if includeTime {
-            selectedMode = .dateTime
+    private func initializeState() {
+        if let existingDueDate = dueDate {
+            internalDate = existingDueDate
+            selectedMode = includeTime ? .dateTime : .dateOnly
         } else {
-            // dueDate가 nil이라고 가정하고 없음으로 시작
+            internalDate = Date()
             selectedMode = .none
         }
     }
@@ -150,10 +153,25 @@ struct ReminderDueDatePicker: View {
         switch selectedMode {
         case .none:
             includeTime = false
+            dueDate = nil
         case .dateOnly:
             includeTime = false
+            dueDate = internalDate
         case .dateTime:
             includeTime = true
+            dueDate = internalDate
+        }
+    }
+    
+    private func updateDueDateFromInternal() {
+        if selectedMode != .none {
+            dueDate = internalDate
+        }
+    }
+    
+    private func updateInternalFromDueDate() {
+        if let newDueDate = dueDate {
+            internalDate = newDueDate
         }
     }
     
@@ -182,7 +200,7 @@ struct ReminderDueDatePicker: View {
 // MARK: - Preview
 #Preview("Reminder Due Date Picker") {
     struct PreviewWrapper: View {
-        @State private var dueDate = Date()
+        @State private var dueDate: Date? = nil  // Optional로 변경
         @State private var includeTime = false
         @FocusState private var isFocused: Bool
         
@@ -210,8 +228,13 @@ struct ReminderDueDatePicker: View {
                                 .foregroundColor(.secondary)
                             Text("includeTime: \(includeTime ? "true" : "false")")
                                 .font(.caption)
-                            Text("dueDate: \(dueDate, formatter: debugFormatter)")
-                                .font(.caption)
+                            if let dueDate = dueDate {
+                                Text("dueDate: \(dueDate, formatter: debugFormatter)")
+                                    .font(.caption)
+                            } else {
+                                Text("dueDate: nil")
+                                    .font(.caption)
+                            }
                         }
                         .padding()
                         .background(Color.gray.opacity(0.1))
