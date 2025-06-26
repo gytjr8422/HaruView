@@ -100,7 +100,6 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     // MARK: 공통 Title Field --------------------------------------------------
     private var commonTitleField: some View {
         VStack(alignment: .leading, spacing: 15) {
-            Text("제목").font(.pretendardBold(size: 17))
             HaruTextField(text: $vm.currentTitle, placeholder: String(localized: "제목 입력"))
                 .focused($isTextFieldFocused)
         }
