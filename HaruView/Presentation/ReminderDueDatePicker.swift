@@ -47,7 +47,7 @@ struct ReminderDueDatePicker: View {
                     }) {
                         Text(mode.title)
                             .font(.system(size: 14, weight: .medium))
-                            .foregroundColor(selectedMode == mode ? .white : Color(hexCode: "A76545"))
+                            .foregroundStyle(selectedMode == mode ? .white : Color(hexCode: "A76545"))
                             .padding(.horizontal, 16)
                             .padding(.vertical, 10)
                             .background(
@@ -75,20 +75,20 @@ struct ReminderDueDatePicker: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(formatDateWithDay(internalDate))
                                 .font(.pretendardRegular(size: 15))
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
                             
                             if selectedMode == .dateOnly {
                                 HStack {
                                     Text("마감일")
                                         .font(.system(size: 25, weight: .light))
-                                        .foregroundColor(selectedField == .dueDate ? Color(hexCode: "A76545") : .primary)
+                                        .foregroundStyle(selectedField == .dueDate ? Color(hexCode: "A76545") : .primary)
                                     Spacer()
                                 }
                             } else {
                                 HStack(alignment: .bottom, spacing: 3) {
                                     Text(formatTime(internalDate))
                                         .font(.system(size: 25, weight: .light))
-                                        .foregroundColor(selectedField == .dueDate ? Color(hexCode: "A76545") : .primary)
+                                        .foregroundStyle(selectedField == .dueDate ? Color(hexCode: "A76545") : .primary)
                                     Text("마감")
                                         .font(.system(size: 12, weight: .light))
                                         .padding(.bottom, 2)
@@ -225,7 +225,7 @@ struct ReminderDueDatePicker: View {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("현재 상태:")
                                 .font(.caption)
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
                             Text("includeTime: \(includeTime ? "true" : "false")")
                                 .font(.caption)
                             if let dueDate = dueDate {

@@ -23,17 +23,13 @@ final class DIContainer {
                              locationProvider: { try await LocationProvider.shared.current() })
     }()
     
-    
     // MARK: - 권한 요청
     @MainActor
     func bootstrapPermissions() async {
-        // 1. 캘린더 writeOnly 권한 요청
         switch await eventKitService.requestAccess(.writeOnly) {
         case .success:
-            // 2. 캘린더 full 권한 요청
             switch await eventKitService.requestAccess(.full) {
             case .success:
-                // 권한 획득 후 위젯 새로고침
                 WidgetRefreshService.shared.refreshWithDebounce()
             case .failure(let error):
                 print("Full access request failed: \(error)")
@@ -78,7 +74,6 @@ final class DIContainer {
         FetchTodayWeatherUseCase(repo: weatherRepository)
     }
 
-    
     // MARK: - ViewModels
     @MainActor
     func makeHomeVM() -> HomeViewModel {
@@ -102,24 +97,37 @@ final class DIContainer {
                               deleteObject: makeDeleteEventUseCase())
     }
     
+    // MARK: - AddSheet & EditSheet ViewModels
     @MainActor
     func makeAddSheetVM() -> AddSheetViewModel {
-        AddSheetViewModel(addEvent: makeAddEventUseCase(),
-                          addReminder: makeAddReminderUseCase())
+        let availableCalendars = eventKitRepository.getAvailableCalendars()
+        return AddSheetViewModel(
+            addEvent: makeAddEventUseCase(),
+            addReminder: makeAddReminderUseCase(),
+            availableCalendars: availableCalendars
+        )
     }
 
     @MainActor
     func makeEditSheetVM(event: Event) -> EditSheetViewModel {
-        EditSheetViewModel(event: event,
-                           editEvent: makeEditEventUseCase(),
-                           editReminder: makeEditReminderUseCase())
+        let availableCalendars = eventKitRepository.getAvailableCalendars()
+        return EditSheetViewModel(
+            event: event,
+            editEvent: makeEditEventUseCase(),
+            editReminder: makeEditReminderUseCase(),
+            availableCalendars: availableCalendars
+        )
     }
 
     @MainActor
     func makeEditSheetVM(reminder: Reminder) -> EditSheetViewModel {
-        EditSheetViewModel(reminder: reminder,
-                           editEvent: makeEditEventUseCase(),
-                           editReminder: makeEditReminderUseCase())
+        let availableCalendars = eventKitRepository.getAvailableCalendars()
+        return EditSheetViewModel(
+            reminder: reminder,
+            editEvent: makeEditEventUseCase(),
+            editReminder: makeEditReminderUseCase(),
+            availableCalendars: availableCalendars
+        )
     }
 }
 

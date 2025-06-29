@@ -29,7 +29,7 @@ struct SmallEventsWidget: View {
             if entry.events.isEmpty {
                 Text("일정이 없습니다")
                     .font(.pretendardRegular(size: 11))
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.gray)
                     .padding(.vertical, 4)
             } else {
                 ForEach(Array(entry.events.prefix(4).enumerated()), id: \.offset) { index, event in
@@ -46,19 +46,19 @@ struct SmallEventsWidget: View {
                             Text(event.title)
                                 .font(.pretendardBold(size: 13))
                                 .lineLimit(1)
-                                .foregroundColor(Color(hexCode: "40392B"))
+                                .foregroundStyle(Color(hexCode: "40392B"))
                                 .strikethrough(isPast)
                                 .opacity(isPast ? 0.5 : 1)
                             
                             if !event.isAllDay {
                                 Text(event.startDate, style: .time)
                                     .font(.jakartaRegular(size: 11))
-                                    .foregroundColor(.gray)
+                                    .foregroundStyle(.gray)
                                     .opacity(isPast ? 0.5 : 1)
                             } else {
                                 Text("하루 종일")
                                     .font(.jakartaRegular(size: 9))
-                                    .foregroundColor(.gray)
+                                    .foregroundStyle(.gray)
                                     .opacity(isPast ? 0.5 : 1)
                             }
                         }
@@ -82,7 +82,7 @@ struct SmallRemindersWidget: View {
             if entry.reminders.isEmpty {
                 Text("할 일이 없습니다")
                     .font(.pretendardRegular(size: 11))
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.gray)
                     .padding(.vertical, 4)
             } else {
                 ForEach(Array(entry.reminders.prefix(4).enumerated()), id: \.element.id) { index, reminder in
@@ -98,7 +98,7 @@ struct SmallRemindersWidget: View {
                         } else {
                             Button(intent: ToggleReminderIntent(reminderId: reminder.id)) {
                                 Image(systemName: reminder.isCompleted ? "checkmark.circle.fill" : "circle")
-                                    .foregroundColor(reminder.isCompleted ? Color(hexCode: "A76545") : .gray)
+                                    .foregroundStyle(reminder.isCompleted ? Color(hexCode: "A76545") : .gray)
                                     .font(.system(size: 20))
                                     .contentTransition(.symbolEffect(.replace))
                             }
@@ -111,7 +111,7 @@ struct SmallRemindersWidget: View {
                             .font(.pretendardSemiBold(size: 13))
                             .lineLimit(1)
                             .strikethrough(reminder.isCompleted)
-                            .foregroundColor(reminder.isCompleted ? .gray : Color(hexCode: "40392B"))
+                            .foregroundStyle(reminder.isCompleted ? .gray : Color(hexCode: "40392B"))
                             .invalidatableContent()
                     }
                     .offset(x: -8)

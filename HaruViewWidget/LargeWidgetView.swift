@@ -18,17 +18,17 @@ struct LargeWidgetView: View {
                 VStack(alignment: .leading, spacing: 6) {
                     HStack(spacing: 3) {
                         Image(systemName: "calendar")
-                            .foregroundColor(Color(hexCode: "A76545"))
+                            .foregroundStyle(Color(hexCode: "A76545"))
                             .font(.system(size: 10))
                         Text("일정")
                             .font(.pretendardBold(size: 11))
-                            .foregroundColor(Color(hexCode: "40392B"))
+                            .foregroundStyle(Color(hexCode: "40392B"))
                     }
                     
                     if entry.events.isEmpty {
                         Text("일정이 없습니다")
                             .font(.pretendardRegular(size: 11))
-                            .foregroundColor(.gray)
+                            .foregroundStyle(.gray)
                             .padding(.vertical, 4)
                     } else {
                         ForEach(Array(entry.events.prefix(9).enumerated()), id: \.offset) { index, event in
@@ -45,19 +45,19 @@ struct LargeWidgetView: View {
                                     Text(event.title)
                                         .font(.pretendardBold(size: 13))
                                         .lineLimit(1)
-                                        .foregroundColor(Color(hexCode: "40392B"))
+                                        .foregroundStyle(Color(hexCode: "40392B"))
                                         .strikethrough(isPast)
                                         .opacity(isPast ? 0.5 : 1)
                                     
                                     if !event.isAllDay {
                                         Text(event.startDate, style: .time)
                                             .font(.jakartaRegular(size: 11))
-                                            .foregroundColor(.gray)
+                                            .foregroundStyle(.gray)
                                             .opacity(isPast ? 0.5 : 1)
                                     } else {
                                         Text("하루 종일")
                                             .font(.jakartaRegular(size: 9))
-                                            .foregroundColor(.gray)
+                                            .foregroundStyle(.gray)
                                             .opacity(isPast ? 0.5 : 1)
                                     }
                                 }
@@ -77,17 +77,17 @@ struct LargeWidgetView: View {
                 VStack(alignment: .leading, spacing: 6) {
                     HStack(spacing: 3) {
                         Image(systemName: "checklist")
-                            .foregroundColor(Color(hexCode: "C2966B"))
+                            .foregroundStyle(Color(hexCode: "C2966B"))
                             .font(.system(size: 10))
                         Text("할 일")
                             .font(.pretendardSemiBold(size: 10))
-                            .foregroundColor(Color(hexCode: "40392B"))
+                            .foregroundStyle(Color(hexCode: "40392B"))
                     }
                     
                     if entry.reminders.isEmpty {
                         Text("할 일이 없습니다")
                             .font(.pretendardRegular(size: 11))
-                            .foregroundColor(.gray)
+                            .foregroundStyle(.gray)
                             .padding(.vertical, 4)
                     } else {
                         ForEach(Array(entry.reminders.prefix(9).enumerated()), id: \.element.id) { index, reminder in
@@ -103,7 +103,7 @@ struct LargeWidgetView: View {
                                 } else {
                                     Button(intent: ToggleReminderIntent(reminderId: reminder.id)) {
                                         Image(systemName: reminder.isCompleted ? "checkmark.circle.fill" : "circle")
-                                            .foregroundColor(reminder.isCompleted ? Color(hexCode: "A76545") : .gray)
+                                            .foregroundStyle(reminder.isCompleted ? Color(hexCode: "A76545") : .gray)
                                             .font(.system(size: 20))
                                             .contentTransition(.symbolEffect(.replace))
                                     }
@@ -116,7 +116,7 @@ struct LargeWidgetView: View {
                                     .font(.pretendardSemiBold(size: 13))
                                     .lineLimit(1)
                                     .strikethrough(reminder.isCompleted)
-                                    .foregroundColor(reminder.isCompleted ? .gray : Color(hexCode: "40392B"))
+                                    .foregroundStyle(reminder.isCompleted ? .gray : Color(hexCode: "40392B"))
                                     .invalidatableContent()
                             }
                             

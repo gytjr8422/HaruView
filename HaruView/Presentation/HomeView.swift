@@ -210,7 +210,15 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                     EventCard(event: event)
                         .contextMenu {
                             Button {
-                                editingEvent = event
+                                if let root = UIApplication.shared.connectedScenes
+                                    .compactMap({ ($0 as? UIWindowScene)?.keyWindow })
+                                    .first?.rootViewController {
+                                    AdManager.shared.show(from: root) {
+                                        editingEvent = event
+                                    }
+                                } else {
+                                    editingEvent = event
+                                }
                             } label: {
                                 Label {
                                     Text("편집").font(Font.pretendardRegular(size: 14))
@@ -314,9 +322,6 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
         HStack {
             Spacer()
             HStack(spacing: 5) {
-//                Text(" Weather")
-//                    .font(.pretendardRegular(size: 11))
-//                    .foregroundColor(.secondary)
                 Link(" 날씨", destination: URL(string: "https://weatherkit.apple.com/legal-attribution.html")!)
                     .font(.pretendardSemiBold (size: 11))
                     .foregroundStyle(Color(hexCode: "A76545"))
@@ -414,7 +419,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
             VStack(spacing: 20) {
                 Image(systemName: "calendar.badge.exclamationmark")
                     .font(.system(size: 40))
-                    .foregroundColor(.orange)
+                    .foregroundStyle(.orange)
                 
                 Text("오늘의 일정과 할 일을 보려면")
                     .multilineTextAlignment(.center)
@@ -499,14 +504,225 @@ final class MockHomeVM: HomeViewModelProtocol {
     var weatherError: TodayBoardError?
     
     @Published var state: HomeState = {
-        var st = HomeState()
-        st.overview = TodayOverview(
-            events: [Event(id: "1111", title: "WWDC 컨퍼런스 참석", start: Calendar.current.startOfDay(for: Date()), end: Date.at(hour: 23, minute: 59)!, calendarTitle: "집", calendarColor: CGColor(gray: 0.9, alpha: 0.9), location: "Apple Campus", notes: "컨퍼런스"),
-                     Event(id: "1113", title: "운동", start: Date(), end: Date(), calendarTitle: "운동장", calendarColor: CGColor(gray: 0.9, alpha: 0.9), location: "", notes: nil),
-                     Event(id: "1115", title: "코딩", start: Date(), end: Date(), calendarTitle: "집", calendarColor: CGColor(gray: 0.9, alpha: 0.9), location: "", notes: nil),
-                     Event(id: "1116", title: "공부하기", start: Date(), end: Date(), calendarTitle: "집", calendarColor: CGColor(gray: 0.9, alpha: 0.9), location: "", notes: nil),
-                     Event(id: "1117", title: "친구 만나기", start: Date(), end: Date(), calendarTitle: "카페", calendarColor: CGColor(gray: 0.9, alpha: 0.9), location: "", notes: nil),
-                     Event(id: "1118", title: "재택근무", start: Date(), end: Date(), calendarTitle: "집", calendarColor: CGColor(gray: 0.9, alpha: 0.9), location: "", notes: nil)],
+         var st = HomeState()
+         
+         // 테스트용 캘린더 정보
+         let testCalendar = EventCalendar(
+             id: "test-calendar",
+             title: "내 캘린더",
+             color: CGColor(red: 0.2, green: 0.6, blue: 0.8, alpha: 1.0),
+             type: .local,
+             isReadOnly: false,
+             allowsContentModifications: true,
+             source: EventCalendar.CalendarSource(
+                 title: "로컬",
+                 type: .local
+             )
+         )
+         
+         st.overview = TodayOverview(
+             events: [
+                 Event(
+                     id: "1111",
+                     title: "WWDC 컨퍼런스 참석",
+                     start: Calendar.current.startOfDay(for: Date()),
+                     end: Date.at(hour: 23, minute: 59)!,
+                     calendarTitle: "집",
+                     calendarColor: CGColor(gray: 0.9, alpha: 0.9),
+                     location: "Apple Campus",
+                     notes: "컨퍼런스 참석 및 네트워킹",
+                     url: URL(string: "https://developer.apple.com/wwdc"),
+                     hasAlarms: true,
+                     alarms: [
+                         EventAlarm(
+                             relativeOffset: -15 * 60, // 15분 전
+                             absoluteDate: nil,
+                             type: .display
+                         ),
+                         EventAlarm(
+                             relativeOffset: -60 * 60, // 1시간 전
+                             absoluteDate: nil,
+                             type: .display
+                         )
+                     ],
+                     hasRecurrence: false,
+                     recurrenceRule: nil,
+                     calendar: testCalendar,
+                     structuredLocation: EventStructuredLocation(
+                         title: "Apple Park",
+                         geoLocation: EventStructuredLocation.GeoLocation(
+                             latitude: 37.3349,
+                             longitude: -122.0090
+                         ),
+                         radius: 100.0
+                     )
+                 ),
+                 
+                 Event(
+                     id: "1113",
+                     title: "운동",
+                     start: Date(),
+                     end: Calendar.current.date(byAdding: .hour, value: 1, to: Date())!,
+                     calendarTitle: "운동장",
+                     calendarColor: CGColor(red: 1.0, green: 0.3, blue: 0.3, alpha: 1.0),
+                     location: "헬스장",
+                     notes: nil,
+                     url: nil,
+                     hasAlarms: true,
+                     alarms: [
+                         EventAlarm(
+                             relativeOffset: -30 * 60, // 30분 전
+                             absoluteDate: nil,
+                             type: .display
+                         )
+                     ],
+                     hasRecurrence: true,
+                     recurrenceRule: EventRecurrenceRule(
+                         frequency: .weekly,
+                         interval: 1,
+                         endDate: nil,
+                         occurrenceCount: nil,
+                         daysOfWeek: [
+                             EventRecurrenceRule.RecurrenceWeekday(dayOfWeek: 2, weekNumber: nil), // 월
+                             EventRecurrenceRule.RecurrenceWeekday(dayOfWeek: 4, weekNumber: nil), // 수
+                             EventRecurrenceRule.RecurrenceWeekday(dayOfWeek: 6, weekNumber: nil)  // 금
+                         ],
+                         daysOfMonth: nil,
+                         weeksOfYear: nil,
+                         monthsOfYear: nil,
+                         setPositions: nil
+                     ),
+                     calendar: testCalendar,
+                     structuredLocation: nil
+                 ),
+                 
+                 Event(
+                     id: "1115",
+                     title: "코딩",
+                     start: Date(),
+                     end: Calendar.current.date(byAdding: .hour, value: 2, to: Date())!,
+                     calendarTitle: "집",
+                     calendarColor: CGColor(red: 0.3, green: 0.8, blue: 0.3, alpha: 1.0),
+                     location: "집",
+                     notes: "SwiftUI 프로젝트 개발",
+                     url: URL(string: "https://github.com/myproject"),
+                     hasAlarms: false,
+                     alarms: [],
+                     hasRecurrence: true,
+                     recurrenceRule: EventRecurrenceRule(
+                         frequency: .daily,
+                         interval: 1,
+                         endDate: Calendar.current.date(byAdding: .month, value: 1, to: Date()),
+                         occurrenceCount: nil,
+                         daysOfWeek: nil,
+                         daysOfMonth: nil,
+                         weeksOfYear: nil,
+                         monthsOfYear: nil,
+                         setPositions: nil
+                     ),
+                     calendar: testCalendar,
+                     structuredLocation: nil
+                 ),
+                 
+                 Event(
+                     id: "1116",
+                     title: "공부하기",
+                     start: Date(),
+                     end: Calendar.current.date(byAdding: .hour, value: 1, to: Date())!,
+                     calendarTitle: "집",
+                     calendarColor: CGColor(red: 0.8, green: 0.6, blue: 0.2, alpha: 1.0),
+                     location: "도서관",
+                     notes: "iOS 개발 서적 읽기",
+                     url: nil,
+                     hasAlarms: true,
+                     alarms: [
+                         EventAlarm(
+                             relativeOffset: -10 * 60, // 10분 전
+                             absoluteDate: nil,
+                             type: .display
+                         )
+                     ],
+                     hasRecurrence: false,
+                     recurrenceRule: nil,
+                     calendar: testCalendar,
+                     structuredLocation: EventStructuredLocation(
+                         title: "시립도서관",
+                         geoLocation: nil,
+                         radius: nil
+                     )
+                 ),
+                 
+                 Event(
+                     id: "1117",
+                     title: "친구 만나기",
+                     start: Date(),
+                     end: Calendar.current.date(byAdding: .hour, value: 3, to: Date())!,
+                     calendarTitle: "카페",
+                     calendarColor: CGColor(red: 0.9, green: 0.4, blue: 0.9, alpha: 1.0),
+                     location: "스타벅스 강남점",
+                     notes: "오랜만에 만나는 대학 친구들",
+                     url: nil,
+                     hasAlarms: true,
+                     alarms: [
+                         EventAlarm(
+                             relativeOffset: -20 * 60, // 20분 전
+                             absoluteDate: nil,
+                             type: .display
+                         )
+                     ],
+                     hasRecurrence: false,
+                     recurrenceRule: nil,
+                     calendar: testCalendar,
+                     structuredLocation: EventStructuredLocation(
+                         title: "스타벅스 강남점",
+                         geoLocation: EventStructuredLocation.GeoLocation(
+                             latitude: 37.4979,
+                             longitude: 127.0276
+                         ),
+                         radius: 50.0
+                     )
+                 ),
+                 
+                 Event(
+                     id: "1118",
+                     title: "재택근무",
+                     start: Calendar.current.date(byAdding: .hour, value: -2, to: Date())!,
+                     end: Calendar.current.date(byAdding: .hour, value: 6, to: Date())!,
+                     calendarTitle: "집",
+                     calendarColor: CGColor(red: 0.4, green: 0.4, blue: 0.8, alpha: 1.0),
+                     location: "집",
+                     notes: "프로젝트 회의 및 개발 업무",
+                     url: URL(string: "https://zoom.us/meeting/123456"),
+                     hasAlarms: true,
+                     alarms: [
+                         EventAlarm(
+                             relativeOffset: 0, // 시작 시간
+                             absoluteDate: nil,
+                             type: .display
+                         )
+                     ],
+                     hasRecurrence: true,
+                     recurrenceRule: EventRecurrenceRule(
+                         frequency: .weekly,
+                         interval: 1,
+                         endDate: nil,
+                         occurrenceCount: nil,
+                         daysOfWeek: [
+                             EventRecurrenceRule.RecurrenceWeekday(dayOfWeek: 2, weekNumber: nil), // 월
+                             EventRecurrenceRule.RecurrenceWeekday(dayOfWeek: 3, weekNumber: nil), // 화
+                             EventRecurrenceRule.RecurrenceWeekday(dayOfWeek: 4, weekNumber: nil), // 수
+                             EventRecurrenceRule.RecurrenceWeekday(dayOfWeek: 5, weekNumber: nil), // 목
+                             EventRecurrenceRule.RecurrenceWeekday(dayOfWeek: 6, weekNumber: nil)  // 금
+                         ],
+                         daysOfMonth: nil,
+                         weeksOfYear: nil,
+                         monthsOfYear: nil,
+                         setPositions: nil
+                     ),
+                     calendar: testCalendar,
+                     structuredLocation: nil
+                 )
+             ],
             reminders: [Reminder(id: "1112", title: "원두 주문하기", due: nil, isCompleted: false, priority: 0),
                         Reminder(id: "1114", title: "약국 가기", due: Date(), isCompleted: true, priority: 1),
                         Reminder(id: "1119", title: "미리보기", due: Date(), isCompleted: false, priority: 9),

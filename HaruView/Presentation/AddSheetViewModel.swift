@@ -17,11 +17,11 @@ enum AddSheetMode: String, CaseIterable, Identifiable {
 // MARK: - ViewModel Protocol
 protocol AddSheetViewModelProtocol: ObservableObject {
     var mode: AddSheetMode { get set }
-    var currentTitle: String { get set }   // ▶︎ 모드별 제목 바인딩
+    var currentTitle: String { get set }
 
     var startDate: Date { get set }
     var endDate: Date { get set }
-    var dueDate: Date? { get set }  // Optional로 변경
+    var dueDate: Date? { get set }
 
     var isAllDay: Bool { get set }
     var includeTime: Bool { get set }
@@ -30,15 +30,27 @@ protocol AddSheetViewModelProtocol: ObservableObject {
     var isSaving: Bool { get }
     var isEdit: Bool { get }
     var hasChanges: Bool { get }
+    
+    // 확장 프로퍼티들
+    var location: String { get set }
+    var notes: String { get set }
+    var url: String { get set }
+    var alarms: [AlarmInput] { get set }
+    var recurrenceRule: RecurrenceRuleInput? { get set }
+    var selectedCalendar: EventCalendar? { get set }
+    var availableCalendars: [EventCalendar] { get }
 
     func save() async
+    func addAlarm(_ alarm: AlarmInput)
+    func removeAlarm(at index: Int)
+    func setRecurrenceRule(_ rule: RecurrenceRuleInput?)
 }
 
-// MARK: - ViewModel
+// MARK: - AddSheetViewModel (새 이벤트/리마인더 생성용)
 @MainActor
 final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewModelProtocol {
 
-    // Published
+    // 기존 Published 프로퍼티들
     @Published var mode: AddSheetMode = .event {
         didSet { currentTitle = titles[mode] ?? "" }
     }
@@ -48,20 +60,18 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
     @Published var startDate: Date = .now {
         didSet { clampEndIfNeeded() }
     }
-    @Published var endDate  : Date = Calendar.current.date(byAdding: .hour, value: 1, to: .now)!
-    @Published var dueDate  : Date? = nil  // Optional로 변경
+    @Published var endDate: Date = Calendar.current.date(byAdding: .hour, value: 1, to: .now)!
+    @Published var dueDate: Date? = nil
 
     @Published var isAllDay: Bool = false {
         didSet {
             if isAllDay {
-                // 시작 시간을 00:00으로 설정
                 let calendar = Calendar.current
                 var components = calendar.dateComponents([.year, .month, .day], from: startDate)
                 components.hour = 0
                 components.minute = 0
                 startDate = calendar.date(from: components)!
                 
-                // 종료 시간을 23:59로 설정
                 components = calendar.dateComponents([.year, .month, .day], from: endDate)
                 components.hour = 23
                 components.minute = 59
@@ -70,29 +80,49 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
         }
     }
     
-    @Published var includeTime: Bool = false  // 기본값을 false로 변경
+    @Published var includeTime: Bool = false
 
     @Published var error: TodayBoardError?
     @Published var isSaving: Bool = false
+    
+    // 확장된 Published 프로퍼티들
+    @Published var location: String = ""
+    @Published var notes: String = ""
+    @Published var url: String = ""
+    @Published var alarms: [AlarmInput] = []
+    @Published var recurrenceRule: RecurrenceRuleInput? = nil
+    @Published var selectedCalendar: EventCalendar? = nil
+    @Published var availableCalendars: [EventCalendar] = []
+
     var isEdit: Bool { false }
     var hasChanges: Bool {
         switch mode {
         case .event:
-            return !currentTitle.isEmpty || startDate > Date()
+            return !currentTitle.isEmpty ||
+                   startDate > Date() ||
+                   !location.isEmpty ||
+                   !notes.isEmpty ||
+                   !url.isEmpty ||
+                   !alarms.isEmpty ||
+                   recurrenceRule != nil
         case .reminder:
             return !currentTitle.isEmpty || dueDate != nil
         }
     }
 
-    private var titles: [AddSheetMode:String] = [.event:"", .reminder:""]
+    private var titles: [AddSheetMode: String] = [.event: "", .reminder: ""]
 
-    // Use‑Cases
+    // Use Cases
     private let addEvent: AddEventUseCase
     private let addReminder: AddReminderUseCase
 
-    init(addEvent: AddEventUseCase, addReminder: AddReminderUseCase) {
-        self.addEvent     = addEvent
-        self.addReminder  = addReminder
+    init(addEvent: AddEventUseCase, addReminder: AddReminderUseCase, availableCalendars: [EventCalendar] = []) {
+        self.addEvent = addEvent
+        self.addReminder = addReminder
+        self.availableCalendars = availableCalendars
+        
+        // 기본 캘린더 선택
+        selectDefaultCalendar()
     }
 
     func save() async {
@@ -103,14 +133,55 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
         
         switch mode {
         case .event:
-            let res = await addEvent(.init(title: titles[.event] ?? "", start: startDate, end: endDate))
+            let eventInput = EventInput(
+                title: titles[.event] ?? "",
+                start: startDate,
+                end: endDate,
+                location: location.isEmpty ? nil : location,
+                notes: notes.isEmpty ? nil : notes,
+                url: url.isEmpty ? nil : URL(string: url),
+                alarms: alarms,
+                recurrenceRule: recurrenceRule,
+                calendarId: selectedCalendar?.id
+            )
+            let res = await addEvent(eventInput)
             handle(res)
+            
         case .reminder:
-            let res = await addReminder(.init(title: titles[.reminder] ?? "", due: dueDate, includesTime: includeTime))
+            let reminderInput = ReminderInput(
+                title: titles[.reminder] ?? "",
+                due: dueDate,
+                includesTime: includeTime
+            )
+            let res = await addReminder(reminderInput)
             handle(res)
         }
         
         isSaving = false
+    }
+    
+    // MARK: - 알람 관리
+    func addAlarm(_ alarm: AlarmInput) {
+        alarms.append(alarm)
+    }
+    
+    func removeAlarm(at index: Int) {
+        guard alarms.indices.contains(index) else { return }
+        alarms.remove(at: index)
+    }
+    
+    // MARK: - 반복 규칙 관리
+    func setRecurrenceRule(_ rule: RecurrenceRuleInput?) {
+        recurrenceRule = rule
+    }
+    
+    // MARK: - Private Methods
+    private func selectDefaultCalendar() {
+        if let defaultCalendar = availableCalendars.first(where: { $0.type == .local }) {
+            selectedCalendar = defaultCalendar
+        } else {
+            selectedCalendar = availableCalendars.first
+        }
     }
     
     private func clampEndIfNeeded() {

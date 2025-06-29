@@ -27,7 +27,7 @@ struct ReminderCard: View {
     var body: some View {
         HStack {
             Image(systemName: reminder.isCompleted ? "checkmark.circle.fill" : "circle")
-                .foregroundColor(reminder.isCompleted ? Color(hexCode: "A76545") : .secondary)
+                .foregroundStyle(reminder.isCompleted ? Color(hexCode: "A76545") : .secondary)
                 .font(.custom("", size: 22))
                 .onTapGesture { onToggle() }
                 .animation(.smooth, value: 1)

@@ -18,6 +18,224 @@ struct Event: Identifiable, Equatable {
     let calendarColor: CGColor
     let location: String?
     let notes: String?
+    
+    // 새로 추가되는 필드들
+    let url: URL?
+    let hasAlarms: Bool
+    let alarms: [EventAlarm]
+    let hasRecurrence: Bool
+    let recurrenceRule: EventRecurrenceRule?
+    let calendar: EventCalendar
+    let structuredLocation: EventStructuredLocation?
+}
+
+// MARK: - 이벤트 알람
+struct EventAlarm: Identifiable, Equatable {
+    let id = UUID()
+    let relativeOffset: TimeInterval  // 초 단위 (음수: 미리, 양수: 늦게)
+    let absoluteDate: Date?           // 절대 시간 알람
+    let type: AlarmType
+    
+    enum AlarmType: String, CaseIterable {
+        case display = "display"
+        case email = "email"
+        case sound = "sound"
+        
+        var localizedDescription: String {
+            switch self {
+            case .display: return String(localized: "알림")
+            case .email: return String(localized: "이메일")
+            case .sound: return String(localized: "소리")
+            }
+        }
+    }
+    
+    var timeDescription: String {
+        if let absoluteDate = absoluteDate {
+            return DateFormatter.localizedString(from: absoluteDate, dateStyle: .short, timeStyle: .short)
+        }
+        
+        let minutes = Int(abs(relativeOffset) / 60)
+        let hours = minutes / 60
+        let days = hours / 24
+        
+        if relativeOffset == 0 {
+            return String(localized: "이벤트 시간")
+        } else if relativeOffset < 0 {
+            if days > 0 {
+                return String(format: NSLocalizedString("%d일 전", comment: ""), days)
+            } else if hours > 0 {
+                return String(format: NSLocalizedString("%d시간 전", comment: ""), hours)
+            } else {
+                return String(format: NSLocalizedString("%d분 전", comment: ""), minutes)
+            }
+        } else {
+            if days > 0 {
+                return String(format: NSLocalizedString("%d일 후", comment: ""), days)
+            } else if hours > 0 {
+                return String(format: NSLocalizedString("%d시간 후", comment: ""), hours)
+            } else {
+                return String(format: NSLocalizedString("%d분 후", comment: ""), minutes)
+            }
+        }
+    }
+}
+
+// MARK: - 이벤트 반복 규칙
+struct EventRecurrenceRule: Equatable {
+    let frequency: RecurrenceFrequency
+    let interval: Int
+    let endDate: Date?
+    let occurrenceCount: Int?
+    let daysOfWeek: [RecurrenceWeekday]?
+    let daysOfMonth: [Int]?
+    let weeksOfYear: [Int]?
+    let monthsOfYear: [Int]?
+    let setPositions: [Int]?
+    
+    enum RecurrenceFrequency: String, CaseIterable {
+        case daily = "daily"
+        case weekly = "weekly"
+        case monthly = "monthly"
+        case yearly = "yearly"
+        
+        var localizedDescription: String {
+            switch self {
+            case .daily: return String(localized: "매일")
+            case .weekly: return String(localized: "매주")
+            case .monthly: return String(localized: "매월")
+            case .yearly: return String(localized: "매년")
+            }
+        }
+    }
+    
+    struct RecurrenceWeekday: Equatable {
+        let dayOfWeek: Int  // 1=일요일, 2=월요일, ..., 7=토요일
+        let weekNumber: Int? // nil이면 모든 주, 양수면 첫째/둘째 등, 음수면 마지막/마지막 전 등
+        
+        var localizedDescription: String {
+            let dayNames = [
+                String(localized: "일요일"),
+                String(localized: "월요일"),
+                String(localized: "화요일"),
+                String(localized: "수요일"),
+                String(localized: "목요일"),
+                String(localized: "금요일"),
+                String(localized: "토요일")
+            ]
+            
+            guard dayOfWeek >= 1 && dayOfWeek <= 7 else { return "" }
+            let dayName = dayNames[dayOfWeek - 1]
+            
+            if let weekNumber = weekNumber {
+                if weekNumber > 0 {
+                    return String(format: NSLocalizedString("매월 %d번째 %@", comment: ""), weekNumber, dayName)
+                } else {
+                    return String(format: NSLocalizedString("매월 마지막 %@", comment: ""), dayName)
+                }
+            } else {
+                return dayName
+            }
+        }
+    }
+    
+    var description: String {
+        var components: [String] = []
+        
+        if interval > 1 {
+            components.append(String(format: NSLocalizedString("%d%@ 마다", comment: ""), interval, frequency.localizedDescription))
+        } else {
+            components.append(frequency.localizedDescription)
+        }
+        
+        if let daysOfWeek = daysOfWeek, !daysOfWeek.isEmpty {
+            let dayNames = daysOfWeek.map { $0.localizedDescription }
+            components.append(dayNames.joined(separator: ", "))
+        }
+        
+        if let endDate = endDate {
+            let formatter = DateFormatter()
+            formatter.dateStyle = .medium
+            components.append(String(format: NSLocalizedString("%@까지", comment: ""), formatter.string(from: endDate)))
+        } else if let count = occurrenceCount {
+            components.append(String(format: NSLocalizedString("%d회", comment: ""), count))
+        }
+        
+        return components.joined(separator: " ")
+    }
+}
+
+// MARK: - 이벤트 캘린더 정보
+struct EventCalendar: Identifiable, Equatable {
+    let id: String
+    let title: String
+    let color: CGColor
+    let type: CalendarType
+    let isReadOnly: Bool
+    let allowsContentModifications: Bool
+    let source: CalendarSource
+    
+    enum CalendarType: String {
+        case local = "local"
+        case calDAV = "calDAV"
+        case exchange = "exchange"
+        case subscription = "subscription"
+        case birthday = "birthday"
+        
+        var localizedDescription: String {
+            switch self {
+            case .local: return String(localized: "로컬")
+            case .calDAV: return String(localized: "CalDAV")
+            case .exchange: return String(localized: "Exchange")
+            case .subscription: return String(localized: "구독")
+            case .birthday: return String(localized: "생일")
+            }
+        }
+    }
+    
+    struct CalendarSource: Equatable {
+        let title: String
+        let type: SourceType
+        
+        enum SourceType: String {
+            case local = "local"
+            case exchange = "exchange"
+            case calDAV = "calDAV"
+            case mobileMe = "mobileMe"
+            case subscribed = "subscribed"
+            case birthdays = "birthdays"
+        }
+    }
+}
+
+// MARK: - 구조화된 위치 정보
+struct EventStructuredLocation: Equatable {
+    let title: String?
+    let geoLocation: GeoLocation?
+    let radius: Double?
+    
+    struct GeoLocation: Equatable {
+        let latitude: Double
+        let longitude: Double
+        
+        var coordinate: String {
+            return String(format: "%.6f, %.6f", latitude, longitude)
+        }
+    }
+    
+    var displayText: String {
+        if let title = title, !title.isEmpty {
+            if let geo = geoLocation {
+                return "\(title) (\(geo.coordinate))"
+            } else {
+                return title
+            }
+        } else if let geo = geoLocation {
+            return geo.coordinate
+        } else {
+            return String(localized: "위치 정보 없음")
+        }
+    }
 }
 
 // MARK: - 미리알림

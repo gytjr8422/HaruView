@@ -38,20 +38,20 @@ struct EventDateTimePicker: View {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(formatDateWithDay(startDate))
                             .font(.pretendardRegular(size: 15))
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                         
                         if isAllDay {
                             HStack {
                                 Text("하루 종일")
                                     .font(.system(size: 25, weight: .light))
-                                    .foregroundColor(selectedField == .start ? Color(hexCode: "A76545") : .primary)
+                                    .foregroundStyle(selectedField == .start ? Color(hexCode: "A76545") : .primary)
                                 Spacer()
                             }
                         } else {
                             HStack(alignment: .bottom, spacing: 3) {
                                 Text(formatTime(startDate))
                                     .font(.system(size: 25, weight: .light))
-                                    .foregroundColor(selectedField == .start ? Color(hexCode: "A76545") : .primary)
+                                    .foregroundStyle(selectedField == .start ? Color(hexCode: "A76545") : .primary)
                                 Text("시작")
                                     .font(.system(size: 12, weight: .light))
                                     .padding(.bottom, 2)
@@ -65,7 +65,7 @@ struct EventDateTimePicker: View {
                     // 화살표
                     Image(systemName: "arrow.right")
                         .font(.system(size: 20, weight: .ultraLight))
-                        .foregroundColor(.gray)
+                        .foregroundStyle(.gray)
                         .padding(.horizontal, 8)
                         .padding(.top, 20)
                     
@@ -81,12 +81,12 @@ struct EventDateTimePicker: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(formatDateWithDay(endDate))
                                 .font(.pretendardRegular(size: 15))
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
                             
                             HStack(alignment: .bottom, spacing: 3) {
                                 Text(formatTime(endDate))
                                     .font(.system(size: 25, weight: .light))
-                                    .foregroundColor(selectedField == .end ? Color(hexCode: "A76545") : .primary)
+                                    .foregroundStyle(selectedField == .end ? Color(hexCode: "A76545") : .primary)
                                 Text("종료")
                                     .font(.system(size: 12, weight: .light))
                                     .padding(.bottom, 2)
@@ -107,7 +107,7 @@ struct EventDateTimePicker: View {
                         endDate = Calendar.current.date(byAdding: .minute, value: 15, to: startDate) ?? startDate
                     }
                     .font(.system(size: 12, weight: .medium))
-                    .foregroundColor(Color(hexCode: "A76545"))
+                    .foregroundStyle(Color(hexCode: "A76545"))
                     .padding(.horizontal, 14)
                     .padding(.vertical, 7)
                     .background(
@@ -120,7 +120,7 @@ struct EventDateTimePicker: View {
                         endDate = Calendar.current.date(byAdding: .minute, value: 30, to: startDate) ?? startDate
                     }
                     .font(.system(size: 12, weight: .medium))
-                    .foregroundColor(Color(hexCode: "A76545"))
+                    .foregroundStyle(Color(hexCode: "A76545"))
                     .padding(.horizontal, 14)
                     .padding(.vertical, 7)
                     .background(
@@ -133,7 +133,7 @@ struct EventDateTimePicker: View {
                         endDate = Calendar.current.date(byAdding: .hour, value: 1, to: startDate) ?? startDate
                     }
                     .font(.system(size: 12, weight: .medium))
-                    .foregroundColor(Color(hexCode: "A76545"))
+                    .foregroundStyle(Color(hexCode: "A76545"))
                     .padding(.horizontal, 14)
                     .padding(.vertical, 7)
                     .background(
@@ -146,7 +146,7 @@ struct EventDateTimePicker: View {
                         endDate = Calendar.current.date(byAdding: .minute, value: 90, to: startDate) ?? startDate
                     }
                     .font(.system(size: 12, weight: .medium))
-                    .foregroundColor(Color(hexCode: "A76545"))
+                    .foregroundStyle(Color(hexCode: "A76545"))
                     .padding(.horizontal, 14)
                     .padding(.vertical, 7)
                     .background(
@@ -159,7 +159,7 @@ struct EventDateTimePicker: View {
                         endDate = Calendar.current.date(byAdding: .hour, value: 2, to: startDate) ?? startDate
                     }
                     .font(.system(size: 12, weight: .medium))
-                    .foregroundColor(Color(hexCode: "A76545"))
+                    .foregroundStyle(Color(hexCode: "A76545"))
                     .padding(.horizontal, 14)
                     .padding(.vertical, 7)
                     .background(
