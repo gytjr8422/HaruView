@@ -31,7 +31,7 @@ protocol AddSheetViewModelProtocol: ObservableObject {
     var isEdit: Bool { get }
     var hasChanges: Bool { get }
     
-    // 확장 프로퍼티들
+    // Event 관련 프로퍼티들
     var location: String { get set }
     var notes: String { get set }
     var url: String { get set }
@@ -39,12 +39,25 @@ protocol AddSheetViewModelProtocol: ObservableObject {
     var recurrenceRule: RecurrenceRuleInput? { get set }
     var selectedCalendar: EventCalendar? { get set }
     var availableCalendars: [EventCalendar] { get }
+    
+    // Reminder 관련 확장 프로퍼티들
+    var reminderPriority: Int { get set }
+    var reminderNotes: String { get set }
+    var reminderURL: String { get set }
+    var reminderLocation: String { get set }
+    var reminderAlarms: [AlarmInput] { get set }
+    var selectedReminderCalendar: ReminderCalendar? { get set }
+    var availableReminderCalendars: [ReminderCalendar] { get }
 
     func save() async
     func addAlarm(_ alarm: AlarmInput)
     func removeAlarm(at index: Int)
     func setRecurrenceRule(_ rule: RecurrenceRuleInput?)
+    func addReminderAlarm(_ alarm: AlarmInput)
+    func removeReminderAlarm(at index: Int)
+    func setReminderPriority(_ priority: Int)
 }
+
 
 // MARK: - AddSheetViewModel (새 이벤트/리마인더 생성용)
 @MainActor
@@ -85,7 +98,7 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
     @Published var error: TodayBoardError?
     @Published var isSaving: Bool = false
     
-    // 확장된 Published 프로퍼티들
+    // 일정 추가 프로퍼티
     @Published var location: String = ""
     @Published var notes: String = ""
     @Published var url: String = ""
@@ -93,6 +106,15 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
     @Published var recurrenceRule: RecurrenceRuleInput? = nil
     @Published var selectedCalendar: EventCalendar? = nil
     @Published var availableCalendars: [EventCalendar] = []
+    
+    // 미리알림 추가 프로퍼티
+    @Published var reminderPriority: Int = 0
+    @Published var reminderNotes: String = ""
+    @Published var reminderURL: String = ""
+    @Published var reminderLocation: String = ""
+    @Published var reminderAlarms: [AlarmInput] = []
+    @Published var selectedReminderCalendar: ReminderCalendar? = nil
+    @Published var availableReminderCalendars: [ReminderCalendar] = []
 
     var isEdit: Bool { false }
     var hasChanges: Bool {
@@ -106,7 +128,13 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
                    !alarms.isEmpty ||
                    recurrenceRule != nil
         case .reminder:
-            return !currentTitle.isEmpty || dueDate != nil
+            return !currentTitle.isEmpty ||
+                   dueDate != nil ||
+                   reminderPriority > 0 ||
+                   !reminderNotes.isEmpty ||
+                   !reminderURL.isEmpty ||
+                   !reminderLocation.isEmpty ||
+                   !reminderAlarms.isEmpty
         }
     }
 
@@ -123,6 +151,17 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
         
         // 기본 캘린더 선택
         selectDefaultCalendar()
+    }
+    
+    convenience init(
+        addEvent: AddEventUseCase,
+        addReminder: AddReminderUseCase,
+        availableCalendars: [EventCalendar] = [],
+        availableReminderCalendars: [ReminderCalendar] = []
+    ) {
+        self.init(addEvent: addEvent, addReminder: addReminder, availableCalendars: availableCalendars)
+        self.availableReminderCalendars = availableReminderCalendars
+        selectDefaultReminderCalendar()
     }
 
     func save() async {
@@ -151,7 +190,13 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
             let reminderInput = ReminderInput(
                 title: titles[.reminder] ?? "",
                 due: dueDate,
-                includesTime: includeTime
+                includesTime: includeTime,
+                priority: reminderPriority,
+                notes: reminderNotes.isEmpty ? nil : reminderNotes,
+                url: reminderURL.isEmpty ? nil : URL(string: reminderURL),
+                location: reminderLocation.isEmpty ? nil : reminderLocation,
+                alarms: reminderAlarms,
+                calendarId: selectedReminderCalendar?.id
             )
             let res = await addReminder(reminderInput)
             handle(res)
@@ -196,4 +241,36 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
     private func handle(_ result: Result<Void, TodayBoardError>) {
         if case .failure(let err) = result { self.error = err }
     }
+    
+    // MARK: - 미리알림
+    func addReminderAlarm(_ alarm: AlarmInput) {
+        reminderAlarms.append(alarm)
+    }
+    
+    func removeReminderAlarm(at index: Int) {
+        guard reminderAlarms.indices.contains(index) else { return }
+        reminderAlarms.remove(at: index)
+    }
+     
+     // MARK: - 우선순위 관리
+    func setReminderPriority(_ priority: Int) {
+        reminderPriority = priority
+    }
+     
+     // MARK: - 리마인더 캘린더 초기화
+    private func selectDefaultReminderCalendar() {
+        if let defaultCalendar = availableReminderCalendars.first(where: { $0.type == .local }) {
+            selectedReminderCalendar = defaultCalendar
+        } else {
+            selectedReminderCalendar = availableReminderCalendars.first
+        }
+    }
+     
+     // init에서 호출할 초기화 메서드
+//     private func initializeReminderCalendars() {
+//         // Repository에서 사용 가능한 리마인더 캘린더 가져오기
+//         // availableReminderCalendars = eventKitRepository.getAvailableReminderCalendars()
+//         selectDefaultReminderCalendar()
+//     }
 }
+

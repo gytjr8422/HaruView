@@ -101,32 +101,41 @@ final class DIContainer {
     @MainActor
     func makeAddSheetVM() -> AddSheetViewModel {
         let availableCalendars = eventKitRepository.getAvailableCalendars()
+        let availableReminderCalendars = eventKitRepository.getAvailableReminderCalendars()
+        
         return AddSheetViewModel(
             addEvent: makeAddEventUseCase(),
             addReminder: makeAddReminderUseCase(),
-            availableCalendars: availableCalendars
+            availableCalendars: availableCalendars,
+            availableReminderCalendars: availableReminderCalendars
         )
     }
 
     @MainActor
     func makeEditSheetVM(event: Event) -> EditSheetViewModel {
         let availableCalendars = eventKitRepository.getAvailableCalendars()
+        let availableReminderCalendars = eventKitRepository.getAvailableReminderCalendars()
+        
         return EditSheetViewModel(
             event: event,
             editEvent: makeEditEventUseCase(),
             editReminder: makeEditReminderUseCase(),
-            availableCalendars: availableCalendars
+            availableCalendars: availableCalendars,
+            availableReminderCalendars: availableReminderCalendars
         )
     }
 
     @MainActor
     func makeEditSheetVM(reminder: Reminder) -> EditSheetViewModel {
         let availableCalendars = eventKitRepository.getAvailableCalendars()
+        let availableReminderCalendars = eventKitRepository.getAvailableReminderCalendars()
+        
         return EditSheetViewModel(
             reminder: reminder,
             editEvent: makeEditEventUseCase(),
             editReminder: makeEditReminderUseCase(),
-            availableCalendars: availableCalendars
+            availableCalendars: availableCalendars,
+            availableReminderCalendars: availableReminderCalendars
         )
     }
 }

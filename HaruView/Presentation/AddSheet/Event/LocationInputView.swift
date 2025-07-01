@@ -17,12 +17,12 @@ struct LocationInputView: View {
             HStack {
                 Text("위치")
                     .font(.pretendardSemiBold(size: 16))
-                Spacer()
-                Button("빠른 선택") {
-                    showLocationPicker = true
-                }
-                .font(.pretendardRegular(size: 14))
-                .foregroundStyle(Color(hexCode: "A76545"))
+//                Spacer()
+//                Button("빠른 선택") {
+//                    showLocationPicker = true
+//                }
+//                .font(.pretendardRegular(size: 14))
+//                .foregroundStyle(Color(hexCode: "A76545"))
             }
             
             HaruTextField(text: $location, placeholder: "위치 입력")

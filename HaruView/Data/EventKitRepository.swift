@@ -281,22 +281,102 @@ final class EventKitRepository: EventRepositoryProtocol, ReminderRepositoryProto
         )
     }
     
-    // MARK: - 기존 Reminder 매핑 (변경 없음)
-    private static func mapReminder(_ rem: EKReminder) -> Reminder {
-        let hasTime = rem.dueDateComponents?.hour != nil || rem.dueDateComponents?.minute != nil
-        let due = hasTime ? rem.dueDateComponents?.date : nil
-        return Reminder(id: rem.calendarItemIdentifier,
-                        title: rem.title,
-                        due: due,
-                        isCompleted: rem.isCompleted,
-                        priority: rem.priority)
-    }
-    
     // MARK: - 사용 가능한 캘린더 조회
     func getAvailableCalendars() -> [EventCalendar] {
         let calendars = service.getAvailableCalendars()
         return calendars
             .filter { $0.allowsContentModifications } // 편집 가능한 캘린더만
             .map(Self.mapCalendar)
+    }
+    
+    // MARK: - Reminder 매핑 함수
+    private static func mapReminder(_ rem: EKReminder) -> Reminder {
+        let hasTime = rem.dueDateComponents?.hour != nil || rem.dueDateComponents?.minute != nil
+        let due = hasTime ? rem.dueDateComponents?.date : nil
+        
+        return Reminder(
+            id: rem.calendarItemIdentifier,
+            title: rem.title ?? "(제목 없음)",
+            due: due,
+            isCompleted: rem.isCompleted,
+            priority: rem.priority,
+            notes: rem.notes,
+            url: rem.url,
+            location: rem.location,
+            hasAlarms: !(rem.alarms?.isEmpty ?? true),
+            alarms: mapReminderAlarms(rem.alarms ?? []),
+            calendar: mapReminderCalendar(rem.calendar)
+        )
+    }
+    
+    // MARK: - 리마인더 알람 매핑
+    private static func mapReminderAlarms(_ ekAlarms: [EKAlarm]) -> [ReminderAlarm] {
+        return ekAlarms.map { alarm in
+            let type: ReminderAlarm.AlarmType = .display // EKAlarm 타입이 직접 노출되지 않으므로 기본값
+            
+            return ReminderAlarm(
+                relativeOffset: alarm.relativeOffset,
+                absoluteDate: alarm.absoluteDate,
+                type: type
+            )
+        }
+    }
+    
+    // MARK: - 리마인더 캘린더 매핑
+     private static func mapReminderCalendar(_ ekCalendar: EKCalendar) -> ReminderCalendar {
+         let calendarType: ReminderCalendar.CalendarType
+         switch ekCalendar.type {
+         case .local:
+             calendarType = .local
+         case .calDAV:
+             calendarType = .calDAV
+         case .exchange:
+             calendarType = .exchange
+         case .subscription:
+             calendarType = .subscription
+         case .birthday:
+             calendarType = .birthday
+         @unknown default:
+             calendarType = .local
+         }
+         
+         let sourceType: ReminderCalendar.CalendarSource.SourceType
+         switch ekCalendar.source.sourceType {
+         case .local:
+             sourceType = .local
+         case .exchange:
+             sourceType = .exchange
+         case .calDAV:
+             sourceType = .calDAV
+         case .mobileMe:
+             sourceType = .mobileMe
+         case .subscribed:
+             sourceType = .subscribed
+         case .birthdays:
+             sourceType = .birthdays
+         @unknown default:
+             sourceType = .local
+         }
+         
+         return ReminderCalendar(
+             id: ekCalendar.calendarIdentifier,
+             title: ekCalendar.title,
+             color: ekCalendar.cgColor,
+             type: calendarType,
+             isReadOnly: !ekCalendar.allowsContentModifications,
+             allowsContentModifications: ekCalendar.allowsContentModifications,
+             source: ReminderCalendar.CalendarSource(
+                 title: ekCalendar.source.title,
+                 type: sourceType
+             )
+         )
+     }
+    
+    // MARK: - 사용 가능한 리마인더 캘린더 조회
+    func getAvailableReminderCalendars() -> [ReminderCalendar] {
+        let calendars = service.getAvailableReminderCalendars()
+        return calendars
+            .filter { $0.allowsContentModifications } // 편집 가능한 캘린더만
+            .map(Self.mapReminderCalendar)
     }
 }

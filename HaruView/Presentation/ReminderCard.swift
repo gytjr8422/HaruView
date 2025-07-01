@@ -24,6 +24,19 @@ struct ReminderCard: View {
         }
     }
     
+    var prioritySymbol: String {
+        switch reminder.priority {
+        case 1:
+            return "exclamationmark.3"  // 높은 우선순위
+        case 5:
+            return "exclamationmark.2"  // 보통 우선순위
+        case 9:
+            return "exclamationmark"    // 낮은 우선순위
+        default:
+            return "minus"              // 우선순위 없음
+        }
+    }
+    
     var body: some View {
         HStack {
             Image(systemName: reminder.isCompleted ? "checkmark.circle.fill" : "circle")
@@ -34,7 +47,7 @@ struct ReminderCard: View {
                 .padding(.trailing, 2)
             
             if reminder.priority > 0 {
-                Image(systemName: "exclamationmark.triangle.fill")
+                Image(systemName: prioritySymbol)
                     .foregroundStyle(priorityColor)
                     .opacity(reminder.isCompleted ? 0.5 : 1)
             }
@@ -60,5 +73,28 @@ struct ReminderCard: View {
 }
 
 #Preview {
-    ReminderCard(reminder: Reminder(id: "", title: "타이틀", due: Date(), isCompleted: false, priority: 0), onToggle: {} )
+    ReminderCard(
+        reminder: Reminder(
+            id: "",
+            title: "타이틀",
+            due: Date(),
+            isCompleted: false,
+            priority: 0,
+            notes: nil,
+            url: nil,
+            location: nil,
+            hasAlarms: false,
+            alarms: [],
+            calendar: ReminderCalendar(
+                id: "preview",
+                title: "미리보기",
+                color: CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0),
+                type: .local,
+                isReadOnly: false,
+                allowsContentModifications: true,
+                source: ReminderCalendar.CalendarSource(title: "로컬", type: .local)
+            )
+        ),
+        onToggle: {}
+    )
 }

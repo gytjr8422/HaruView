@@ -152,12 +152,20 @@ final class HomeViewModel: ObservableObject, @preconcurrency HomeViewModelProtoc
         switch res {
         case .success:
             if let idx = state.overview.reminders.firstIndex(where: { $0.id == id }) {
-                var updated = state.overview.reminders[idx]
-                updated = Reminder(id: updated.id,
-                                 title: updated.title,
-                                 due: updated.due,
-                                 isCompleted: !updated.isCompleted,
-                                 priority: updated.priority)
+                let original = state.overview.reminders[idx]
+                let updated = Reminder(
+                    id: original.id,
+                    title: original.title,
+                    due: original.due,
+                    isCompleted: !original.isCompleted,
+                    priority: original.priority,
+                    notes: original.notes,
+                    url: original.url,
+                    location: original.location,
+                    hasAlarms: original.hasAlarms,
+                    alarms: original.alarms,
+                    calendar: original.calendar
+                )
                 
                 withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
                     state.overview.reminders[idx] = updated

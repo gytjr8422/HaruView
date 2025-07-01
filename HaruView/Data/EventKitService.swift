@@ -78,18 +78,10 @@ final class EventKitService {
     // MARK: - 미리알림 CRUD
     func addReminder(_ input: ReminderInput) -> Result<Void, TodayBoardError> {
         let reminder = EKReminder(eventStore: store)
-        reminder.title = input.title
-        if let due = input.due {
-            if input.includesTime {
-                reminder.dueDateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: due)
-            } else {
-                reminder.dueDateComponents = Calendar.current.dateComponents([.year, .month, .day], from: due)
-            }
-        }
-        reminder.calendar = store.defaultCalendarForNewReminders()
+        applyReminderInput(input, to: reminder)
+        
         do {
             try store.save(reminder, commit: true)
-            // 위젯 새로고침
             Task { @MainActor in
                 WidgetRefreshService.shared.refreshWithDebounce()
             }
@@ -98,12 +90,67 @@ final class EventKitService {
             return .failure(.saveFailed)
         }
     }
-
+    
     func updateReminder(_ edit: ReminderEdit) -> Result<Void, TodayBoardError> {
         guard let reminder = store.calendarItem(withIdentifier: edit.id) as? EKReminder else {
             return .failure(.notFound)
         }
+        
+        applyReminderEdit(edit, to: reminder)
+        
+        do {
+            try store.save(reminder, commit: true)
+            Task { @MainActor in
+                WidgetRefreshService.shared.refreshWithDebounce()
+            }
+            return .success(())
+        } catch {
+            return .failure(.saveFailed)
+        }
+    }
+    
+    // MARK: - 사용 가능한 리마인더 캘린더 조회
+    func getAvailableReminderCalendars() -> [EKCalendar] {
+        return store.calendars(for: .reminder)
+    }
+    
+    private func applyReminderInput(_ input: ReminderInput, to reminder: EKReminder) {
+        reminder.title = input.title
+        reminder.notes = input.notes
+        reminder.url = input.url
+        reminder.location = input.location
+        reminder.priority = input.priority
+        
+        // 마감일 설정
+        reminder.dueDateComponents = nil
+        if let due = input.due {
+            if input.includesTime {
+                reminder.dueDateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: due)
+            } else {
+                reminder.dueDateComponents = Calendar.current.dateComponents([.year, .month, .day], from: due)
+            }
+        }
+        
+        // 캘린더 설정
+        if let calendarId = input.calendarId,
+           let calendar = store.calendar(withIdentifier: calendarId) {
+            reminder.calendar = calendar
+        } else {
+            reminder.calendar = store.defaultCalendarForNewReminders()
+        }
+        
+        // 알람 설정
+        applyAlarmsToReminder(input.alarms, to: reminder)
+    }
+    
+    private func applyReminderEdit(_ edit: ReminderEdit, to reminder: EKReminder) {
         reminder.title = edit.title
+        reminder.notes = edit.notes
+        reminder.url = edit.url
+        reminder.location = edit.location
+        reminder.priority = edit.priority
+        
+        // 마감일 설정
         reminder.dueDateComponents = nil
         if let due = edit.due {
             if edit.includesTime {
@@ -112,15 +159,31 @@ final class EventKitService {
                 reminder.dueDateComponents = Calendar.current.dateComponents([.year, .month, .day], from: due)
             }
         }
-        do {
-            try store.save(reminder, commit: true)
-            // 위젯 새로고침
-            Task { @MainActor in
-                WidgetRefreshService.shared.refreshWithDebounce()
+        
+        // 알람 설정 (기존 알람 제거 후 새로 추가)
+        applyAlarmsToReminder(edit.alarms, to: reminder)
+    }
+    
+    private func applyAlarmsToReminder(_ alarms: [AlarmInput], to reminder: EKReminder) {
+        // 기존 알람 제거
+        if let existingAlarms = reminder.alarms {
+            for alarm in existingAlarms {
+                reminder.removeAlarm(alarm)
             }
-            return .success(())
-        } catch {
-            return .failure(.saveFailed)
+        }
+        
+        // 새 알람 추가
+        for alarmInput in alarms {
+            let alarm = EKAlarm()
+            
+            switch alarmInput.trigger {
+            case .relative(let interval):
+                alarm.relativeOffset = interval
+            case .absolute(let date):
+                alarm.absoluteDate = date
+            }
+            
+            reminder.addAlarm(alarm)
         }
     }
     

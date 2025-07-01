@@ -27,6 +27,15 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
     @Published var recurrenceRule: RecurrenceRuleInput? = nil
     @Published var selectedCalendar: EventCalendar? = nil
     @Published var availableCalendars: [EventCalendar] = []
+    
+    // 미리알림용 프로퍼티
+    @Published var reminderPriority: Int = 0
+    @Published var reminderNotes: String = ""
+    @Published var reminderURL: String = ""
+    @Published var reminderLocation: String = ""
+    @Published var reminderAlarms: [AlarmInput] = []
+    @Published var selectedReminderCalendar: ReminderCalendar? = nil
+    @Published var availableReminderCalendars: [ReminderCalendar] = []
 
     var isEdit: Bool { true }
     var hasChanges: Bool {
@@ -56,6 +65,11 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
             if currentTitle != original.title { return true }
             let newDue: Date? = includeTime ? dueDate : nil
             if original.due != newDue { return true }
+            if reminderPriority != original.priority { return true }
+            if reminderNotes != (original.notes ?? "") { return true }
+            if reminderURL != (original.url?.absoluteString ?? "") { return true }
+            if reminderLocation != (original.location ?? "") { return true }
+            if reminderAlarms.count != original.alarms.count { return true }
             return false
         }
     }
@@ -95,41 +109,72 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
         // 기존 리마인더 데이터로 초기화
         initializeWithReminder(reminder)
     }
-
-    func save() async {
-        isSaving = true
-        error = nil
-
-        if mode == .event { clampEndIfNeeded() }
-
-        switch mode {
-        case .event:
-            let eventEdit = EventEdit(
-                id: objectId,
-                title: titles[.event] ?? "",
-                start: startDate,
-                end: endDate,
-                location: location.isEmpty ? nil : location,
-                notes: notes.isEmpty ? nil : notes,
-                url: url.isEmpty ? nil : URL(string: url),
-                alarms: alarms,
-                recurrenceRule: recurrenceRule
-            )
-            let res = await editEvent(eventEdit)
-            handle(res)
-            
-        case .reminder:
-            let reminderEdit = ReminderEdit(
-                id: objectId,
-                title: titles[.reminder] ?? "",
-                due: dueDate,
-                includesTime: includeTime
-            )
-            let res = await editReminder(reminderEdit)
-            handle(res)
-        }
-        isSaving = false
+    
+    // Event 편집용 초기화
+    convenience init(
+        event: Event,
+        editEvent: EditEventUseCase,
+        editReminder: EditReminderUseCase,
+        availableCalendars: [EventCalendar] = [],
+        availableReminderCalendars: [ReminderCalendar] = []
+    ) {
+        self.init(event: event, editEvent: editEvent, editReminder: editReminder, availableCalendars: availableCalendars)
+        self.availableReminderCalendars = availableReminderCalendars
     }
+    
+    // Reminder 편집용 초기화
+    convenience init(
+        reminder: Reminder,
+        editEvent: EditEventUseCase,
+        editReminder: EditReminderUseCase,
+        availableCalendars: [EventCalendar] = [],
+        availableReminderCalendars: [ReminderCalendar] = []
+    ) {
+        self.init(reminder: reminder, editEvent: editEvent, editReminder: editReminder, availableCalendars: availableCalendars)
+        self.availableReminderCalendars = availableReminderCalendars
+        initializeWithReminder(reminder)
+    }
+
+    // save 메서드 확장 (기존 save 메서드 교체)
+     func save() async {
+         isSaving = true
+         error = nil
+
+         if mode == .event { clampEndIfNeeded() }
+
+         switch mode {
+         case .event:
+             let eventEdit = EventEdit(
+                 id: objectId,
+                 title: titles[.event] ?? "",
+                 start: startDate,
+                 end: endDate,
+                 location: location.isEmpty ? nil : location,
+                 notes: notes.isEmpty ? nil : notes,
+                 url: url.isEmpty ? nil : URL(string: url),
+                 alarms: alarms,
+                 recurrenceRule: recurrenceRule
+             )
+             let res = await editEvent(eventEdit)
+             handle(res)
+             
+         case .reminder:
+             let reminderEdit = ReminderEdit(
+                 id: objectId,
+                 title: titles[.reminder] ?? "",
+                 due: dueDate,
+                 includesTime: includeTime,
+                 priority: reminderPriority,
+                 notes: reminderNotes.isEmpty ? nil : reminderNotes,
+                 url: reminderURL.isEmpty ? nil : URL(string: reminderURL),
+                 location: reminderLocation.isEmpty ? nil : reminderLocation,
+                 alarms: reminderAlarms
+             )
+             let res = await editReminder(reminderEdit)
+             handle(res)
+         }
+         isSaving = false
+     }
     
     // MARK: - 알람 관리
     func addAlarm(_ alarm: AlarmInput) {
@@ -194,6 +239,28 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
         currentTitle = reminder.title
         dueDate = reminder.due
         includeTime = reminder.due != nil
+        reminderPriority = reminder.priority
+        reminderNotes = reminder.notes ?? ""
+        reminderURL = reminder.url?.absoluteString ?? ""
+        reminderLocation = reminder.location ?? ""
+        
+        // 현재 리마인더의 캘린더 찾기
+        selectedReminderCalendar = availableReminderCalendars.first { $0.id == reminder.calendar.id }
+        
+        // 기존 알람을 AlarmInput으로 변환
+        reminderAlarms = reminder.alarms.map { alarm in
+            let type: AlarmInput.AlarmType = .display
+            let trigger: AlarmInput.AlarmTrigger
+            
+            if let absoluteDate = alarm.absoluteDate {
+                trigger = .absolute(absoluteDate)
+            } else {
+                trigger = .relative(alarm.relativeOffset)
+            }
+            
+            return AlarmInput(type: type, trigger: trigger)
+        }
+        
         titles[.reminder] = reminder.title
     }
     
@@ -241,5 +308,19 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
 
     private func handle(_ result: Result<Void, TodayBoardError>) {
         if case .failure(let err) = result { self.error = err }
+    }
+    
+    // MARK: - 리마인더 알람 관리 메서드들
+    func addReminderAlarm(_ alarm: AlarmInput) {
+        reminderAlarms.append(alarm)
+    }
+    
+    func removeReminderAlarm(at index: Int) {
+        guard reminderAlarms.indices.contains(index) else { return }
+        reminderAlarms.remove(at: index)
+    }
+    
+    func setReminderPriority(_ priority: Int) {
+        reminderPriority = priority
     }
 }

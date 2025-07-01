@@ -723,15 +723,173 @@ final class MockHomeVM: HomeViewModelProtocol {
                      structuredLocation: nil
                  )
              ],
-            reminders: [Reminder(id: "1112", title: "원두 주문하기", due: nil, isCompleted: false, priority: 0),
-                        Reminder(id: "1114", title: "약국 가기", due: Date(), isCompleted: true, priority: 1),
-                        Reminder(id: "1119", title: "미리보기", due: Date(), isCompleted: false, priority: 9),
-                        Reminder(id: "1120", title: "책 읽기", due: nil, isCompleted: false, priority: 0),
-                        Reminder(id: "1121", title: "병원 가기", due: Date(), isCompleted: false, priority: 5),
-                        Reminder(id: "1122", title: "설거지 하기", due: nil, isCompleted: false, priority: 0)]
+             reminders: [
+                 Reminder(
+                     id: "1112",
+                     title: "원두 주문하기",
+                     due: nil,
+                     isCompleted: false,
+                     priority: 0,
+                     notes: nil,
+                     url: nil,
+                     location: nil,
+                     hasAlarms: false,
+                     alarms: [],
+                     calendar: ReminderCalendar(
+                        id: "test-reminder-calendar",
+                        title: "내 리마인더",
+                        color: CGColor(red: 0.6, green: 0.4, blue: 0.8, alpha: 1.0),
+                        type: .local,
+                        isReadOnly: false,
+                        allowsContentModifications: true,
+                        source: ReminderCalendar.CalendarSource(
+                            title: "로컬",
+                            type: .local
+                        )
+                    )
+                 ),
+                 Reminder(
+                     id: "1114",
+                     title: "약국 가기",
+                     due: Date(),
+                     isCompleted: true,
+                     priority: 1,
+                     notes: "처방전 가져가기",
+                     url: nil,
+                     location: "우리동네약국",
+                     hasAlarms: true,
+                     alarms: [
+                         ReminderAlarm(
+                             relativeOffset: -30 * 60,
+                             absoluteDate: nil,
+                             type: .display
+                         )
+                     ],
+                     calendar: ReminderCalendar(
+                        id: "test-reminder-calendar",
+                        title: "내 리마인더",
+                        color: CGColor(red: 0.6, green: 0.4, blue: 0.8, alpha: 1.0),
+                        type: .local,
+                        isReadOnly: false,
+                        allowsContentModifications: true,
+                        source: ReminderCalendar.CalendarSource(
+                            title: "로컬",
+                            type: .local
+                        )
+                    )
+                 ),
+                 Reminder(
+                     id: "1119",
+                     title: "미리보기",
+                     due: Date(),
+                     isCompleted: false,
+                     priority: 9,
+                     notes: "낮은 우선순위 작업",
+                     url: URL(string: "https://example.com"),
+                     location: nil,
+                     hasAlarms: false,
+                     alarms: [],
+                     calendar: ReminderCalendar(
+                        id: "test-reminder-calendar",
+                        title: "내 리마인더",
+                        color: CGColor(red: 0.6, green: 0.4, blue: 0.8, alpha: 1.0),
+                        type: .local,
+                        isReadOnly: false,
+                        allowsContentModifications: true,
+                        source: ReminderCalendar.CalendarSource(
+                            title: "로컬",
+                            type: .local
+                        )
+                    )
+                 ),
+                 Reminder(
+                     id: "1120",
+                     title: "책 읽기",
+                     due: nil,
+                     isCompleted: false,
+                     priority: 0,
+                     notes: "SwiftUI 관련 서적",
+                     url: nil,
+                     location: "도서관",
+                     hasAlarms: false,
+                     alarms: [],
+                     calendar: ReminderCalendar(
+                        id: "test-reminder-calendar",
+                        title: "내 리마인더",
+                        color: CGColor(red: 0.6, green: 0.4, blue: 0.8, alpha: 1.0),
+                        type: .local,
+                        isReadOnly: false,
+                        allowsContentModifications: true,
+                        source: ReminderCalendar.CalendarSource(
+                            title: "로컬",
+                            type: .local
+                        )
+                    )
+                 ),
+                 Reminder(
+                     id: "1121",
+                     title: "병원 가기",
+                     due: Date(),
+                     isCompleted: false,
+                     priority: 5,
+                     notes: "정기 검진 예약",
+                     url: nil,
+                     location: "서울대병원",
+                     hasAlarms: true,
+                     alarms: [
+                         ReminderAlarm(
+                             relativeOffset: -60 * 60,
+                             absoluteDate: nil,
+                             type: .display
+                         ),
+                         ReminderAlarm(
+                             relativeOffset: -24 * 60 * 60,
+                             absoluteDate: nil,
+                             type: .display
+                         )
+                     ],
+                     calendar: ReminderCalendar(
+                        id: "test-reminder-calendar",
+                        title: "내 리마인더",
+                        color: CGColor(red: 0.6, green: 0.4, blue: 0.8, alpha: 1.0),
+                        type: .local,
+                        isReadOnly: false,
+                        allowsContentModifications: true,
+                        source: ReminderCalendar.CalendarSource(
+                            title: "로컬",
+                            type: .local
+                        )
+                    )
+                 ),
+                 Reminder(
+                     id: "1122",
+                     title: "설거지 하기",
+                     due: nil,
+                     isCompleted: false,
+                     priority: 0,
+                     notes: nil,
+                     url: nil,
+                     location: "집",
+                     hasAlarms: false,
+                     alarms: [],
+                     calendar: ReminderCalendar(
+                        id: "test-reminder-calendar",
+                        title: "내 리마인더",
+                        color: CGColor(red: 0.6, green: 0.4, blue: 0.8, alpha: 1.0),
+                        type: .local,
+                        isReadOnly: false,
+                        allowsContentModifications: true,
+                        source: ReminderCalendar.CalendarSource(
+                            title: "로컬",
+                            type: .local
+                        )
+                    )
+                 )
+             ]
         )
         return st
     }()
+    
     var today: Date = Date()
     
     func load() {}

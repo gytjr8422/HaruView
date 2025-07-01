@@ -23,16 +23,34 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     @State private var expandedSection: ExpandableSection? = nil
 
     enum ExpandableSection: CaseIterable {
-        case details, alarms, recurrence, calendar
+        case details, alarms, recurrence, calendar, priority
         
-        var title: String {
+        // 모드에 따라 다른 제목 반환하는 메서드 추가
+        func title(for mode: AddSheetMode) -> String {
             switch self {
             case .details: return "상세 정보"
             case .alarms: return "알림"
             case .recurrence: return "반복"
-            case .calendar: return "캘린더"
+            case .calendar:
+                return mode == .reminder ? "목록" : "캘린더"
+            case .priority: return "우선순위"
             }
         }
+        
+        // 리마인더 모드에서 사용할 섹션들
+        static var reminderSections: [ExpandableSection] {
+            [.details, .alarms, .priority, .calendar]
+        }
+        
+        // 일정 모드에서 사용할 섹션들
+        static var eventSections: [ExpandableSection] {
+            [.details, .alarms, .recurrence, .calendar]
+        }
+    }
+    
+    // MARK: - Dirty Check
+    private var isDirty: Bool {
+        vm.hasChanges
     }
 
     init(vm: VM, onSave: @escaping () -> Void) {
@@ -77,11 +95,6 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
         .onAppear {
             selected = vm.mode
         }
-    }
-
-    // MARK: - Dirty Check
-    private var isDirty: Bool {
-        vm.hasChanges
     }
 
     // MARK: - Header
@@ -135,14 +148,20 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     // MARK: - Reminder Page
     private var reminderPage: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
+            VStack {
+                // 기본 정보
                 basicReminderInfo
+                
+                // 확장 가능한 섹션들 (리마인더용)
+                reminderExpandableSections
+                
                 footerError
             }
             .padding(20)
             .contentShape(Rectangle())
             .onTapGesture {
                 isTextFieldFocused = false
+//                expandedSection = nil
             }
         }
     }
@@ -210,10 +229,24 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     }
 
     // MARK: - Expandable Sections
+    // expandableSections 메서드도 모드에 따라 다른 섹션 사용
     private var expandableSections: some View {
         VStack(spacing: 16) {
-            ForEach(ExpandableSection.allCases, id: \.self) { section in
-                expandableSection(for: section)
+            let sections = vm.mode == .event ? ExpandableSection.eventSections : ExpandableSection.reminderSections
+            ForEach(sections, id: \.self) { section in
+                if vm.mode == .event {
+                    expandableSection(for: section)
+                } else {
+                    reminderExpandableSection(for: section)
+                }
+            }
+        }
+    }
+    
+    private var reminderExpandableSections: some View {
+        VStack(spacing: 16) {
+            ForEach(ExpandableSection.reminderSections, id: \.self) { section in
+                reminderExpandableSection(for: section)
             }
         }
     }
@@ -223,7 +256,7 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
         VStack(spacing: 0) {
             // 헤더
             HStack {
-                Text(section.title)
+                Text(section.title(for: vm.mode))  // 모드에 따른 제목 사용
                     .font(.pretendardSemiBold(size: 17))
                 
                 Spacer()
@@ -247,17 +280,15 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
             .padding(.vertical, 12)
             .contentShape(Rectangle())
             .onTapGesture {
-//                withAnimation(.easeInOut(duration: 0.2)) {
-                    if expandedSection == section {
-                        expandedSection = nil
-                    } else {
-                        expandedSection = section
-                        isTextFieldFocused = false
-                    }
-//                }
+                if expandedSection == section {
+                    expandedSection = nil
+                } else {
+                    expandedSection = section
+                    isTextFieldFocused = false
+                }
             }
             
-            // 내용
+            // 내용 (일정용)
             if expandedSection == section {
                 VStack(spacing: 12) {
                     switch section {
@@ -270,6 +301,9 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                     case .calendar:
                         CalendarSelectionView(selectedCalendar: $vm.selectedCalendar,
                                             availableCalendars: vm.availableCalendars)
+                    case .priority:
+                        // 일정에서는 우선순위 섹션 사용하지 않음
+                        EmptyView()
                     }
                 }
                 .padding(.top, 8)
@@ -280,7 +314,78 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
             }
             
             // 구분선
-            if section != ExpandableSection.allCases.last {
+            if section != ExpandableSection.eventSections.last {
+                Divider()
+                    .padding(.top, 12)
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func reminderExpandableSection(for section: ExpandableSection) -> some View {
+        VStack(spacing: 0) {
+            // 헤더
+            HStack {
+                Text(section.title(for: .reminder))  // 리마인더 모드로 제목 설정
+                    .font(.pretendardSemiBold(size: 17))
+                
+                Spacer()
+                
+                // 상태 표시
+                reminderSectionStatusView(for: section)
+                
+                Button {
+                    if expandedSection == section {
+                        expandedSection = nil
+                    } else {
+                        expandedSection = section
+                        isTextFieldFocused = false
+                    }
+                } label: {
+                    Image(systemName: expandedSection == section ? "chevron.up" : "chevron.down")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundStyle(Color(hexCode: "A76545"))
+                }
+            }
+            .padding(.vertical, 12)
+            .contentShape(Rectangle())
+            .onTapGesture {
+                if expandedSection == section {
+                    expandedSection = nil
+                } else {
+                    expandedSection = section
+                    isTextFieldFocused = false
+                }
+            }
+            
+            // 내용
+            if expandedSection == section {
+                VStack(spacing: 12) {
+                    switch section {
+                    case .details:
+                        reminderDetailsSection
+                    case .alarms:
+                        ReminderAlarmSelectionView(alarms: $vm.reminderAlarms)
+                    case .priority:
+                        PrioritySelectionView(selectedPriority: $vm.reminderPriority)
+                    case .calendar:
+                        ReminderCalendarSelectionView(
+                            selectedCalendar: $vm.selectedReminderCalendar,
+                            availableCalendars: vm.availableReminderCalendars
+                        )
+                    default:
+                        EmptyView()
+                    }
+                }
+                .padding(.top, 8)
+                .transition(.asymmetric(
+                    insertion: .move(edge: .top).combined(with: .opacity),
+                    removal: .move(edge: .top).combined(with: .opacity)
+                ))
+            }
+            
+            // 구분선
+            if section != ExpandableSection.reminderSections.last {
                 Divider()
                     .padding(.top, 12)
             }
@@ -293,6 +398,15 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
             LocationInputView(location: $vm.location)
             URLInputView(url: $vm.url)
             NotesInputView(notes: $vm.notes)
+        }
+    }
+    
+    // 리마인더 상세 정보 섹션
+    private var reminderDetailsSection: some View {
+        VStack(spacing: 16) {
+            ReminderDetailInputViews.LocationInputView(location: $vm.reminderLocation)
+            ReminderDetailInputViews.URLInputView(url: $vm.reminderURL)
+            ReminderDetailInputViews.NotesInputView(notes: $vm.reminderNotes)
         }
     }
     
@@ -348,6 +462,73 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                         .lineLimit(1)
                 }
             }
+        case .priority:
+            // 일정에서는 우선순위 표시하지 않음
+            EmptyView()
+        }
+    }
+    
+    @ViewBuilder
+    private func reminderSectionStatusView(for section: ExpandableSection) -> some View {
+        switch section {
+        case .details:
+            if !vm.reminderLocation.isEmpty || !vm.reminderURL.isEmpty || !vm.reminderNotes.isEmpty {
+                HStack(spacing: 4) {
+                    if !vm.reminderLocation.isEmpty {
+                        Image(systemName: "location.fill")
+                            .font(.system(size: 12))
+                            .foregroundStyle(Color(hexCode: "A76545"))
+                    }
+                    if !vm.reminderURL.isEmpty {
+                        Image(systemName: "link")
+                            .font(.system(size: 12))
+                            .foregroundStyle(Color(hexCode: "A76545"))
+                    }
+                    if !vm.reminderNotes.isEmpty {
+                        Image(systemName: "note.text")
+                            .font(.system(size: 12))
+                            .foregroundStyle(Color(hexCode: "A76545"))
+                    }
+                }
+            }
+        case .alarms:
+            if !vm.reminderAlarms.isEmpty {
+                HStack(spacing: 4) {
+                    Image(systemName: "bell.fill")
+                        .font(.system(size: 12))
+                        .foregroundStyle(Color(hexCode: "A76545"))
+                    Text("\(vm.reminderAlarms.count)")
+                        .font(.pretendardRegular(size: 14))
+                        .foregroundStyle(.secondary)
+                }
+            }
+        case .priority:
+            if vm.reminderPriority > 0 {
+                let priority = ReminderInput.Priority(rawValue: vm.reminderPriority) ?? .none
+                HStack(spacing: 4) {
+                    Image(systemName: priority.symbolName)
+                        .font(.system(size: 12))
+                        .foregroundStyle(priority.color)
+                    Text(priority.localizedDescription)
+                        .font(.pretendardRegular(size: 14))
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
+            }
+        case .calendar:
+            if let calendar = vm.selectedReminderCalendar {
+                HStack(spacing: 4) {
+                    Circle()
+                        .fill(Color(calendar.color))
+                        .frame(width: 8, height: 8)
+                    Text(calendar.title)
+                        .font(.pretendardRegular(size: 14))
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
+            }
+        default:
+            EmptyView()
         }
     }
 
@@ -421,6 +602,14 @@ private class MockAddVM: AddSheetViewModelProtocol {
     var selectedCalendar: EventCalendar? = nil
     var availableCalendars: [EventCalendar] = []
     
+    var reminderPriority: Int = 0
+    var reminderNotes: String = ""
+    var reminderURL: String = ""
+    var reminderLocation: String = ""
+    var reminderAlarms: [AlarmInput] = []
+    var selectedReminderCalendar: ReminderCalendar? = nil
+    var availableReminderCalendars: [ReminderCalendar] = []
+    
     @Published var mode: AddSheetMode = .event
     @Published var title: String = ""
     @Published var startDate: Date = .now
@@ -435,6 +624,10 @@ private class MockAddVM: AddSheetViewModelProtocol {
     func addAlarm(_ alarm: AlarmInput) {}
     func removeAlarm(at index: Int) {}
     func setRecurrenceRule(_ rule: RecurrenceRuleInput?) {}
+    
+    func addReminderAlarm(_ alarm: AlarmInput) {}
+    func removeReminderAlarm(at index: Int) {}
+    func setReminderPriority(_ priority: Int) {}
 }
 
 #Preview {
