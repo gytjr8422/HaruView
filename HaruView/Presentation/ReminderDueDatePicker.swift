@@ -101,7 +101,6 @@ struct ReminderDueDatePicker: View {
                     Spacer()
                 }
                 .padding(.horizontal, 15)
-                .padding(.bottom, 16)
             }
             
             // 인라인 피커
@@ -125,6 +124,7 @@ struct ReminderDueDatePicker: View {
                     }
                     .padding(.top, 10)
                 }
+                .padding(.top, 10)
             }
         }
         .background(Color.clear)

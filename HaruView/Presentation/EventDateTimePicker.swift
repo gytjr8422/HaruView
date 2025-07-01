@@ -97,7 +97,7 @@ struct EventDateTimePicker: View {
                 }
             }
             .padding(.horizontal, 15)
-            .padding(.bottom, 16)
+            .padding(.bottom, isAllDay ? 0 : 16)
             
             // 30분, 1시간 빠른 설정 버튼
             if !isAllDay {

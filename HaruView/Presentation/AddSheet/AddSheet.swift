@@ -199,6 +199,9 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                 minDate: minDate,
                 maxDate: maxDate
             )
+            
+            Divider()
+                .padding(.top, 8)
         }
     }
     
@@ -225,6 +228,9 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                                   isTextFieldFocused: $isTextFieldFocused,
                                   minDate: minDate,
                                   maxDate: maxDate)
+            
+            Divider()
+                .padding(.top, 8)
         }
     }
 
