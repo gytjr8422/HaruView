@@ -94,18 +94,18 @@ struct AlarmInput {
         switch trigger {
         case .relative(let interval):
             if interval == 0 {
-                return "이벤트 시간"
+                return String(localized: "이벤트 시간")
             } else if interval < 0 {
                 let minutes = Int(abs(interval) / 60)
                 let hours = minutes / 60
                 let days = hours / 24
                 
                 if days > 0 {
-                    return "\(days)일 전"
+                    return String(localized: "\(days)일 전")
                 } else if hours > 0 {
-                    return "\(hours)시간 전"
+                    return String(localized: "\(hours)시간 전")
                 } else {
-                    return "\(minutes)분 전"
+                    return String(localized: "\(minutes)분 전")
                 }
             } else {
                 let minutes = Int(interval / 60)
@@ -113,11 +113,11 @@ struct AlarmInput {
                 let days = hours / 24
                 
                 if days > 0 {
-                    return "\(days)일 후"
+                    return String(localized: "\(days)일 후")
                 } else if hours > 0 {
-                    return "\(hours)시간 후"
+                    return String(localized: "\(hours)시간 후")
                 } else {
-                    return "\(minutes)분 후"
+                    return String(localized: "\(minutes)분 후")
                 }
             }
         case .absolute(let date):
@@ -247,24 +247,35 @@ struct RecurrenceRuleInput {
         if interval > 1 {
             switch frequency {
             case .daily:
-                result = "\(interval)일마다"
+                result = String(localized: "\(interval)일마다")
             case .weekly:
-                result = "\(interval)주마다"
+                result = String(localized: "\(interval)주마다")
             case .monthly:
-                result = "\(interval)개월마다"
+                result = String(localized: "\(interval)개월마다")
             case .yearly:
-                result = "\(interval)년마다"
+                result = String(localized: "\(interval)년마다")
             }
         } else {
             switch frequency {
             case .daily:
-                result = "매일"
+                result = String(localized: "매일")
             case .weekly:
-                result = "주중"
+                // 평일(월-금)인지 확인
+                if let daysOfWeek,
+                   daysOfWeek.count == 5,
+                   daysOfWeek.contains(where: { $0.dayOfWeek == 2 }) && // 월요일
+                   daysOfWeek.contains(where: { $0.dayOfWeek == 3 }) && // 화요일
+                   daysOfWeek.contains(where: { $0.dayOfWeek == 4 }) && // 수요일
+                   daysOfWeek.contains(where: { $0.dayOfWeek == 5 }) && // 목요일
+                   daysOfWeek.contains(where: { $0.dayOfWeek == 6 }) {  // 금요일
+                    result = String(localized: "평일만")
+                } else {
+                    result = String(localized: "매주")
+                }
             case .monthly:
-                result = "매월"
+                result = String(localized: "매월")
             case .yearly:
-                result = "매년"
+                result = String(localized: "매년")
             }
         }
         
@@ -321,7 +332,7 @@ extension RecurrenceRuleInput {
                                .friday()     // 금
                            ], daysOfMonth: nil),
         
-        // 주중
+        // 매주
         RecurrenceRuleInput(frequency: .weekly, interval: 1, endCondition: .never, daysOfWeek: nil, daysOfMonth: nil),
         
         // 격주

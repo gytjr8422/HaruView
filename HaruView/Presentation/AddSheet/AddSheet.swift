@@ -28,12 +28,12 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
         // 모드에 따라 다른 제목 반환하는 메서드 추가
         func title(for mode: AddSheetMode) -> String {
             switch self {
-            case .details: return "상세 정보"
-            case .alarms: return "알림"
-            case .recurrence: return "반복"
+            case .details: return String(localized: "상세 정보")
+            case .alarms: return String(localized: "알림")
+            case .recurrence: return String(localized: "반복")
             case .calendar:
-                return mode == .reminder ? "목록" : "캘린더"
-            case .priority: return "우선순위"
+                return mode == .reminder ? String(localized: "목록") : String(localized: "캘린더")
+            case .priority: return String(localized: "우선순위")
             }
         }
         

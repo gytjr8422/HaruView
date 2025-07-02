@@ -38,8 +38,8 @@ struct PrioritySelectionView: View {
                     }
                     .foregroundStyle(.white)
                     .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .frame(maxWidth: 100)
+                    .padding(.vertical, 12)
+                    .frame(maxWidth: .infinity)
                     .background(
                         RoundedRectangle(cornerRadius: 16)
                             .fill(currentPriority.color)
@@ -80,7 +80,7 @@ struct PrioritySelectionView: View {
     }
 }
 
-// MARK: - 리마인더용 캘린더 선택 컴포넌트
+// MARK: - 리마인더용 목록 선택 컴포넌트
 struct ReminderCalendarSelectionView: View {
     @Binding var selectedCalendar: ReminderCalendar?
     let availableCalendars: [ReminderCalendar]
@@ -88,7 +88,7 @@ struct ReminderCalendarSelectionView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             if availableCalendars.isEmpty {
-                Text("사용 가능한 캘린더가 없습니다")
+                Text("사용 가능한 목록이 없습니다")
                     .font(.pretendardRegular(size: 14))
                     .foregroundStyle(.secondary)
             } else {
@@ -225,7 +225,7 @@ struct ReminderAlarmSelectionView: View {
                     .foregroundStyle(.secondary)
                     .padding(.vertical, 8)
             } else {
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 5) {
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2), spacing: 5) {
                     ForEach(Array(alarms.enumerated()), id: \.offset) { index, alarm in
                         HStack {
                             Text(alarm.description)
@@ -242,7 +242,7 @@ struct ReminderAlarmSelectionView: View {
                         }
                         .foregroundStyle(.white)
                         .padding(.horizontal,12)
-                        .padding(.vertical, 8)
+                        .padding(.vertical, 12)
                         .frame(maxWidth: .infinity)
                         .background(
                             RoundedRectangle(cornerRadius: 16)
@@ -255,20 +255,22 @@ struct ReminderAlarmSelectionView: View {
             // 빠른 설정 버튼들
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 8) {
                 ForEach(AlarmInput.presets.prefix(6), id: \.description) { preset in
-                    Button(preset.description) {
+                    Button {
                         if !alarms.contains(where: { $0.description == preset.description }) {
                             alarms.append(preset)
                         }
+                    } label: {
+                        Text(preset.description)
+                            .font(.pretendardRegular(size: 14))
+                            .foregroundStyle(Color(hexCode: "A76545"))
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 12)
+                            .frame(maxWidth: .infinity)
+                            .background(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(Color(hexCode: "A76545").opacity(0.1))
+                            )
                     }
-                    .font(.pretendardRegular(size: 14))
-                    .foregroundStyle(Color(hexCode: "A76545"))
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 12)
-                    .frame(maxWidth: .infinity)
-                    .background(
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(Color(hexCode: "A76545").opacity(0.1))
-                    )
                 }
             }
         }

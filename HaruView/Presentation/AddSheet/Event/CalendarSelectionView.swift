@@ -19,7 +19,7 @@ struct CalendarSelectionView: View {
                     .font(.pretendardRegular(size: 14))
                     .foregroundStyle(.secondary)
             } else {
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 8) {
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2), spacing: 8) {
                     ForEach(availableCalendars, id: \.id) { calendar in
                         HStack {
                             Circle()
@@ -28,6 +28,7 @@ struct CalendarSelectionView: View {
                             
                             Text(calendar.title)
                                 .font(.pretendardRegular(size: 16))
+                                .lineLimit(1)
                             
                             Spacer()
                             
@@ -40,7 +41,7 @@ struct CalendarSelectionView: View {
                         .font(.pretendardRegular(size: 12))
                         .foregroundStyle(Color(hexCode: "A76545"))
                         .padding(.horizontal, 12)
-                        .padding(.vertical, 8)
+                        .padding(.vertical, 14)
                         .background(
                             RoundedRectangle(cornerRadius: 16)
                                 .fill(Color(hexCode: "A76545").opacity(0.1))

@@ -23,9 +23,9 @@ struct ReminderDueDatePicker: View {
         
         var title: String {
             switch self {
-            case .none: return "없음"
-            case .dateOnly: return "날짜만"
-            case .dateTime: return "날짜+시간"
+            case .none: return String(localized: "없음")
+            case .dateOnly: return String(localized: "날짜만")
+            case .dateTime: return String(localized: "날짜+시간")
             }
         }
     }

@@ -39,8 +39,8 @@ struct RecurrenceSelectionView: View {
                 }
                 .foregroundStyle(.white)
                 .padding(.horizontal,12)
-                .padding(.vertical, 8)
-                .frame(width: 100)
+                .padding(.vertical, 12)
+                .frame(maxWidth: .infinity)
                 .background(
                     RoundedRectangle(cornerRadius: 16)
                         .fill(Color(hexCode: "A76545"))
@@ -53,20 +53,22 @@ struct RecurrenceSelectionView: View {
             }
             
             // 빠른 설정 버튼들
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 8) {
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2), spacing: 8) {
                 ForEach(Array(RecurrenceRuleInput.presets.enumerated()), id: \.offset) { index, preset in
-                    Button(preset.description) {
+                    Button {
                         recurrenceRule = preset
+                    } label: {
+                        Text(preset.description)
+                            .font(.pretendardRegular(size: 14))
+                            .foregroundStyle(Color(hexCode: "A76545"))
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 12)
+                            .frame(maxWidth: .infinity)
+                            .background(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(Color(hexCode: "A76545").opacity(0.1))
+                            )
                     }
-                    .font(.pretendardRegular(size: 14))
-                    .foregroundStyle(Color(hexCode: "A76545"))
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 12)
-                    .frame(maxWidth: .infinity)
-                    .background(
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(Color(hexCode: "A76545").opacity(0.1))
-                    )
                 }
             }
         }
