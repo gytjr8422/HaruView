@@ -36,16 +36,13 @@ struct EventListSheet<VM: EventListViewModelProtocol>: View {
                                     }
                                 }
                                 Button(role: .destructive) {
-                                    Task {
-                                        await vm.delete(id: event.id)
-                                    }
+                                    vm.requestEventDeletion(event)
                                 } label: {
                                     Label {
                                         Text("삭제").font(Font.pretendardRegular(size: 14))
                                     } icon: {
                                         Image(systemName: "trash")
                                     }
-
                                 }
                             }
                     }
@@ -57,29 +54,13 @@ struct EventListSheet<VM: EventListViewModelProtocol>: View {
             .presentationDragIndicator(.visible)
             .background(Color(hexCode: "FFFCF5"))
         }
-        .onAppear { vm.load() }
-        .onChange(of: phase) {
-            if phase == .active { vm.refresh() }
-        }
-        .refreshable { vm.refresh() }
-        .sheet(item: $editingEvent) { event in
-            AddSheet(vm: di.makeEditSheetVM(event: event)) {
-                showToast = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    showToast = false
-                }
-                vm.refresh()
-            }
-        }
-        .overlay(
-            Group {
-                if showToast {
-                    ToastView()
-                        .animation(.easeInOut, value: showToast)
-                        .transition(.opacity)
-                }
-            }
-        )
+        .modifier(EventListSheetsModifier(
+            editingEvent: $editingEvent,
+            showToast: $showToast,
+            vm: vm,
+            di: di
+        ))
+        .modifier(EventListDeletionModifier(vm: vm))
     }
     
     private var navigationTitleView: some ToolbarContent {
@@ -100,6 +81,47 @@ struct EventListSheet<VM: EventListViewModelProtocol>: View {
             }
         }
     }
+
+}
+
+
+
+// MARK: - ViewModifiers
+
+private struct EventListSheetsModifier<VM: EventListViewModelProtocol>: ViewModifier {
+    @Binding var editingEvent: Event?
+    @Binding var showToast: Bool
+    @ObservedObject var vm: VM
+    let di: DIContainer
+    @Environment(\.scenePhase) private var phase
+    
+    func body(content: Content) -> some View {
+        content
+            .onAppear { vm.load() }
+            .onChange(of: phase) {
+                if phase == .active { vm.refresh() }
+            }
+            .refreshable { vm.refresh() }
+            .sheet(item: $editingEvent) { event in
+                AddSheet(vm: di.makeEditSheetVM(event: event)) {
+                    showToast = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        showToast = false
+                    }
+                    vm.refresh()
+                }
+            }
+            .overlay(
+                Group {
+                    if showToast {
+                        ToastView()
+                            .animation(.easeInOut, value: showToast)
+                            .transition(.opacity)
+                    }
+                }
+            )
+    }
+    
     private struct ToastView: View {
         var body: some View {
             Text("저장이 완료되었습니다.")
@@ -113,22 +135,83 @@ struct EventListSheet<VM: EventListViewModelProtocol>: View {
                 .transition(.move(edge: .top).combined(with: .opacity))
         }
     }
-
-
 }
 
-
-#if DEBUG
-final class MockEventListVM: EventListViewModelProtocol {
+private struct EventListDeletionModifier<VM: EventListViewModelProtocol>: ViewModifier {
+    @ObservedObject var vm: VM
     
-    var events: [Event] = TodayOverview.placeholder.events
-    
-    func load() {}
-    func refresh() { }
-    func delete(id: String) {}
+    func body(content: Content) -> some View {
+        content
+            .confirmationDialog(
+                "반복 일정 삭제",
+                isPresented: $vm.showRecurringDeletionOptions,
+                titleVisibility: .visible
+            ) {
+                if vm.currentDeletingEvent != nil {
+                    Button("이 이벤트만 삭제", role: .destructive) {
+                        vm.deleteEventWithSpan(.thisEventOnly)
+                    }
+                    
+                    Button("이후 모든 이벤트 삭제", role: .destructive) {
+                        vm.deleteEventWithSpan(.futureEvents)
+                    }
+                    
+                    Button("취소", role: .cancel) {
+                        vm.cancelEventDeletion()
+                    }
+                }
+            } message: {
+                if let event = vm.currentDeletingEvent {
+                    Text("'\(event.title)'은(는) 반복 일정입니다. 어떻게 삭제하시겠습니까?")
+                }
+            }
+            .overlay {
+                if vm.isDeletingEvent {
+                    ZStack {
+                        Color.black.opacity(0.3)
+                            .ignoresSafeArea()
+                        
+                        VStack(spacing: 16) {
+                            ProgressView()
+                                .scaleEffect(1.2)
+                            
+                            Text("삭제 중...")
+                                .font(.pretendardSemiBold(size: 16))
+                                .foregroundStyle(.white)
+                        }
+                        .padding(24)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(.ultraThinMaterial)
+                        )
+                    }
+                    .transition(.opacity)
+                }
+            }
+            .alert("삭제 오류", isPresented: .constant(vm.deletionError != nil)) {
+                Button("확인") {
+                    vm.deletionError = nil
+                }
+            } message: {
+                if let error = vm.deletionError {
+                    Text(error.description)
+                }
+            }
+    }
 }
 
-#Preview {
-    EventListSheet(vm: MockEventListVM())
-}
-#endif
+
+//#if DEBUG
+//final class MockEventListVM: EventListViewModelProtocol {
+//    
+//    var events: [Event] = TodayOverview.placeholder.events
+//    
+//    func load() {}
+//    func refresh() { }
+//    func delete(id: String) {}
+//}
+//
+//#Preview {
+//    EventListSheet(vm: MockEventListVM())
+//}
+//#endif

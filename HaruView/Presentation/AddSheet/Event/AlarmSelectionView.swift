@@ -31,29 +31,38 @@ struct AlarmSelectionView: View {
                     .foregroundStyle(.secondary)
                     .padding(.vertical, 8)
             } else {
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2), spacing: 5) {
-                    ForEach(Array(alarms.enumerated()), id: \.offset) { index, alarm in
-                        HStack {
-                            Text(alarm.description)
-                                .font(.pretendardRegular(size: 14))
-                            
-                            Spacer()
-                            
-                            Button {
-                                alarms.remove(at: index)
-                            } label: {
-                                Image(systemName: "xmark")
-                                    .font(.system(size: 14))
+                VStack {
+                    HStack {
+                        Text("캘린더 앱에서 알림이 울려요.")
+                            .font(.pretendardRegular(size: 14))
+                            .foregroundStyle(.secondary)
+                            .padding(.vertical, 5)
+                        Spacer()
+                    }
+                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2), spacing: 5) {
+                        ForEach(Array(alarms.enumerated()), id: \.offset) { index, alarm in
+                            HStack {
+                                Text(alarm.description)
+                                    .font(.pretendardRegular(size: 14))
+                                
+                                Spacer()
+                                
+                                Button {
+                                    alarms.remove(at: index)
+                                } label: {
+                                    Image(systemName: "xmark")
+                                        .font(.system(size: 14))
+                                }
                             }
+                            .foregroundStyle(.white)
+                            .padding(.horizontal,12)
+                            .padding(.vertical, 12)
+                            .frame(maxWidth: .infinity)
+                            .background(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(Color(hexCode: "A76545"))
+                            )
                         }
-                        .foregroundStyle(.white)
-                        .padding(.horizontal,12)
-                        .padding(.vertical, 12)
-                        .frame(maxWidth: .infinity)
-                        .background(
-                            RoundedRectangle(cornerRadius: 16)
-                                .fill(Color(hexCode: "A76545"))
-                        )
                     }
                 }
             }

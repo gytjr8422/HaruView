@@ -120,6 +120,8 @@ struct DeleteObjectUseCase {
     enum ObjectKind {
         case event(String)
         case reminder(String)
+        // 새로운 케이스 추가: span 옵션 포함
+        case eventWithSpan(String, EventDeletionSpan)
     }
     
     private let events: EventRepositoryProtocol
@@ -133,9 +135,11 @@ struct DeleteObjectUseCase {
     func callAsFunction(_ object: ObjectKind) async -> Result<Void, TodayBoardError> {
         switch object {
         case .event(let id):
-            await events.deleteEvent(id: id)
+            return await events.deleteEvent(id: id)
         case .reminder(let id):
-            await reminders.deleteReminder(id: id)
+            return await reminders.deleteReminder(id: id)
+        case .eventWithSpan(let id, let span):
+            return await events.deleteEvent(id: id, span: span)
         }
     }
 }

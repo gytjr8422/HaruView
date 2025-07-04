@@ -55,6 +55,10 @@ final class EventKitRepository: EventRepositoryProtocol, ReminderRepositoryProto
         service.deleteEvent(id: id)
     }
     
+    func deleteEvent(id: String, span: EventDeletionSpan) async -> Result<Void, TodayBoardError> {
+        return service.deleteEvent(id: id, span: span)
+    }
+    
     // MARK: - ReminderRepository (기존과 동일)
     func fetchReminder() async -> Result<[Reminder], TodayBoardError> {
         let todayStart = cal.startOfDay(for: Date())

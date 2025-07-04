@@ -4,6 +4,16 @@
     "" : {
 
     },
+    "'%@'은(는) 반복 일정입니다. 어떻게 삭제하시겠습니까?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@’ is a recurring event. How would you like to delete it?"
+          }
+        }
+      }
+    },
     "%.0f°" : {
       "localizations" : {
         "en" : {
@@ -133,7 +143,14 @@
       }
     },
     "%lld" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
+        }
+      }
     },
     "%lld개월마다" : {
       "localizations" : {
@@ -636,6 +653,16 @@
         }
       }
     },
+    "미리알림 앱에서 알림이 울려요." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You’ll get a notification from the Reminders app."
+          }
+        }
+      }
+    },
     "바람: %.0fm/s" : {
       "localizations" : {
         "en" : {
@@ -662,6 +689,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Repeat Settings"
+          }
+        }
+      }
+    },
+    "반복 일정 삭제" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Recurring Event"
           }
         }
       }
@@ -742,6 +779,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Delete"
+          }
+        }
+      }
+    },
+    "삭제 오류" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Failed to Delete"
+          }
+        }
+      }
+    },
+    "삭제 중..." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleting…"
           }
         }
       }
@@ -1028,6 +1085,16 @@
         }
       }
     },
+    "위치 입력" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter Location"
+          }
+        }
+      }
+    },
     "위치 정보 없음" : {
       "localizations" : {
         "en" : {
@@ -1044,6 +1111,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Location access was denied. Please allow location permission in Settings to fetch weather."
+          }
+        }
+      }
+    },
+    "이 이벤트만" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This Event Only"
+          }
+        }
+      }
+    },
+    "이 이벤트만 삭제" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete This Event Only"
           }
         }
       }
@@ -1074,6 +1161,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Event time"
+          }
+        }
+      }
+    },
+    "이후 모든 이벤트" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All Future Events"
+          }
+        }
+      }
+    },
+    "이후 모든 이벤트 삭제" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete All Future Events"
           }
         }
       }
@@ -1271,6 +1378,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Calendar"
+          }
+        }
+      }
+    },
+    "캘린더 앱에서 알림이 울려요." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You’ll get an alert from the Calendar app."
           }
         }
       }

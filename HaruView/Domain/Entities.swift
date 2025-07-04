@@ -5,6 +5,7 @@
 //  Created by 김효석 on 4/30/25.
 //
 
+import EventKit
 import SwiftUI
 import WeatherKit
 
@@ -237,6 +238,32 @@ struct EventStructuredLocation: Equatable {
         }
     }
 }
+
+/// 반복 일정 삭제 범위
+enum EventDeletionSpan {
+    case thisEventOnly      // 이 이벤트만 삭제
+    case futureEvents       // 이후 모든 이벤트 삭제 (현재 포함)
+    
+    var localizedDescription: String {
+        switch self {
+        case .thisEventOnly:
+            return String(localized: "이 이벤트만")
+        case .futureEvents:
+            return String(localized: "이후 모든 이벤트")
+        }
+    }
+    
+    /// EventKit의 EKSpan으로 변환
+    var ekSpan: EKSpan {
+        switch self {
+        case .thisEventOnly:
+            return .thisEvent
+        case .futureEvents:
+            return .futureEvents
+        }
+    }
+}
+
 
 // MARK: - 미리알림
 struct Reminder: Identifiable, Equatable {

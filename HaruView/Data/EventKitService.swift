@@ -63,9 +63,17 @@ final class EventKitService {
     }
     
     func deleteEvent(id: String) -> Result<Void, TodayBoardError> {
-        guard let event = store.event(withIdentifier: id) else { return .failure(.notFound) }
+        return deleteEvent(id: id, span: .thisEventOnly)
+    }
+    
+    /// 반복 일정 삭제 옵션을 포함한 이벤트 삭제
+    func deleteEvent(id: String, span: EventDeletionSpan) -> Result<Void, TodayBoardError> {
+        guard let event = store.event(withIdentifier: id) else {
+            return .failure(.notFound)
+        }
+        
         do {
-            try store.remove(event, span: .thisEvent, commit: true)
+            try store.remove(event, span: span.ekSpan, commit: true)
             Task { @MainActor in
                 WidgetRefreshService.shared.forceRefresh()
             }
