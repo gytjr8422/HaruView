@@ -91,7 +91,83 @@ final class HomeViewModel: ObservableObject, @preconcurrency HomeViewModelProtoc
         WidgetRefreshService.shared.forceRefresh()
     }
 
-    // MARK: - 삭제 관련 메서드 (새로운 메서드로 기존 것 대체)
+    // MARK: - Reminder Toggle
+    func toggleReminder(id: String) async {
+        let res = await reminderRepo.toggle(id: id)
+        switch res {
+        case .success:
+            if let idx = state.overview.reminders.firstIndex(where: { $0.id == id }) {
+                let original = state.overview.reminders[idx]
+                let updated = Reminder(
+                    id: original.id,
+                    title: original.title,
+                    due: original.due,
+                    isCompleted: !original.isCompleted,
+                    priority: original.priority,
+                    notes: original.notes,
+                    url: original.url,
+                    location: original.location,
+                    hasAlarms: original.hasAlarms,
+                    alarms: original.alarms,
+                    calendar: original.calendar
+                )
+                
+                withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
+                    state.overview.reminders[idx] = updated
+                    state.overview.reminders.sort(by: reminderSortRule)
+                }
+            }
+            WidgetRefreshService.shared.refreshWithDebounce()
+        case .failure(let error):
+            state.error = error
+        }
+    }
+
+    // MARK: - Private Methods
+    private func loadOverview() {
+        dataTask?.cancel()
+        dataTask = Task {
+            state.isLoading = true
+            defer { state.isLoading = false }
+
+            switch await fetchData() {
+            case .success(let ov): state.overview = ov
+            case .failure(let err): state.error  = err
+            }
+        }
+    }
+
+    private func startDateWatcher() {
+        Timer.publish(every: 60, on: .main, in: .common)
+            .autoconnect()
+            .sink { [weak self] _ in
+                guard let self else { return }
+                if !Calendar.current.isDate(Date(), inSameDayAs: today) {
+                    today = Date(); refresh(.storeChange)
+                }
+            }
+            .store(in: &cancellables)
+    }
+
+    private func bindStoreChange() {
+        service.changePublisher
+            .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
+            .sink { [weak self] in
+                self?.refresh(.storeChange)
+                WidgetRefreshService.shared.refreshWithDebounce()
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func reminderSortRule(_ a: Reminder, _ b: Reminder) -> Bool {
+        if a.isCompleted != b.isCompleted { return !a.isCompleted }
+        let da = a.due ?? .distantFuture, db = b.due ?? .distantFuture
+        return da != db ? da < db : a.title < b.title
+    }
+}
+
+// MARK: - 삭제 관련 메서드
+extension HomeViewModel {
     
     /// 이벤트 삭제 요청 (스마트 삭제)
     func requestEventDeletion(_ event: Event) {
@@ -156,52 +232,10 @@ final class HomeViewModel: ObservableObject, @preconcurrency HomeViewModelProtoc
         }
     }
 
-    // MARK: - Reminder Toggle (기존 유지)
-    func toggleReminder(id: String) async {
-        let res = await reminderRepo.toggle(id: id)
-        switch res {
-        case .success:
-            if let idx = state.overview.reminders.firstIndex(where: { $0.id == id }) {
-                let original = state.overview.reminders[idx]
-                let updated = Reminder(
-                    id: original.id,
-                    title: original.title,
-                    due: original.due,
-                    isCompleted: !original.isCompleted,
-                    priority: original.priority,
-                    notes: original.notes,
-                    url: original.url,
-                    location: original.location,
-                    hasAlarms: original.hasAlarms,
-                    alarms: original.alarms,
-                    calendar: original.calendar
-                )
-                
-                withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
-                    state.overview.reminders[idx] = updated
-                    state.overview.reminders.sort(by: reminderSortRule)
-                }
-            }
-            WidgetRefreshService.shared.refreshWithDebounce()
-        case .failure(let error):
-            state.error = error
-        }
-    }
+}
 
-    // MARK: - Private Methods (기존 유지)
-    private func loadOverview() {
-        dataTask?.cancel()
-        dataTask = Task {
-            state.isLoading = true
-            defer { state.isLoading = false }
-
-            switch await fetchData() {
-            case .success(let ov): state.overview = ov
-            case .failure(let err): state.error  = err
-            }
-        }
-    }
-
+// MARK: - 날씨 관련
+extension HomeViewModel {
     func loadWeather() {
         weatherTask?.cancel()
         weatherTask = Task {
@@ -230,33 +264,5 @@ final class HomeViewModel: ObservableObject, @preconcurrency HomeViewModelProtoc
                 }
             }
             .store(in: &cancellables)
-    }
-
-    private func startDateWatcher() {
-        Timer.publish(every: 60, on: .main, in: .common)
-            .autoconnect()
-            .sink { [weak self] _ in
-                guard let self else { return }
-                if !Calendar.current.isDate(Date(), inSameDayAs: today) {
-                    today = Date(); refresh(.storeChange)
-                }
-            }
-            .store(in: &cancellables)
-    }
-
-    private func bindStoreChange() {
-        service.changePublisher
-            .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
-            .sink { [weak self] in
-                self?.refresh(.storeChange)
-                WidgetRefreshService.shared.refreshWithDebounce()
-            }
-            .store(in: &cancellables)
-    }
-    
-    private func reminderSortRule(_ a: Reminder, _ b: Reminder) -> Bool {
-        if a.isCompleted != b.isCompleted { return !a.isCompleted }
-        let da = a.due ?? .distantFuture, db = b.due ?? .distantFuture
-        return da != db ? da < db : a.title < b.title
     }
 }

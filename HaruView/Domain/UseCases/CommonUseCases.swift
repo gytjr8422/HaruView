@@ -1,14 +1,11 @@
 //
-//  UseCases.swift
+//  CommonUseCases.swift
 //  HaruView
 //
-//  Created by 김효석 on 4/30/25.
+//  Created by 김효석 on 7/6/25.
 //
 
-import Foundation
 import EventKit
-
-// MARK: ‑ UseCases
 
 /// 일정/미리알림 카드 데이터를 제공하는 유스케이스.
 struct FetchTodayOverviewUseCase {
@@ -36,81 +33,6 @@ struct FetchTodayOverviewUseCase {
         case (.failure(let err), _), (_, .failure(let err)):
             return .failure(err)
         }
-    }
-}
-
-/// 일정 추가 유스케이스
-struct AddEventUseCase {
-    private let repo: EventRepositoryProtocol
-    
-    init(repo: EventRepositoryProtocol) {
-        self.repo = repo
-    }
-    
-    func callAsFunction(_ input: EventInput) async -> Result<Void, TodayBoardError> {
-        await repo.add(input)
-    }
-}
-
-/// 일정 수정 유스케이스
-struct EditEventUseCase {
-    private let repo: EventRepositoryProtocol
-    
-    init(repo: EventRepositoryProtocol) {
-        self.repo = repo
-    }
-    
-    func callAsFunction(_ edit: EventEdit) async -> Result<Void, TodayBoardError> {
-        await repo.update(edit)
-    }
-}
-
-/// 미리알림 추가 유스케이스
-struct AddReminderUseCase {
-    private let repo: ReminderRepositoryProtocol
-    
-    init(repo: ReminderRepositoryProtocol) {
-        self.repo = repo
-    }
-    
-    func callAsFunction(_ input: ReminderInput) async -> Result<Void, TodayBoardError> {
-        await repo.add(input)
-    }
-}
-
-/// 미리알림 수정 유스케이스
-struct EditReminderUseCase {
-    private let repo: ReminderRepositoryProtocol
-
-    init(repo: ReminderRepositoryProtocol) {
-        self.repo = repo
-    }
-
-    func callAsFunction(_ edit: ReminderEdit) async -> Result<Void, TodayBoardError> {
-        await repo.update(edit)
-    }
-}
-
-struct FetchTodayWeatherUseCase {
-    private let repo: WeatherRepositoryProtocol
-    
-    init(repo: WeatherRepositoryProtocol) { self.repo = repo }
-
-    func callAsFunction() async -> Result<TodayWeather, TodayBoardError> {
-        await repo.fetchWeather()
-    }
-}
-
-
-struct ToggleReminderUseCase {
-    private let repo: ReminderRepositoryProtocol
-    
-    init(repo: ReminderRepositoryProtocol) {
-        self.repo = repo
-    }
-    
-    func callAsFunction(_ id: String) async -> Result<Void, TodayBoardError> {
-        await repo.toggle(id: id)
     }
 }
 

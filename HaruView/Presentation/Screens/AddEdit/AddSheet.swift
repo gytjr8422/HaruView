@@ -1,0 +1,238 @@
+//
+//  AddSheet.swift
+//  HaruView
+//
+//  Created by 김효석 on 5/2/25.
+//
+
+import SwiftUI
+
+struct AddSheet<VM: AddSheetViewModelProtocol>: View {
+    @Environment(\.dismiss) private var dismiss
+    @Namespace private var indicatorNS
+    @FocusState private var isTextFieldFocused: Bool
+
+    @StateObject private var vm: VM
+    var onSave: () -> Void
+
+    private var minDate: Date { Calendar.current.startOfDay(for: .now) }
+    private var maxDate: Date { Calendar.current.date(byAdding: .day, value: 2, to: minDate)! }
+
+    @State private var selected: AddSheetMode = .event
+    @State private var showDiscardAlert = false
+    @State private var expandedSection: ExpandableSection? = nil
+    
+    // MARK: - Dirty Check
+    private var isDirty: Bool {
+        vm.hasChanges
+    }
+
+    init(vm: VM, onSave: @escaping () -> Void) {
+        _vm = StateObject(wrappedValue: vm)
+        self.onSave = onSave
+    }
+
+    var body: some View {
+        NavigationStack {
+            VStack(spacing: 0) {
+                if !vm.isEdit {
+                    AddSheetHeader(
+                        selected: $selected,
+                        indicatorNS: indicatorNS
+                    )
+                }
+
+                if vm.isEdit {
+                    if vm.mode == .event {
+                        eventPage
+                    } else {
+                        reminderPage
+                    }
+                } else {
+                    TabView(selection: $selected) {
+                        eventPage.tag(AddSheetMode.event)
+                        reminderPage.tag(AddSheetMode.reminder)
+                    }
+                    .tabViewStyle(.page(indexDisplayMode: .never))
+                    .onChange(of: selected) { _, newValue in
+                        vm.mode = newValue
+                        isTextFieldFocused = false
+                        expandedSection = nil
+                    }
+                }
+            }
+            .background(Color(hexCode: "FFFCF5"))
+            .toolbar { leadingToolbar; toolbarTitle; saveToolbar }
+            .navigationBarTitleDisplayMode(.inline)
+            .confirmationDialog(vm.isEdit ? "편집 내용이 저장되지 않습니다." : "작성 내용이 저장되지 않습니다.",
+                                isPresented: $showDiscardAlert) {
+                Button(vm.isEdit ? "편집 취소하기" : "저장 안 하고 닫기", role: .destructive) { dismiss() }
+                Button(vm.isEdit ? "계속 편집" : "계속 작성", role: .cancel) {}
+            }
+        }
+        .interactiveDismissDisabled(isDirty || vm.isSaving)
+        .onAppear {
+            selected = vm.mode
+        }
+    }
+
+    // MARK: - Event Page
+    private var eventPage: some View {
+        ScrollView {
+            VStack {
+                // 기본 정보
+                BasicEventInfoSection(
+                    vm: vm,
+                    isTextFieldFocused: $isTextFieldFocused,
+                    minDate: minDate,
+                    maxDate: maxDate
+                )
+                
+                // 확장 가능한 섹션들
+                ExpandableSectionView(
+                    vm: vm,
+                    expandedSection: $expandedSection,
+                    isTextFieldFocused: $isTextFieldFocused,
+                    mode: .event
+                )
+                
+                footerError
+            }
+            .padding(20)
+            .contentShape(Rectangle())
+//            .onTapGesture {
+//                isTextFieldFocused = false
+//                expandedSection = nil
+//            }
+        }
+    }
+
+    // MARK: - Reminder Page
+    private var reminderPage: some View {
+        ScrollView {
+            VStack {
+                // 기본 정보
+                BasicReminderInfoSection(
+                    vm: vm,
+                    isTextFieldFocused: $isTextFieldFocused,
+                    minDate: minDate,
+                    maxDate: maxDate
+                )
+                
+                // 확장 가능한 섹션들
+                ExpandableSectionView(
+                    vm: vm,
+                    expandedSection: $expandedSection,
+                    isTextFieldFocused: $isTextFieldFocused,
+                    mode: .reminder
+                )
+                
+                footerError
+            }
+            .padding(20)
+            .contentShape(Rectangle())
+            .onTapGesture {
+                isTextFieldFocused = false
+//                expandedSection = nil
+            }
+        }
+    }
+    
+    private var footerError: some View {
+        Group {
+            if let e = vm.error {
+                Text(String(format: NSLocalizedString("⚠️ 오류: %@", comment: ""), e.localizedDescription))
+                    .font(.jakartaRegular(size: 14))
+                    .foregroundStyle(.red)
+            }
+        }
+    }
+
+    // MARK: - Toolbar
+    private var leadingToolbar: some ToolbarContent {
+        ToolbarItem(placement: .cancellationAction) {
+            Button { isDirty ? (showDiscardAlert = true) : dismiss() } label: {
+                Text("취소").font(.pretendardSemiBold(size: 16)).foregroundStyle(.red.opacity(0.8))
+            }
+        }
+    }
+    
+    private var saveToolbar: some ToolbarContent {
+        ToolbarItem(placement: .confirmationAction) {
+            if vm.isSaving {
+                ProgressView()
+                    .scaleEffect(0.8)
+            } else {
+                Button {
+                    Task {
+                        await vm.save()
+                        if vm.error == nil { dismiss(); onSave() }
+                    }
+                } label: {
+                    Text("저장").font(.pretendardSemiBold(size: 16))
+                        .foregroundStyle(vm.currentTitle.isEmpty ? .secondary : Color.blue.opacity(0.8))
+                }
+                .disabled(vm.currentTitle.isEmpty)
+            }
+        }
+    }
+    
+    private var toolbarTitle: some ToolbarContent {
+        ToolbarItem(placement: .principal) {
+            let key = vm.isEdit ? "%@ 편집" : "%@ 추가"
+            Text(String(format: NSLocalizedString(key, comment: ""), vm.mode.localized))
+                .font(.pretendardSemiBold(size: 18))
+        }
+    }
+}
+
+// MARK: - Preview
+#if DEBUG
+private class MockAddVM: AddSheetViewModelProtocol {
+    var hasChanges: Bool = false
+    var isEdit: Bool = false
+    var currentTitle: String = ""
+    var location: String = ""
+    var notes: String = ""
+    var url: String = ""
+    var alarms: [AlarmInput] = []
+    var recurrenceRule: RecurrenceRuleInput? = nil
+    var selectedCalendar: EventCalendar? = nil
+    var availableCalendars: [EventCalendar] = []
+    
+    var reminderPriority: Int = 0
+    var reminderNotes: String = ""
+    var reminderURL: String = ""
+    var reminderLocation: String = ""
+    var reminderAlarms: [AlarmInput] = []
+    var selectedReminderCalendar: ReminderCalendar? = nil
+    var availableReminderCalendars: [ReminderCalendar] = []
+    
+    @Published var mode: AddSheetMode = .event
+    @Published var title: String = ""
+    @Published var startDate: Date = .now
+    @Published var endDate: Date = .now
+    @Published var dueDate: Date? = nil
+    @Published var error: TodayBoardError? = nil
+    @Published var isSaving: Bool = false
+    @Published var isAllDay: Bool = false
+    @Published var includeTime: Bool = false
+    
+    func save() async {}
+    func addAlarm(_ alarm: AlarmInput) {}
+    func removeAlarm(at index: Int) {}
+    func setRecurrenceRule(_ rule: RecurrenceRuleInput?) {}
+    
+    func addReminderAlarm(_ alarm: AlarmInput) {}
+    func removeReminderAlarm(at index: Int) {}
+    func setReminderPriority(_ priority: Int) {}
+}
+
+#Preview {
+    AddSheet(vm: MockAddVM(), onSave: {})
+}
+#endif
+
+
+
+

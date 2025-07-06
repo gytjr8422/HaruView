@@ -201,17 +201,23 @@ private struct EventListDeletionModifier<VM: EventListViewModelProtocol>: ViewMo
 }
 
 
-//#if DEBUG
-//final class MockEventListVM: EventListViewModelProtocol {
-//    
-//    var events: [Event] = TodayOverview.placeholder.events
-//    
-//    func load() {}
-//    func refresh() { }
-//    func delete(id: String) {}
-//}
-//
-//#Preview {
-//    EventListSheet(vm: MockEventListVM())
-//}
-//#endif
+#if DEBUG
+final class MockEventListVM: EventListViewModelProtocol {
+    var showRecurringDeletionOptions: Bool = false
+    var currentDeletingEvent: Event?
+    var isDeletingEvent: Bool = false
+    var deletionError: TodayBoardError?
+    var events: [Event] = TodayOverview.placeholder.events
+    
+    func load() {}
+    func refresh() {}
+    func delete(id: String) {}
+    func requestEventDeletion(_ event: Event) {}
+    func deleteEventWithSpan(_ span: EventDeletionSpan) {}
+    func cancelEventDeletion() {}
+}
+
+#Preview {
+    EventListSheet(vm: MockEventListVM())
+}
+#endif

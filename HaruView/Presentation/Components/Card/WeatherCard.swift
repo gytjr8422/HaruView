@@ -129,9 +129,3 @@ struct WeatherCard: View {
         tempMin: 16
     ), place: " ")
 }
-
-extension Array {
-    subscript(safe index: Index) -> Element {
-        indices.contains(index) ? self[index] : self[0] // fallback to first color
-    }
-}

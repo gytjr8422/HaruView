@@ -54,19 +54,15 @@
         }
       }
     },
-    "위젯에서 할 일의 완료 상태를 전환합니다." : {
-      "extractionState" : "stale",
+    "위젯에서 할 일의 완료 상태를 토글합니다." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Toggle a task’s completion status from the widget."
+            "value" : "Mark tasks as complete from the widget."
           }
         }
       }
-    },
-    "위젯에서 할 일의 완료 상태를 토글합니다." : {
-
     },
     "일정" : {
       "localizations" : {

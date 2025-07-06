@@ -265,12 +265,5 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
             selectedReminderCalendar = availableReminderCalendars.first
         }
     }
-     
-     // init에서 호출할 초기화 메서드
-//     private func initializeReminderCalendars() {
-//         // Repository에서 사용 가능한 리마인더 캘린더 가져오기
-//         // availableReminderCalendars = eventKitRepository.getAvailableReminderCalendars()
-//         selectDefaultReminderCalendar()
-//     }
 }
 
