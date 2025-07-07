@@ -152,6 +152,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                     
                 }
                 .padding(.horizontal, 20)
+                .padding(.bottom, 70) // 탭바에 콘텐츠 가리지 않도록
             }
         }
     }

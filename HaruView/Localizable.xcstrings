@@ -377,6 +377,9 @@
         }
       }
     },
+    "곧 멋진 달력이 여기에 나타날 예정입니다!" : {
+
+    },
     "구독" : {
       "localizations" : {
         "en" : {
@@ -518,6 +521,12 @@
           }
         }
       }
+    },
+    "달력" : {
+
+    },
+    "달력 뷰" : {
+
     },
     "로컬" : {
       "localizations" : {
@@ -1175,22 +1184,22 @@
         }
       }
     },
-    "이후 모든 이벤트 삭제" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete All Future Events"
-          }
-        }
-      }
-    },
     "일" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : " "
+          }
+        }
+      }
+    },
+    "이후 모든 이벤트 삭제" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete All Future Events"
           }
         }
       }
@@ -1511,6 +1520,9 @@
           }
         }
       }
+    },
+    "홈" : {
+
     },
     "화요일" : {
       "localizations" : {

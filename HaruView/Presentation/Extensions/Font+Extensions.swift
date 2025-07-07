@@ -19,6 +19,10 @@ extension Font {
     static func pretendardSemiBold(size: CGFloat) -> Font {
         .custom("Pretendard-SemiBold", size: size)
     }
+    
+    static func pretendardMedium(size: CGFloat) -> Font {
+        .custom("Pretendard-Medium", size: size)
+    }
 
     static func pretendardRegular(size: CGFloat) -> Font {
         .custom("Pretendard-Regular", size: size)

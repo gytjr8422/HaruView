@@ -23,7 +23,7 @@ struct HaruViewApp: App {
     
     var body: some Scene {
         WindowGroup {
-            HomeView(vm: DIContainer.shared.makeHomeVM())
+            MainTabView()
                 .environment(\.di, .shared)
                 .task {
                     guard !didBootstrap else { return }
