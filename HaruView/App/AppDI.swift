@@ -222,7 +222,8 @@ extension DIContainer {
             cacheManager: makeCalendarCacheUseCase(),
             addEvent: makeAddEventUseCase(),
             addReminder: makeAddReminderUseCase(),
-            deleteObject: makeDeleteEventUseCase()
+            deleteObject: makeDeleteEventUseCase(),
+            eventKitService: eventKitService
         )
     }
 }

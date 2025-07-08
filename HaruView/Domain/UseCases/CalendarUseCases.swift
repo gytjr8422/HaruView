@@ -29,11 +29,9 @@ struct FetchCalendarMonthUseCase {
     
     private func fetchMonthDataFallback(year: Int, month: Int) async -> Result<CalendarMonth, TodayBoardError> {
         let calendar = Calendar.current
-        guard let firstDay = calendar.date(from: DateComponents(year: year, month: month, day: 1)) else {
+        guard calendar.date(from: DateComponents(year: year, month: month, day: 1)) != nil else {
             return .failure(.invalidInput)
         }
-        
-        let lastDay = calendar.date(byAdding: .month, value: 1, to: firstDay)!
         
         // 기본 이벤트 조회 사용
         async let eventsResult = eventRepo.fetchEvent()

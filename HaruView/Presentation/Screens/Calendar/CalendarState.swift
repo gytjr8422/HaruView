@@ -60,7 +60,6 @@ struct CalendarState: Equatable {
     
     // 오래된 캐시 정리 (현재 월 기준 ±2개월만 유지)
     mutating func clearOldCache() {
-        let currentKey = currentCacheKey
         cachedMonths = cachedMonths.filter { key, month in
             let monthDiff = (month.year - currentYear) * 12 + (month.month - currentMonth)
             return abs(monthDiff) <= 2

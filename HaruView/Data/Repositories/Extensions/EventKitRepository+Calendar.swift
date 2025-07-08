@@ -12,28 +12,72 @@ extension EventKitRepository {
     
     /// 특정 날짜 범위의 이벤트 조회
     func fetchEvents(from startDate: Date, to endDate: Date) async -> Result<[Event], TodayBoardError> {
+        
         let ekResult = service.fetchEventsBetween(startDate, endDate)
+        
         return ekResult.map { events in
-            events
-                .filter { $0.calendar.title != "대한민국 공휴일" } // 공휴일 제외
+            
+            let filtered = events
+                .filter { event in
+                    let isNotHoliday = event.calendar.title != "대한민국 공휴일"
+                    
+                    // 하루 종일 이벤트와 일반 이벤트를 다르게 처리
+                    let isInRange: Bool
+                    if event.isAllDay {
+                        // 하루 종일 이벤트: 날짜만 비교 (시간 무시)
+                        let calendar = Calendar.current
+                        let eventStartDay = calendar.startOfDay(for: event.startDate)
+                        let eventEndDay = calendar.startOfDay(for: event.endDate)
+                        let rangeStartDay = calendar.startOfDay(for: startDate)
+                        let rangeEndDay = calendar.startOfDay(for: endDate)
+                        
+                        // 하루 종일 이벤트는 종료일이 다음날 00:00일 수 있으므로 하루 빼서 확인
+                        let actualEventEndDay = eventEndDay > eventStartDay ?
+                            calendar.date(byAdding: .day, value: -1, to: eventEndDay) ?? eventEndDay :
+                            eventEndDay
+                        
+                        isInRange = actualEventEndDay >= rangeStartDay && eventStartDay < rangeEndDay
+                    } else {
+                        // 일반 이벤트: 기존 로직
+                        isInRange = event.endDate > startDate && event.startDate < endDate
+                    }
+                    
+                    let include = isNotHoliday && isInRange
+                    
+                    return include
+                }
                 .map(Self.mapEvent)
                 .sorted { $0.start < $1.start }
+            
+            return filtered
         }
     }
     
     /// 특정 날짜 범위의 할일 조회
     func fetchReminders(from startDate: Date, to endDate: Date) async -> Result<[Reminder], TodayBoardError> {
+        
         let ekRes = await service.fetchRemindersBetween(startDate, endDate)
         return ekRes.map { rems in
-            rems
-                .filter { rem in
-                    // 마감일이 있는 할일만 필터링
-                    guard let due = rem.dueDateComponents?.date else {
-                        // 마감일이 없는 할일은 오늘에만 표시
-                        return Calendar.current.isDateInToday(startDate)
-                    }
-                    return due >= startDate && due < endDate
+            
+            let filtered = rems.filter { rem in
+                guard let due = rem.dueDateComponents?.date else {
+                    // 마감일이 없는 할일은 오늘에만 표시
+                    let isToday = Calendar.current.isDateInToday(startDate)
+                    return isToday
                 }
+                
+                // 마감일이 조회 범위에 포함되는지 확인
+                let calendar = Calendar.current
+                let dueDate = calendar.startOfDay(for: due)
+                let rangeStart = calendar.startOfDay(for: startDate)
+                let rangeEnd = calendar.startOfDay(for: endDate)
+                
+                let isInRange = dueDate >= rangeStart && dueDate < rangeEnd
+                
+                return isInRange
+            }
+            
+            return filtered
                 .sorted(by: Self.sortRule)
                 .map(Self.mapReminder)
         }
@@ -41,6 +85,7 @@ extension EventKitRepository {
     
     /// 특정 월의 모든 데이터 조회 (달력용)
     func fetchCalendarMonth(year: Int, month: Int) async -> Result<CalendarMonth, TodayBoardError> {
+        
         let calendar = Calendar.current
         guard let firstDay = calendar.date(from: DateComponents(year: year, month: month, day: 1)) else {
             return .failure(.invalidInput)
@@ -82,8 +127,34 @@ extension EventKitRepository {
             
             // 해당 날짜의 이벤트 필터링
             let dayEvents = events.filter { event in
-                // 이벤트가 해당 날짜와 겹치는지 확인
-                return event.start < dayEnd && event.end > dayStart
+                // 하루 종일 이벤트와 일반 이벤트를 다르게 처리
+                let overlaps: Bool
+                
+                // Event 구조체에서 하루 종일 여부 판단
+                let isAllDay = calendar.isDate(event.start, inSameDayAs: event.end) &&
+                             calendar.dateComponents([.hour, .minute], from: event.start) == DateComponents(hour: 0, minute: 0) &&
+                             (calendar.dateComponents([.hour, .minute], from: event.end) == DateComponents(hour: 23, minute: 59) ||
+                              calendar.dateComponents([.hour, .minute], from: event.end) == DateComponents(hour: 0, minute: 0))
+                
+                if isAllDay {
+                    // 하루 종일 이벤트: 날짜만 비교
+                    let eventStartDay = calendar.startOfDay(for: event.start)
+                    let eventEndDay = calendar.startOfDay(for: event.end)
+                    let targetDay = calendar.startOfDay(for: date)
+                    
+                    // 하루 종일 이벤트가 여러 날에 걸칠 수 있으므로
+                    let actualEventEndDay = eventEndDay > eventStartDay ?
+                        calendar.date(byAdding: .day, value: -1, to: eventEndDay) ?? eventEndDay :
+                        eventStartDay
+                    
+                    overlaps = targetDay >= eventStartDay && targetDay <= actualEventEndDay
+                    
+                } else {
+                    // 일반 이벤트: 시간 포함 비교
+                    overlaps = event.start < dayEnd && event.end > dayStart
+                }
+                
+                return overlaps
             }
             
             // 해당 날짜의 할일 필터링
@@ -92,13 +163,18 @@ extension EventKitRepository {
                     // 마감일이 없는 할일은 오늘에만 표시
                     return calendar.isDateInToday(date)
                 }
-                return calendar.isDate(due, inSameDayAs: date)
+                
+                // 마감일이 해당 날짜와 같은 날인지 확인 (시간 무시)
+                let reminderDate = calendar.startOfDay(for: due)
+                let targetDate = calendar.startOfDay(for: date)
+                return calendar.isDate(reminderDate, inSameDayAs: targetDate)
             }
             
             return CalendarDay(date: date, events: dayEvents, reminders: dayReminders)
         }
         
         let monthWithDays = CalendarMonth(year: year, month: month, days: days)
+        
         return .success(monthWithDays)
     }
     

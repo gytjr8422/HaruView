@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CalendarView: View {
     @Environment(\.di) private var di
+    @Environment(\.scenePhase) private var phase
     @StateObject private var vm: CalendarViewModel
     @State private var showDayDetail = false
     @State private var selectedDayForDetail: CalendarDay?
@@ -32,9 +33,6 @@ struct CalendarView: View {
                     errorView(error)
                 } else if let monthData = vm.currentMonthData {
                     calendarContent(monthData)
-                        .onAppear {
-                            isDataReady = true
-                        }
                 } else {
                     emptyStateView
                 }
@@ -49,23 +47,8 @@ struct CalendarView: View {
             }
         }
         .sheet(isPresented: $showDayDetail) {
-            if let dayData = selectedDayForDetail {
-                if dayData.hasItems {
-                    DayDetailSheet(calendarDay: dayData)
-                } else {
-                    EmptyView()
-                        .onAppear {
-                            print("빈 데이터 감지, Sheet 닫기")
-                            showDayDetail = false
-                            selectedDayForDetail = nil
-                        }
-                }
-            } else {
-                EmptyView()
-                    .onAppear {
-                        print("selectedDayForDetail이 nil, Sheet 닫기")
-                        showDayDetail = false
-                    }
+            if let dayData = selectedDayForDetail, dayData.hasItems {
+                DayDetailSheet(calendarDay: dayData)
             }
         }
         .sheet(isPresented: $showAddSheet) {
@@ -75,76 +58,100 @@ struct CalendarView: View {
                 }
             }
         }
-    }
-    
-    @ViewBuilder
-    private func calendarContent(_ monthData: CalendarMonth) -> some View {
-        VStack(spacing: 0) {
-            CalendarHeaderView(
-                monthDisplayText: vm.monthDisplayText,
-                onPreviousMonth: {
-                    withAnimation(.easeInOut(duration: 0.3)) {
-                        vm.moveToPreviousMonth()
-                    }
-                },
-                onNextMonth: {
-                    withAnimation(.easeInOut(duration: 0.3)) {
-                        vm.moveToNextMonth()
-                    }
-                },
-                onToday: {
-                    withAnimation(.easeInOut(duration: 0.3)) {
-                        vm.moveToToday()
-                    }
-                }
-            )
-            
-            WeekdayHeaderView()
-            
-            ScrollView {
-                VStack(spacing: 0) {
-                    CalendarGridView(
-                        monthData: monthData,
-                        selectedDate: vm.selectedDate,
-                        onDateTap: { date in
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                vm.selectDate(date)
-                            }
-                            
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                                showDayDetailIfNeeded(for: date)
-                            }
-                        },
-                        onDateLongPress: { date in
-                            let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
-                            impactFeedback.impactOccurred()
-                            
-                            quickAddDate = date
-                            showAddSheet = true
-                        }
-                    )
-                    .transition(.opacity)
-                    
-                    Spacer(minLength: 20)
-                }
+        .onChange(of: showDayDetail) { _, isShowing in
+            // Sheet가 닫힐 때 선택된 데이터 정리
+            if !isShowing {
+                selectedDayForDetail = nil
             }
-            .refreshable {
+        }
+        .onChange(of: showAddSheet) { _, isShowing in
+            if !isShowing {
+                quickAddDate = nil
+            }
+        }
+        .onChange(of: phase) { _, newPhase in
+            // 앱이 다시 활성화될 때 새로고침 (다른 앱에서 일정 추가했을 수도 있음)
+            if newPhase == .active {
                 vm.refresh()
             }
-            
-            if vm.isLoading && vm.currentMonthData != nil {
-                HStack {
-                    ProgressView()
-                        .scaleEffect(0.8)
-                    Text("업데이트 중...")
-                        .font(.pretendardRegular(size: 14))
-                        .foregroundStyle(.secondary)
-                }
-                .padding(.vertical, 8)
-                .transition(.opacity)
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .EKEventStoreChanged)) { _ in
+            // EventKit 변경 알림을 직접 받아서도 처리 (이중 보장)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                vm.forceRefresh()
             }
         }
     }
+    
+    @ViewBuilder
+     private func calendarContent(_ monthData: CalendarMonth) -> some View {
+         VStack(spacing: 0) {
+             CalendarHeaderView(
+                 monthDisplayText: vm.monthDisplayText,
+                 onPreviousMonth: {
+                     withAnimation(.easeInOut(duration: 0.3)) {
+                         vm.moveToPreviousMonth()
+                     }
+                 },
+                 onNextMonth: {
+                     withAnimation(.easeInOut(duration: 0.3)) {
+                         vm.moveToNextMonth()
+                     }
+                 },
+                 onToday: {
+                     withAnimation(.easeInOut(duration: 0.3)) {
+                         vm.moveToToday()
+                     }
+                 }
+             )
+             
+             WeekdayHeaderView()
+             
+             ScrollView {
+                 VStack(spacing: 0) {
+                     CalendarGridView(
+                         monthData: monthData,
+                         selectedDate: vm.selectedDate,
+                         onDateTap: { date in
+                             withAnimation(.easeInOut(duration: 0.2)) {
+                                 vm.selectDate(date)
+                             }
+                             
+                             // 즉시 체크하지 말고 약간의 지연 후 체크
+                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                 showDayDetailIfNeeded(for: date)
+                             }
+                         },
+                         onDateLongPress: { date in
+                             let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
+                             impactFeedback.impactOccurred()
+                             
+                             quickAddDate = date
+                             showAddSheet = true
+                         }
+                     )
+                     .transition(.opacity)
+                     
+                     Spacer(minLength: 20)
+                 }
+             }
+             .refreshable {
+                 vm.refresh()
+             }
+             
+             if vm.isLoading && vm.currentMonthData != nil {
+                 HStack {
+                     ProgressView()
+                         .scaleEffect(0.8)
+                     Text("업데이트 중...")
+                         .font(.pretendardRegular(size: 14))
+                         .foregroundStyle(.secondary)
+                 }
+                 .padding(.vertical, 8)
+                 .transition(.opacity)
+             }
+         }
+     }
     
     private var loadingView: some View {
         VStack(spacing: 16) {
@@ -207,26 +214,40 @@ struct CalendarView: View {
     }
     
     private func showDayDetailIfNeeded(for date: Date) {
-        guard vm.hasInitialDataLoaded,
-              !vm.isLoading,
-              let monthData = vm.currentMonthData,
-              let calendarDay = monthData.day(for: date) else {
-            print("데이터 조건 불충족")
+        // 1. ViewModel의 데이터 준비 상태 확인
+        guard vm.isCurrentMonthDataReady else {
+            print("데이터가 아직 준비되지 않음 - 로딩: \(vm.isLoading), 데이터 준비: \(vm.isDataReady)")
             return
         }
         
+        // 2. Sheet가 이미 열려있지 않은지 확인
+        guard !showDayDetail else {
+            print("Sheet가 이미 열려있음")
+            return
+        }
+        
+        // 3. 해당 날짜가 현재 월에 속하는지 확인
+        guard vm.isDateDataReady(for: date) else {
+            print("해당 날짜가 현재 월에 속하지 않거나 데이터가 준비되지 않음")
+            return
+        }
+        
+        // 4. 월 데이터에서 해당 날짜 찾기
+        guard let monthData = vm.currentMonthData,
+              let calendarDay = monthData.day(for: date) else {
+            print("해당 날짜의 데이터를 찾을 수 없음: \(date)")
+            return
+        }
+        
+        // 5. 실제 이벤트/리마인더 개수 확인
         let eventCount = calendarDay.events.count
         let reminderCount = calendarDay.reminders.count
         let totalCount = eventCount + reminderCount
         
-        print("날짜: \(date), 이벤트: \(eventCount)개, 리마인더: \(reminderCount)개, 총: \(totalCount)개")
-        
+        // 6. 일정이 있을 때만 Sheet 표시
         if totalCount > 0 {
             selectedDayForDetail = calendarDay
             showDayDetail = true
-            print("Sheet 표시함")
-        } else {
-            print("일정 없음, Sheet 표시 안 함")
         }
     }
 }
@@ -245,28 +266,13 @@ struct DayDetailSheet: View {
     
     var body: some View {
         NavigationStack {
-            if calendarDay.events.isEmpty && calendarDay.reminders.isEmpty {
-                VStack(spacing: 16) {
-                    Image(systemName: "calendar")
-                        .font(.system(size: 40))
-                        .foregroundStyle(Color(hexCode: "A76545").opacity(0.5))
-                    
-                    Text("이 날에는 일정이 없습니다")
-                        .font(.pretendardRegular(size: 16))
-                        .foregroundStyle(.secondary)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color(hexCode: "FFFCF5"))
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button("닫기") {
-                            dismiss()
-                        }
-                        .font(.pretendardRegular(size: 16))
-                        .foregroundStyle(Color(hexCode: "A76545"))
+            // 데이터 유효성 재확인
+            if !calendarDay.hasItems {
+                // 빈 데이터인 경우 즉시 닫기
+                Color.clear
+                    .onAppear {
+                        dismiss()
                     }
-                }
             } else {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 16) {

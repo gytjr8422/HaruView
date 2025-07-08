@@ -9,36 +9,44 @@ import EventKit
 
 // MARK: - 할 일 관련
 extension EventKitRepository {
-    // MARK: - ReminderRepository (기존과 동일)
+    
+    // MARK: - ReminderRepository Protocol 구현
     func fetchReminder() async -> Result<[Reminder], TodayBoardError> {
+        
         let todayStart = cal.startOfDay(for: Date())
         let todayEnd   = cal.date(byAdding: .day, value: 1, to: todayStart)!
         let ekRes = await service.fetchRemindersBetween(todayStart, todayEnd)
         return ekRes.map { rems in
-            rems
-                .filter { rem in
-                    guard let due = rem.dueDateComponents?.date else { return true }
-                    return due >= todayStart && due < todayEnd
+            
+            let filtered = rems.filter { rem in
+                guard let due = rem.dueDateComponents?.date else {
+                    return true
                 }
+                
+                let isInToday = due >= todayStart && due < todayEnd
+                return isInToday
+            }
+            
+            return filtered
                 .sorted(by: Self.sortRule)
                 .map(Self.mapReminder)
         }
     }
     
     func add(_ input: ReminderInput) async -> Result<Void, TodayBoardError> {
-        service.addReminder(input)
+        return service.addReminder(input)
     }
 
     func update(_ edit: ReminderEdit) async -> Result<Void, TodayBoardError> {
-        service.updateReminder(edit)
+        return service.updateReminder(edit)
     }
     
     func toggle(id: String) async -> Result<Void, TodayBoardError> {
-        service.toggleReminder(id: id)
+        return service.toggleReminder(id: id)
     }
     
     func deleteReminder(id: String) async -> Result<Void, TodayBoardError> {
-        service.deleteReminder(id: id)
+        return service.deleteReminder(id: id)
     }
     
     // MARK: - 사용 가능한 리마인더 캘린더 조회
@@ -49,11 +57,14 @@ extension EventKitRepository {
             .map(Self.mapReminderCalendar)
     }
     
+    // MARK: - 정렬 규칙
     static func sortRule(lhs: EKReminder, rhs: EKReminder) -> Bool {
+        // 1. 완료 상태: 미완료가 먼저
         if lhs.isCompleted != rhs.isCompleted {
             return !lhs.isCompleted
         }
         
+        // 2. 우선순위: 낮은 숫자(높은 우선순위)가 먼저
         let lhsPriority = lhs.priority == 0 ? Int.max : lhs.priority
         let rhsPriority = rhs.priority == 0 ? Int.max : rhs.priority
 
@@ -61,6 +72,7 @@ extension EventKitRepository {
             return lhsPriority < rhsPriority
         }
         
+        // 3. 시간 설정 여부: 시간이 설정된 것이 먼저
         let lhsHasTime = lhs.dueDateComponents?.hour != nil || lhs.dueDateComponents?.minute != nil
         let rhsHasTime = rhs.dueDateComponents?.hour != nil || rhs.dueDateComponents?.minute != nil
         
@@ -68,21 +80,44 @@ extension EventKitRepository {
             return lhsHasTime
         }
         
+        // 4. 마감일: 빠른 마감일이 먼저
         let lDue = lhs.dueDateComponents?.date ?? .distantFuture
         let rDue = rhs.dueDateComponents?.date ?? .distantFuture
         if lDue != rDue {
             return lDue < rDue
         }
 
+        // 5. 제목: 알파벳 순
         return lhs.title < rhs.title
     }
 }
 
+// MARK: - 미리알림 매핑 관련
 extension EventKitRepository {
+    
     // MARK: - Reminder 매핑 함수
     static func mapReminder(_ rem: EKReminder) -> Reminder {
-        let hasTime = rem.dueDateComponents?.hour != nil || rem.dueDateComponents?.minute != nil
-        let due = hasTime ? rem.dueDateComponents?.date : nil
+        // 마감일 처리 로직 개선
+        let due: Date?
+        
+        if let dueDateComponents = rem.dueDateComponents {
+            // 시간이 설정된 경우와 날짜만 설정된 경우 구분
+            let hasTime = dueDateComponents.hour != nil || dueDateComponents.minute != nil
+            
+            if hasTime {
+                // 시간이 있는 경우 그대로 사용
+                due = dueDateComponents.date
+            } else {
+                // 날짜만 있는 경우 해당 날짜의 시작 시간으로 설정
+                if let originalDate = dueDateComponents.date {
+                    due = Calendar.current.startOfDay(for: originalDate)
+                } else {
+                    due = nil
+                }
+            }
+        } else {
+            due = nil
+        }
         
         return Reminder(
             id: rem.calendarItemIdentifier,
@@ -113,52 +148,52 @@ extension EventKitRepository {
     }
     
     // MARK: - 리마인더 캘린더 매핑
-     private static func mapReminderCalendar(_ ekCalendar: EKCalendar) -> ReminderCalendar {
-         let calendarType: ReminderCalendar.CalendarType
-         switch ekCalendar.type {
-         case .local:
-             calendarType = .local
-         case .calDAV:
-             calendarType = .calDAV
-         case .exchange:
-             calendarType = .exchange
-         case .subscription:
-             calendarType = .subscription
-         case .birthday:
-             calendarType = .birthday
-         @unknown default:
-             calendarType = .local
-         }
-         
-         let sourceType: ReminderCalendar.CalendarSource.SourceType
-         switch ekCalendar.source.sourceType {
-         case .local:
-             sourceType = .local
-         case .exchange:
-             sourceType = .exchange
-         case .calDAV:
-             sourceType = .calDAV
-         case .mobileMe:
-             sourceType = .mobileMe
-         case .subscribed:
-             sourceType = .subscribed
-         case .birthdays:
-             sourceType = .birthdays
-         @unknown default:
-             sourceType = .local
-         }
-         
-         return ReminderCalendar(
-             id: ekCalendar.calendarIdentifier,
-             title: ekCalendar.title,
-             color: ekCalendar.cgColor,
-             type: calendarType,
-             isReadOnly: !ekCalendar.allowsContentModifications,
-             allowsContentModifications: ekCalendar.allowsContentModifications,
-             source: ReminderCalendar.CalendarSource(
-                 title: ekCalendar.source.title,
-                 type: sourceType
-             )
-         )
-     }
+    static func mapReminderCalendar(_ ekCalendar: EKCalendar) -> ReminderCalendar {
+        let calendarType: ReminderCalendar.CalendarType
+        switch ekCalendar.type {
+        case .local:
+            calendarType = .local
+        case .calDAV:
+            calendarType = .calDAV
+        case .exchange:
+            calendarType = .exchange
+        case .subscription:
+            calendarType = .subscription
+        case .birthday:
+            calendarType = .birthday
+        @unknown default:
+            calendarType = .local
+        }
+        
+        let sourceType: ReminderCalendar.CalendarSource.SourceType
+        switch ekCalendar.source.sourceType {
+        case .local:
+            sourceType = .local
+        case .exchange:
+            sourceType = .exchange
+        case .calDAV:
+            sourceType = .calDAV
+        case .mobileMe:
+            sourceType = .mobileMe
+        case .subscribed:
+            sourceType = .subscribed
+        case .birthdays:
+            sourceType = .birthdays
+        @unknown default:
+            sourceType = .local
+        }
+        
+        return ReminderCalendar(
+            id: ekCalendar.calendarIdentifier,
+            title: ekCalendar.title,
+            color: ekCalendar.cgColor,
+            type: calendarType,
+            isReadOnly: !ekCalendar.allowsContentModifications,
+            allowsContentModifications: ekCalendar.allowsContentModifications,
+            source: ReminderCalendar.CalendarSource(
+                title: ekCalendar.source.title,
+                type: sourceType
+            )
+        )
+    }
 }

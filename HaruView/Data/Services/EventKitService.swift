@@ -35,27 +35,36 @@ final class EventKitService {
     
     // MARK: - 데이터 fetch
     func fetchEventsBetween(_ start: Date, _ end: Date) -> Result<[EKEvent], TodayBoardError> {
+        
         let predicate = store.predicateForEvents(withStart: start, end: end, calendars: nil)
-        return .success(store.events(matching: predicate))
+        let events = store.events(matching: predicate)
+        
+        return .success(events)
     }
     
     // MARK: 리마인더 조회 (완료+미완료 모두)
     func fetchRemindersBetween(_ start: Date, _ end: Date) async -> Result<[EKReminder], TodayBoardError> {
+        
         // Apple API: dueDateStarting=nil, ending=nil ⇒ 모든 dueDate & dueDate nil 포함
         let incPred = store.predicateForIncompleteReminders(withDueDateStarting: nil, ending: nil, calendars: nil)
         let cmpPred = store.predicateForCompletedReminders(withCompletionDateStarting: nil, ending: nil, calendars: nil)
 
         return await withCheckedContinuation { cont in
             var bucket: [EKReminder] = []
-            store.fetchReminders(matching: incPred) { inc in
-                bucket.append(contentsOf: inc ?? [])
-                self.store.fetchReminders(matching: cmpPred) { comp in
-                    bucket.append(contentsOf: comp ?? [])
-                    // 오늘과 겹치는지 after‑filter
+            
+            store.fetchReminders(matching: incPred) { incompleteReminders in
+                bucket.append(contentsOf: incompleteReminders ?? [])
+                
+                self.store.fetchReminders(matching: cmpPred) { completedReminders in
+                    bucket.append(contentsOf: completedReminders ?? [])
+                    // 조회 범위와 겹치는지 필터링
                     let filtered = bucket.filter { rem in
                         guard let due = rem.dueDateComponents?.date else { return true }
-                        return due >= start && due < end
+                        
+                        let isInRange = due >= start && due < end
+                        return isInRange
                     }
+                    
                     cont.resume(returning: .success(filtered))
                 }
             }
@@ -71,9 +80,6 @@ final class EventKitService {
     func getAvailableReminderCalendars() -> [EKCalendar] {
         return store.calendars(for: .reminder)
     }
-    
- 
-    
 
 }
 

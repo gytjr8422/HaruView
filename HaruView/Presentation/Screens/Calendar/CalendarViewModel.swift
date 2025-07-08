@@ -32,6 +32,7 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
     // MARK: - Published State
     @Published private(set) var state = CalendarState()
     @Published private(set) var hasInitialDataLoaded = false // 초기 데이터 로딩 완료 여부
+    @Published private(set) var isDataReady = false // 현재 월 데이터 준비 상태
     
     // MARK: - Computed Properties
     var currentMonthData: CalendarMonth? { state.currentMonthData }
@@ -48,10 +49,22 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
     private let addReminder: AddReminderUseCase
     private let deleteObject: DeleteObjectUseCase
     
+    // MARK: - EventKit Service
+    private let eventKitService: EventKitService
+    
     // MARK: - Tasks & Combine
     private var loadTask: Task<Void, Never>?
     private var preloadTask: Task<Void, Never>?
     private var cancellables = Set<AnyCancellable>()
+    
+    /// 현재 월 데이터가 완전히 준비되었는지 확인
+    var isCurrentMonthDataReady: Bool {
+        return isDataReady &&
+               !isLoading &&
+               currentMonthData != nil &&
+               error == nil
+    }
+ 
     
     // MARK: - Initialization
     init(
@@ -61,7 +74,8 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
         cacheManager: CalendarCacheUseCase,
         addEvent: AddEventUseCase,
         addReminder: AddReminderUseCase,
-        deleteObject: DeleteObjectUseCase
+        deleteObject: DeleteObjectUseCase,
+        eventKitService: EventKitService
     ) {
         self.fetchMonth = fetchMonth
         self.fetchDay = fetchDay
@@ -70,9 +84,12 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
         self.addEvent = addEvent
         self.addReminder = addReminder
         self.deleteObject = deleteObject
+        self.eventKitService = eventKitService
         
         // 초기 로드
         loadCurrentMonth()
+        
+        bindEventKitChanges()
         
         // 메모리 경고 시 캐시 정리
         setupMemoryWarningObserver()
@@ -121,34 +138,57 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
         loadCurrentMonth()
     }
     
+    private func bindEventKitChanges() {
+        eventKitService.changePublisher
+            .debounce(for: .milliseconds(500), scheduler: RunLoop.main) // 달력은 좀 더 길게 디바운스
+            .sink { [weak self] in
+                guard let self = self else { return }
+                
+                // 현재 월 캐시 무효화
+                let currentKey = self.state.currentCacheKey
+                self.state.cachedMonths.removeValue(forKey: currentKey)
+                
+                // 데이터 새로고침
+                self.loadCurrentMonth()
+                
+                // 위젯도 새로고침
+                WidgetRefreshService.shared.refreshWithDebounce()
+            }
+            .store(in: &cancellables)
+    }
+    
     // MARK: - Action Handler
     private func handle(_ action: CalendarAction) {
         switch action {
-        case .loadCurrentMonth:
-            loadMonthData(year: state.currentYear, month: state.currentMonth)
-            
         case .moveToMonth(let year, let month):
+            isDataReady = false // 월 변경 시 데이터 준비 상태 리셋
             state.moveToMonth(year: year, month: month)
             loadMonthData(year: year, month: month)
             
         case .moveToPreviousMonth:
+            isDataReady = false // 월 변경 시 데이터 준비 상태 리셋
             state.moveToPreviousMonth()
             loadMonthData(year: state.currentYear, month: state.currentMonth)
             
         case .moveToNextMonth:
+            isDataReady = false // 월 변경 시 데이터 준비 상태 리셋
             state.moveToNextMonth()
+            loadMonthData(year: state.currentYear, month: state.currentMonth)
+            
+        case .refresh:
+            isDataReady = false // 새로고침 시 데이터 준비 상태 리셋
+            clearCurrentMonthCache()
+            loadMonthData(year: state.currentYear, month: state.currentMonth, forceReload: true)
+            
+        // 다른 케이스들은 동일...
+        case .loadCurrentMonth:
             loadMonthData(year: state.currentYear, month: state.currentMonth)
             
         case .selectDate(let date):
             state.selectDate(date)
-            // 선택한 날짜가 다른 월이면 해당 월 로드
             if !state.isSelectedDateInCurrentMonth {
                 loadMonthData(year: state.currentYear, month: state.currentMonth)
             }
-            
-        case .refresh:
-            clearCurrentMonthCache()
-            loadMonthData(year: state.currentYear, month: state.currentMonth, forceReload: true)
             
         case .changeViewMode(let mode):
             state.viewMode = mode
@@ -160,42 +200,89 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
     
     // MARK: - Data Loading
     private func loadMonthData(year: Int, month: Int, forceReload: Bool = false) {
-        // 이미 로딩 중이면 취소
-        loadTask?.cancel()
+         // 이미 로딩 중이면 취소
+         loadTask?.cancel()
+         
+         // 데이터 준비 상태 리셋
+         isDataReady = false
+         
+         // 강제 리로드가 아니고 캐시가 있으면 사용
+         if !forceReload, let cachedMonth = state.getCachedMonth(year: year, month: month) {
+             state.currentMonthData = cachedMonth
+             state.error = nil
+             isDataReady = true
+             startPreloadAdjacentMonths()
+             return
+         }
+         
+         loadTask = Task {
+             state.isLoading = true
+             state.error = nil
+             
+             let result = await fetchMonth(year: year, month: month)
+             
+             guard !Task.isCancelled else { return }
+             
+             switch result {
+             case .success(let monthData):
+                 
+                 // 디버깅: 로드된 데이터의 상세 정보
+                 var totalEvents = 0
+                 var totalReminders = 0
+                 var daysWithData: [String] = []
+                 
+                 for day in monthData.days {
+                     let dayEvents = day.events.count
+                     let dayReminders = day.reminders.count
+                     totalEvents += dayEvents
+                     totalReminders += dayReminders
+                     
+                     if dayEvents > 0 || dayReminders > 0 {
+                         let formatter = DateFormatter()
+                         formatter.dateFormat = "MM/dd"
+                         daysWithData.append("\(formatter.string(from: day.date))(E:\(dayEvents),R:\(dayReminders))")
+                     }
+                 }
+                 
+                 state.currentMonthData = monthData
+                 state.setCachedMonth(monthData)
+                 state.error = nil
+                 hasInitialDataLoaded = true
+                 isDataReady = true
+                 
+                 // 인접 월 미리 로딩 시작
+                 startPreloadAdjacentMonths()
+                 
+             case .failure(let error):
+                 state.error = error
+                 isDataReady = false
+             }
+             
+             state.isLoading = false
+         }
+     }
+    
+    /// 특정 날짜의 데이터가 준비되었는지 확인
+    func isDateDataReady(for date: Date) -> Bool {
+        guard isCurrentMonthDataReady else { return false }
         
-        // 캐시에서 먼저 확인
-        if !forceReload, let cachedMonth = state.getCachedMonth(year: year, month: month) {
-            state.currentMonthData = cachedMonth
-            state.error = nil
-            startPreloadAdjacentMonths()
-            return
-        }
+        let calendar = Calendar.current
+        let dateComponents = calendar.dateComponents([.year, .month], from: date)
+        return dateComponents.year == state.currentYear &&
+               dateComponents.month == state.currentMonth
+    }
+    
+    // MARK: - 강제 새로고침 메서드
+    func forceRefresh() {
         
-        loadTask = Task {
-            state.isLoading = true
-            state.error = nil
-            
-            let result = await fetchMonth(year: year, month: month)
-            
-            guard !Task.isCancelled else { return }
-            
-            switch result {
-            case .success(let monthData):
-                state.currentMonthData = monthData
-                state.setCachedMonth(monthData)
-                state.error = nil
-                hasInitialDataLoaded = true // 데이터 로딩 완료 표시
-                
-                // 인접 월 미리 로딩 시작
-                startPreloadAdjacentMonths()
-                
-            case .failure(let error):
-                state.error = error
-                print("Failed to load calendar month: \(error)")
-            }
-            
-            state.isLoading = false
-        }
+        // 모든 캐시 삭제
+        state.cachedMonths.removeAll()
+        
+        // 데이터 준비 상태 리셋
+        isDataReady = false
+        
+        // 강제 리로드
+        loadMonthData(year: state.currentYear, month: state.currentMonth, forceReload: true)
     }
     
     // MARK: - Preloading

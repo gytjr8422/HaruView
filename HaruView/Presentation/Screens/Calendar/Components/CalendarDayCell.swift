@@ -64,9 +64,10 @@ struct CalendarDayCell: View {
                     )
             }
             .frame(height: 32)
+            .padding(.top, 2)
             
             // 일정 표시 바들 (최대 4개, 고정 높이)
-            VStack(spacing: 0) { // spacing을 0으로 변경
+            VStack(spacing: 2) { // spacing을 0으로 변경
                 ForEach(Array(displayItems.prefix(4).enumerated()), id: \.element.id) { index, item in
                     EventBar(
                         item: item,
@@ -134,6 +135,7 @@ struct CalendarDayCell: View {
                     Capsule()
                         .fill(Color(hexCode: "6E5C49").opacity(0.15))
                 )
+                .padding(.bottom, 2)
         }
     }
     
@@ -148,7 +150,7 @@ struct CalendarDayCell: View {
     }
 }
 
-// MARK: - 일정 표시 바 컴포넌트 (원래 크기 복원)
+// MARK: - 일정 표시 바 컴포넌트
 struct EventBar: View {
     let item: CalendarDisplayItem
     let isCompact: Bool
