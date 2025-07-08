@@ -158,9 +158,14 @@ struct EventBar: View {
     var body: some View {
         HStack(spacing: 2) {
             // 왼쪽 색상 인디케이터
-            Rectangle()
-                .fill(Color(item.color))
-                .frame(width: 2)
+            switch item {
+            case .event(_:):
+                Rectangle()
+                    .fill(Color(item.color))
+                    .frame(width: 2)
+            case .reminder(_):
+                EmptyView()
+            }
             
             // 제목 텍스트
             Text(item.title)
@@ -175,8 +180,8 @@ struct EventBar: View {
             
             Spacer(minLength: 0)
         }
-        .padding(.horizontal, 4)
-        .padding(.vertical, 2)
+        .padding(.horizontal, 2)
+        .padding(.vertical, 1)
         .background(
             RoundedRectangle(cornerRadius: 4, style: .continuous)
                 .fill(Color(item.color).opacity(0.1))

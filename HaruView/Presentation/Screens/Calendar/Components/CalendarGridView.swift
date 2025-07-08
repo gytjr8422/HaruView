@@ -35,7 +35,6 @@ struct CalendarGridView: View {
                 )
             }
         }
-        .padding(.horizontal, 16)
     }
     
     private func isDateSelected(_ date: Date) -> Bool {

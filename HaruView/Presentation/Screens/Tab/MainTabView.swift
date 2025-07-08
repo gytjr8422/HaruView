@@ -22,23 +22,27 @@ enum TabItem: CaseIterable, Identifiable {
     
     var title: String {
         switch self {
-        case .home: return String(localized: "홈")
+        case .home: return String(localized: "오늘")
         case .calendar: return String(localized: "달력")
         }
     }
     
     var iconName: String {
         switch self {
-        case .home: return "house"
+        case .home: return "\(currentDay).square"
         case .calendar: return "calendar"
         }
     }
     
     var selectedIconName: String {
         switch self {
-        case .home: return "house.fill"
+        case .home: return "\(currentDay).square.fill"
         case .calendar: return "calendar"
         }
+    }
+    
+    private var currentDay: Int {
+        Calendar.current.component(.day, from: Date())
     }
 }
 
@@ -136,7 +140,7 @@ struct TabBarButton: View {
                     
                     // 아이콘
                     Image(systemName: isSelected ? tab.selectedIconName : tab.iconName)
-                        .font(.system(size: 18, weight: isSelected ? .semibold : .medium))
+                        .font(.system(size: 24, weight: isSelected ? .semibold : .medium))
                         .foregroundStyle(
                             isSelected
                             ? Color(hexCode: "A76545")

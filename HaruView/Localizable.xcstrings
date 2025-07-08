@@ -1188,16 +1188,6 @@
         }
       }
     },
-    "이후 모든 이벤트" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All Future Events"
-          }
-        }
-      }
-    },
     "일" : {
       "localizations" : {
         "en" : {
@@ -1214,6 +1204,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Event time"
+          }
+        }
+      }
+    },
+    "이후 모든 이벤트" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All Future Events"
           }
         }
       }
@@ -1556,9 +1556,6 @@
           }
         }
       }
-    },
-    "홈" : {
-
     },
     "화요일" : {
       "localizations" : {
