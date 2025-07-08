@@ -64,7 +64,7 @@ extension EventKitRepository {
 // MARK: - 일정 매핑 관련
 extension EventKitRepository {
     // MARK: - 확장된 Event 매핑 함수
-    private static func mapEvent(_ ek: EKEvent) -> Event {
+    static func mapEvent(_ ek: EKEvent) -> Event {
         Event(
             id: ek.eventIdentifier,
             title: ek.title ?? "(제목 없음)",

@@ -171,3 +171,58 @@ private struct MockWeatherRepository: WeatherRepositoryProtocol {
         )
     }
 }
+
+// MARK: - 달력 관련
+extension DIContainer {
+    
+    /// 달력 월 데이터 조회 Use Case
+    func makeFetchCalendarMonthUseCase() -> FetchCalendarMonthUseCase {
+        FetchCalendarMonthUseCase(
+            eventRepo: eventKitRepository,
+            reminderRepo: eventKitRepository
+        )
+    }
+    
+    /// 달력 특정 날짜 상세 조회 Use Case
+    func makeFetchCalendarDayUseCase() -> FetchCalendarDayUseCase {
+        FetchCalendarDayUseCase(
+            eventRepo: eventKitRepository,
+            reminderRepo: eventKitRepository
+        )
+    }
+    
+    /// 달력 날짜 범위 조회 Use Case
+    func makeFetchEventsByDateRangeUseCase() -> FetchEventsByDateRangeUseCase {
+        FetchEventsByDateRangeUseCase(
+            eventRepo: eventKitRepository,
+            reminderRepo: eventKitRepository
+        )
+    }
+    
+    /// 달력 3개월 윈도우 조회 Use Case
+    func makeFetchCalendarWindowUseCase() -> FetchCalendarWindowUseCase {
+        FetchCalendarWindowUseCase(
+            eventRepo: eventKitRepository,
+            reminderRepo: eventKitRepository
+        )
+    }
+    
+    /// 달력 캐시 관리 Use Case
+    func makeCalendarCacheUseCase() -> CalendarCacheUseCase {
+        CalendarCacheUseCase(eventRepo: eventKitRepository)
+    }
+    
+    /// 달력 ViewModel 생성
+    @MainActor
+    func makeCalendarViewModel() -> CalendarViewModel {
+        CalendarViewModel(
+            fetchMonth: makeFetchCalendarMonthUseCase(),
+            fetchDay: makeFetchCalendarDayUseCase(),
+            fetchWindow: makeFetchCalendarWindowUseCase(),
+            cacheManager: makeCalendarCacheUseCase(),
+            addEvent: makeAddEventUseCase(),
+            addReminder: makeAddReminderUseCase(),
+            deleteObject: makeDeleteEventUseCase()
+        )
+    }
+}

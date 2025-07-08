@@ -49,7 +49,7 @@ extension EventKitRepository {
             .map(Self.mapReminderCalendar)
     }
     
-    private static func sortRule(lhs: EKReminder, rhs: EKReminder) -> Bool {
+    static func sortRule(lhs: EKReminder, rhs: EKReminder) -> Bool {
         if lhs.isCompleted != rhs.isCompleted {
             return !lhs.isCompleted
         }
@@ -80,7 +80,7 @@ extension EventKitRepository {
 
 extension EventKitRepository {
     // MARK: - Reminder 매핑 함수
-    private static func mapReminder(_ rem: EKReminder) -> Reminder {
+    static func mapReminder(_ rem: EKReminder) -> Reminder {
         let hasTime = rem.dueDateComponents?.hour != nil || rem.dueDateComponents?.minute != nil
         let due = hasTime ? rem.dueDateComponents?.date : nil
         
