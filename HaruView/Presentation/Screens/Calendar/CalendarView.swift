@@ -15,7 +15,8 @@ struct CalendarView: View {
     @State private var selectedDayForDetail: CalendarDay?
     @State private var showAddSheet = false
     @State private var quickAddDate: Date?
-    @State private var isDataReady = false
+    
+    @State private var showMonthYearPicker = false
     
     init() {
         _vm = StateObject(wrappedValue: DIContainer.shared.makeCalendarViewModel())
@@ -27,22 +28,73 @@ struct CalendarView: View {
                 Color(hexCode: "FFFCF5")
                     .ignoresSafeArea()
                 
-                if vm.isLoading && vm.currentMonthData == nil {
+                if vm.isLoading && vm.monthWindow.isEmpty {
                     loadingView
-                } else if let error = vm.error, vm.currentMonthData == nil {
+                } else if let error = vm.error, vm.monthWindow.isEmpty {
                     errorView(error)
-                } else if let monthData = vm.currentMonthData {
-                    calendarContent(monthData)
+                } else if !vm.monthWindow.isEmpty {
+                    calendarContent
                 } else {
                     emptyStateView
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                // 왼쪽: 이전 달 버튼
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            vm.moveToDirectPreviousMonth()
+                        }
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(Color(hexCode: "A76545"))
+                    }
+                }
+                
+                // 중앙: 월/년 + 오늘 버튼 (터치로 월/년 선택)
                 ToolbarItem(placement: .principal) {
-                    Text("달력")
-                        .font(.pretendardSemiBold(size: 18))
-                        .foregroundStyle(Color(hexCode: "40392B"))
+                    VStack(spacing: 2) {
+                        Button(action: {
+                            let impactFeedback = UIImpactFeedbackGenerator(style: .light)
+                            impactFeedback.impactOccurred()
+                            showMonthYearPicker = true
+                        }) {
+                            HStack(spacing: 4) {
+                                Text(vm.monthDisplayText)
+                                    .font(.pretendardSemiBold(size: 18))
+                                    .foregroundStyle(Color(hexCode: "40392B"))
+                                
+                                // 시각적 힌트 아이콘
+                                Image(systemName: "chevron.down")
+                                    .font(.system(size: 12, weight: .medium))
+                                    .foregroundStyle(Color(hexCode: "A76545").opacity(0.7))
+                            }
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        
+                        Button("오늘") {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                vm.moveToToday()
+                            }
+                        }
+                        .font(.pretendardRegular(size: 12))
+                        .foregroundStyle(Color(hexCode: "A76545"))
+                    }
+                }
+                
+                // 오른쪽: 다음 달 버튼
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            vm.moveToDirectNextMonth()
+                        }
+                    }) {
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(Color(hexCode: "A76545"))
+                    }
                 }
             }
         }
@@ -58,8 +110,18 @@ struct CalendarView: View {
                 }
             }
         }
+        .sheet(isPresented: $showMonthYearPicker) {
+            MonthYearPickerSheet(
+                currentYear: vm.state.currentYear,
+                currentMonth: vm.state.currentMonth,
+                onDateSelected: { year, month in
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        vm.moveToMonth(year: year, month: month)
+                    }
+                }
+            )
+        }
         .onChange(of: showDayDetail) { _, isShowing in
-            // Sheet가 닫힐 때 선택된 데이터 정리
             if !isShowing {
                 selectedDayForDetail = nil
             }
@@ -70,13 +132,11 @@ struct CalendarView: View {
             }
         }
         .onChange(of: phase) { _, newPhase in
-            // 앱이 다시 활성화될 때 새로고침 (다른 앱에서 일정 추가했을 수도 있음)
             if newPhase == .active {
                 vm.refresh()
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: .EKEventStoreChanged)) { _ in
-            // EventKit 변경 알림을 직접 받아서도 처리 (이중 보장)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 vm.forceRefresh()
             }
@@ -84,74 +144,63 @@ struct CalendarView: View {
     }
     
     @ViewBuilder
-     private func calendarContent(_ monthData: CalendarMonth) -> some View {
-         VStack(spacing: 0) {
-             CalendarHeaderView(
-                 monthDisplayText: vm.monthDisplayText,
-                 onPreviousMonth: {
-                     withAnimation(.easeInOut(duration: 0.3)) {
-                         vm.moveToPreviousMonth()
-                     }
-                 },
-                 onNextMonth: {
-                     withAnimation(.easeInOut(duration: 0.3)) {
-                         vm.moveToNextMonth()
-                     }
-                 },
-                 onToday: {
-                     withAnimation(.easeInOut(duration: 0.3)) {
-                         vm.moveToToday()
-                     }
-                 }
-             )
-             
-             WeekdayHeaderView()
-             
-             ScrollView {
-                 VStack(spacing: 0) {
-                     CalendarGridView(
-                         monthData: monthData,
-                         selectedDate: vm.selectedDate,
-                         onDateTap: { date in
-                             withAnimation(.easeInOut(duration: 0.2)) {
-                                 vm.selectDate(date)
-                             }
-                             
-                             // 즉시 체크하지 말고 약간의 지연 후 체크
-                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                 showDayDetailIfNeeded(for: date)
-                             }
-                         },
-                         onDateLongPress: { date in
-                             let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
-                             impactFeedback.impactOccurred()
-                             
-                             quickAddDate = date
-                             showAddSheet = true
-                         }
-                     )
-                     .transition(.opacity)
-                     
-                     Spacer(minLength: 20)
-                 }
-             }
-             .refreshable {
-                 vm.refresh()
-             }
-             
-             if vm.isLoading && vm.currentMonthData != nil {
-                 HStack {
-                     ProgressView()
-                         .scaleEffect(0.8)
-                     Text("업데이트 중...")
-                         .font(.pretendardRegular(size: 14))
-                         .foregroundStyle(.secondary)
-                 }
-                 .padding(.vertical, 8)
-                 .transition(.opacity)
-             }
-         }
-     }
+    private var calendarContent: some View {
+        VStack(spacing: 0) {
+            // 요일 헤더
+            WeekdayHeaderView()
+            
+            // PagedTabView로 3개월 표시
+            if vm.monthWindow.count >= 3 {
+                PagedTabView(
+                    currentIndex: $vm.currentWindowIndex,
+                    views: vm.monthWindow.map { monthData in
+                        MonthGridView(
+                            monthData: monthData,
+                            selectedDate: vm.selectedDate,
+                            isCurrentDisplayedMonth: monthData.year == vm.state.currentYear &&
+                                                   monthData.month == vm.state.currentMonth,
+                            onDateTap: { date in
+                                withAnimation(.easeInOut(duration: 0.2)) {
+                                    vm.selectDate(date)
+                                }
+                                
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                    showDayDetailIfNeeded(for: date)
+                                }
+                            },
+                            onDateLongPress: { date in
+                                let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
+                                impactFeedback.impactOccurred()
+                                
+                                quickAddDate = date
+                                showAddSheet = true
+                            }
+                        )
+                        .id("\(monthData.year)-\(monthData.month)")
+                    },
+                    onPageSettled: { index in
+                        vm.handlePageChange(to: index)
+                    }
+                )
+                .id(vm.monthWindow.map { "\($0.year)-\($0.month)" }.joined(separator: "_"))
+            } else {
+                ProgressView("달력 준비 중...")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+            
+            if vm.isLoading && !vm.monthWindow.isEmpty {
+                HStack {
+                    ProgressView()
+                        .scaleEffect(0.8)
+                    Text("업데이트 중...")
+                        .font(.pretendardRegular(size: 14))
+                        .foregroundStyle(.secondary)
+                }
+                .padding(.vertical, 8)
+                .transition(.opacity)
+            }
+        }
+    }
     
     private var loadingView: some View {
         VStack(spacing: 16) {
@@ -214,44 +263,247 @@ struct CalendarView: View {
     }
     
     private func showDayDetailIfNeeded(for date: Date) {
-        // 1. ViewModel의 데이터 준비 상태 확인
         guard vm.isCurrentMonthDataReady else {
-            print("데이터가 아직 준비되지 않음 - 로딩: \(vm.isLoading), 데이터 준비: \(vm.isDataReady)")
             return
         }
         
-        // 2. Sheet가 이미 열려있지 않은지 확인
         guard !showDayDetail else {
-            print("Sheet가 이미 열려있음")
             return
         }
         
-        // 3. 해당 날짜가 현재 월에 속하는지 확인
-        guard vm.isDateDataReady(for: date) else {
-            print("해당 날짜가 현재 월에 속하지 않거나 데이터가 준비되지 않음")
+        guard let calendarDay = findCalendarDay(for: date) else {
             return
         }
         
-        // 4. 월 데이터에서 해당 날짜 찾기
-        guard let monthData = vm.currentMonthData,
-              let calendarDay = monthData.day(for: date) else {
-            print("해당 날짜의 데이터를 찾을 수 없음: \(date)")
-            return
-        }
+        let totalCount = calendarDay.events.count + calendarDay.reminders.count
         
-        // 5. 실제 이벤트/리마인더 개수 확인
-        let eventCount = calendarDay.events.count
-        let reminderCount = calendarDay.reminders.count
-        let totalCount = eventCount + reminderCount
-        
-        // 6. 일정이 있을 때만 Sheet 표시
         if totalCount > 0 {
             selectedDayForDetail = calendarDay
             showDayDetail = true
         }
     }
+    
+    private func findCalendarDay(for date: Date) -> CalendarDay? {
+        for monthData in vm.monthWindow {
+            if let day = monthData.day(for: date) {
+                return day
+            }
+        }
+        return nil
+    }
 }
 
+
+// MARK: - 월/년 선택기 시트
+struct MonthYearPickerSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    
+    let currentYear: Int
+    let currentMonth: Int
+    let onDateSelected: (Int, Int) -> Void
+    
+    @State private var selectedYear: Int
+    @State private var selectedMonth: Int
+    
+    init(currentYear: Int, currentMonth: Int, onDateSelected: @escaping (Int, Int) -> Void) {
+        self.currentYear = currentYear
+        self.currentMonth = currentMonth
+        self.onDateSelected = onDateSelected
+        _selectedYear = State(initialValue: currentYear)
+        _selectedMonth = State(initialValue: currentMonth)
+    }
+    
+    private let years = Array(2020...2030)
+    private let months = Array(1...12)
+    
+    var body: some View {
+        NavigationStack {
+            VStack(spacing: 20) {
+                Text("이동할 월을 선택하세요")
+                    .font(.pretendardSemiBold(size: 18))
+                    .foregroundStyle(Color(hexCode: "40392B"))
+                    .padding(.top, 20)
+                
+                HStack(spacing: 20) {
+                    // 년도 선택
+                    VStack(spacing: 8) {
+                        Picker("년", selection: $selectedYear) {
+                            ForEach(years, id: \.self) { year in
+                                Text(String(year) + "년").tag(year)
+                            }
+                        }
+                        .pickerStyle(.wheel)
+                        .frame(height: 120)
+                    }
+                    
+                    // 월 선택
+                    VStack(spacing: 8) {
+                        Picker("월", selection: $selectedMonth) {
+                            ForEach(months, id: \.self) { month in
+                                Text(String(month) + "월").tag(month)
+                            }
+                        }
+                        .pickerStyle(.wheel)
+                        .frame(height: 120)
+                    }
+                }
+                .padding(.horizontal, 20)
+                
+                Spacer()
+            }
+            .background(Color(hexCode: "FFFCF5"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("취소") {
+                        dismiss()
+                    }
+                    .font(.pretendardRegular(size: 16))
+                    .foregroundStyle(Color(hexCode: "A76545"))
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("이동") {
+                        onDateSelected(selectedYear, selectedMonth)
+                        dismiss()
+                    }
+                    .font(.pretendardSemiBold(size: 16))
+                    .foregroundStyle(Color(hexCode: "A76545"))
+                }
+                
+                ToolbarItem(placement: .principal) {
+                    Text("년/월 선택")
+                        .font(.pretendardSemiBold(size: 17))
+                        .foregroundStyle(Color(hexCode: "40392B"))
+                }
+            }
+        }
+        .presentationDetents([.fraction(0.35)])
+        .presentationDragIndicator(.visible)
+    }
+}
+
+// MARK: - MonthGridView (개별 월 표시용)
+struct MonthGridView: View {
+    let monthData: CalendarMonth
+    let selectedDate: Date?
+    let isCurrentDisplayedMonth: Bool
+    let onDateTap: (Date) -> Void
+    let onDateLongPress: (Date) -> Void
+    
+    private let columns = Array(repeating: GridItem(.flexible(), spacing: 1), count: 7)
+    
+    var body: some View {
+        ScrollView(showsIndicators: false) {
+            VStack(spacing: 0) {
+                LazyVGrid(columns: columns, spacing: 2) {
+                    ForEach(monthData.calendarDates, id: \.self) { date in
+                        CalendarDayCell(
+                            date: date,
+                            calendarDay: monthData.day(for: date),
+                            isSelected: isDateSelected(date),
+                            isToday: Calendar.current.isDateInToday(date),
+                            isCurrentMonth: isDateInCurrentMonth(date),
+                            onTap: {
+                                onDateTap(date)
+                            },
+                            onLongPress: {
+                                onDateLongPress(date)
+                            }
+                        )
+                    }
+                }
+                .padding(.horizontal, 2)
+                .transition(.opacity)
+                
+                Spacer(minLength: 20)
+            }
+        }
+        .refreshable {
+            // 부모 뷰에서 전체 새로고침 처리
+        }
+    }
+    
+    private func isDateSelected(_ date: Date) -> Bool {
+        guard let selectedDate = selectedDate else { return false }
+        return Calendar.current.isDate(date, inSameDayAs: selectedDate)
+    }
+    
+    private func isDateInCurrentMonth(_ date: Date) -> Bool {
+        let calendar = Calendar.current
+        let dateComponents = calendar.dateComponents([.year, .month], from: date)
+        return dateComponents.year == monthData.year && dateComponents.month == monthData.month
+    }
+}
+
+// MARK: - 기존 Sheet들은 그대로 유지
+// DayDetailSheet, QuickAddSheet 등은 기존과 동일
+
+#Preview {
+    CalendarView()
+        .environment(\.di, .shared)
+}
+
+// OptimizedCalendarTabView 제거 - 불필요한 래퍼 컴포넌트
+
+// MARK: - 최적화된 달력 페이지 컴포넌트 (ProgressView 최소화)
+struct CalendarPageView: View {
+    let monthData: CalendarMonth?
+    let pageIndex: Int
+    let selectedDate: Date?
+    let onDateTap: (Date, Int) -> Void
+    let onDateLongPress: (Date) -> Void
+    
+    var body: some View {
+        ScrollView(.vertical, showsIndicators: false) {
+            VStack(spacing: 0) {
+                if let monthData = monthData {
+                    // 데이터가 있는 경우 (즉시 표시)
+                    CalendarGridView(
+                        monthData: monthData,
+                        selectedDate: selectedDate,
+                        onDateTap: { date in
+                            onDateTap(date, pageIndex)
+                        },
+                        onDateLongPress: onDateLongPress
+                    )
+                    .id("\(monthData.year)-\(monthData.month)")
+                    .padding(.horizontal, 20)
+                } else {
+                    // 로딩 상태 (최소화된 플레이스홀더)
+                    CalendarGridPlaceholder()
+                        .padding(.horizontal, 20)
+                }
+                
+                // 하단 여백 추가 (탭바와 겹치지 않도록)
+                Spacer(minLength: 100)
+            }
+        }
+    }
+}
+
+// MARK: - 가벼운 플레이스홀더 (ProgressView 대신)
+struct CalendarGridPlaceholder: View {
+    private let columns = Array(repeating: GridItem(.flexible(), spacing: 1), count: 7)
+    
+    var body: some View {
+        LazyVGrid(columns: columns, spacing: 2) {
+            // 6주 × 7일 = 42개 셀의 플레이스홀더
+            ForEach(0..<42, id: \.self) { index in
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(Color.gray.opacity(0.1))
+                    .frame(height: 108) // CalendarDayCell과 동일한 높이
+                    .overlay {
+                        if index == 21 { // 중앙에만 작은 인디케이터
+                            ProgressView()
+                                .scaleEffect(0.6)
+                                .opacity(0.5)
+                        }
+                    }
+            }
+        }
+    }
+}
 // MARK: - Day Detail Sheet
 struct DayDetailSheet: View {
     @Environment(\.dismiss) private var dismiss
@@ -610,4 +862,91 @@ struct QuickAddSheet: View {
 #Preview {
     CalendarView()
         .environment(\.di, .shared)
+}
+
+
+struct PagedTabView<Content: View>: UIViewControllerRepresentable {
+    @Binding var currentIndex: Int
+    let views: [Content]
+    let onPageSettled: (Int) -> Void
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(parent: self)
+    }
+
+    func makeUIViewController(context: Context) -> UIPageViewController {
+        let controller = UIPageViewController(
+            transitionStyle: .scroll,
+            navigationOrientation: .horizontal
+        )
+
+        controller.dataSource = context.coordinator
+        controller.delegate = context.coordinator
+
+        if let initialVC = context.coordinator.viewController(for: currentIndex) {
+            controller.setViewControllers([initialVC], direction: .forward, animated: false)
+        }
+
+        return controller
+    }
+
+    func updateUIViewController(_ uiViewController: UIPageViewController, context: Context) {
+        // 뷰가 변경되었으면 컨트롤러들을 새로 생성
+        context.coordinator.updateControllers(with: views)
+        
+        // 외부에서 currentIndex가 변경되었을 때만 업데이트
+        if let currentVC = uiViewController.viewControllers?.first,
+           let currentVCIndex = context.coordinator.controllers.firstIndex(of: currentVC),
+           currentVCIndex != currentIndex {
+            
+            if let newVC = context.coordinator.viewController(for: currentIndex) {
+                let direction: UIPageViewController.NavigationDirection = currentIndex > currentVCIndex ? .forward : .reverse
+                uiViewController.setViewControllers([newVC], direction: direction, animated: true)
+            }
+        } else if let newVC = context.coordinator.viewController(for: currentIndex) {
+            // 같은 인덱스라도 내용이 바뀌었을 수 있으므로 업데이트
+            uiViewController.setViewControllers([newVC], direction: .forward, animated: false)
+        }
+    }
+
+    class Coordinator: NSObject, UIPageViewControllerDataSource, UIPageViewControllerDelegate {
+        var parent: PagedTabView
+        private(set) var controllers: [UIViewController]
+
+        init(parent: PagedTabView) {
+            self.parent = parent
+            self.controllers = parent.views.map { UIHostingController(rootView: $0) }
+        }
+        
+        // 뷰 컨트롤러들을 업데이트할 수 있는 메서드 추가
+        func updateControllers(with views: [Content]) {
+            controllers = views.map { UIHostingController(rootView: $0) }
+        }
+
+        func viewController(for index: Int) -> UIViewController? {
+            guard index >= 0 && index < controllers.count else { return nil }
+            return controllers[index]
+        }
+
+        func presentationCount(for _: UIPageViewController) -> Int { controllers.count }
+        func presentationIndex(for _: UIPageViewController) -> Int { parent.currentIndex }
+
+        func pageViewController(_: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
+            guard let index = controllers.firstIndex(of: viewController), index > 0 else { return nil }
+            return controllers[index - 1]
+        }
+
+        func pageViewController(_: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+            guard let index = controllers.firstIndex(of: viewController), index < controllers.count - 1 else { return nil }
+            return controllers[index + 1]
+        }
+
+        func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating _: Bool, previousViewControllers _: [UIViewController], transitionCompleted completed: Bool) {
+            if completed, let visibleVC = pageViewController.viewControllers?.first,
+               let newIndex = controllers.firstIndex(of: visibleVC) {
+                parent.currentIndex = newIndex
+                parent.onPageSettled(newIndex) // 손을 떼고 이동이 확정된 순간 호출
+            }
+        }
+    }
 }

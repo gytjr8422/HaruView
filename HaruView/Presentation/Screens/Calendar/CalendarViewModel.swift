@@ -16,6 +16,11 @@ protocol CalendarViewModelProtocol: ObservableObject {
     var error: TodayBoardError? { get }
     var selectedDate: Date? { get }
     
+    // 3개월 윈도우 관련
+    var monthWindow: [CalendarMonth] { get }
+    var currentWindowIndex: Int { get }
+    var isCurrentMonthDataReady: Bool { get }
+    
     func loadCurrentMonth()
     func moveToMonth(year: Int, month: Int)
     func moveToPreviousMonth()
@@ -23,6 +28,13 @@ protocol CalendarViewModelProtocol: ObservableObject {
     func selectDate(_ date: Date)
     func refresh()
     func moveToToday()
+    
+    // PagedTabView 관련
+    func handlePageChange(to index: Int)
+    func moveToDirectPreviousMonth()
+    func moveToDirectNextMonth()
+    func forceRefresh()
+    func isDateDataReady(for date: Date) -> Bool
 }
 
 // MARK: - CalendarViewModel Implementation
@@ -31,14 +43,39 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
     
     // MARK: - Published State
     @Published private(set) var state = CalendarState()
-    @Published private(set) var hasInitialDataLoaded = false // 초기 데이터 로딩 완료 여부
-    @Published private(set) var isDataReady = false // 현재 월 데이터 준비 상태
+    @Published private(set) var hasInitialDataLoaded = false
+    @Published private(set) var isDataReady = false
+    
+    // 3개월 윈도우 관리
+    @Published private(set) var monthWindow: [CalendarMonth] = []
+    @Published var currentWindowIndex = 1 // 중간이 현재 월
     
     // MARK: - Computed Properties
     var currentMonthData: CalendarMonth? { state.currentMonthData }
     var isLoading: Bool { state.isLoading }
     var error: TodayBoardError? { state.error }
     var selectedDate: Date? { state.selectedDate }
+    
+    // 3개월 윈도우 관련 프로퍼티
+    var previousMonth: CalendarMonth? {
+        monthWindow.indices.contains(0) ? monthWindow[0] : nil
+    }
+    
+    var currentMonth: CalendarMonth? {
+        monthWindow.indices.contains(1) ? monthWindow[1] : nil
+    }
+    
+    var nextMonth: CalendarMonth? {
+        monthWindow.indices.contains(2) ? monthWindow[2] : nil
+    }
+    
+    /// 현재 월 데이터가 완전히 준비되었는지 확인
+    var isCurrentMonthDataReady: Bool {
+        return isDataReady &&
+               !isLoading &&
+               !monthWindow.isEmpty &&
+               error == nil
+    }
     
     // MARK: - Use Cases
     private let fetchMonth: FetchCalendarMonthUseCase
@@ -56,15 +93,6 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
     private var loadTask: Task<Void, Never>?
     private var preloadTask: Task<Void, Never>?
     private var cancellables = Set<AnyCancellable>()
-    
-    /// 현재 월 데이터가 완전히 준비되었는지 확인
-    var isCurrentMonthDataReady: Bool {
-        return isDataReady &&
-               !isLoading &&
-               currentMonthData != nil &&
-               error == nil
-    }
- 
     
     // MARK: - Initialization
     init(
@@ -102,7 +130,7 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
     
     // MARK: - Public Methods
     
-    /// 현재 월 데이터 로드
+    /// 현재 월 데이터 로드 (3개월 윈도우)
     func loadCurrentMonth() {
         handle(.loadCurrentMonth)
     }
@@ -112,12 +140,12 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
         handle(.moveToMonth(year: year, month: month))
     }
     
-    /// 이전 달로 이동
+    /// 이전 달로 이동 (기본 구현 - PagedTabView에서 주로 처리)
     func moveToPreviousMonth() {
         handle(.moveToPreviousMonth)
     }
     
-    /// 다음 달로 이동
+    /// 다음 달로 이동 (기본 구현 - PagedTabView에서 주로 처리)
     func moveToNextMonth() {
         handle(.moveToNextMonth)
     }
@@ -135,12 +163,89 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
     /// 오늘로 이동
     func moveToToday() {
         state.moveToToday()
-        loadCurrentMonth()
+        loadMonthWindow()
     }
+    
+    // MARK: - PagedTabView 관련 메서드
+    
+    /// 페이지 변경 처리
+    func handlePageChange(to index: Int) {
+        guard index >= 0 && index < monthWindow.count else { return }
+        
+        currentWindowIndex = index
+        let selectedMonth = monthWindow[index]
+        
+        // 상태 업데이트
+        state.currentYear = selectedMonth.year
+        state.currentMonth = selectedMonth.month
+        state.currentMonthData = selectedMonth
+        isDataReady = true
+        
+        // 경계에 도달하면 새로운 윈도우 로드
+        if index == 0 {
+            loadNewWindow(direction: .previous)
+        } else if index == monthWindow.count - 1 {
+            loadNewWindow(direction: .next)
+        }
+    }
+    
+    /// 헤더 버튼용 직접 이전 달 이동
+    func moveToDirectPreviousMonth() {
+        if currentWindowIndex > 0 {
+            currentWindowIndex -= 1
+            handlePageChange(to: currentWindowIndex)
+        } else {
+            state.moveToPreviousMonth()
+            loadMonthWindow()
+        }
+    }
+    
+    /// 헤더 버튼용 직접 다음 달 이동
+    func moveToDirectNextMonth() {
+        if currentWindowIndex < monthWindow.count - 1 {
+            currentWindowIndex += 1
+            handlePageChange(to: currentWindowIndex)
+        } else {
+            state.moveToNextMonth()
+            loadMonthWindow()
+        }
+    }
+    
+    /// 강제 새로고침
+    func forceRefresh() {
+        // 모든 캐시 삭제
+        state.cachedMonths.removeAll()
+        monthWindow.removeAll()
+        
+        // 데이터 준비 상태 리셋
+        isDataReady = false
+        
+        // 강제 리로드
+        loadMonthWindow()
+    }
+    
+    /// 특정 날짜의 데이터가 준비되었는지 확인
+    func isDateDataReady(for date: Date) -> Bool {
+        guard isCurrentMonthDataReady else { return false }
+        
+        // 3개월 윈도우에서 해당 날짜 확인
+        for monthData in monthWindow {
+            let calendar = Calendar.current
+            let dateComponents = calendar.dateComponents([.year, .month], from: date)
+            if dateComponents.year == monthData.year &&
+               dateComponents.month == monthData.month {
+                return true
+            }
+        }
+        
+        return false
+    }
+    
+    // MARK: - Private Methods
     
     private func bindEventKitChanges() {
         eventKitService.changePublisher
-            .debounce(for: .milliseconds(500), scheduler: RunLoop.main) // 달력은 좀 더 길게 디바운스
+            .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
             .sink { [weak self] in
                 guard let self = self else { return }
                 
@@ -148,8 +253,9 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
                 let currentKey = self.state.currentCacheKey
                 self.state.cachedMonths.removeValue(forKey: currentKey)
                 
-                // 데이터 새로고침
-                self.loadCurrentMonth()
+                // 윈도우 초기화 후 데이터 새로고침
+                self.monthWindow.removeAll()
+                self.loadMonthWindow()
                 
                 // 위젯도 새로고침
                 WidgetRefreshService.shared.refreshWithDebounce()
@@ -161,33 +267,36 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
     private func handle(_ action: CalendarAction) {
         switch action {
         case .moveToMonth(let year, let month):
-            isDataReady = false // 월 변경 시 데이터 준비 상태 리셋
+            isDataReady = false
             state.moveToMonth(year: year, month: month)
-            loadMonthData(year: year, month: month)
+            loadMonthWindow()
             
         case .moveToPreviousMonth:
-            isDataReady = false // 월 변경 시 데이터 준비 상태 리셋
+            isDataReady = false
             state.moveToPreviousMonth()
-            loadMonthData(year: state.currentYear, month: state.currentMonth)
+            loadMonthWindow()
             
         case .moveToNextMonth:
-            isDataReady = false // 월 변경 시 데이터 준비 상태 리셋
+            isDataReady = false
             state.moveToNextMonth()
-            loadMonthData(year: state.currentYear, month: state.currentMonth)
+            loadMonthWindow()
             
         case .refresh:
-            isDataReady = false // 새로고침 시 데이터 준비 상태 리셋
+            isDataReady = false
             clearCurrentMonthCache()
-            loadMonthData(year: state.currentYear, month: state.currentMonth, forceReload: true)
+            loadMonthWindow()
             
-        // 다른 케이스들은 동일...
         case .loadCurrentMonth:
-            loadMonthData(year: state.currentYear, month: state.currentMonth)
+            loadMonthWindow()
             
         case .selectDate(let date):
             state.selectDate(date)
             if !state.isSelectedDateInCurrentMonth {
-                loadMonthData(year: state.currentYear, month: state.currentMonth)
+                // 선택된 날짜가 현재 월이 아니면 해당 월로 이동
+                let components = Calendar.current.dateComponents([.year, .month], from: date)
+                if let year = components.year, let month = components.month {
+                    moveToMonth(year: year, month: month)
+                }
             }
             
         case .changeViewMode(let mode):
@@ -198,91 +307,101 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
         }
     }
     
-    // MARK: - Data Loading
-    private func loadMonthData(year: Int, month: Int, forceReload: Bool = false) {
-         // 이미 로딩 중이면 취소
-         loadTask?.cancel()
-         
-         // 데이터 준비 상태 리셋
-         isDataReady = false
-         
-         // 강제 리로드가 아니고 캐시가 있으면 사용
-         if !forceReload, let cachedMonth = state.getCachedMonth(year: year, month: month) {
-             state.currentMonthData = cachedMonth
-             state.error = nil
-             isDataReady = true
-             startPreloadAdjacentMonths()
-             return
-         }
-         
-         loadTask = Task {
-             state.isLoading = true
-             state.error = nil
-             
-             let result = await fetchMonth(year: year, month: month)
-             
-             guard !Task.isCancelled else { return }
-             
-             switch result {
-             case .success(let monthData):
-                 
-                 // 디버깅: 로드된 데이터의 상세 정보
-                 var totalEvents = 0
-                 var totalReminders = 0
-                 var daysWithData: [String] = []
-                 
-                 for day in monthData.days {
-                     let dayEvents = day.events.count
-                     let dayReminders = day.reminders.count
-                     totalEvents += dayEvents
-                     totalReminders += dayReminders
-                     
-                     if dayEvents > 0 || dayReminders > 0 {
-                         let formatter = DateFormatter()
-                         formatter.dateFormat = "MM/dd"
-                         daysWithData.append("\(formatter.string(from: day.date))(E:\(dayEvents),R:\(dayReminders))")
-                     }
-                 }
-                 
-                 state.currentMonthData = monthData
-                 state.setCachedMonth(monthData)
-                 state.error = nil
-                 hasInitialDataLoaded = true
-                 isDataReady = true
-                 
-                 // 인접 월 미리 로딩 시작
-                 startPreloadAdjacentMonths()
-                 
-             case .failure(let error):
-                 state.error = error
-                 isDataReady = false
-             }
-             
-             state.isLoading = false
-         }
-     }
-    
-    /// 특정 날짜의 데이터가 준비되었는지 확인
-    func isDateDataReady(for date: Date) -> Bool {
-        guard isCurrentMonthDataReady else { return false }
+    // MARK: - 3개월 윈도우 로딩
+    private func loadMonthWindow() {
+        loadTask?.cancel()
         
-        let calendar = Calendar.current
-        let dateComponents = calendar.dateComponents([.year, .month], from: date)
-        return dateComponents.year == state.currentYear &&
-               dateComponents.month == state.currentMonth
-    }
-    
-    // MARK: - 강제 새로고침 메서드
-    func forceRefresh() {
-        
-        // 모든 캐시 삭제
-        state.cachedMonths.removeAll()
-        
-        // 데이터 준비 상태 리셋
         isDataReady = false
         
-        // 강제 리로드
-        loadMonthData(year: state.currentYear, month: state.currentMonth, forceReload: true)
+        loadTask = Task {
+            state.isLoading = true
+            state.error = nil
+            
+            let centerDate = state.currentMonthFirstDay
+            let result = await fetchWindow(centerMonth: centerDate)
+            
+            guard !Task.isCancelled else { return }
+            
+            switch result {
+            case .success(let months):
+                monthWindow = months
+                currentWindowIndex = 1 // 중간이 현재 월
+                
+                // 현재 월 데이터도 업데이트 (중간이 현재 월)
+                if months.count >= 2 {
+                    let currentMonth = months[1]
+                    state.currentMonthData = currentMonth
+                    state.setCachedMonth(currentMonth)
+                    
+                    // 상태도 업데이트
+                    state.currentYear = currentMonth.year
+                    state.currentMonth = currentMonth.month
+                }
+                
+                // 모든 월을 캐시에 저장
+                for month in months {
+                    state.setCachedMonth(month)
+                }
+                
+                state.error = nil
+                hasInitialDataLoaded = true
+                isDataReady = true
+                
+                // 인접 월 미리 로딩 시작
+                startPreloadAdjacentMonths()
+                
+            case .failure(let error):
+                state.error = error
+                isDataReady = false
+            }
+            
+            state.isLoading = false
+        }
+    }
+    
+    // MARK: - 윈도우 방향
+    private enum WindowDirection {
+        case previous, next
+    }
+    
+    private func loadNewWindow(direction: WindowDirection) {
+        Task {
+            let newCenterDate: Date
+            
+            switch direction {
+            case .previous:
+                // 현재 이전 달을 새로운 중심으로
+                newCenterDate = monthWindow[0].firstDay
+            case .next:
+                // 현재 다음 달을 새로운 중심으로
+                newCenterDate = monthWindow[2].firstDay
+            }
+            
+            let result = await fetchWindow(centerMonth: newCenterDate)
+            
+            guard !Task.isCancelled else { return }
+            
+            if case .success(let newMonths) = result {
+                await MainActor.run {
+                    
+                    monthWindow = newMonths
+                    currentWindowIndex = 1 // 다시 중간으로
+                    
+                    // 캐시 업데이트
+                    for month in newMonths {
+                        state.setCachedMonth(month)
+                    }
+                    
+                    // 현재 월 업데이트
+                    if newMonths.count >= 2 {
+                        let currentMonth = newMonths[1]
+                        state.currentYear = currentMonth.year
+                        state.currentMonth = currentMonth.month
+                        state.currentMonthData = currentMonth
+                    }
+                }
+            }
+        }
     }
     
     // MARK: - Preloading
@@ -350,7 +469,19 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
     
     /// 특정 날짜의 CalendarDay 조회
     func getCalendarDay(for date: Date) -> CalendarDay? {
-        return state.currentMonthData?.day(for: date)
+        // 먼저 현재 월에서 찾기
+        if let day = state.currentMonthData?.day(for: date) {
+            return day
+        }
+        
+        // 3개월 윈도우에서 찾기
+        for monthData in monthWindow {
+            if let day = monthData.day(for: date) {
+                return day
+            }
+        }
+        
+        return nil
     }
     
     /// 현재 월의 모든 날짜 (6주 그리드)
@@ -365,7 +496,6 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
     
     /// 날짜 선택 가능 여부 확인
     func canSelectDate(_ date: Date) -> Bool {
-        // 과거 제한이 있다면 여기서 처리
         return true
     }
     
@@ -402,7 +532,6 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
         
         let result = await addEvent(input)
         if case .success = result {
-            // 성공 시 해당 월 새로고침
             refresh()
         }
     }
@@ -423,7 +552,6 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
         
         let result = await addReminder(input)
         if case .success = result {
-            // 성공 시 해당 월 새로고침
             refresh()
         }
     }
@@ -441,15 +569,29 @@ extension CalendarViewModel {
         print("Is Loading: \(isLoading)")
         print("Error: \(error?.description ?? "nil")")
         print("Cached Months: \(state.cachedMonths.keys.sorted())")
-        print("Current Month Data: \(currentMonthData != nil ? "Available" : "nil")")
+        print("Month Window: \(monthWindow.map { "\($0.year)/\($0.month)" })")
+        print("Current Window Index: \(currentWindowIndex)")
+        print("Is Data Ready: \(isDataReady)")
         print("=====================")
     }
     
     /// 테스트용 더미 데이터 로드
     func loadDummyData() {
-        let dummyMonth = CalendarMonth(year: state.currentYear, month: state.currentMonth, days: [])
-        state.currentMonthData = dummyMonth
-        state.setCachedMonth(dummyMonth)
+        let dummyMonths = [
+            CalendarMonth(year: state.currentYear, month: state.currentMonth == 1 ? 12 : state.currentMonth - 1, days: []),
+            CalendarMonth(year: state.currentYear, month: state.currentMonth, days: []),
+            CalendarMonth(year: state.currentYear, month: state.currentMonth == 12 ? 1 : state.currentMonth + 1, days: [])
+        ]
+        
+        monthWindow = dummyMonths
+        currentWindowIndex = 1
+        state.currentMonthData = dummyMonths[1]
+        
+        for month in dummyMonths {
+            state.setCachedMonth(month)
+        }
+        
+        isDataReady = true
     }
 }
 #endif
