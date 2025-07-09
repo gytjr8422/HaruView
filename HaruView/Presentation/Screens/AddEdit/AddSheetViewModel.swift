@@ -121,7 +121,6 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
         switch mode {
         case .event:
             return !currentTitle.isEmpty ||
-                   startDate > Date() ||
                    !location.isEmpty ||
                    !notes.isEmpty ||
                    !url.isEmpty ||

@@ -226,4 +226,18 @@ extension DIContainer {
             eventKitService: eventKitService
         )
     }
+    
+    
+    @MainActor
+    func makeAddSheetVMWithDate(_ date: Date) -> AddSheetViewModel {
+        let vm = makeAddSheetVM()
+        
+        // 선택된 날짜로 미리 설정
+        let calendar = Calendar.current
+        vm.startDate = calendar.date(bySettingHour: 9, minute: 0, second: 0, of: date) ?? date
+        vm.endDate = calendar.date(byAdding: .hour, value: 1, to: vm.startDate) ?? vm.startDate
+        vm.dueDate = date
+        
+        return vm
+    }
 }

@@ -442,6 +442,7 @@
       }
     },
     "날짜는 이틀 후까지만 선택 가능합니다." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -473,6 +474,7 @@
       }
     },
     "내일/모레 일정은 홈에서 보이지 않아요!" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -483,6 +485,7 @@
       }
     },
     "내일/모레 할 일은 홈에서 보이지 않아요!" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1187,6 +1190,26 @@
         }
       }
     },
+    "이벤트 시간" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Event time"
+          }
+        }
+      }
+    },
+    "이후 모든 이벤트" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All Future Events"
+          }
+        }
+      }
+    },
     "일" : {
       "localizations" : {
         "en" : {
@@ -1209,26 +1232,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "email"
-          }
-        }
-      }
-    },
-    "이벤트 시간" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Event time"
-          }
-        }
-      }
-    },
-    "이후 모든 이벤트" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All Future Events"
           }
         }
       }

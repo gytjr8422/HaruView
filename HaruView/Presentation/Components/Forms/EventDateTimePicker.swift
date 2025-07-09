@@ -15,8 +15,9 @@ struct EventDateTimePicker: View {
     
     @State private var selectedField: DateTimeField? = nil
     
-    var minDate: Date
-    var maxDate: Date
+    // 과거 날짜도 허용
+    var minDate: Date { Date.distantPast } // 또는 적절한 과거 날짜
+    var maxDate: Date { Date.distantFuture } // 또는 적절한 미래 날짜
     
     enum DateTimeField {
         case start, end
@@ -628,9 +629,7 @@ struct CustomTimePicker: UIViewRepresentable {
                             startDate: $startDate,
                             endDate: $endDate,
                             isAllDay: $isAllDay,
-                            isTextFieldFocused: $isFocused,
-                            minDate: Calendar.current.startOfDay(for: Date()),
-                            maxDate: Calendar.current.date(byAdding: .day, value: 2, to: Date()) ?? Date()
+                            isTextFieldFocused: $isFocused
                         )
                         
                         Spacer(minLength: 100)

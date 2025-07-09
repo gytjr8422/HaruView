@@ -105,7 +105,7 @@ struct CalendarView: View {
         }
         .sheet(isPresented: $showAddSheet) {
             if let date = quickAddDate {
-                QuickAddSheet(date: date) {
+                AddSheet(vm: di.makeAddSheetVMWithDate(date)) {
                     vm.refresh()
                 }
             }
