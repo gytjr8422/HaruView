@@ -50,6 +50,5 @@ struct EventDetailRow: View {
             RoundedRectangle(cornerRadius: 8)
                 .fill(Color(event.calendarColor).opacity(0.1))
         )
-        .padding(.horizontal, 20)
     }
 }

@@ -18,6 +18,9 @@ struct CalendarView: View {
     
     @State private var showMonthYearPicker = false
     
+    // 편집 후 새로고침을 위한 상태
+    @State private var pendingDetailDate: Date?
+    
     init() {
         _vm = StateObject(wrappedValue: DIContainer.shared.makeCalendarViewModel())
     }
@@ -99,17 +102,9 @@ struct CalendarView: View {
             }
         }
         .sheet(isPresented: $showDayDetail) {
-            // 수정된 부분: 데이터 유효성을 다시 한 번 확인
-            if let dayData = selectedDayForDetail,
-               dayData.hasItems {
-                DayDetailSheet(calendarDay: dayData)
-            } else {
-                // 빈 시트 방지: 데이터가 없으면 즉시 닫기
-                EmptyView()
-                    .onAppear {
-                        showDayDetail = false
-                        selectedDayForDetail = nil
-                    }
+            // 날짜만 전달하고 DayDetailSheet에서 자체적으로 데이터 관리
+            if let dayData = selectedDayForDetail {
+                DayDetailSheet(initialDate: dayData.date)
             }
         }
         .sheet(isPresented: $showAddSheet) {
@@ -325,8 +320,38 @@ struct CalendarView: View {
         
         return nil
     }
+    
+    // MARK: - 편집 후 새로고침 처리
+    
+    /// 편집 완료 후 데이터 변경 처리
+    private func handleDataChangedInDetail() {
+        // 현재 선택된 날짜 저장
+        if let currentDay = selectedDayForDetail {
+            pendingDetailDate = currentDay.date
+        }
+        
+        // 시트 닫기
+        showDayDetail = false
+        selectedDayForDetail = nil
+        
+        // 데이터 새로고침
+        vm.forceRefresh()
+    }
+    
+    /// 새로고침 후 DayDetail 다시 열기
+    private func reopenDayDetail(for date: Date) {
+        guard let updatedCalendarDay = findCalendarDay(for: date),
+              updatedCalendarDay.hasItems else {
+            pendingDetailDate = nil
+            return
+        }
+        
+        // 업데이트된 데이터로 다시 시트 열기
+        selectedDayForDetail = updatedCalendarDay
+        showDayDetail = true
+        pendingDetailDate = nil
+    }
 }
-
 #Preview {
     CalendarView()
         .environment(\.di, .shared)

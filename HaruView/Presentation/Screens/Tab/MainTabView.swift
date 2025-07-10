@@ -131,7 +131,7 @@ struct TabBarButton: View {
                     if isSelected {
                         RoundedRectangle(cornerRadius: 12, style: .continuous)
                             .fill(Color(hexCode: "A76545").opacity(0.15))
-                            .frame(width: 100, height: 40)
+                            .frame(width: 60, height: 40)
                             .matchedGeometryEffect(
                                 id: "selectedBackground",
                                 in: namespace
