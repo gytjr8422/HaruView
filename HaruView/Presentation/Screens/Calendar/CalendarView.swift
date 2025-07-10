@@ -558,8 +558,6 @@ struct DayDetailSheet: View {
             if isDataValid && (calendarDay.hasItems || !localReminders.isEmpty) {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 16) {
-                        headerView
-                        
                         if !calendarDay.events.isEmpty {
                             eventSection
                         }
@@ -580,6 +578,10 @@ struct DayDetailSheet: View {
                         }
                         .font(.pretendardRegular(size: 16))
                         .foregroundStyle(Color(hexCode: "A76545"))
+                    }
+                    
+                    ToolbarItem(placement: .topBarLeading) {
+                        headerView
                     }
                 }
             } else {
@@ -609,9 +611,8 @@ struct DayDetailSheet: View {
     // MARK: - Header
     private var headerView: some View {
         Text(dateFormatter.string(from: calendarDay.date))
-            .font(.pretendardBold(size: 20))
-            .foregroundStyle(Color(hexCode: "40392B"))
-            .padding(.horizontal, 20)
+            .font(Locale.current.language.languageCode?.identifier == "ko" ? .museumMedium(size: 19) : .robotoSerifBold(size: 19))
+            .padding(.leading, 3)
             .padding(.top, 10)
     }
     
@@ -619,10 +620,10 @@ struct DayDetailSheet: View {
     private var eventSection: some View {
         VStack(alignment: .leading) {
             Text("일정")
-                .font(.pretendardSemiBold(size: 18))
-                .foregroundStyle(Color(hexCode: "40392B"))
+                .font(.pretendardSemiBold(size: 17))
+                .foregroundStyle(.secondary)
                 .padding(.horizontal, 20)
-                .padding(.vertical, 12)
+                .padding(.bottom, 6)
             
             ForEach(calendarDay.events, id: \.id) { event in
                 EventDetailRow(event: event)
@@ -630,12 +631,14 @@ struct DayDetailSheet: View {
         }
     }
     
+    
+    
     // MARK: - Reminder Section with Toggle
     private var reminderSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("할일")
-                .font(.pretendardSemiBold(size: 18))
-                .foregroundStyle(Color(hexCode: "40392B"))
+            Text("할 일")
+                .font(.pretendardSemiBold(size: 17))
+                .foregroundStyle(.secondary)
                 .padding(.horizontal, 20)
             
             // HomeView와 동일한 스타일의 컨테이너
