@@ -44,6 +44,8 @@ struct DeleteObjectUseCase {
         case reminder(String)
         // 새로운 케이스 추가: span 옵션 포함
         case eventWithSpan(String, EventDeletionSpan)
+        // 날짜 기반 반복 일정 삭제 케이스 추가
+        case recurringEventInstance(eventId: String, targetDate: Date, span: EventDeletionSpan)
     }
     
     private let events: EventRepositoryProtocol
@@ -62,6 +64,17 @@ struct DeleteObjectUseCase {
             return await reminders.deleteReminder(id: id)
         case .eventWithSpan(let id, let span):
             return await events.deleteEvent(id: id, span: span)
+        case .recurringEventInstance(let eventId, let targetDate, let span):
+            if let eventKitRepo = events as? EventKitRepository {
+                return eventKitRepo.deleteRecurringEventInstance(
+                    eventId: eventId,
+                    targetDate: targetDate,
+                    span: span
+                )
+            } else {
+                // Fallback: 기본 삭제
+                return await events.deleteEvent(id: eventId, span: span)
+            }
         }
     }
 }

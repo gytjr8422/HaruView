@@ -72,6 +72,19 @@ extension EventKitRepository {
         return service.deleteEvent(id: id, span: span)
     }
     
+    func deleteRecurringEventInstance(
+        eventId: String,
+        targetDate: Date,
+        span: EventDeletionSpan
+    ) -> Result<Void, TodayBoardError> {
+        
+        return service.deleteRecurringEventInstance(
+            eventId: eventId,
+            targetDate: targetDate,
+            span: span
+        )
+    }
+    
     /// 종료된 일정은 뒤, 그 외는 시작 시각 오름차순
     private func eventSortRule(_ a: Event, _ b: Event) -> Bool {
         let now = Date()

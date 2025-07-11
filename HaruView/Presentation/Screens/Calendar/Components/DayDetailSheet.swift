@@ -216,7 +216,7 @@ struct DayDetailSheet: View {
                     .foregroundStyle(Color(hexCode: "40392B"))
                     .multilineTextAlignment(.center)
                 
-                Text("위의 +를 누르거나 달력에서 날짜를 길게 눌러서\n일정이나 할 일을 추가할 수 있어요!")
+                Text("상단의 + 버튼을 누르거나 달력에서 날짜를 길게 눌러서\n일정이나 할 일을 추가할 수 있어요!")
                     .font(.pretendardRegular(size: 14))
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
@@ -239,25 +239,29 @@ struct DayDetailSheet: View {
             ForEach(events, id: \.id) { event in
                 EventDetailRow(event: event)
                     .contentShape(Rectangle())
+                    // 메인 액션: 탭으로 편집
+                    .onTapGesture {
+                        if let fullEvent = findFullEvent(by: event.id) {
+                            editingEvent = fullEvent
+                        }
+                    }
+                    // 보조 액션: 길게 눌러서 삭제 메뉴
+                    .onLongPressGesture {
+                        let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
+                        impactFeedback.impactOccurred()
+                        
+                        if let fullEvent = findFullEvent(by: event.id) {
+                            requestEventDeletion(fullEvent)
+                        }
+                    }
+                    // 컨텍스트 메뉴
                     .contextMenu {
                         Button {
                             if let fullEvent = findFullEvent(by: event.id) {
-                                if let root = UIApplication.shared.connectedScenes
-                                    .compactMap({ ($0 as? UIWindowScene)?.keyWindow })
-                                    .first?.rootViewController {
-                                    AdManager.shared.show(from: root) {
-                                        editingEvent = fullEvent
-                                    }
-                                } else {
-                                    editingEvent = fullEvent
-                                }
+                                editingEvent = fullEvent
                             }
                         } label: {
-                            Label {
-                                Text("편집").font(Font.pretendardRegular(size: 14))
-                            } icon: {
-                                Image(systemName: "pencil")
-                            }
+                            Label("편집", systemImage: "pencil")
                         }
                         
                         Button(role: .destructive) {
@@ -265,11 +269,7 @@ struct DayDetailSheet: View {
                                 requestEventDeletion(fullEvent)
                             }
                         } label: {
-                            Label {
-                                Text("삭제").font(Font.pretendardRegular(size: 14))
-                            } icon: {
-                                Image(systemName: "trash")
-                            }
+                            Label("삭제", systemImage: "trash")
                         }
                     }
             }
@@ -287,30 +287,101 @@ struct DayDetailSheet: View {
             
             VStack(spacing: 0) {
                 ForEach(Array(reminders.enumerated()), id: \.element.id) { index, reminder in
-                    ReminderCard(reminder: convertToFullReminder(reminder)) {
-                        toggleReminder(reminder.id)
+                    // 커스텀 ReminderCard 대신 직접 구현
+                    HStack(spacing: 12) {
+                        // 완료 토글 버튼
+                        Button {
+                            toggleReminder(reminder.id)
+                        } label: {
+                            Image(systemName: reminder.isCompleted ? "checkmark.circle.fill" : "circle")
+                                .foregroundStyle(reminder.isCompleted ? Color(hexCode: "A76545") : .secondary)
+                                .font(.system(size: 22))
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        
+                        // 우선순위 표시
+                        if reminder.priority > 0 {
+                            let prioritySymbol: String = {
+                                switch reminder.priority {
+                                case 1: return "exclamationmark.3"  // 높은 우선순위
+                                case 5: return "exclamationmark.2"  // 보통 우선순위
+                                case 9: return "exclamationmark"    // 낮은 우선순위
+                                default: return "minus"             // 우선순위 없음
+                                }
+                            }()
+                            
+                            let priorityColor: Color = {
+                                switch reminder.priority {
+                                case 1: return Color(hexCode: "FF5722") // 높음
+                                case 5: return Color(hexCode: "FFC107") // 보통
+                                case 9: return Color(hexCode: "4CAF50") // 낮음
+                                default: return .secondary
+                                }
+                            }()
+                            
+                            Image(systemName: prioritySymbol)
+                                .foregroundStyle(priorityColor)
+                                .opacity(reminder.isCompleted ? 0.5 : 1)
+                        }
+                        
+                        // 제목 및 시간
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(reminder.title)
+                                .lineLimit(1)
+                                .font(.pretendardRegular(size: 17))
+                                .strikethrough(reminder.isCompleted)
+                                .opacity(reminder.isCompleted ? 0.5 : 1)
+                            
+                            if let timeText = reminder.timeDisplayText {
+                                Text(timeText)
+                                    .lineLimit(1)
+                                    .font(.jakartaRegular(size: 15))
+                                    .foregroundStyle(Color(hexCode: "2E2514").opacity(0.8))
+                            }
+                        }
+                        
+                        Spacer()
                     }
+                    .contentShape(Rectangle())
+                    .padding(.vertical, 14)
+                    .padding(.horizontal, 16)
+                    // 메인 액션: 탭으로 편집
+                    .onTapGesture {
+                        if let fullReminder = findFullReminder(by: reminder.id) {
+                            editingReminder = fullReminder
+                        }
+                    }
+                    // 보조 액션: 길게 눌러서 삭제
+                    .onLongPressGesture {
+                        let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
+                        impactFeedback.impactOccurred()
+                        
+                        deleteReminder(reminder.id)
+                    }
+                    // 컨텍스트 메뉴
                     .contextMenu {
                         Button {
                             if let fullReminder = findFullReminder(by: reminder.id) {
                                 editingReminder = fullReminder
                             }
                         } label: {
-                            Label {
-                                Text("편집").font(Font.pretendardRegular(size: 14))
-                            } icon: {
-                                Image(systemName: "pencil")
+                            Label("편집", systemImage: "pencil")
+                        }
+                        
+                        Button {
+                            toggleReminder(reminder.id)
+                        } label: {
+                            if reminder.isCompleted {
+                                Label("미완료로 표시", systemImage: "circle")
+                            } else {
+                                Label("완료로 표시", systemImage: "checkmark.circle")
                             }
                         }
                         
                         Button(role: .destructive) {
                             deleteReminder(reminder.id)
                         } label: {
-                            Label {
-                                Text("삭제").font(Font.pretendardRegular(size: 14))
-                            } icon: {
-                                Image(systemName: "trash")
-                            }
+                            Label("삭제", systemImage: "trash")
                         }
                     }
                     
@@ -598,7 +669,45 @@ struct DayDetailSheet: View {
         showRecurringDeletionOptions = false
         
         Task {
-            await deleteEvent(event.id, span: span)
+            if event.hasRecurrence {
+                // 반복 일정인 경우 날짜 기반 삭제 사용
+                await deleteRecurringEventInstance(event.id, span: span)
+            } else {
+                // 일반 일정인 경우 기존 방식 사용
+                await deleteEvent(event.id, span: span)
+            }
+        }
+    }
+    
+    /// 반복 일정 인스턴스 삭제 (새로운 메서드)
+    private func deleteRecurringEventInstance(_ eventId: String, span: EventDeletionSpan) async {
+        isDeletingEvent = true
+        deletionError = nil
+        
+        let deleteUseCase = di.makeDeleteEventUseCase()
+        
+        // 날짜 기반 반복 일정 삭제 사용
+        let result = await deleteUseCase(.recurringEventInstance(
+            eventId: eventId,
+            targetDate: initialDate, // DayDetailSheet의 초기 날짜 사용
+            span: span
+        ))
+        
+        await MainActor.run {
+            isDeletingEvent = false
+            
+            switch result {
+            case .success:
+                currentDeletingEvent = nil
+                showToast = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    showToast = false
+                }
+                // 삭제 후 데이터 리로드
+                loadCalendarDayData()
+            case .failure(let error):
+                deletionError = error
+            }
         }
     }
     

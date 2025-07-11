@@ -29,6 +29,57 @@ extension EventKitService {
         }
     }
     
+    /// 특정 날짜의 반복 일정 인스턴스 삭제 (새로운 메서드)
+    func deleteRecurringEventInstance(
+        eventId: String,
+        targetDate: Date,
+        span: EventDeletionSpan
+    ) -> Result<Void, TodayBoardError> {
+        
+        // 1. 먼저 원본 이벤트 조회
+        guard let originalEvent = store.event(withIdentifier: eventId) else {
+            return .failure(.notFound)
+        }
+        
+        // 2. 반복 일정이 아닌 경우 기본 삭제
+        guard originalEvent.hasRecurrenceRules else {
+            return deleteEvent(id: eventId, span: span)
+        }
+        
+        // 3. 특정 날짜 범위에서 이벤트 검색
+        let calendar = Calendar.current
+        let dayStart = calendar.startOfDay(for: targetDate)
+        let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart)!
+        
+        let predicate = store.predicateForEvents(
+            withStart: dayStart,
+            end: dayEnd,
+            calendars: nil
+        )
+        
+        let eventsOnDate = store.events(matching: predicate)
+        
+        // 4. 동일한 eventIdentifier와 시작 시간이 일치하는 이벤트 찾기
+        let targetEvent = eventsOnDate.first { event in
+            event.eventIdentifier == eventId &&
+            calendar.isDate(event.startDate, inSameDayAs: targetDate)
+        }
+        
+        guard let eventToDelete = targetEvent else {
+            return .failure(.notFound)
+        }
+        
+        do {
+            try store.remove(eventToDelete, span: span.ekSpan, commit: true)
+            Task { @MainActor in
+                WidgetRefreshService.shared.forceRefresh()
+            }
+            return .success(())
+        } catch {
+            return .failure(.saveFailed)
+        }
+    }
+    
     // 기존 확장된 저장/업데이트 메서드들...
     func save(_ input: EventInput) -> Result<Void, TodayBoardError> {
         let event = EKEvent(eventStore: store)
