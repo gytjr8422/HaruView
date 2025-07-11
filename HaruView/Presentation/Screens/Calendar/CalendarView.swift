@@ -102,7 +102,7 @@ struct CalendarView: View {
             }
         }
         .sheet(isPresented: $showDayDetail) {
-            // 날짜만 전달하고 DayDetailSheet에서 자체적으로 데이터 관리
+            // 빈 날짜든 아니든 항상 시트 열기
             if let dayData = selectedDayForDetail {
                 DayDetailSheet(initialDate: dayData.date)
             }
@@ -275,25 +275,13 @@ struct CalendarView: View {
         // 이미 시트가 표시 중이면 중복 방지
         guard !showDayDetail else { return }
         
-        // CalendarDay 찾기
-        guard let calendarDay = findCalendarDay(for: date) else { return }
+        // CalendarDay 찾기 (빈 날짜라도 CalendarDay 객체는 생성)
+        let calendarDay = findCalendarDay(for: date) ?? CalendarDay(date: date, events: [], reminders: [])
         
-        // 아이템이 있는지 확인
-        let totalCount = calendarDay.events.count + calendarDay.reminders.count
-        
-        // 실제로 표시할 아이템이 있는지 재확인
-        if totalCount > 0 && calendarDay.hasItems {
-            // 데이터를 다시 한 번 검증
-            DispatchQueue.main.async {
-                // UI 업데이트 시점에서 다시 확인
-                let revalidatedDay = self.findCalendarDay(for: date)
-                let revalidatedCount = (revalidatedDay?.events.count ?? 0) + (revalidatedDay?.reminders.count ?? 0)
-                
-                if revalidatedCount > 0, let validDay = revalidatedDay, validDay.hasItems {
-                    self.selectedDayForDetail = validDay
-                    self.showDayDetail = true
-                }
-            }
+        // 빈 날짜든 아니든 항상 시트 열기
+        DispatchQueue.main.async {
+            self.selectedDayForDetail = calendarDay
+            self.showDayDetail = true
         }
     }
     
@@ -352,6 +340,7 @@ struct CalendarView: View {
         pendingDetailDate = nil
     }
 }
+
 #Preview {
     CalendarView()
         .environment(\.di, .shared)

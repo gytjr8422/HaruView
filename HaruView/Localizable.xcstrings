@@ -540,6 +540,9 @@
     "달력 준비 중..." : {
 
     },
+    "달력에서 날짜를 길게 눌러서\n일정이나 할 일을 추가할 수 있어요" : {
+
+    },
     "달력을 불러오는 중..." : {
 
     },
@@ -1186,16 +1189,6 @@
         }
       }
     },
-    "일" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : " "
-          }
-        }
-      }
-    },
     "이동" : {
 
     },
@@ -1218,6 +1211,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Location request already in progress."
+          }
+        }
+      }
+    },
+    "일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " "
           }
         }
       }

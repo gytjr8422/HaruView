@@ -184,25 +184,24 @@ struct DayDetailSheet: View {
     }
     
     private var emptyView: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "calendar")
-                .font(.system(size: 40))
-                .foregroundStyle(.secondary)
+        VStack(spacing: 20) {
+            Image(systemName: "calendar.badge.plus")
+                .font(.system(size: 50))
+                .foregroundStyle(Color(hexCode: "A76545").opacity(0.7))
             
-            Text("이 날짜에는 일정이나 할 일이 없습니다")
-                .font(.pretendardRegular(size: 16))
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-            
-            Button("닫기") {
-                dismiss()
+            VStack(spacing: 8) {
+                Text("이 날짜에는 일정이나 할 일이 없습니다")
+                    .font(.pretendardSemiBold(size: 18))
+                    .foregroundStyle(Color(hexCode: "40392B"))
+                    .multilineTextAlignment(.center)
+                
+                Text("달력에서 날짜를 길게 눌러서\n일정이나 할 일을 추가할 수 있어요")
+                    .font(.pretendardRegular(size: 14))
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
             }
-            .font(.pretendardSemiBold(size: 14))
-            .foregroundStyle(.white)
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
-            .background(Color(hexCode: "A76545"))
-            .cornerRadius(8)
+            
+            // 나중에 여기에 [일정 추가] [할 일 추가] 버튼들이 들어갈 예정
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(hexCode: "FFFCF5"))
