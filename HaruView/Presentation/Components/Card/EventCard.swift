@@ -43,7 +43,7 @@ struct EventCard: View {
         
     }
     
-    /// 세 가지 조건에 따라 출력할 문자열을 반환합니다.
+    /// 세 가지 조건에 따라 출력할 문자열을 반환
     private var timeText: String? {
         let start = event.start
         let end   = event.end
@@ -59,7 +59,7 @@ struct EventCard: View {
             return nil
         }
         
-        // 2) 시작 == 종료 (분 단위) → 한 번만
+        // 2) 시작 == 종료 (분 단위) → 한 번만 표시
         if Calendar.current.isDate(start, equalTo: end, toGranularity: .minute) {
             return startStr
         }

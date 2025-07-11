@@ -57,9 +57,13 @@ struct CalendarEvent: Identifiable, Hashable {
         formatter.timeStyle = .short
         formatter.locale = Locale.current
         
-        if let endTime = endTime,
-           !Calendar.current.isDate(startTime, equalTo: endTime, toGranularity: .minute) {
-            return "\(formatter.string(from: startTime))-\(formatter.string(from: endTime))"
+        if let endTime = endTime {
+            // 시작시간과 끝시간이 같은 경우에도 한 번만 표시
+            if Calendar.current.isDate(startTime, equalTo: endTime, toGranularity: .minute) {
+                return formatter.string(from: startTime)
+            } else {
+                return "\(formatter.string(from: startTime))-\(formatter.string(from: endTime))"
+            }
         } else {
             return formatter.string(from: startTime)
         }

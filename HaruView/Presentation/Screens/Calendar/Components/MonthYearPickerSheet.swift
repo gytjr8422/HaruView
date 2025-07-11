@@ -25,7 +25,11 @@ struct MonthYearPickerSheet: View {
         _selectedMonth = State(initialValue: currentMonth)
     }
     
-    private let years = Array(2020...2030)
+    private var years: [Int] {
+        let now = Calendar.current.component(.year, from: Date())
+        return Array((now - 50)...(now + 50))
+    }
+    
     private let months = Array(1...12)
     
     var body: some View {

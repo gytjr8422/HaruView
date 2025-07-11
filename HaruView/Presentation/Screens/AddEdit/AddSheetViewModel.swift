@@ -231,7 +231,7 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
     private func clampEndIfNeeded() {
         guard !isAllDay else { return }
 
-        let minInterval: TimeInterval = 60
+        let minInterval: TimeInterval = 0
         if endDate < startDate.addingTimeInterval(minInterval) {
             endDate = startDate.addingTimeInterval(minInterval)
         }

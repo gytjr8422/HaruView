@@ -185,7 +185,6 @@ struct EventDateTimePicker: View {
                         Group {
                             switch field {
                             case .start:
-                                // 시작 날짜+시간 항상 선택 가능
                                 CustomDateTimePicker(
                                     date: $startDate,
                                     minDate: minDate,
@@ -193,10 +192,9 @@ struct EventDateTimePicker: View {
                                     isAllDay: isAllDay
                                 )
                             case .end:
-                                // 종료 날짜+시간 항상 선택 가능
                                 CustomDateTimePicker(
                                     date: $endDate,
-                                    minDate: startDate,
+                                    minDate: startDate, // 수정: 시작시간과 같아도 허용
                                     maxDate: maxDate,
                                     isAllDay: false
                                 )
@@ -204,19 +202,19 @@ struct EventDateTimePicker: View {
                         }
                         .frame(height: 200)
                         .onChange(of: startDate) { _, newValue in
-                            // 시작 시간이 종료보다 늦으면 종료 시간 조정
-                            if newValue >= endDate {
+                            // 수정: 시작 시간이 종료보다 늦으면 종료 시간을 시작시간과 같게 설정
+                            if newValue > endDate {
                                 if isAllDay {
                                     endDate = Calendar.current.startOfDay(for: newValue)
                                 } else {
-                                    endDate = Calendar.current.date(byAdding: .minute, value: 30, to: newValue) ?? newValue
+                                    endDate = newValue // 시작시간과 같게 설정
                                 }
                             }
                         }
                         .onChange(of: endDate) { _, newValue in
-                            // 종료 시간이 시작보다 빠르면 시작 시간 조정
-                            if newValue <= startDate && !isAllDay {
-                                startDate = Calendar.current.date(byAdding: .minute, value: -30, to: newValue) ?? newValue
+                            // 수정: 종료 시간이 시작보다 빠르면 시작 시간을 종료시간과 같게 설정
+                            if newValue < startDate {
+                                startDate = newValue // 종료시간과 같게 설정
                             }
                         }
                     }
