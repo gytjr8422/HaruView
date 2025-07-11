@@ -216,7 +216,7 @@ struct DayDetailSheet: View {
                     .foregroundStyle(Color(hexCode: "40392B"))
                     .multilineTextAlignment(.center)
                 
-                Text("달력에서 날짜를 길게 눌러서\n일정이나 할 일을 추가할 수 있어요")
+                Text("위의 +를 누르거나 달력에서 날짜를 길게 눌러서\n일정이나 할 일을 추가할 수 있어요!")
                     .font(.pretendardRegular(size: 14))
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
@@ -402,10 +402,13 @@ struct DayDetailSheet: View {
                     // 해당 날짜 마감인 할 일만 필터링
                     let filteredReminders = filterRemindersForSpecificDate(calendarDay.reminders)
                     
-                    // 필터링된 할 일로 새로운 CalendarDay 생성
+                    // 일정도 해당 날짜와 겹치는지 확인하여 필터링
+                    let filteredEvents = filterEventsForSpecificDate(calendarDay.events)
+                    
+                    // 필터링된 데이터로 새로운 CalendarDay 생성
                     let filteredCalendarDay = CalendarDay(
                         date: calendarDay.date,
-                        events: calendarDay.events.map { Event(
+                        events: filteredEvents.map { Event(
                             id: $0.id,
                             title: $0.title,
                             start: $0.startTime ?? calendarDay.date,
@@ -456,6 +459,46 @@ struct DayDetailSheet: View {
                     self.currentCalendarDay = filteredCalendarDay
                 case .failure(let error):
                     self.loadError = error
+                }
+            }
+        }
+    }
+    
+    // 일정 필터링
+    private func filterEventsForSpecificDate(_ events: [CalendarEvent]) -> [CalendarEvent] {
+        let calendar = Calendar.current
+        let targetDateStart = calendar.startOfDay(for: initialDate)
+        let targetDateEnd = calendar.date(byAdding: .day, value: 1, to: targetDateStart)!
+        
+        return events.filter { event in
+            // 하루 종일 일정인지 확인
+            if event.isAllDay {
+                // 하루 종일 일정: 날짜만 비교
+                if let startTime = event.startTime, let endTime = event.endTime {
+                    let eventStartDay = calendar.startOfDay(for: startTime)
+                    let eventEndDay = calendar.startOfDay(for: endTime)
+                    
+                    // 하루 종일 이벤트가 여러 날에 걸칠 수 있으므로
+                    let actualEventEndDay = eventEndDay > eventStartDay ?
+                        calendar.date(byAdding: .day, value: -1, to: eventEndDay) ?? eventEndDay :
+                        eventStartDay
+                    
+                    return targetDateStart >= eventStartDay && targetDateStart <= actualEventEndDay
+                } else {
+                    // startTime이나 endTime이 nil인 경우 (하루 종일 일정)
+                    return true
+                }
+            } else {
+                // 일반 이벤트: 시간 포함 비교
+                if let startTime = event.startTime, let endTime = event.endTime {
+                    // 수정: 시작시간과 끝시간이 같아도 포함하도록 변경
+                    return startTime < targetDateEnd && endTime >= targetDateStart
+                } else if let startTime = event.startTime {
+                    // endTime이 없는 경우 startTime이 해당 날짜에 있는지만 확인
+                    return startTime >= targetDateStart && startTime < targetDateEnd
+                } else {
+                    // 시간 정보가 없는 경우 포함
+                    return true
                 }
             }
         }

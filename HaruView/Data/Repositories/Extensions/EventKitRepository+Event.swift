@@ -11,20 +11,50 @@ import EventKit
 extension EventKitRepository {
     // MARK: - 캘린더 Repository
     func fetchEvent() async -> Result<[Event], TodayBoardError> {
-        let windowStart = cal.startOfDay(for: Date())
-        let windowEnd = cal.date(byAdding: .day, value: 1, to: windowStart)!
-        
-        let wideStart = cal.date(byAdding: .day, value: -7, to: windowStart)!
-        let wideEnd = cal.date(byAdding: .day, value: 7, to: windowEnd)!
-        
-        let ekResult = service.fetchEventsBetween(wideStart, wideEnd)
-        return ekResult.map { events in
-            events
-                .filter { $0.endDate > windowStart && $0.startDate < windowEnd && $0.calendar.title != "대한민국 공휴일"}
-                .map(Self.mapEvent) // 확장된 매핑 함수 사용
-                .sorted(by: eventSortRule)
-        }
-    }
+         let windowStart = cal.startOfDay(for: Date())
+         let windowEnd = cal.date(byAdding: .day, value: 1, to: windowStart)!
+         
+         let wideStart = cal.date(byAdding: .day, value: -7, to: windowStart)!
+         let wideEnd = cal.date(byAdding: .day, value: 7, to: windowEnd)!
+         
+         let ekResult = service.fetchEventsBetween(wideStart, wideEnd)
+         return ekResult.map { events in
+             events
+                 .filter { event in
+                     // 공휴일 제외
+                     let isNotHoliday = event.calendar.title != "대한민국 공휴일"
+                     
+                     // 오늘 날짜와 겹치는 일정인지 확인
+                     let overlapsToday: Bool
+                     
+                     // 하루 종일 이벤트 판별
+                     let compsStart = cal.dateComponents([.hour, .minute], from: event.startDate)
+                     let compsEnd = cal.dateComponents([.hour, .minute], from: event.endDate)
+                     let isAllDay = cal.isDate(event.startDate, inSameDayAs: event.endDate) &&
+                                   compsStart.hour == 0 && compsStart.minute == 0 &&
+                                   (compsEnd.hour == 23 && compsEnd.minute == 59 ||
+                                    compsEnd.hour == 0 && compsEnd.minute == 0)
+                     
+                     if isAllDay {
+                         // 하루 종일 이벤트: 날짜만 비교
+                         let eventStartDay = cal.startOfDay(for: event.startDate)
+                         let eventEndDay = cal.startOfDay(for: event.endDate)
+                         let todayStart = cal.startOfDay(for: Date())
+                         
+                         // 하루 종일 이벤트가 오늘과 겹치는지 확인
+                         overlapsToday = eventStartDay <= todayStart && eventEndDay >= todayStart
+                     } else {
+                         // 일반 이벤트: 오늘 범위와 겹치는지 확인
+                         // 수정: 시작시간과 끝시간이 같아도 포함하도록 변경
+                         overlapsToday = event.startDate < windowEnd && event.endDate >= windowStart
+                     }
+                     
+                     return isNotHoliday && overlapsToday
+                 }
+                 .map(Self.mapEvent)
+                 .sorted(by: eventSortRule)
+         }
+     }
 
     func add(_ input: EventInput) async -> Result<Void, TodayBoardError> {
         service.save(input)

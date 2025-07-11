@@ -38,8 +38,7 @@ extension EventKitRepository {
                         
                         isInRange = actualEventEndDay >= rangeStartDay && eventStartDay < rangeEndDay
                     } else {
-                        // 일반 이벤트: 기존 로직
-                        isInRange = event.endDate > startDate && event.startDate < endDate
+                        isInRange = event.startDate < endDate && event.endDate >= startDate
                     }
                     
                     let include = isNotHoliday && isInRange
