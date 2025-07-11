@@ -1189,6 +1189,16 @@
         }
       }
     },
+    "일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " "
+          }
+        }
+      }
+    },
     "이동" : {
 
     },
@@ -1211,16 +1221,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Location request already in progress."
-          }
-        }
-      }
-    },
-    "일" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : " "
           }
         }
       }

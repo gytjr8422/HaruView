@@ -23,6 +23,9 @@ struct DayDetailSheet: View {
     @State private var editingReminder: Reminder?
     @State private var showToast: Bool = false
     
+    // 추가 관련 상태
+    @State private var showAddSheet: Bool = false
+    
     // 삭제 관련 상태
     @State private var showRecurringDeletionOptions: Bool = false
     @State private var currentDeletingEvent: Event?
@@ -48,7 +51,7 @@ struct DayDetailSheet: View {
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .topBarLeading) {
                     Button("닫기") {
                         dismiss()
                     }
@@ -56,11 +59,19 @@ struct DayDetailSheet: View {
                     .foregroundStyle(Color(hexCode: "A76545"))
                 }
                 
-                ToolbarItem(placement: .topBarLeading) {
+                ToolbarItem(placement: .principal) {
                     Text(dateFormatter.string(from: initialDate))
                         .font(Locale.current.language.languageCode?.identifier == "ko" ? .museumMedium(size: 19) : .robotoSerifBold(size: 19))
-                        .padding(.leading, 3)
-                        .padding(.top, 10)
+                }
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showAddSheet = true
+                    } label: {
+                        Image(systemName: "plus")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(Color(hexCode: "A76545"))
+                    }
                 }
             }
         }
@@ -81,6 +92,16 @@ struct DayDetailSheet: View {
                     showToast = false
                 }
                 // 편집 완료 후 데이터 리로드
+                loadCalendarDayData()
+            }
+        }
+        .sheet(isPresented: $showAddSheet) {
+            AddSheet(vm: di.makeAddSheetVMWithDate(initialDate)) {
+                showToast = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    showToast = false
+                }
+                // 추가 완료 후 데이터 리로드
                 loadCalendarDayData()
             }
         }
