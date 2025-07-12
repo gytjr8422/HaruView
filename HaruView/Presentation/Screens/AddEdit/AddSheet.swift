@@ -15,8 +15,13 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     @StateObject private var vm: VM
     var onSave: () -> Void
 
-    private var minDate: Date { Calendar.current.startOfDay(for: .now) }
-    private var maxDate: Date { Calendar.current.date(byAdding: .day, value: 2, to: minDate)! }
+    // 날짜 제한 해제: 과거 날짜도 허용하고 미래 날짜 범위 확장
+    private var minDate: Date {
+        Calendar.current.date(byAdding: .year, value: -10, to: Date()) ?? Date.distantPast
+    }
+    private var maxDate: Date {
+        Calendar.current.date(byAdding: .year, value: 10, to: Date()) ?? Date.distantFuture
+    }
 
     @State private var selected: AddSheetMode = .event
     @State private var showDiscardAlert = false
@@ -100,10 +105,6 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
             }
             .padding(20)
             .contentShape(Rectangle())
-//            .onTapGesture {
-//                isTextFieldFocused = false
-//                expandedSection = nil
-//            }
         }
     }
 
@@ -133,7 +134,6 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
             .contentShape(Rectangle())
             .onTapGesture {
                 isTextFieldFocused = false
-//                expandedSection = nil
             }
         }
     }
@@ -232,7 +232,6 @@ private class MockAddVM: AddSheetViewModelProtocol {
     AddSheet(vm: MockAddVM(), onSave: {})
 }
 #endif
-
 
 
 

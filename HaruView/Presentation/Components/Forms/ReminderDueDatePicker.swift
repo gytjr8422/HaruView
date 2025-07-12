@@ -15,8 +15,10 @@ struct ReminderDueDatePicker: View {
     @State private var internalDate: Date = Date()  // 내부용 Date
     
     var isTextFieldFocused: FocusState<Bool>.Binding
-    var minDate: Date
-    var maxDate: Date
+    
+    // 날짜 제한 해제: 과거/미래 모든 날짜 허용
+    var minDate: Date { Date.distantPast }
+    var maxDate: Date { Date.distantFuture }
     
     enum DueDateMode: CaseIterable {
         case none, dateOnly, dateTime
@@ -196,7 +198,6 @@ struct ReminderDueDatePicker: View {
     }
 }
 
-
 // MARK: - Preview
 #Preview("Reminder Due Date Picker") {
     struct PreviewWrapper: View {
@@ -215,9 +216,7 @@ struct ReminderDueDatePicker: View {
                         ReminderDueDatePicker(
                             dueDate: $dueDate,
                             includeTime: $includeTime,
-                            isTextFieldFocused: $isFocused,
-                            minDate: Calendar.current.startOfDay(for: Date()),
-                            maxDate: Calendar.current.date(byAdding: .day, value: 2, to: Date()) ?? Date()
+                            isTextFieldFocused: $isFocused
                         )
                         .padding(.horizontal, 20)
                         

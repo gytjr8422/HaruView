@@ -23,9 +23,7 @@ struct BasicReminderInfoSection<VM: AddSheetViewModelProtocol>: View {
             ReminderDueDatePicker(
                 dueDate: $vm.dueDate,
                 includeTime: $vm.includeTime,
-                isTextFieldFocused: isTextFieldFocused,
-                minDate: minDate,
-                maxDate: maxDate
+                isTextFieldFocused: isTextFieldFocused
             )
             
             Divider()

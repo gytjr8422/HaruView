@@ -21,6 +21,11 @@ struct CalendarView: View {
     // 편집 후 새로고침을 위한 상태
     @State private var pendingDetailDate: Date?
     
+    // ID 최적화: 현재 표시 중인 월만 기준으로 ID 생성
+    private var optimizedViewID: String {
+        "\(vm.state.currentYear)-\(String(format: "%02d", vm.state.currentMonth))"
+    }
+    
     init() {
         _vm = StateObject(wrappedValue: DIContainer.shared.makeCalendarViewModel())
     }
@@ -102,7 +107,6 @@ struct CalendarView: View {
             }
         }
         .sheet(isPresented: $showDayDetail) {
-            // 빈 날짜든 아니든 항상 시트 열기
             if let dayData = selectedDayForDetail {
                 DayDetailSheet(initialDate: dayData.date)
             }
@@ -153,40 +157,33 @@ struct CalendarView: View {
             // 요일 헤더
             WeekdayHeaderView()
             
-            // PagedTabView로 3개월 표시
+            // 최적화된 PagedTabView - 현재 월만 기준으로 ID 설정
             if vm.monthWindow.count >= 3 {
-                PagedTabView(
-                    currentIndex: $vm.currentWindowIndex,
-                    views: vm.monthWindow.map { monthData in
-                        MonthGridView(
-                            monthData: monthData,
-                            selectedDate: vm.selectedDate,
-                            isCurrentDisplayedMonth: monthData.year == vm.state.currentYear &&
-                                                   monthData.month == vm.state.currentMonth,
-                            onDateTap: { date in
-                                withAnimation(.easeInOut(duration: 0.2)) {
-                                    vm.selectDate(date)
-                                }
-                                
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                    showDayDetailIfNeeded(for: date)
-                                }
-                            },
-                            onDateLongPress: { date in
-                                let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
-                                impactFeedback.impactOccurred()
-                                
-                                quickAddDate = date
-                                showAddSheet = true
-                            }
-                        )
-                        .id("\(monthData.year)-\(monthData.month)")
-                    },
-                    onPageSettled: { index in
+                OptimizedPagedCalendarView(
+                    monthWindow: vm.monthWindow,
+                    currentIndex: vm.currentWindowIndex,
+                    selectedDate: vm.selectedDate,
+                    onPageChange: { index in
                         vm.handlePageChange(to: index)
+                    },
+                    onDateTap: { date in
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            vm.selectDate(date)
+                        }
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            showDayDetailIfNeeded(for: date)
+                        }
+                    },
+                    onDateLongPress: { date in
+                        let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
+                        impactFeedback.impactOccurred()
+                        
+                        quickAddDate = date
+                        showAddSheet = true
                     }
                 )
-                .id(vm.monthWindow.map { "\($0.year)-\($0.month)" }.joined(separator: "_"))
+                .id(optimizedViewID) // 최적화된 ID 사용
             } else {
                 ProgressView("달력 준비 중...")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -267,30 +264,24 @@ struct CalendarView: View {
     }
     
     private func showDayDetailIfNeeded(for date: Date) {
-        // 데이터 준비 상태 확인을 더 엄격하게
         guard vm.isCurrentMonthDataReady,
               !vm.isLoading,
               vm.error == nil else { return }
         
-        // 이미 시트가 표시 중이면 중복 방지
         guard !showDayDetail else { return }
         
-        // CalendarDay 찾기 (빈 날짜라도 CalendarDay 객체는 생성)
         let calendarDay = findCalendarDay(for: date) ?? CalendarDay(date: date, events: [], reminders: [])
         
-        // 빈 날짜든 아니든 항상 시트 열기
         DispatchQueue.main.async {
             self.selectedDayForDetail = calendarDay
             self.showDayDetail = true
         }
     }
     
-    // 수정된 부분: findCalendarDay 메서드 개선
     private func findCalendarDay(for date: Date) -> CalendarDay? {
         let calendar = Calendar.current
         let targetDate = calendar.startOfDay(for: date)
         
-        // 먼저 현재 월에서 찾기
         if let currentMonth = vm.monthWindow.first(where: {
             $0.year == vm.state.currentYear && $0.month == vm.state.currentMonth
         }) {
@@ -299,7 +290,6 @@ struct CalendarView: View {
             }
         }
         
-        // 전체 윈도우에서 찾기
         for monthData in vm.monthWindow {
             if let day = monthData.day(for: targetDate) {
                 return day
@@ -308,36 +298,43 @@ struct CalendarView: View {
         
         return nil
     }
+}
+
+// MARK: - 최적화된 PagedCalendarView 컴포넌트
+struct OptimizedPagedCalendarView: View {
+    let monthWindow: [CalendarMonth]
+    let currentIndex: Int
+    let selectedDate: Date?
+    let onPageChange: (Int) -> Void
+    let onDateTap: (Date) -> Void
+    let onDateLongPress: (Date) -> Void
     
-    // MARK: - 편집 후 새로고침 처리
+    // currentIndex 변경을 감지하여 PagedTabView의 바인딩 업데이트
+    @State private var internalCurrentIndex: Int = 1
     
-    /// 편집 완료 후 데이터 변경 처리
-    private func handleDataChangedInDetail() {
-        // 현재 선택된 날짜 저장
-        if let currentDay = selectedDayForDetail {
-            pendingDetailDate = currentDay.date
+    var body: some View {
+        PagedTabView(
+            currentIndex: $internalCurrentIndex,
+            views: monthWindow.enumerated().map { index, monthData in
+                MonthGridView(
+                    monthData: monthData,
+                    selectedDate: selectedDate,
+                    isCurrentDisplayedMonth: index == currentIndex,
+                    onDateTap: onDateTap,
+                    onDateLongPress: onDateLongPress
+                )
+                .id("\(monthData.year)-\(monthData.month)") // 개별 월은 개별 ID 유지
+            },
+            onPageSettled: onPageChange
+        )
+        .onAppear {
+            internalCurrentIndex = currentIndex
         }
-        
-        // 시트 닫기
-        showDayDetail = false
-        selectedDayForDetail = nil
-        
-        // 데이터 새로고침
-        vm.forceRefresh()
-    }
-    
-    /// 새로고침 후 DayDetail 다시 열기
-    private func reopenDayDetail(for date: Date) {
-        guard let updatedCalendarDay = findCalendarDay(for: date),
-              updatedCalendarDay.hasItems else {
-            pendingDetailDate = nil
-            return
+        .onChange(of: currentIndex) { _, newIndex in
+            if internalCurrentIndex != newIndex {
+                internalCurrentIndex = newIndex
+            }
         }
-        
-        // 업데이트된 데이터로 다시 시트 열기
-        selectedDayForDetail = updatedCalendarDay
-        showDayDetail = true
-        pendingDetailDate = nil
     }
 }
 

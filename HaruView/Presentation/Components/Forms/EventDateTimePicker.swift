@@ -15,9 +15,9 @@ struct EventDateTimePicker: View {
     
     @State private var selectedField: DateTimeField? = nil
     
-    // 과거 날짜도 허용
-    var minDate: Date { Date.distantPast } // 또는 적절한 과거 날짜
-    var maxDate: Date { Date.distantFuture } // 또는 적절한 미래 날짜
+    // 날짜 제한 해제: 과거/미래 모든 날짜 허용
+    var minDate: Date { Date.distantPast }
+    var maxDate: Date { Date.distantFuture }
     
     enum DateTimeField {
         case start, end
@@ -97,10 +97,9 @@ struct EventDateTimePicker: View {
                     .buttonStyle(PlainButtonStyle())
                 }
             }
-//            .padding(.horizontal, 15)
             .padding(.bottom, isAllDay ? 0 : 16)
             
-            // 30분, 1시간 빠른 설정 버튼
+            // 빠른 설정 버튼 (하루 종일이 아닐 때만)
             if !isAllDay {
                 HStack(spacing: 5) {
                     Button("15분") {
@@ -170,7 +169,6 @@ struct EventDateTimePicker: View {
                 }
             }
             
-            
             // 인라인 피커
             if let field = selectedField {
                 VStack(spacing: 0) {
@@ -194,7 +192,7 @@ struct EventDateTimePicker: View {
                             case .end:
                                 CustomDateTimePicker(
                                     date: $endDate,
-                                    minDate: startDate, // 수정: 시작시간과 같아도 허용
+                                    minDate: startDate, // 시작시간과 같아도 허용
                                     maxDate: maxDate,
                                     isAllDay: false
                                 )
@@ -202,7 +200,7 @@ struct EventDateTimePicker: View {
                         }
                         .frame(height: 200)
                         .onChange(of: startDate) { _, newValue in
-                            // 수정: 시작 시간이 종료보다 늦으면 종료 시간을 시작시간과 같게 설정
+                            // 시작 시간이 종료보다 늦으면 종료 시간을 시작시간과 같게 설정
                             if newValue > endDate {
                                 if isAllDay {
                                     endDate = Calendar.current.startOfDay(for: newValue)
@@ -212,7 +210,7 @@ struct EventDateTimePicker: View {
                             }
                         }
                         .onChange(of: endDate) { _, newValue in
-                            // 수정: 종료 시간이 시작보다 빠르면 시작 시간을 종료시간과 같게 설정
+                            // 종료 시간이 시작보다 빠르면 시작 시간을 종료시간과 같게 설정
                             if newValue < startDate {
                                 startDate = newValue // 종료시간과 같게 설정
                             }
@@ -419,189 +417,11 @@ struct CustomDateTimePicker: UIViewRepresentable {
     }
 }
 
-// MARK: - CustomTimePicker (시간만 선택)
-struct CustomTimePicker: UIViewRepresentable {
-    @Binding var date: Date
-    @State private var isPreciseMode = false
-    
-    var minDate: Date?
-    var maxDate: Date?
-    
-    func makeUIView(context: Context) -> UIDatePicker {
-        let picker = UIDatePicker()
-        picker.datePickerMode = .time
-        picker.preferredDatePickerStyle = .wheels
-        picker.minuteInterval = 5
-        
-        if let minDate = minDate {
-            picker.minimumDate = minDate
-        }
-        if let maxDate = maxDate {
-            picker.maximumDate = maxDate
-        }
-        
-        picker.date = roundToInterval(date, interval: 5)
-        
-        picker.addTarget(
-            context.coordinator,
-            action: #selector(Coordinator.dateChanged),
-            for: .valueChanged
-        )
-        
-        let doubleTap = UITapGestureRecognizer(
-            target: context.coordinator,
-            action: #selector(Coordinator.handleDoubleTap)
-        )
-        doubleTap.numberOfTapsRequired = 2
-        picker.addGestureRecognizer(doubleTap)
-        
-        return picker
-    }
-    
-    func updateUIView(_ uiView: UIDatePicker, context: Context) {
-        let currentInterval = context.coordinator.isPreciseMode ? 1 : 5
-        let roundedDate = roundToInterval(date, interval: currentInterval)
-        
-        if !Calendar.current.isDate(uiView.date, equalTo: roundedDate, toGranularity: .minute) {
-            uiView.date = roundedDate
-        }
-        
-        uiView.minimumDate = minDate
-        uiView.maximumDate = maxDate
-    }
-    
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
-    }
-    
-    private func roundToInterval(_ date: Date, interval: Int) -> Date {
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: date)
-        
-        guard let minute = components.minute else { return date }
-        
-        let roundedMinute = (minute / interval) * interval
-        
-        var newComponents = components
-        newComponents.minute = roundedMinute
-        newComponents.second = 0
-        
-        return calendar.date(from: newComponents) ?? date
-    }
-    
-    class Coordinator: NSObject {
-        var parent: CustomTimePicker
-        var isPreciseMode = false
-        
-        init(_ parent: CustomTimePicker) {
-            self.parent = parent
-        }
-        
-        @objc func dateChanged(_ sender: UIDatePicker) {
-            parent.date = sender.date
-        }
-        
-        @objc func handleDoubleTap(_ sender: UITapGestureRecognizer) {
-            guard let picker = sender.view as? UIDatePicker else { return }
-            
-            let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
-            impactFeedback.impactOccurred()
-            
-            isPreciseMode.toggle()
-            
-            UIView.animate(withDuration: 0.3) {
-                picker.minuteInterval = self.isPreciseMode ? 1 : 5
-            }
-            
-            let newInterval = isPreciseMode ? 1 : 5
-            let adjustedDate = parent.roundToInterval(picker.date, interval: newInterval)
-            picker.setDate(adjustedDate, animated: true)
-            parent.date = adjustedDate
-            
-            showModeIndicator(isPrecise: isPreciseMode)
-        }
-        
-        private func showModeIndicator(isPrecise: Bool) {
-            guard let window = UIApplication.shared.connectedScenes
-                .compactMap({ $0 as? UIWindowScene })
-                .first?.windows
-                .first else { return }
-            
-            let message = isPrecise ? "1분 단위 선택" : "5분 단위 선택"
-            let symbolName = isPrecise ? "clock.fill" : "clock.badge.checkmark.fill"
-            
-            let toastView = createToastView(message: message, symbolName: symbolName)
-            window.addSubview(toastView)
-            
-            toastView.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                toastView.centerXAnchor.constraint(equalTo: window.centerXAnchor),
-                toastView.topAnchor.constraint(equalTo: window.safeAreaLayoutGuide.topAnchor, constant: 20)
-            ])
-            
-            toastView.alpha = 0
-            toastView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-            
-            UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5) {
-                toastView.alpha = 1
-                toastView.transform = .identity
-            }
-            
-            UIView.animate(withDuration: 0.3, delay: 2.0) {
-                toastView.alpha = 0
-                toastView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-            } completion: { _ in
-                toastView.removeFromSuperview()
-            }
-        }
-        
-        private func createToastView(message: String, symbolName: String) -> UIView {
-            let containerView = UIView()
-            containerView.backgroundColor = UIColor(red: 0.65, green: 0.39, blue: 0.27, alpha: 0.9)
-            containerView.layer.cornerRadius = 20
-            containerView.layer.shadowColor = UIColor.black.cgColor
-            containerView.layer.shadowOffset = CGSize(width: 0, height: 2)
-            containerView.layer.shadowRadius = 8
-            containerView.layer.shadowOpacity = 0.2
-            
-            let stackView = UIStackView()
-            stackView.axis = .horizontal
-            stackView.spacing = 8
-            stackView.alignment = .center
-            
-            let iconConfig = UIImage.SymbolConfiguration(pointSize: 16, weight: .medium)
-            let iconImage = UIImage(systemName: symbolName, withConfiguration: iconConfig)
-            let iconView = UIImageView(image: iconImage)
-            iconView.tintColor = .white
-            iconView.contentMode = .scaleAspectFit
-            
-            let label = UILabel()
-            label.text = message
-            label.textColor = .white
-            label.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
-            
-            stackView.addArrangedSubview(iconView)
-            stackView.addArrangedSubview(label)
-            
-            containerView.addSubview(stackView)
-            stackView.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                stackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-                stackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-                stackView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
-                stackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -8)
-            ])
-            
-            return containerView
-        }
-    }
-}
-
 // MARK: - Preview
 #Preview("Event DateTime Picker - iPhone Style") {
     struct PreviewWrapper: View {
         @State private var startDate = Date()
-        @State private var endDate = Calendar.current.date(byAdding: .hour, value: 12, to: Date()) ?? Date()
+        @State private var endDate = Calendar.current.date(byAdding: .hour, value: 1, to: Date()) ?? Date()
         @State private var isAllDay = false
         @FocusState private var isFocused: Bool
         
