@@ -5,14 +5,6 @@
 //  Created by 김효석 on 7/8/25.
 //
 
-//
-//  CalendarDayCell.swift
-//  HaruView
-//
-//  Created by Developer on 7/7/25.
-//  위치: HaruView/Presentation/Screens/Calendar/Components/CalendarDayCell.swift
-//
-
 import SwiftUI
 
 struct CalendarDayCell: View {
@@ -30,6 +22,17 @@ struct CalendarDayCell: View {
     
     private var displayItems: [CalendarDisplayItem] {
         calendarDay?.displayItems ?? []
+    }
+    
+    // 표시할 아이템 개수 로직 변경
+    private var itemsToShow: [CalendarDisplayItem] {
+        if displayItems.count <= 4 {
+            // 4개 이하면 모두 표시
+            return Array(displayItems)
+        } else {
+            // 5개 이상이면 3개만 표시
+            return Array(displayItems.prefix(3))
+        }
     }
     
     private var extraItemCount: Int {
@@ -66,26 +69,24 @@ struct CalendarDayCell: View {
             .frame(height: 32)
             .padding(.top, 2)
             
-            // 일정 표시 바들 (최대 4개, 고정 높이)
-            VStack(spacing: 2) { // spacing을 0으로 변경
-                ForEach(Array(displayItems.prefix(4).enumerated()), id: \.element.id) { index, item in
+            // 일정 표시 바들 (고정 높이)
+            VStack(spacing: 3) {
+                ForEach(Array(itemsToShow.enumerated()), id: \.element.id) { index, item in
                     EventBar(
                         item: item,
                         isCompact: true
                     )
-                    .frame(height: eventBarHeight) // 고정 높이 적용
+                    .frame(height: eventBarHeight)
                 }
                 
-                // 빈 공간 채우기 (4개 미만일 때)
-                ForEach(displayItems.count..<4, id: \.self) { _ in
+                // 5개 이상일 때는 3개만 표시하므로 1개 빈 공간, 4개 이하일 때는 4개까지 채움
+                let maxSlots = displayItems.count > 4 ? 3 : 4
+                ForEach(itemsToShow.count..<maxSlots, id: \.self) { _ in
                     Rectangle()
                         .fill(Color.clear)
                         .frame(height: eventBarHeight)
                 }
-                
-                // 추가 일정 개수 표시는 별도 처리하지 않음 (공간 절약)
             }
-            .frame(height: totalEventAreaHeight) // 전체 일정 영역 높이 고정
             
             Spacer(minLength: 0)
             
@@ -93,6 +94,8 @@ struct CalendarDayCell: View {
             if extraItemCount > 0 {
                 extraCountView
             }
+            
+            Spacer(minLength: 0)
         }
         .frame(maxWidth: .infinity)
         .frame(height: fixedCellHeight) // 고정 높이 사용
@@ -114,7 +117,7 @@ struct CalendarDayCell: View {
     }
     
     // 고정 셀 높이 (높이 증가)
-    private let fixedCellHeight: CGFloat = 108 // 40(날짜) + 54(일정 4개) + 14(여백)
+    private let fixedCellHeight: CGFloat = 98 // 40(날짜) + 54(일정 4개) + 14(여백)
     
     // 일정 바 고정 높이 (원래 적당했던 크기)
     private let eventBarHeight: CGFloat = 12 // 원래 크기로 복원

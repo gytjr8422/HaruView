@@ -208,21 +208,24 @@ struct CalendarDay: Identifiable, Hashable {
         
         // 이벤트 먼저, 그 다음 할일
         for event in sortedEvents {
-            if items.count >= 4 { break }
             items.append(.event(event))
         }
         
         for reminder in sortedReminders {
-            if items.count >= 4 { break }
             items.append(.reminder(reminder))
         }
         
+        // ⚠️ 여기서 4개 제한을 제거! 모든 아이템 반환
         return items
     }
-    
-    /// 4개 초과시 추가 개수
+
+    /// 4개 초과시 추가 개수 (이제 동적으로 계산)
     var extraItemCount: Int {
-        max(0, totalItemCount - 4)
+        if totalItemCount <= 4 {
+            return 0  // 4개 이하면 "+N" 표시 안함
+        } else {
+            return totalItemCount - 3  // 5개 이상이면 (전체 - 3)개 표시
+        }
     }
 }
 

@@ -473,7 +473,14 @@
       }
     },
     "년/월 선택" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select Year/Month"
+          }
+        }
+      }
     },
     "높음" : {
       "localizations" : {
@@ -486,7 +493,14 @@
       }
     },
     "다시 시도" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try Again"
+          }
+        }
+      }
     },
     "닫기" : {
       "localizations" : {
@@ -499,25 +513,74 @@
       }
     },
     "달력" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calendar"
+          }
+        }
+      }
     },
     "달력 데이터가 없습니다" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No calendar data available"
+          }
+        }
+      }
     },
     "달력 준비 중..." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preparing calendar..."
+          }
+        }
+      }
     },
     "달력을 불러오는 중..." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading calendar..."
+          }
+        }
+      }
     },
     "달력을 불러올 수 없습니다" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cannot load calendar"
+          }
+        }
+      }
     },
     "데이터를 불러올 수 없습니다" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cannot load data"
+          }
+        }
+      }
     },
     "로딩 중..." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading..."
+          }
+        }
+      }
     },
     "로컬" : {
       "localizations" : {
@@ -590,7 +653,14 @@
       }
     },
     "매월 마지막 %@" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %@ of every month"
+          }
+        }
+      }
     },
     "매일" : {
       "localizations" : {
@@ -664,7 +734,14 @@
       }
     },
     "미완료로 표시" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mark as Incomplete"
+          }
+        }
+      }
     },
     "바람: %.0fm/s" : {
       "localizations" : {
@@ -717,7 +794,14 @@
       }
     },
     "변경사항이 저장되었습니다" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changes have been saved"
+          }
+        }
+      }
     },
     "보통" : {
       "localizations" : {
@@ -810,7 +894,14 @@
       }
     },
     "상단의 + 버튼을 누르거나 달력에서 날짜를 길게 눌러서\n일정이나 할 일을 추가할 수 있어요!" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\"Tap the + button above or long press a date on the calendar\\nto add events or tasks!\""
+          }
+        }
+      }
     },
     "상세 정보" : {
       "localizations" : {
@@ -823,7 +914,14 @@
       }
     },
     "새로고침" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refresh"
+          }
+        }
+      }
     },
     "생일" : {
       "localizations" : {
@@ -957,7 +1055,14 @@
       }
     },
     "업데이트 중..." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Updating..."
+          }
+        }
+      }
     },
     "없음" : {
       "localizations" : {
@@ -970,7 +1075,14 @@
       }
     },
     "오늘" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
+          }
+        }
+      }
     },
     "오늘 일정이 없습니다." : {
       "localizations" : {
@@ -1033,7 +1145,14 @@
       }
     },
     "완료로 표시" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mark as Complete"
+          }
+        }
+      }
     },
     "요일" : {
       "localizations" : {
@@ -1067,7 +1186,14 @@
       }
     },
     "월" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Month"
+          }
+        }
+      }
     },
     "월요일" : {
       "localizations" : {
@@ -1140,7 +1266,14 @@
       }
     },
     "이 날짜에는 일정이나 할 일이 없습니다" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No events or tasks on this date"
+          }
+        }
+      }
     },
     "이 이벤트만" : {
       "localizations" : {
@@ -1163,10 +1296,24 @@
       }
     },
     "이동" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go"
+          }
+        }
+      }
     },
     "이동할 월을 선택하세요" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select the month to navigate to"
+          }
+        }
+      }
     },
     "이메일" : {
       "localizations" : {

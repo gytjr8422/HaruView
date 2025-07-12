@@ -17,33 +17,28 @@ struct MonthGridView: View {
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 1), count: 7)
     
     var body: some View {
-        ScrollView(showsIndicators: false) {
-            VStack(spacing: 0) {
-                LazyVGrid(columns: columns, spacing: 2) {
-                    ForEach(monthData.calendarDates, id: \.self) { date in
-                        CalendarDayCell(
-                            date: date,
-                            calendarDay: monthData.day(for: date),
-                            isSelected: isDateSelected(date),
-                            isToday: Calendar.current.isDateInToday(date),
-                            isCurrentMonth: isDateInCurrentMonth(date),
-                            onTap: {
-                                onDateTap(date)
-                            },
-                            onLongPress: {
-                                onDateLongPress(date)
-                            }
-                        )
-                    }
+        VStack(spacing: 0) {
+            LazyVGrid(columns: columns, spacing: 2) {
+                ForEach(monthData.calendarDates, id: \.self) { date in
+                    CalendarDayCell(
+                        date: date,
+                        calendarDay: monthData.day(for: date),
+                        isSelected: isDateSelected(date),
+                        isToday: Calendar.current.isDateInToday(date),
+                        isCurrentMonth: isDateInCurrentMonth(date),
+                        onTap: {
+                            onDateTap(date)
+                        },
+                        onLongPress: {
+                            onDateLongPress(date)
+                        }
+                    )
                 }
-                .padding(.horizontal, 2)
-                .transition(.opacity)
-                
-                Spacer(minLength: 20)
             }
-        }
-        .refreshable {
-            // 부모 뷰에서 전체 새로고침 처리
+            .padding(.horizontal, 2)
+            .transition(.opacity)
+            
+            Spacer(minLength: 20)
         }
     }
     

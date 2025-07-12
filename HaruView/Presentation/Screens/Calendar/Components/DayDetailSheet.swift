@@ -224,6 +224,7 @@ struct DayDetailSheet: View {
             
             // 나중에 여기에 [일정 추가] [할 일 추가] 버튼들이 들어갈 예정
         }
+        .padding(.horizontal, 20)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(hexCode: "FFFCF5"))
     }
