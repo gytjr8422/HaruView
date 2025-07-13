@@ -196,7 +196,7 @@ extension EventKitRepository {
         }
     }
     
-    /// 달력용 3개월 데이터 조회 (이전/현재/다음 달)
+    /// 달력용 7개월 데이터 조회 (이전/현재/다음 달)
     func fetchCalendarWindow(centerMonth: Date) async -> Result<[CalendarMonth], TodayBoardError> {
         let calendar = Calendar.current
         let centerComponents = calendar.dateComponents([.year, .month], from: centerMonth)
@@ -206,22 +206,27 @@ extension EventKitRepository {
             return .failure(.invalidInput)
         }
         
-        // 이전, 현재, 다음 달 계산
-        let months: [(Int, Int)] = [
-            // 이전 달
-            centerMonthNumber == 1 ? (centerYear - 1, 12) : (centerYear, centerMonthNumber - 1),
-            // 현재 달
-            (centerYear, centerMonthNumber),
-            // 다음 달
-            centerMonthNumber == 12 ? (centerYear + 1, 1) : (centerYear, centerMonthNumber + 1)
-        ]
-        
-        // 병렬로 3개월 데이터 조회
-        async let prevMonth = fetchCalendarMonth(year: months[0].0, month: months[0].1)
-        async let currentMonth = fetchCalendarMonth(year: months[1].0, month: months[1].1)
-        async let nextMonth = fetchCalendarMonth(year: months[2].0, month: months[2].1)
-        
-        let results = await [prevMonth, currentMonth, nextMonth]
+        // 중심 월 기준 이전 7개월과 다음 7개월 계산
+        let centerDate = calendar.date(from: DateComponents(year: centerYear, month: centerMonthNumber, day: 1))!
+        let months: [(Int, Int)] = (-3...3).compactMap { offset in
+            guard let date = calendar.date(byAdding: .month, value: offset, to: centerDate) else { return nil }
+            let comps = calendar.dateComponents([.year, .month], from: date)
+            return (comps.year!, comps.month!)
+        }
+
+        // 병렬로 7개월 데이터 조회
+        var results = Array<Result<CalendarMonth, TodayBoardError>?>(repeating: nil, count: months.count)
+        await withTaskGroup(of: (Int, Result<CalendarMonth, TodayBoardError>).self) { group in
+            for (idx, pair) in months.enumerated() {
+                group.addTask {
+                    let res = await self.fetchCalendarMonth(year: pair.0, month: pair.1)
+                    return (idx, res)
+                }
+            }
+            for await (idx, res) in group {
+                results[idx] = res
+            }
+        }
         
         var calendarMonths: [CalendarMonth] = []
         for result in results {
@@ -230,6 +235,8 @@ extension EventKitRepository {
                 calendarMonths.append(month)
             case .failure(let error):
                 return .failure(error)
+            case .none:
+                return .failure(.notFound)
             }
         }
         
@@ -278,7 +285,7 @@ extension EventKitRepository {
             Self.monthCache = Self.monthCache.filter { key, month in
                 // 현재 월 기준 ±2개월 데이터만 유지
                 let monthDiff = (month.year - currentYear) * 12 + (month.month - currentMonth)
-                return abs(monthDiff) <= 2
+                return abs(monthDiff) <= 3
             }
         }
     }

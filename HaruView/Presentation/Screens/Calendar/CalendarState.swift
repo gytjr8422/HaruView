@@ -62,7 +62,7 @@ struct CalendarState: Equatable {
     mutating func clearOldCache() {
         cachedMonths = cachedMonths.filter { key, month in
             let monthDiff = (month.year - currentYear) * 12 + (month.month - currentMonth)
-            return abs(monthDiff) <= 2
+            return abs(monthDiff) <= 3
         }
     }
 }

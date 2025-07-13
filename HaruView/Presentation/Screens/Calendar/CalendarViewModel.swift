@@ -16,7 +16,7 @@ protocol CalendarViewModelProtocol: ObservableObject {
     var error: TodayBoardError? { get }
     var selectedDate: Date? { get }
     
-    // 3개월 윈도우 관련
+    // 7개월 윈도우 관련
     var monthWindow: [CalendarMonth] { get }
     var currentWindowIndex: Int { get }
     var isCurrentMonthDataReady: Bool { get }
@@ -46,9 +46,9 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
     @Published private(set) var hasInitialDataLoaded = false
     @Published private(set) var isDataReady = false
     
-    // 3개월 윈도우 관리
+    // 7개월 윈도우 관리
     @Published private(set) var monthWindow: [CalendarMonth] = []
-    @Published var currentWindowIndex = 1 // 중간이 현재 월
+    @Published var currentWindowIndex = 3 // 중간이 현재 월
     
     // MARK: - Computed Properties
     var currentMonthData: CalendarMonth? { state.currentMonthData }
@@ -56,17 +56,17 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
     var error: TodayBoardError? { state.error }
     var selectedDate: Date? { state.selectedDate }
     
-    // 3개월 윈도우 관련 프로퍼티
+    // 7개월 윈도우 관련 프로퍼티
     var previousMonth: CalendarMonth? {
-        monthWindow.indices.contains(0) ? monthWindow[0] : nil
+        monthWindow.indices.contains(2) ? monthWindow[2] : nil
     }
     
     var currentMonth: CalendarMonth? {
-        monthWindow.indices.contains(1) ? monthWindow[1] : nil
+        monthWindow.indices.contains(1) ? monthWindow[3] : nil
     }
     
     var nextMonth: CalendarMonth? {
-        monthWindow.indices.contains(2) ? monthWindow[2] : nil
+        monthWindow.indices.contains(2) ? monthWindow[4] : nil
     }
     
     /// 현재 월 데이터가 완전히 준비되었는지 확인
@@ -130,7 +130,7 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
     
     // MARK: - Public Methods
     
-    /// 현재 월 데이터 로드 (3개월 윈도우)
+    /// 현재 월 데이터 로드 (7개월 윈도우)
     func loadCurrentMonth() {
         handle(.loadCurrentMonth)
     }
@@ -228,7 +228,7 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
     func isDateDataReady(for date: Date) -> Bool {
         guard isCurrentMonthDataReady else { return false }
         
-        // 3개월 윈도우에서 해당 날짜 확인
+        // 7개월 윈도우에서 해당 날짜 확인
         for monthData in monthWindow {
             let calendar = Calendar.current
             let dateComponents = calendar.dateComponents([.year, .month], from: date)
@@ -307,7 +307,7 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
         }
     }
     
-    // MARK: - 3개월 윈도우 로딩
+    // MARK: - 7개월 윈도우 로딩
     private func loadMonthWindow() {
         loadTask?.cancel()
         
@@ -325,11 +325,11 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
             switch result {
             case .success(let months):
                 monthWindow = months
-                currentWindowIndex = 1 // 중간이 현재 월
+                currentWindowIndex = 3 // 중간이 현재 월
                 
                 // 현재 월 데이터도 업데이트 (중간이 현재 월)
-                if months.count >= 2 {
-                    let currentMonth = months[1]
+                if months.count >= 4 {
+                    let currentMonth = months[3]
                     state.currentMonthData = currentMonth
                     state.setCachedMonth(currentMonth)
                     
@@ -373,8 +373,8 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
                 // 현재 이전 달을 새로운 중심으로
                 newCenterDate = monthWindow[0].firstDay
             case .next:
-                // 현재 다음 달을 새로운 중심으로
-                newCenterDate = monthWindow[2].firstDay
+                // 현재 가장 이후 달을 새로운 중심으로
+                newCenterDate = monthWindow[6].firstDay
             }
             
             let result = await fetchWindow(centerMonth: newCenterDate)
@@ -385,7 +385,7 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
                 await MainActor.run {
                     
                     monthWindow = newMonths
-                    currentWindowIndex = 1 // 다시 중간으로
+                    currentWindowIndex = 3 // 다시 중간으로
                     
                     // 캐시 업데이트
                     for month in newMonths {
@@ -393,8 +393,8 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
                     }
                     
                     // 현재 월 업데이트
-                    if newMonths.count >= 2 {
-                        let currentMonth = newMonths[1]
+                    if newMonths.count >= 4 {
+                        let currentMonth = newMonths[3]
                         state.currentYear = currentMonth.year
                         state.currentMonth = currentMonth.month
                         state.currentMonthData = currentMonth
@@ -474,7 +474,7 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
             return day
         }
         
-        // 3개월 윈도우에서 찾기
+        // 7개월 윈도우에서 찾기
         for monthData in monthWindow {
             if let day = monthData.day(for: date) {
                 return day
@@ -577,15 +577,18 @@ extension CalendarViewModel {
     
     /// 테스트용 더미 데이터 로드
     func loadDummyData() {
-        let dummyMonths = [
-            CalendarMonth(year: state.currentYear, month: state.currentMonth == 1 ? 12 : state.currentMonth - 1, days: []),
-            CalendarMonth(year: state.currentYear, month: state.currentMonth, days: []),
-            CalendarMonth(year: state.currentYear, month: state.currentMonth == 12 ? 1 : state.currentMonth + 1, days: [])
-        ]
+        let dummyMonths = (-3...3).map { offset -> CalendarMonth in
+                    var comps = DateComponents()
+                    comps.month = offset
+                    let date = Calendar.current.date(byAdding: comps, to: state.currentMonthFirstDay)!
+                    let year = Calendar.current.component(.year, from: date)
+                    let month = Calendar.current.component(.month, from: date)
+                    return CalendarMonth(year: year, month: month, days: [])
+                }
         
         monthWindow = dummyMonths
-        currentWindowIndex = 1
-        state.currentMonthData = dummyMonths[1]
+        currentWindowIndex = 3
+        state.currentMonthData = dummyMonths[3]
         
         for month in dummyMonths {
             state.setCachedMonth(month)

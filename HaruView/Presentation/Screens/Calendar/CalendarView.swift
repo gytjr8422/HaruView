@@ -158,7 +158,7 @@ struct CalendarView: View {
             WeekdayHeaderView()
             
             // 최적화된 PagedTabView - 현재 월만 기준으로 ID 설정
-            if vm.monthWindow.count >= 3 {
+            if vm.monthWindow.count >= 7 {
                 OptimizedPagedCalendarView(
                     monthWindow: vm.monthWindow,
                     currentIndex: vm.currentWindowIndex,

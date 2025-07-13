@@ -163,7 +163,7 @@ struct FetchEventsByDateRangeUseCase {
     }
 }
 
-// MARK: - 달력 3개월 윈도우 조회 Use Case (성능 최적화용)
+// MARK: - 달력 7개월 윈도우 조회 Use Case (성능 최적화용)
 struct FetchCalendarWindowUseCase {
     private let eventRepo: EventRepositoryProtocol
     private let reminderRepo: ReminderRepositoryProtocol
@@ -192,16 +192,17 @@ struct FetchCalendarWindowUseCase {
             return .failure(.invalidInput)
         }
         
-        // 이전, 현재, 다음 달 계산
-        let months: [(Int, Int)] = [
-            centerMonthNumber == 1 ? (centerYear - 1, 12) : (centerYear, centerMonthNumber - 1),
-            (centerYear, centerMonthNumber),
-            centerMonthNumber == 12 ? (centerYear + 1, 1) : (centerYear, centerMonthNumber + 1)
-        ]
+        // 중심 월 기준 이전 3개월과 다음 3개월 계산
+        let centerDate = calendar.date(from: DateComponents(year: centerYear, month: centerMonthNumber, day: 1))!
+        let months: [(Int, Int)] = (-3...3).compactMap { offset in
+            guard let date = calendar.date(byAdding: .month, value: offset, to: centerDate) else { return nil }
+            let comps = calendar.dateComponents([.year, .month], from: date)
+            return (comps.year!, comps.month!)
+        }
         
         let fetchMonth = FetchCalendarMonthUseCase(eventRepo: eventRepo, reminderRepo: reminderRepo)
         
-        // 순차적으로 3개월 데이터 조회
+        // 순차적으로 7개월 데이터 조회
         var calendarMonths: [CalendarMonth] = []
         for (year, month) in months {
             let result = await fetchMonth(year: year, month: month)

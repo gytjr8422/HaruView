@@ -199,7 +199,7 @@ extension DIContainer {
         )
     }
     
-    /// 달력 3개월 윈도우 조회 Use Case
+    /// 달력 7개월 윈도우 조회 Use Case
     func makeFetchCalendarWindowUseCase() -> FetchCalendarWindowUseCase {
         FetchCalendarWindowUseCase(
             eventRepo: eventKitRepository,
