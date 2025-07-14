@@ -19,17 +19,14 @@ struct EditRecurrenceViewModifier<VM: AddSheetViewModelProtocol>: ViewModifier {
                     isPresented: $internalShowDialog,
                     actions: {
                         Button("이 이벤트만 편집") {
-                            print("DEBUG: '이 이벤트만 편집' 버튼 클릭됨")
                             editVM.editEventWithSpan(.thisEventOnly)
                         }
                         
                         Button("이후 모든 이벤트 편집") {
-                            print("DEBUG: '이후 모든 이벤트 편집' 버튼 클릭됨")
                             editVM.editEventWithSpan(.futureEvents)
                         }
                         
                         Button("취소", role: .cancel) {
-                            print("DEBUG: '취소' 버튼 클릭됨")
                             editVM.cancelEventEdit()
                         }
                     },
@@ -38,13 +35,11 @@ struct EditRecurrenceViewModifier<VM: AddSheetViewModelProtocol>: ViewModifier {
                     }
                 )
                 .onChange(of: editVM.showRecurringEditOptions) { _, newValue in
-                    print("DEBUG: showRecurringEditOptions 변경됨: \(newValue)")
                     if newValue {
                         internalShowDialog = true
                     }
                 }
                 .onChange(of: internalShowDialog) { _, newValue in
-                    print("DEBUG: internalShowDialog 변경됨: \(newValue)")
                     // dialog가 닫혔을 때만 처리
                     if !newValue {
                         Task { @MainActor in

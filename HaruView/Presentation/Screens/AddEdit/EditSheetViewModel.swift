@@ -38,11 +38,7 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
     @Published var availableReminderCalendars: [ReminderCalendar] = []
     
     // 반복 일정 편집 범위 선택을 위한 상태
-    @Published var showRecurringEditOptions: Bool = false {
-        didSet {
-            print("DEBUG: showRecurringEditOptions changed from \(oldValue) to \(showRecurringEditOptions)")
-        }
-    }
+    @Published var showRecurringEditOptions: Bool = false
     @Published var pendingSaveAction: (() -> Void)? = nil
     @Published var saveCompleted: Bool = false
 
@@ -155,8 +151,6 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
          
          // 반복 일정인 경우 사용자에게 편집 범위를 묻기
          if mode == .event, let originalEvent = originalEvent, originalEvent.hasRecurrence {
-             print("DEBUG: 반복 일정 감지됨, dialog 표시 시작")
-             
              // 다음 런루프에서 상태 변경하여 "Publishing changes from within view updates" 오류 방지
              Task { @MainActor in
                  self.pendingSaveAction = {
@@ -165,7 +159,6 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
                      }
                  }
                  self.showRecurringEditOptions = true
-                 print("DEBUG: showRecurringEditOptions 설정 완료: \(self.showRecurringEditOptions)")
              }
              return
          }
@@ -257,7 +250,6 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
      
      /// 반복 일정 편집 범위 선택
      func editEventWithSpan(_ span: EventEditSpan) {
-         print("DEBUG: editEventWithSpan 호출됨, span: \(span)")
          showRecurringEditOptions = false
          pendingSaveAction = nil
          
@@ -268,7 +260,6 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
      
      /// 반복 일정 편집 취소
      func cancelEventEdit() {
-         print("DEBUG: cancelEventEdit 호출됨")
          showRecurringEditOptions = false
          pendingSaveAction = nil
      }
