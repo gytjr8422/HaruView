@@ -192,7 +192,8 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
                          url: url.isEmpty ? nil : URL(string: url),
                          alarms: alarms,
                          recurrenceRule: nil, // 반복 규칙 변경 방지
-                         editSpan: editSpan
+                         editSpan: editSpan,
+                         calendarId: selectedCalendar?.id
                      )
                      let res = await editEvent(eventEdit)
                      handle(res)
@@ -207,7 +208,8 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
                          url: url.isEmpty ? nil : URL(string: url),
                          alarms: alarms,
                          recurrenceRule: recurrenceRule,
-                         editSpan: editSpan
+                         editSpan: editSpan,
+                         calendarId: selectedCalendar?.id
                      )
                      let res = await editEvent(eventEdit)
                      handle(res)
@@ -223,7 +225,8 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
                      url: url.isEmpty ? nil : URL(string: url),
                      alarms: alarms,
                      recurrenceRule: recurrenceRule,
-                     editSpan: editSpan
+                     editSpan: editSpan,
+                     calendarId: selectedCalendar?.id
                  )
                  let res = await editEvent(eventEdit)
                  handle(res)
@@ -239,7 +242,8 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
                  notes: reminderNotes.isEmpty ? nil : reminderNotes,
                  url: reminderURL.isEmpty ? nil : URL(string: reminderURL),
                  location: reminderLocation.isEmpty ? nil : reminderLocation,
-                 alarms: reminderAlarms
+                 alarms: reminderAlarms,
+                 calendarId: selectedReminderCalendar?.id
              )
              let res = await editReminder(reminderEdit)
              handle(res)

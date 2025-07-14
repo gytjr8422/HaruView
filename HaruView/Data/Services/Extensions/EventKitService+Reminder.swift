@@ -121,6 +121,12 @@ extension EventKitService {
             }
         }
         
+        // 캘린더 설정
+        if let calendarId = edit.calendarId,
+           let calendar = store.calendar(withIdentifier: calendarId) {
+            reminder.calendar = calendar
+        }
+        
         // 알람 설정 (기존 알람 제거 후 새로 추가)
         applyAlarmsToReminder(edit.alarms, to: reminder)
     }

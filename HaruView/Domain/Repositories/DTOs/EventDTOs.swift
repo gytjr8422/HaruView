@@ -30,8 +30,9 @@ struct EventEdit {
     let alarms: [AlarmInput]
     let recurrenceRule: RecurrenceRuleInput?
     let editSpan: EventEditSpan
+    let calendarId: String?
     
-    init(id: String, title: String, start: Date, end: Date, location: String?, notes: String?, url: URL?, alarms: [AlarmInput], recurrenceRule: RecurrenceRuleInput?, editSpan: EventEditSpan = .thisEventOnly) {
+    init(id: String, title: String, start: Date, end: Date, location: String?, notes: String?, url: URL?, alarms: [AlarmInput], recurrenceRule: RecurrenceRuleInput?, editSpan: EventEditSpan = .thisEventOnly, calendarId: String? = nil) {
         self.id = id
         self.title = title
         self.start = start
@@ -42,6 +43,7 @@ struct EventEdit {
         self.alarms = alarms
         self.recurrenceRule = recurrenceRule
         self.editSpan = editSpan
+        self.calendarId = calendarId
     }
 }
 

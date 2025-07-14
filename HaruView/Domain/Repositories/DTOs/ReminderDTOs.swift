@@ -29,6 +29,20 @@ struct ReminderEdit {
     let url: URL?
     let location: String?
     let alarms: [AlarmInput]
+    let calendarId: String?
+    
+    init(id: String, title: String, due: Date?, includesTime: Bool, priority: Int, notes: String?, url: URL?, location: String?, alarms: [AlarmInput], calendarId: String? = nil) {
+        self.id = id
+        self.title = title
+        self.due = due
+        self.includesTime = includesTime
+        self.priority = priority
+        self.notes = notes
+        self.url = url
+        self.location = location
+        self.alarms = alarms
+        self.calendarId = calendarId
+    }
 }
 
 // MARK: - 우선순위 타입 정의

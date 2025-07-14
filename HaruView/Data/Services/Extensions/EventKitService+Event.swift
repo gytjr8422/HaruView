@@ -154,6 +154,12 @@ extension EventKitService {
         event.notes = edit.notes
         event.url = edit.url
         
+        // 캘린더 설정
+        if let calendarId = edit.calendarId,
+           let calendar = store.calendar(withIdentifier: calendarId) {
+            event.calendar = calendar
+        }
+        
         // 알람 설정 (기존 알람 제거 후 새로 추가)
         applyAlarms(edit.alarms, to: event)
         
@@ -194,6 +200,12 @@ extension EventKitService {
         event.location = edit.location
         event.notes = edit.notes
         event.url = edit.url
+        
+        // 캘린더 설정
+        if let calendarId = edit.calendarId,
+           let calendar = store.calendar(withIdentifier: calendarId) {
+            event.calendar = calendar
+        }
         
         // 알람 설정 (기존 알람 제거 후 새로 추가)
         applyAlarms(edit.alarms, to: event)
