@@ -29,6 +29,20 @@ struct EventEdit {
     let url: URL?
     let alarms: [AlarmInput]
     let recurrenceRule: RecurrenceRuleInput?
+    let editSpan: EventEditSpan
+    
+    init(id: String, title: String, start: Date, end: Date, location: String?, notes: String?, url: URL?, alarms: [AlarmInput], recurrenceRule: RecurrenceRuleInput?, editSpan: EventEditSpan = .thisEventOnly) {
+        self.id = id
+        self.title = title
+        self.start = start
+        self.end = end
+        self.location = location
+        self.notes = notes
+        self.url = url
+        self.alarms = alarms
+        self.recurrenceRule = recurrenceRule
+        self.editSpan = editSpan
+    }
 }
 
 // MARK: - 반복 규칙 입력 DTO

@@ -36,9 +36,23 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
     @Published var reminderAlarms: [AlarmInput] = []
     @Published var selectedReminderCalendar: ReminderCalendar? = nil
     @Published var availableReminderCalendars: [ReminderCalendar] = []
+    
+    // 반복 일정 편집 범위 선택을 위한 상태
+    @Published var showRecurringEditOptions: Bool = false {
+        didSet {
+            print("DEBUG: showRecurringEditOptions changed from \(oldValue) to \(showRecurringEditOptions)")
+        }
+    }
+    @Published var pendingSaveAction: (() -> Void)? = nil
+    @Published var saveCompleted: Bool = false
 
     var isEdit: Bool { true }
     var hasChanges: Bool {
+        // showRecurringEditOptions가 true일 때는 hasChanges를 true로 유지
+        if showRecurringEditOptions {
+            return true
+        }
+        
         switch mode {
         case .event:
             guard let original = originalEvent else { return false }
@@ -137,6 +151,30 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
 
     // save 메서드 확장 (기존 save 메서드 교체)
      func save() async {
+         saveCompleted = false
+         
+         // 반복 일정인 경우 사용자에게 편집 범위를 묻기
+         if mode == .event, let originalEvent = originalEvent, originalEvent.hasRecurrence {
+             print("DEBUG: 반복 일정 감지됨, dialog 표시 시작")
+             
+             // 다음 런루프에서 상태 변경하여 "Publishing changes from within view updates" 오류 방지
+             Task { @MainActor in
+                 self.pendingSaveAction = {
+                     Task {
+                         await self.performSave()
+                     }
+                 }
+                 self.showRecurringEditOptions = true
+                 print("DEBUG: showRecurringEditOptions 설정 완료: \(self.showRecurringEditOptions)")
+             }
+             return
+         }
+         
+         await performSave()
+     }
+     
+     /// 실제 저장 수행
+     private func performSave(editSpan: EventEditSpan = .thisEventOnly) async {
          isSaving = true
          error = nil
 
@@ -144,19 +182,59 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
 
          switch mode {
          case .event:
-             let eventEdit = EventEdit(
-                 id: objectId,
-                 title: titles[.event] ?? "",
-                 start: startDate,
-                 end: endDate,
-                 location: location.isEmpty ? nil : location,
-                 notes: notes.isEmpty ? nil : notes,
-                 url: url.isEmpty ? nil : URL(string: url),
-                 alarms: alarms,
-                 recurrenceRule: recurrenceRule
-             )
-             let res = await editEvent(eventEdit)
-             handle(res)
+             // 반복 일정에서 반복 규칙 변경 시 경고
+             if let originalEvent = originalEvent, originalEvent.hasRecurrence {
+                 let originalHasRecurrence = originalEvent.hasRecurrence
+                 let newHasRecurrence = recurrenceRule != nil
+                 
+                 if originalHasRecurrence && (newHasRecurrence || (!newHasRecurrence && originalHasRecurrence)) {
+                     // 반복 규칙을 변경하려는 경우 - 기존 반복 규칙 유지
+                     let eventEdit = EventEdit(
+                         id: objectId,
+                         title: titles[.event] ?? "",
+                         start: startDate,
+                         end: endDate,
+                         location: location.isEmpty ? nil : location,
+                         notes: notes.isEmpty ? nil : notes,
+                         url: url.isEmpty ? nil : URL(string: url),
+                         alarms: alarms,
+                         recurrenceRule: nil, // 반복 규칙 변경 방지
+                         editSpan: editSpan
+                     )
+                     let res = await editEvent(eventEdit)
+                     handle(res)
+                 } else {
+                     let eventEdit = EventEdit(
+                         id: objectId,
+                         title: titles[.event] ?? "",
+                         start: startDate,
+                         end: endDate,
+                         location: location.isEmpty ? nil : location,
+                         notes: notes.isEmpty ? nil : notes,
+                         url: url.isEmpty ? nil : URL(string: url),
+                         alarms: alarms,
+                         recurrenceRule: recurrenceRule,
+                         editSpan: editSpan
+                     )
+                     let res = await editEvent(eventEdit)
+                     handle(res)
+                 }
+             } else {
+                 let eventEdit = EventEdit(
+                     id: objectId,
+                     title: titles[.event] ?? "",
+                     start: startDate,
+                     end: endDate,
+                     location: location.isEmpty ? nil : location,
+                     notes: notes.isEmpty ? nil : notes,
+                     url: url.isEmpty ? nil : URL(string: url),
+                     alarms: alarms,
+                     recurrenceRule: recurrenceRule,
+                     editSpan: editSpan
+                 )
+                 let res = await editEvent(eventEdit)
+                 handle(res)
+             }
              
          case .reminder:
              let reminderEdit = ReminderEdit(
@@ -174,6 +252,25 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
              handle(res)
          }
          isSaving = false
+         saveCompleted = error == nil
+     }
+     
+     /// 반복 일정 편집 범위 선택
+     func editEventWithSpan(_ span: EventEditSpan) {
+         print("DEBUG: editEventWithSpan 호출됨, span: \(span)")
+         showRecurringEditOptions = false
+         pendingSaveAction = nil
+         
+         Task {
+             await performSave(editSpan: span)
+         }
+     }
+     
+     /// 반복 일정 편집 취소
+     func cancelEventEdit() {
+         print("DEBUG: cancelEventEdit 호출됨")
+         showRecurringEditOptions = false
+         pendingSaveAction = nil
      }
     
     // MARK: - 알람 관리

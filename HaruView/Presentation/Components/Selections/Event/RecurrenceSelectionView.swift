@@ -70,6 +70,22 @@ struct RecurrenceSelectionView: View {
                             )
                     }
                 }
+                
+                // 커스텀 설정 버튼
+                Button {
+                    showCustomRecurrence = true
+                } label: {
+                    Text("커스텀 설정")
+                        .font(.pretendardRegular(size: 14))
+                        .foregroundStyle(Color(hexCode: "A76545"))
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 12)
+                        .frame(maxWidth: .infinity)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16)
+                                .stroke(Color(hexCode: "A76545"), lineWidth: 1)
+                        )
+                }
             }
         }
         .sheet(isPresented: $showCustomRecurrence) {

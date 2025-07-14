@@ -76,8 +76,15 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
             }
         }
         .interactiveDismissDisabled(isDirty || vm.isSaving)
+        .modifier(EditRecurrenceViewModifier(vm: vm))
         .onAppear {
             selected = vm.mode
+        }
+        .onChange(of: vm.saveCompleted) { _, newValue in
+            if newValue && vm.error == nil && !vm.showRecurringEditOptions {
+                dismiss()
+                onSave()
+            }
         }
     }
 
@@ -166,7 +173,7 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                 Button {
                     Task {
                         await vm.save()
-                        if vm.error == nil { dismiss(); onSave() }
+                        // 저장 후 즉시 시트를 닫지 않음 - saveCompleted onChange에서 처리
                     }
                 } label: {
                     Text("저장").font(.pretendardSemiBold(size: 16))

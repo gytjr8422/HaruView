@@ -30,6 +30,7 @@ protocol AddSheetViewModelProtocol: ObservableObject {
     var isSaving: Bool { get }
     var isEdit: Bool { get }
     var hasChanges: Bool { get }
+    var saveCompleted: Bool { get }
     
     // Event 관련 프로퍼티들
     var location: String { get set }
@@ -56,6 +57,27 @@ protocol AddSheetViewModelProtocol: ObservableObject {
     func addReminderAlarm(_ alarm: AlarmInput)
     func removeReminderAlarm(at index: Int)
     func setReminderPriority(_ priority: Int)
+}
+
+// MARK: - 반복 일정 편집 프로토콜 확장
+extension AddSheetViewModelProtocol {
+    var showRecurringEditOptions: Bool { 
+        get { false }
+        set { }
+    }
+    var pendingSaveAction: (() -> Void)? { 
+        get { nil }
+        set { }
+    }
+    var saveCompleted: Bool { false }
+    
+    func editEventWithSpan(_ span: EventEditSpan) {
+        // 기본 구현 (AddSheetViewModel용)
+    }
+    
+    func cancelEventEdit() {
+        // 기본 구현 (AddSheetViewModel용)
+    }
 }
 
 
@@ -97,6 +119,7 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
 
     @Published var error: TodayBoardError?
     @Published var isSaving: Bool = false
+    @Published var saveCompleted: Bool = false
     
     // 일정 추가 프로퍼티
     @Published var location: String = ""
@@ -202,6 +225,7 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
         }
         
         isSaving = false
+        saveCompleted = error == nil
     }
     
     // MARK: - 알람 관리

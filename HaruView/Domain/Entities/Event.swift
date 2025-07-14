@@ -7,6 +7,19 @@
 
 import EventKit
 
+// MARK: - 반복 일정 편집 범위
+enum EventEditSpan {
+    case thisEventOnly
+    case futureEvents
+    
+    var ekSpan: EKSpan {
+        switch self {
+        case .thisEventOnly: return .thisEvent
+        case .futureEvents: return .futureEvents
+        }
+    }
+}
+
 // MARK: - 캘린더 일정
 struct Event: Identifiable, Equatable {
     let id: String       // EKEventIdentifier

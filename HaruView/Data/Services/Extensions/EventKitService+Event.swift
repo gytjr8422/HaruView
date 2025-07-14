@@ -101,6 +101,11 @@ extension EventKitService {
             return .failure(.notFound)
         }
         
+        // 반복 일정 편집 시 특별 처리
+        if event.hasRecurrenceRules {
+            return updateRecurringEvent(edit, originalEvent: event)
+        }
+        
         applyEventEdit(edit, to: event)
         
         do {
@@ -112,6 +117,48 @@ extension EventKitService {
         } catch {
             return .failure(.saveFailed)
         }
+    }
+    
+    private func updateRecurringEvent(_ edit: EventEdit, originalEvent: EKEvent) -> Result<Void, TodayBoardError> {
+        let span: EKSpan = edit.editSpan.ekSpan
+        
+        do {
+            if span == .thisEvent {
+                // 이 이벤트만 편집: 단순히 thisEvent span 사용
+                // EventKit이 자동으로 예외 처리를 해줌
+                applyEventEditForRecurring(edit, to: originalEvent)
+                try store.save(originalEvent, span: .thisEvent)
+                
+            } else {
+                // 이후 모든 이벤트 편집: futureEvents span 사용
+                applyEventEditForRecurring(edit, to: originalEvent)
+                try store.save(originalEvent, span: .futureEvents)
+            }
+            
+            Task { @MainActor in
+                WidgetRefreshService.shared.forceRefresh()
+            }
+            return .success(())
+            
+        } catch {
+            print("DEBUG: 반복 일정 편집 오류: \(error)")
+            return .failure(.saveFailed)
+        }
+    }
+    
+    private func applyEventEditForRecurring(_ edit: EventEdit, to event: EKEvent) {
+        event.title = edit.title
+        event.startDate = edit.start
+        event.endDate = edit.end
+        event.location = edit.location
+        event.notes = edit.notes
+        event.url = edit.url
+        
+        // 알람 설정 (기존 알람 제거 후 새로 추가)
+        applyAlarms(edit.alarms, to: event)
+        
+        // 반복 규칙은 편집하지 않음 (EventKit 제한 때문)
+        // 반복 규칙 변경이 필요한 경우 별도 처리 필요
     }
     
     // MARK: - Helper 메서드들
@@ -151,17 +198,31 @@ extension EventKitService {
         // 알람 설정 (기존 알람 제거 후 새로 추가)
         applyAlarms(edit.alarms, to: event)
         
-        // 반복 규칙 설정 (기존 규칙 제거 후 새로 추가)
-        if let recurrenceRule = edit.recurrenceRule {
-            applyRecurrenceRule(recurrenceRule, to: event)
-        } else {
-            // 반복 규칙 제거
+        // 반복 규칙 설정 - 기존 반복 일정의 경우 조건부 처리
+        let hasExistingRecurrence = event.hasRecurrenceRules
+        let newRecurrenceRule = edit.recurrenceRule
+        
+        if hasExistingRecurrence && newRecurrenceRule != nil {
+            // 기존 반복 일정에 새 반복 규칙 적용 시도
+            // 일부 변경은 허용되지 않을 수 있으므로 조건부 처리
+            if let existingRules = event.recurrenceRules {
+                for rule in existingRules {
+                    event.removeRecurrenceRule(rule)
+                }
+            }
+            applyRecurrenceRule(newRecurrenceRule!, to: event)
+        } else if !hasExistingRecurrence && newRecurrenceRule != nil {
+            // 새로운 반복 규칙 추가
+            applyRecurrenceRule(newRecurrenceRule!, to: event)
+        } else if hasExistingRecurrence && newRecurrenceRule == nil {
+            // 기존 반복 규칙 제거
             if let existingRules = event.recurrenceRules {
                 for rule in existingRules {
                     event.removeRecurrenceRule(rule)
                 }
             }
         }
+        // hasExistingRecurrence가 false이고 newRecurrenceRule이 nil인 경우는 아무것도 하지 않음
     }
     
     private func applyAlarms(_ alarms: [AlarmInput], to event: EKEvent) {
