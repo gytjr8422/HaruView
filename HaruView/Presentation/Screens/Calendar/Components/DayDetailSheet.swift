@@ -66,7 +66,17 @@ struct DayDetailSheet: View {
                 
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        showAddSheet = true
+                        // 1) 광고가 있으면 먼저 보여주고
+                        if let root = UIApplication.shared.connectedScenes
+                            .compactMap({ ($0 as? UIWindowScene)?.keyWindow })
+                            .first?.rootViewController {
+                            AdManager.shared.show(from: root) {
+                                // 2) 광고 닫힌 뒤 AddSheet 열기
+                                showAddSheet = true
+                            }
+                        } else {
+                            showAddSheet = true
+                        }
                     } label: {
                         Image(systemName: "plus")
                             .font(.system(size: 16, weight: .semibold))

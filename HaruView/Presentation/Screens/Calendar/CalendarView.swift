@@ -310,7 +310,8 @@ struct OptimizedPagedCalendarView: View {
     let onDateLongPress: (Date) -> Void
     
     // currentIndex 변경을 감지하여 PagedTabView의 바인딩 업데이트
-    @State private var internalCurrentIndex: Int = 1
+    @State private var internalCurrentIndex: Int = 3
+    @State private var isInternalUpdate = false
     
     var body: some View {
         PagedTabView(
@@ -325,13 +326,25 @@ struct OptimizedPagedCalendarView: View {
                 )
                 .id("\(monthData.year)-\(monthData.month)") // 개별 월은 개별 ID 유지
             },
-            onPageSettled: onPageChange
+            onPageSettled: { index in
+                // 내부 스와이프로 인한 변경임을 표시
+                isInternalUpdate = true
+                internalCurrentIndex = index
+                onPageChange(index)
+                
+                // 플래그 리셋
+                DispatchQueue.main.async {
+                    isInternalUpdate = false
+                }
+            }
         )
         .onAppear {
             internalCurrentIndex = currentIndex
         }
         .onChange(of: currentIndex) { _, newIndex in
-            if internalCurrentIndex != newIndex {
+            // 외부에서 currentIndex가 변경되었을 때만 업데이트
+            // 내부 스와이프로 인한 변경은 onPageSettled에서 처리
+            if !isInternalUpdate && internalCurrentIndex != newIndex {
                 internalCurrentIndex = newIndex
             }
         }

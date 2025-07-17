@@ -92,7 +92,9 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
     // MARK: - Tasks & Combine
     private var loadTask: Task<Void, Never>?
     private var preloadTask: Task<Void, Never>?
+    private var windowLoadTask: Task<Void, Never>?
     private var cancellables = Set<AnyCancellable>()
+    private var isLoadingNewWindow = false
     
     // MARK: - Initialization
     init(
@@ -126,6 +128,7 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
     deinit {
         loadTask?.cancel()
         preloadTask?.cancel()
+        windowLoadTask?.cancel()
     }
     
     // MARK: - Public Methods
@@ -181,11 +184,15 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
         state.currentMonthData = selectedMonth
         isDataReady = true
         
-        // 경계에 도달하면 새로운 윈도우 로드
-        if index == 0 {
-            loadNewWindow(direction: .previous)
-        } else if index == monthWindow.count - 1 {
-            loadNewWindow(direction: .next)
+        // 경계에 도달하면 새로운 윈도우 로드 (더 보수적인 경계 설정)
+        // 이미 로딩 중이면 중복 로드 방지
+        if !isLoadingNewWindow {
+            // 첫 번째 인덱스나 마지막 인덱스에 도달했을 때만 로드
+            if index == 0 {
+                loadNewWindow(direction: .previous)
+            } else if index == monthWindow.count - 1 {
+                loadNewWindow(direction: .next)
+            }
         }
     }
     
@@ -365,7 +372,18 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
     }
     
     private func loadNewWindow(direction: WindowDirection) {
-        Task {
+        // 이미 로딩 중이면 중복 방지
+        guard !isLoadingNewWindow else { return }
+        
+        // 현재 진행 중인 작업 취소
+        windowLoadTask?.cancel()
+        
+        windowLoadTask = Task {
+            // 로딩 플래그 설정
+            await MainActor.run {
+                isLoadingNewWindow = true
+            }
+            
             let newCenterDate: Date
             
             switch direction {
@@ -379,10 +397,22 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
             
             let result = await fetchWindow(centerMonth: newCenterDate)
             
-            guard !Task.isCancelled else { return }
-            
-            if case .success(let newMonths) = result {
+            // 작업이 취소되었는지 확인
+            guard !Task.isCancelled else { 
                 await MainActor.run {
+                    isLoadingNewWindow = false
+                }
+                return 
+            }
+            
+            switch result {
+            case .success(let newMonths):
+                await MainActor.run {
+                    // 안전한 상태 업데이트
+                    guard !Task.isCancelled else {
+                        isLoadingNewWindow = false
+                        return
+                    }
                     
                     monthWindow = newMonths
                     currentWindowIndex = 3 // 다시 중간으로
@@ -399,6 +429,12 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
                         state.currentMonth = currentMonth.month
                         state.currentMonthData = currentMonth
                     }
+                    
+                    isLoadingNewWindow = false
+                }
+            case .failure:
+                await MainActor.run {
+                    isLoadingNewWindow = false
                 }
             }
         }
