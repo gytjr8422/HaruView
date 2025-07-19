@@ -21,10 +21,6 @@ struct CalendarView: View {
     // 편집 후 새로고침을 위한 상태
     @State private var pendingDetailDate: Date?
     
-    // ID 최적화: 현재 표시 중인 월만 기준으로 ID 생성
-    private var optimizedViewID: String {
-        "\(vm.state.currentYear)-\(String(format: "%02d", vm.state.currentMonth))"
-    }
     
     init() {
         _vm = StateObject(wrappedValue: DIContainer.shared.makeCalendarViewModel())
@@ -157,11 +153,11 @@ struct CalendarView: View {
             // 요일 헤더
             WeekdayHeaderView()
             
-            // 최적화된 PagedTabView - 현재 월만 기준으로 ID 설정
+            // 안정적인 TabView 기반 달력
             if vm.monthWindow.count >= 7 {
-                OptimizedPagedCalendarView(
+                StableTabCalendarView(
+                    currentIndex: $vm.currentWindowIndex,
                     monthWindow: vm.monthWindow,
-                    currentIndex: vm.currentWindowIndex,
                     selectedDate: vm.selectedDate,
                     onPageChange: { index in
                         vm.handlePageChange(to: index)
@@ -183,7 +179,6 @@ struct CalendarView: View {
                         showAddSheet = true
                     }
                 )
-                .id(optimizedViewID) // 최적화된 ID 사용
             } else {
                 ProgressView("달력 준비 중...")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -300,56 +295,6 @@ struct CalendarView: View {
     }
 }
 
-// MARK: - 최적화된 PagedCalendarView 컴포넌트
-struct OptimizedPagedCalendarView: View {
-    let monthWindow: [CalendarMonth]
-    let currentIndex: Int
-    let selectedDate: Date?
-    let onPageChange: (Int) -> Void
-    let onDateTap: (Date) -> Void
-    let onDateLongPress: (Date) -> Void
-    
-    // currentIndex 변경을 감지하여 PagedTabView의 바인딩 업데이트
-    @State private var internalCurrentIndex: Int = 3
-    @State private var isInternalUpdate = false
-    
-    var body: some View {
-        PagedTabView(
-            currentIndex: $internalCurrentIndex,
-            views: monthWindow.enumerated().map { index, monthData in
-                MonthGridView(
-                    monthData: monthData,
-                    selectedDate: selectedDate,
-                    isCurrentDisplayedMonth: index == currentIndex,
-                    onDateTap: onDateTap,
-                    onDateLongPress: onDateLongPress
-                )
-                .id("\(monthData.year)-\(monthData.month)") // 개별 월은 개별 ID 유지
-            },
-            onPageSettled: { index in
-                // 내부 스와이프로 인한 변경임을 표시
-                isInternalUpdate = true
-                internalCurrentIndex = index
-                onPageChange(index)
-                
-                // 플래그 리셋
-                DispatchQueue.main.async {
-                    isInternalUpdate = false
-                }
-            }
-        )
-        .onAppear {
-            internalCurrentIndex = currentIndex
-        }
-        .onChange(of: currentIndex) { _, newIndex in
-            // 외부에서 currentIndex가 변경되었을 때만 업데이트
-            // 내부 스와이프로 인한 변경은 onPageSettled에서 처리
-            if !isInternalUpdate && internalCurrentIndex != newIndex {
-                internalCurrentIndex = newIndex
-            }
-        }
-    }
-}
 
 #Preview {
     CalendarView()

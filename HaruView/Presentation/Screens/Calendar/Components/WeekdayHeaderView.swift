@@ -27,7 +27,8 @@ struct WeekdayHeaderView: View {
                         Color(hexCode: "6E5C49").opacity(0.7)   // 평일 회색
                     )
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 8)
+                    .padding(.top, 8)
+                    .padding(.bottom, 0)
             }
         }
         .background(
