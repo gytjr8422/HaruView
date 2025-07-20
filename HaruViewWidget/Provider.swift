@@ -88,7 +88,8 @@ struct Provider: AppIntentTimelineProvider {
                     title: event.title ?? "제목 없음",
                     startDate: event.startDate,
                     endDate: event.endDate,
-                    isAllDay: event.isAllDay || isAllDayDetected  // EKEvent의 isAllDay 또는 시간 기반 감지
+                    isAllDay: event.isAllDay || isAllDayDetected,  // EKEvent의 isAllDay 또는 시간 기반 감지
+                    calendarColor: event.calendar.cgColor
                 )
             }
             .sorted(by: eventSortRule)

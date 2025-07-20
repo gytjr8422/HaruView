@@ -7,6 +7,7 @@
 
 import SwiftUI
 import AppIntents
+import UIKit
 
 struct MediumWidgetView: View {
     let entry: Provider.Entry
@@ -28,7 +29,7 @@ struct MediumWidgetView: View {
                             
                             HStack {
                                 RoundedRectangle(cornerRadius: 5)
-                                    .fill(Color(hexCode: "A76545"))
+                                    .fill(Color(cgColor: event.calendarColor))
                                     .frame(width: 4)
                                     .frame(maxHeight: 25)
                                     .opacity(isPast ? 0.5 : 1)
@@ -124,4 +125,23 @@ struct CheckboxToggleStyle: ToggleStyle {
             .font(.system(size: 20))
             .contentTransition(.symbolEffect(.replace))
     }
+}
+
+#Preview("Medium Widget") {
+    let sampleEntry = SimpleEntry(
+        date: Date(),
+        configuration: ConfigurationAppIntent(),
+        events: [
+            CalendarEvent(title: "팀 미팅", startDate: Date(), endDate: Date().addingTimeInterval(3600), isAllDay: false, calendarColor: UIColor.systemBlue.cgColor),
+            CalendarEvent(title: "점심 약속", startDate: Date().addingTimeInterval(3600), endDate: Date().addingTimeInterval(7200), isAllDay: false, calendarColor: UIColor.systemGreen.cgColor),
+            CalendarEvent(title: "프로젝트 회의", startDate: Date().addingTimeInterval(7200), endDate: Date().addingTimeInterval(10800), isAllDay: false, calendarColor: UIColor.systemRed.cgColor)
+        ],
+        reminders: [
+            ReminderItem(id: "1", title: "프로젝트 마감", dueDate: Date(), priority: 1, isCompleted: false),
+            ReminderItem(id: "2", title: "보고서 작성", dueDate: Date(), priority: 2, isCompleted: true)
+        ]
+    )
+    
+    return MediumWidgetView(entry: sampleEntry)
+        .background(Color(hexCode: "FFFCF5"))
 }

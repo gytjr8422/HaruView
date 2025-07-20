@@ -8,6 +8,7 @@
 
 import Foundation
 import WidgetKit
+import CoreGraphics
 
 struct SimpleEntry: TimelineEntry {
     let date: Date
@@ -21,6 +22,7 @@ struct CalendarEvent {
     let startDate: Date
     let endDate: Date
     let isAllDay: Bool
+    let calendarColor: CGColor
 }
 
 struct ReminderItem: Identifiable {

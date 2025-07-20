@@ -38,7 +38,7 @@ struct StableTabCalendarView: View {
 }
 
 #Preview("Stable Tab Calendar") {
-    @State var currentIndex = 3
+    @Previewable @State var currentIndex = 3
     
     let dummyMonths = (1...7).map { month in
         CalendarMonth(year: 2025, month: month, days: [])

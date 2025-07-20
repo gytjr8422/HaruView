@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct SmallWidgetView: View {
     let entry: Provider.Entry
@@ -37,7 +38,7 @@ struct SmallEventsWidget: View {
                     
                     HStack {
                         RoundedRectangle(cornerRadius: 5)
-                            .fill(Color(hexCode: "A76545"))
+                            .fill(Color(cgColor: event.calendarColor))
                             .frame(width: 4)
                             .frame(maxHeight: 25)
                             .opacity(isPast ? 0.5 : 1)
@@ -67,7 +68,6 @@ struct SmallEventsWidget: View {
                     }
                 }
             }
-            Spacer()
         }
     }
 }
@@ -123,4 +123,44 @@ struct SmallRemindersWidget: View {
             }
         }
     }
+}
+
+#Preview("Small Widget - Events") {
+    let sampleEntry = SimpleEntry(
+        date: Date(),
+        configuration: {
+            let config = ConfigurationAppIntent()
+            config.widgetType = .events
+            return config
+        }(),
+        events: [
+            CalendarEvent(title: "팀 미팅", startDate: Date(), endDate: Date().addingTimeInterval(3600), isAllDay: false, calendarColor: UIColor.systemBlue.cgColor),
+            CalendarEvent(title: "점심 약속", startDate: Date().addingTimeInterval(3600), endDate: Date().addingTimeInterval(7200), isAllDay: false, calendarColor: UIColor.systemGreen.cgColor),
+            CalendarEvent(title: "회의", startDate: Date().addingTimeInterval(7200), endDate: Date().addingTimeInterval(10800), isAllDay: true, calendarColor: UIColor.systemRed.cgColor)
+        ],
+        reminders: []
+    )
+    
+    return SmallWidgetView(entry: sampleEntry)
+        .background(Color(hexCode: "FFFCF5"))
+}
+
+#Preview("Small Widget - Reminders") {
+    let sampleEntry = SimpleEntry(
+        date: Date(),
+        configuration: {
+            let config = ConfigurationAppIntent()
+            config.widgetType = .reminders
+            return config
+        }(),
+        events: [],
+        reminders: [
+            ReminderItem(id: "1", title: "프로젝트 마감", dueDate: Date(), priority: 1, isCompleted: false),
+            ReminderItem(id: "2", title: "보고서 작성", dueDate: Date(), priority: 2, isCompleted: true),
+            ReminderItem(id: "3", title: "회의 준비", dueDate: Date(), priority: 3, isCompleted: false)
+        ]
+    )
+    
+    return SmallWidgetView(entry: sampleEntry)
+        .background(Color(hexCode: "FFFCF5"))
 }
