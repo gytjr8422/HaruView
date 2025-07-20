@@ -32,6 +32,9 @@ struct DayDetailSheet: View {
     @State private var isDeletingEvent: Bool = false
     @State private var deletionError: TodayBoardError?
     
+    // 광고 관련 상태
+    @State private var adHeight: CGFloat = 0
+    
     var body: some View {
         NavigationStack {
             Group {
@@ -173,8 +176,11 @@ struct DayDetailSheet: View {
                     reminderSection(calendarDay.reminders)
                 }
                 
+                adView
+                
                 Spacer(minLength: 20)
             }
+            .padding(.horizontal, 20)
         }
         .background(Color(hexCode: "FFFCF5"))
     }
@@ -231,12 +237,26 @@ struct DayDetailSheet: View {
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
             }
-            
-            // 나중에 여기에 [일정 추가] [할 일 추가] 버튼들이 들어갈 예정
         }
         .padding(.horizontal, 20)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(hexCode: "FFFCF5"))
+    }
+    
+    @ViewBuilder
+    private var adView: some View {
+        if !showAddSheet {
+            // 네이티브 광고
+            NativeAdBanner(height: $adHeight)
+                .frame(maxWidth: .infinity)
+                .frame(height: adHeight == 0 ? 200 : adHeight)   // 로드 전엔 임시 높이
+                .padding(10)
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color(hexCode: "6E5C49").opacity(0.2), lineWidth: 1)
+                )
+                .padding(.top, 10)
+        }
     }
     
     // MARK: - Event Section
@@ -285,7 +305,6 @@ struct DayDetailSheet: View {
                     }
             }
         }
-        .padding(.horizontal, 20)
     }
     
     // MARK: - Reminder Section
@@ -294,7 +313,6 @@ struct DayDetailSheet: View {
             Text("할 일")
                 .font(.pretendardSemiBold(size: 17))
                 .foregroundStyle(.secondary)
-                .padding(.horizontal, 20)
             
             VStack(spacing: 0) {
                 ForEach(Array(reminders.enumerated()), id: \.element.id) { index, reminder in
@@ -412,7 +430,6 @@ struct DayDetailSheet: View {
                 RoundedRectangle(cornerRadius: 12)
                     .stroke(Color(hexCode: "C2966B").opacity(0.5), lineWidth: 1)
             )
-            .padding(.horizontal, 20)
         }
     }
     
