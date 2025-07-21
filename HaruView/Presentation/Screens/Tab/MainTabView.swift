@@ -106,7 +106,7 @@ struct HaruTabBar: View {
                 )
         )
         .padding(.horizontal, 16)
-        .padding(.bottom, 12)
+        .padding(.bottom, 22)
     }
 }
 

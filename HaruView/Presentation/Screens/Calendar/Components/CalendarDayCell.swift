@@ -171,15 +171,18 @@ struct EventBar: View {
             }
             
             // 제목 텍스트
-            Text(item.title)
-                .font(.pretendardRegular(size: isCompact ? 9 : 11))
-                .foregroundStyle(
-                    item.isCompleted ?
-                    Color(hexCode: "6E5C49").opacity(0.5) :
-                    Color(hexCode: "40392B")
-                )
-                .strikethrough(item.isCompleted)
-                .lineLimit(1)
+            Canvas { context, size in
+                let text = Text(item.title)
+                    .font(.pretendardRegular(size: isCompact ? 9 : 11))
+                    .foregroundStyle(
+                        item.isCompleted ?
+                        Color(hexCode: "6E5C49").opacity(0.5) :
+                        Color(hexCode: "40392B")
+                    )
+                
+                context.draw(text, at: CGPoint(x: 0, y: size.height / 2), anchor: .leading)
+            }
+            .clipped()
             
             Spacer(minLength: 0)
         }
