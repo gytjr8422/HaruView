@@ -33,40 +33,43 @@ struct SmallEventsWidget: View {
                     .foregroundStyle(.gray)
                     .padding(.vertical, 4)
             } else {
-                ForEach(Array(entry.events.prefix(4).enumerated()), id: \.offset) { index, event in
-                    let isPast = event.endDate < Date()
-                    
-                    HStack {
-                        RoundedRectangle(cornerRadius: 5)
-                            .fill(Color(cgColor: event.calendarColor))
-                            .frame(width: 4)
-                            .frame(maxHeight: 25)
-                            .opacity(isPast ? 0.5 : 1)
+                VStack {
+                    ForEach(Array(entry.events.prefix(4).enumerated()), id: \.offset) { index, event in
+                        let isPast = event.endDate < Date()
                         
-                        VStack(alignment: .leading) {
-                            Text(event.title)
-                                .font(.pretendardBold(size: 13))
-                                .lineLimit(1)
-                                .foregroundStyle(Color(hexCode: "40392B"))
-                                .strikethrough(isPast)
+                        HStack {
+                            RoundedRectangle(cornerRadius: 5)
+                                .fill(Color(cgColor: event.calendarColor))
+                                .frame(width: 4)
+                                .frame(maxHeight: 25)
                                 .opacity(isPast ? 0.5 : 1)
                             
-                            if !event.isAllDay {
-                                Text(event.startDate, style: .time)
-                                    .font(.jakartaRegular(size: 11))
-                                    .foregroundStyle(.gray)
+                            VStack(alignment: .leading) {
+                                Text(event.title)
+                                    .font(.pretendardBold(size: 13))
+                                    .lineLimit(1)
+                                    .foregroundStyle(Color(hexCode: "40392B"))
+                                    .strikethrough(isPast)
                                     .opacity(isPast ? 0.5 : 1)
-                            } else {
-                                Text("하루 종일")
-                                    .font(.jakartaRegular(size: 9))
-                                    .foregroundStyle(.gray)
-                                    .opacity(isPast ? 0.5 : 1)
+                                
+                                if !event.isAllDay {
+                                    Text(event.startDate, style: .time)
+                                        .font(.jakartaRegular(size: 11))
+                                        .foregroundStyle(.gray)
+                                        .opacity(isPast ? 0.5 : 1)
+                                } else {
+                                    Text("하루 종일")
+                                        .font(.jakartaRegular(size: 9))
+                                        .foregroundStyle(.gray)
+                                        .opacity(isPast ? 0.5 : 1)
+                                }
                             }
+                            
+                            Spacer()
                         }
-                        
-                        Spacer()
                     }
                 }
+                Spacer()
             }
         }
     }
