@@ -20,7 +20,7 @@ struct CalendarDayCell: View {
         String(Calendar.current.component(.day, from: date))
     }
     
-    // 요일별 색상
+    // 요일별 색상 (공휴일 고려)
     private var dayNumberColor: Color {
         if isSelected {
             return .white
@@ -28,6 +28,8 @@ struct CalendarDayCell: View {
             return Color(hexCode: "A76545")
         } else if !isCurrentMonth {
             return Color(hexCode: "6E5C49").opacity(0.3)
+        } else if calendarDay?.isHoliday == true {
+            return Color(hexCode: "9C27B0") // 공휴일은 보라색
         } else {
             let weekday = Calendar.current.component(.weekday, from: date)
             switch weekday {
@@ -185,6 +187,10 @@ struct EventBar: View {
                     .frame(width: 2)
             case .reminder(_):
                 EmptyView()
+            case .holiday(_):
+                Rectangle()
+                    .fill(Color(item.color))
+                    .frame(width: 2)
             }
             
             // 제목 텍스트 - Canvas로 모든 언어 처리

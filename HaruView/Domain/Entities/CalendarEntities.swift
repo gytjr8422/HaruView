@@ -67,6 +67,24 @@ struct CalendarEvent: Identifiable, Hashable {
     }
 }
 
+// MARK: - 달력용 공휴일 모델
+struct CalendarHoliday: Identifiable, Hashable {
+    let id: String
+    let title: String
+    let date: Date
+    
+    init(title: String, date: Date) {
+        self.id = "holiday_\(ISO8601DateFormatter().string(from: date))_\(title)"
+        self.title = title
+        self.date = date
+    }
+    
+    /// 달력 셀에 표시할 제목
+    var displayTitle: String {
+        return title
+    }
+}
+
 // MARK: - 달력용 간소화된 할일 모델
 struct CalendarReminder: Identifiable, Hashable {
     let id: String
@@ -119,12 +137,14 @@ struct CalendarDay: Identifiable, Hashable {
     let date: Date
     let events: [CalendarEvent]
     let reminders: [CalendarReminder]
+    let holidays: [CalendarHoliday]
     
-    init(date: Date, events: [Event] = [], reminders: [Reminder] = []) {
+    init(date: Date, events: [Event] = [], reminders: [Reminder] = [], holidays: [CalendarHoliday] = []) {
         self.id = ISO8601DateFormatter().string(from: Calendar.current.startOfDay(for: date))
         self.date = Calendar.current.startOfDay(for: date)
         self.events = events.map(CalendarEvent.init)
         self.reminders = reminders.map(CalendarReminder.init)
+        self.holidays = holidays
     }
     
     /// 오늘인지 확인
@@ -137,14 +157,19 @@ struct CalendarDay: Identifiable, Hashable {
         Calendar.current.isDate(date, equalTo: monthDate, toGranularity: .month)
     }
     
+    /// 공휴일인지 확인
+    var isHoliday: Bool {
+        !holidays.isEmpty
+    }
+    
     /// 일정이 있는지 확인
     var hasItems: Bool {
-        !events.isEmpty || !reminders.isEmpty
+        !events.isEmpty || !reminders.isEmpty || !holidays.isEmpty
     }
     
     /// 총 아이템 개수
     var totalItemCount: Int {
-        events.count + reminders.count
+        events.count + reminders.count + holidays.count
     }
     
     /// 표시할 아이템들 (최대 4개, 우선순위 정렬)
@@ -198,7 +223,11 @@ struct CalendarDay: Identifiable, Hashable {
             return reminder1.title < reminder2.title
         }
         
-        // 이벤트 먼저, 그 다음 할일
+        // 공휴일 먼저 (가장 우선), 그 다음 이벤트, 마지막에 할일
+        for holiday in holidays {
+            items.append(.holiday(holiday))
+        }
+        
         for event in sortedEvents {
             items.append(.event(event))
         }
@@ -221,15 +250,17 @@ struct CalendarDay: Identifiable, Hashable {
     }
 }
 
-// MARK: - 달력 표시 아이템 (이벤트 or 할일)
+// MARK: - 달력 표시 아이템 (이벤트 or 할일 or 공휴일)
 enum CalendarDisplayItem: Identifiable, Hashable {
     case event(CalendarEvent)
     case reminder(CalendarReminder)
+    case holiday(CalendarHoliday)
     
     var id: String {
         switch self {
         case .event(let event): return "event_\(event.id)"
         case .reminder(let reminder): return "reminder_\(reminder.id)"
+        case .holiday(let holiday): return "holiday_\(holiday.id)"
         }
     }
     
@@ -237,6 +268,7 @@ enum CalendarDisplayItem: Identifiable, Hashable {
         switch self {
         case .event(let event): return event.displayTitle
         case .reminder(let reminder): return reminder.displayTitle
+        case .holiday(let holiday): return holiday.displayTitle
         }
     }
     
@@ -244,6 +276,7 @@ enum CalendarDisplayItem: Identifiable, Hashable {
         switch self {
         case .event(let event): return event.timeDisplayText
         case .reminder(let reminder): return reminder.timeDisplayText
+        case .holiday: return nil // 공휴일은 시간 표시 없음
         }
     }
     
@@ -252,6 +285,8 @@ enum CalendarDisplayItem: Identifiable, Hashable {
         case .event(let event): return event.calendarColor
         case .reminder(let reminder):
             return reminder.priorityColor ?? reminder.calendarColor
+        case .holiday: 
+            return CGColor(red: 0.61, green: 0.15, blue: 0.69, alpha: 1.0) // 공휴일은 보라색 (#9C27B0)
         }
     }
     
@@ -259,6 +294,7 @@ enum CalendarDisplayItem: Identifiable, Hashable {
         switch self {
         case .event: return false
         case .reminder(let reminder): return reminder.isCompleted
+        case .holiday: return false
         }
     }
 }

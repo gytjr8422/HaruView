@@ -52,6 +52,11 @@ extension EventKitRepository {
         }
     }
     
+    /// 특정 날짜 범위의 공휴일 조회
+    func fetchHolidays(from startDate: Date, to endDate: Date) -> Result<[CalendarHoliday], TodayBoardError> {
+        return service.fetchHolidaysBetween(startDate, endDate)
+    }
+    
     /// 특정 날짜 범위의 할일 조회
     func fetchReminders(from startDate: Date, to endDate: Date) async -> Result<[Reminder], TodayBoardError> {
         
@@ -97,12 +102,14 @@ extension EventKitRepository {
         let gridStartDate = calendar.date(byAdding: .day, value: -7, to: firstDay)!
         let gridEndDate = calendar.date(byAdding: .day, value: 7, to: lastDay)!
         
-        // 이벤트와 할일을 병렬로 조회
+        // 이벤트, 할일, 공휴일을 병렬로 조회
         async let eventsResult = fetchEvents(from: gridStartDate, to: gridEndDate)
         async let remindersResult = fetchReminders(from: gridStartDate, to: gridEndDate)
+        let holidaysResult = fetchHolidays(from: gridStartDate, to: gridEndDate)
         
         let events: [Event]
         let reminders: [Reminder]
+        let holidays: [CalendarHoliday]
         
         switch await eventsResult {
         case .success(let eventList):
@@ -114,6 +121,13 @@ extension EventKitRepository {
         switch await remindersResult {
         case .success(let reminderList):
             reminders = reminderList
+        case .failure(let error):
+            return .failure(error)
+        }
+        
+        switch holidaysResult {
+        case .success(let holidayList):
+            holidays = holidayList
         case .failure(let error):
             return .failure(error)
         }
@@ -169,7 +183,14 @@ extension EventKitRepository {
                 return calendar.isDate(reminderDate, inSameDayAs: targetDate)
             }
             
-            return CalendarDay(date: date, events: dayEvents, reminders: dayReminders)
+            // 해당 날짜의 공휴일 필터링
+            let dayHolidays = holidays.filter { holiday in
+                let holidayDate = calendar.startOfDay(for: holiday.date)
+                let targetDate = calendar.startOfDay(for: date)
+                return calendar.isDate(holidayDate, inSameDayAs: targetDate)
+            }
+            
+            return CalendarDay(date: date, events: dayEvents, reminders: dayReminders, holidays: dayHolidays)
         }
         
         let monthWithDays = CalendarMonth(year: year, month: month, days: days)
@@ -185,13 +206,14 @@ extension EventKitRepository {
         
         async let eventsResult = fetchEvents(from: dayStart, to: dayEnd)
         async let remindersResult = fetchReminders(from: dayStart, to: dayEnd)
+        let holidaysResult = fetchHolidays(from: dayStart, to: dayEnd)
         
-        switch (await eventsResult, await remindersResult) {
-        case (.success(let events), .success(let reminders)):
-            let calendarDay = CalendarDay(date: date, events: events, reminders: reminders)
+        switch (await eventsResult, await remindersResult, holidaysResult) {
+        case (.success(let events), .success(let reminders), .success(let holidays)):
+            let calendarDay = CalendarDay(date: date, events: events, reminders: reminders, holidays: holidays)
             return .success(calendarDay)
             
-        case (.failure(let error), _), (_, .failure(let error)):
+        case (.failure(let error), _, _), (_, .failure(let error), _), (_, _, .failure(let error)):
             return .failure(error)
         }
     }

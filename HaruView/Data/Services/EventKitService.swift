@@ -42,6 +42,31 @@ final class EventKitService {
         return .success(events)
     }
     
+    // MARK: - 공휴일 fetch
+    func fetchHolidaysBetween(_ start: Date, _ end: Date) -> Result<[CalendarHoliday], TodayBoardError> {
+        // iOS에서 제공하는 Holiday calendar 찾기
+        let holidayCalendars = store.calendars(for: .event).filter { calendar in
+            calendar.title.lowercased().contains("holiday") || 
+            calendar.title.lowercased().contains("휴일") ||
+            calendar.title.lowercased().contains("공휴일") ||
+            calendar.calendarIdentifier.contains("holiday")
+        }
+        
+        guard !holidayCalendars.isEmpty else {
+            // Holiday calendar가 없으면 빈 배열 반환
+            return .success([])
+        }
+        
+        let predicate = store.predicateForEvents(withStart: start, end: end, calendars: holidayCalendars)
+        let holidayEvents = store.events(matching: predicate)
+        
+        let holidays = holidayEvents.map { event in
+            CalendarHoliday(title: event.title ?? "공휴일", date: event.startDate)
+        }
+        
+        return .success(holidays)
+    }
+    
     // MARK: 리마인더 조회 (완료+미완료 모두)
     func fetchRemindersBetween(_ start: Date, _ end: Date) async -> Result<[EKReminder], TodayBoardError> {
         
