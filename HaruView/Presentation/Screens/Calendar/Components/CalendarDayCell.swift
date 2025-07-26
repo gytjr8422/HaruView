@@ -20,6 +20,27 @@ struct CalendarDayCell: View {
         String(Calendar.current.component(.day, from: date))
     }
     
+    // 요일별 색상
+    private var dayNumberColor: Color {
+        if isSelected {
+            return .white
+        } else if isToday {
+            return Color(hexCode: "A76545")
+        } else if !isCurrentMonth {
+            return Color(hexCode: "6E5C49").opacity(0.3)
+        } else {
+            let weekday = Calendar.current.component(.weekday, from: date)
+            switch weekday {
+            case 1: // 일요일
+                return Color(hexCode: "FF5722") // 일요일 헤더와 동일한 빨간색
+            case 7: // 토요일
+                return Color(hexCode: "2196F3") // 토요일 헤더와 동일한 파란색
+            default: // 평일 (월~금)
+                return Color(hexCode: "40392B")
+            }
+        }
+    }
+    
     private var displayItems: [CalendarDisplayItem] {
         calendarDay?.displayItems ?? []
     }
@@ -59,12 +80,7 @@ struct CalendarDayCell: View {
                 
                 Text(dayNumber)
                     .font(.pretendardSemiBold(size: 16))
-                    .foregroundStyle(
-                        isSelected ? .white :
-                        isToday ? Color(hexCode: "A76545") :
-                        !isCurrentMonth ? Color(hexCode: "6E5C49").opacity(0.3) :
-                        Color(hexCode: "40392B")
-                    )
+                    .foregroundStyle(dayNumberColor)
             }
             .frame(height: 32)
             .padding(.top, 2)
