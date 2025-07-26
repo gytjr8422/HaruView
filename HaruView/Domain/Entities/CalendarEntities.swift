@@ -41,12 +41,9 @@ struct CalendarEvent: Identifiable, Hashable {
         }
     }
     
-    /// 달력 셀에 표시할 짧은 제목 (최대 8자)
+    /// 달력 셀에 표시할 제목 (원본 그대로)
     var displayTitle: String {
-        if title.count <= 8 {
-            return title
-        }
-        return String(title.prefix(6)) + "..."
+        return title
     }
     
     /// 시간 표시 텍스트
@@ -88,15 +85,10 @@ struct CalendarReminder: Identifiable, Hashable {
         self.calendarColor = reminder.calendar.color
     }
     
-    /// 달력 셀에 표시할 짧은 제목 (최대 6자 + 상태 아이콘)
+    /// 달력 셀에 표시할 제목 (원본 그대로 + 상태 아이콘)
     var displayTitle: String {
         let icon = isCompleted ? "✓ " : "○ "
-        let maxLength = 6
-        
-        if title.count <= maxLength {
-            return icon + title
-        }
-        return icon + String(title.prefix(maxLength - 1)) + "..."
+        return icon + title
     }
     
     /// 시간 표시 텍스트

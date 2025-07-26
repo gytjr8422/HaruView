@@ -153,6 +153,7 @@ struct CalendarDayCell: View {
     }
 }
 
+
 // MARK: - 일정 표시 바 컴포넌트
 struct EventBar: View {
     let item: CalendarDisplayItem
@@ -170,7 +171,7 @@ struct EventBar: View {
                 EmptyView()
             }
             
-            // 제목 텍스트
+            // 제목 텍스트 - Canvas로 모든 언어 처리
             Canvas { context, size in
                 let text = Text(item.title)
                     .font(.pretendardRegular(size: isCompact ? 9 : 11))
