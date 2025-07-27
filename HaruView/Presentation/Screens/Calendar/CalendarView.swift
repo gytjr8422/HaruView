@@ -111,7 +111,10 @@ struct CalendarView: View {
             if let date = quickAddDate {
                 AddSheet(vm: di.makeAddSheetVMWithDate(date)) { isDeleted in
                     ToastManager.shared.show(isDeleted ? .delete : .success)
-                    vm.refresh()
+                    // 일정 추가/삭제 후 모든 캐시를 삭제하고 강제 새로고침
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                        vm.forceRefresh()
+                    }
                 }
             }
         }
@@ -143,6 +146,11 @@ struct CalendarView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: .EKEventStoreChanged)) { _ in
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                vm.forceRefresh()
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .calendarNeedsRefresh)) { _ in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 vm.forceRefresh()
             }
         }

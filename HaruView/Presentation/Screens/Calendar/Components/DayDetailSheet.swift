@@ -90,22 +90,25 @@ struct DayDetailSheet: View {
         .sheet(item: $editingEvent) { event in
             AddSheet(vm: di.makeEditSheetVM(event: event)) { isDeleted in
                 ToastManager.shared.show(isDeleted ? .delete : .success)
-                // 편집 완료 후 데이터 리로드
+                // 편집 완료 후 데이터 리로드 및 부모 캘린더 강제 새로고침
                 loadCalendarDayData()
+                NotificationCenter.default.post(name: .calendarNeedsRefresh, object: nil)
             }
         }
         .sheet(item: $editingReminder) { reminder in
             AddSheet(vm: di.makeEditSheetVM(reminder: reminder)) { isDeleted in
                 ToastManager.shared.show(isDeleted ? .delete : .success)
-                // 편집 완료 후 데이터 리로드
+                // 편집 완료 후 데이터 리로드 및 부모 캘린더 강제 새로고침
                 loadCalendarDayData()
+                NotificationCenter.default.post(name: .calendarNeedsRefresh, object: nil)
             }
         }
         .sheet(isPresented: $showAddSheet) {
             AddSheet(vm: di.makeAddSheetVMWithDate(initialDate)) { isDeleted in
                 ToastManager.shared.show(isDeleted ? .delete : .success)
-                // 추가 완료 후 데이터 리로드
+                // 추가 완료 후 데이터 리로드 및 부모 캘린더 강제 새로고침
                 loadCalendarDayData()
+                NotificationCenter.default.post(name: .calendarNeedsRefresh, object: nil)
             }
         }
         .overlay(deletionOverlay)
@@ -695,8 +698,9 @@ struct DayDetailSheet: View {
             case .success:
                 currentDeletingEvent = nil
                 ToastManager.shared.show(.delete)
-                // 삭제 후 데이터 리로드
+                // 삭제 후 데이터 리로드 및 부모 캘린더 강제 새로고침
                 loadCalendarDayData()
+                NotificationCenter.default.post(name: .calendarNeedsRefresh, object: nil)
             case .failure(let error):
                 deletionError = error
             }
@@ -724,8 +728,9 @@ struct DayDetailSheet: View {
             case .success:
                 currentDeletingEvent = nil
                 ToastManager.shared.show(.delete)
-                // 삭제 후 데이터 리로드
+                // 삭제 후 데이터 리로드 및 부모 캘린더 강제 새로고침
                 loadCalendarDayData()
+                NotificationCenter.default.post(name: .calendarNeedsRefresh, object: nil)
             case .failure(let error):
                 deletionError = error
             }
@@ -742,8 +747,9 @@ struct DayDetailSheet: View {
                 switch result {
                 case .success:
                     ToastManager.shared.show(.delete)
-                    // 삭제 후 데이터 리로드
+                    // 삭제 후 데이터 리로드 및 부모 캘린더 강제 새로고침
                     loadCalendarDayData()
+                    NotificationCenter.default.post(name: .calendarNeedsRefresh, object: nil)
                 case .failure(let error):
                     print("❌ 할 일 삭제 실패: \(error.description)")
                 }
@@ -761,8 +767,9 @@ struct DayDetailSheet: View {
                 switch result {
                 case .success:
                     ToastManager.shared.show(.success)
-                    // 토글 후 데이터 리로드
+                    // 토글 후 데이터 리로드 및 부모 캘린더 강제 새로고침
                     loadCalendarDayData()
+                    NotificationCenter.default.post(name: .calendarNeedsRefresh, object: nil)
                 case .failure(let error):
                     print("❌ 할 일 토글 실패: \(error.description)")
                 }
