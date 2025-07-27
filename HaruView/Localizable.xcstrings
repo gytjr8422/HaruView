@@ -253,7 +253,14 @@
       }
     },
     "+%lld" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%lld"
+          }
+        }
+      }
     },
     "⚠️ 오류: %@" : {
       "localizations" : {
@@ -316,19 +323,55 @@
       }
     },
     "CalDAV" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CalDAV"
+          }
+        }
+      }
     },
     "Exchange" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exchange"
+          }
+        }
+      }
     },
     "Key" : {
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Key"
+          }
+        }
+      }
     },
     "Reminder ID" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reminder ID"
+          }
+        }
+      }
     },
     "URL" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL"
+          }
+        }
+      }
     },
     "간격" : {
       "localizations" : {
@@ -644,6 +687,12 @@
     },
     "매월 %d번째 %@" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every %1$dth %2$@ of the month"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "new",
@@ -784,10 +833,24 @@
       }
     },
     "반복 일정 편집" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit Recurring Event"
+          }
+        }
+      }
     },
     "반복 일정입니다. 어떻게 편집하시겠습니까?" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is a recurring event. How would you like to edit it?"
+          }
+        }
+      }
     },
     "반복하지 않음" : {
       "localizations" : {
@@ -865,6 +928,16 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "No available calendars"
+          }
+        }
+      }
+    },
+    "사용자 설정" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom Settings"
           }
         }
       }
@@ -1125,7 +1198,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Today's schedule"
+            "value" : "Today's Events"
           }
         }
       }
@@ -1302,7 +1375,34 @@
       }
     },
     "이 이벤트만 편집" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit This Event Only"
+          }
+        }
+      }
+    },
+    "이후 모든 이벤트 편집" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit All Following Events"
+          }
+        }
+      }
+    },
+    "일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " "
+          }
+        }
+      }
     },
     "이동" : {
       "localizations" : {
@@ -1330,16 +1430,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "email"
-          }
-        }
-      }
-    },
-    "일" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : " "
           }
         }
       }
@@ -1384,9 +1474,6 @@
         }
       }
     },
-    "이후 모든 이벤트 편집" : {
-
-    },
     "일요일" : {
       "localizations" : {
         "en" : {
@@ -1403,7 +1490,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Event time"
+            "value" : "Events"
           }
         }
       }
@@ -1593,9 +1680,6 @@
           }
         }
       }
-    },
-    "커스텀 설정" : {
-
     },
     "타입" : {
       "localizations" : {

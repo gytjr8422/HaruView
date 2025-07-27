@@ -75,7 +75,7 @@ struct RecurrenceSelectionView: View {
                 Button {
                     showCustomRecurrence = true
                 } label: {
-                    Text("커스텀 설정")
+                    Text("사용자 설정")
                         .font(.pretendardRegular(size: 14))
                         .foregroundStyle(Color(hexCode: "A76545"))
                         .padding(.horizontal, 20)
