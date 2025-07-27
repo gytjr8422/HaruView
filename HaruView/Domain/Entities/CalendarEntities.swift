@@ -16,12 +16,16 @@ struct CalendarEvent: Identifiable, Hashable {
     let calendarColor: CGColor
     let isAllDay: Bool
     let hasAlarms: Bool
+    let originalStart: Date  // 원본 시작일
+    let originalEnd: Date    // 원본 종료일
     
     init(from event: Event) {
         self.id = event.id
         self.title = event.title
         self.calendarColor = event.calendarColor
         self.hasAlarms = event.hasAlarms
+        self.originalStart = event.start
+        self.originalEnd = event.end
         
         // 하루 종일 일정 판별
         let calendar = Calendar.current
@@ -172,7 +176,7 @@ struct CalendarDay: Identifiable, Hashable {
         events.count + reminders.count + holidays.count
     }
     
-    /// 표시할 아이템들 (최대 4개, 우선순위 정렬)
+    /// 표시할 아이템들 (연속 이벤트 처리 포함)
     var displayItems: [CalendarDisplayItem] {
         var items: [CalendarDisplayItem] = []
         
@@ -223,21 +227,62 @@ struct CalendarDay: Identifiable, Hashable {
             return reminder1.title < reminder2.title
         }
         
-        // 공휴일 먼저 (가장 우선), 그 다음 이벤트, 마지막에 할일
+        // 공휴일 먼저 (가장 우선)
         for holiday in holidays {
             items.append(.holiday(holiday))
         }
         
+        // 이벤트 처리 (연속 이벤트 로직 적용)
         for event in sortedEvents {
-            items.append(.event(event))
+            let continuousInfo = createContinuousEventInfo(for: event, on: date)
+            if let info = continuousInfo {
+                items.append(.continuousEvent(info))
+            } else {
+                items.append(.event(event))
+            }
         }
         
+        // 할일 처리
         for reminder in sortedReminders {
             items.append(.reminder(reminder))
         }
         
-        // ⚠️ 여기서 4개 제한을 제거! 모든 아이템 반환
         return items
+    }
+    
+    /// 연속 이벤트 정보 생성
+    private func createContinuousEventInfo(for event: CalendarEvent, on targetDate: Date) -> ContinuousEventInfo? {
+        let calendar = Calendar.current
+        let targetDay = calendar.startOfDay(for: targetDate)
+        let eventStartDay = calendar.startOfDay(for: event.originalStart)
+        let eventEndDay = calendar.startOfDay(for: event.originalEnd)
+        
+        // 해당 날짜가 이벤트 기간에 포함되지 않으면 nil 반환
+        guard targetDay >= eventStartDay && targetDay <= eventEndDay else {
+            return nil
+        }
+        
+        // 단일 날짜 이벤트는 연속 이벤트 처리하지 않음
+        guard eventStartDay != eventEndDay else {
+            return nil
+        }
+        
+        let weekday = calendar.component(.weekday, from: targetDate)
+        let weekPosition = weekday - 1 // 일요일=0, 월요일=1, ..., 토요일=6으로 변환
+        
+        let isStart = targetDay == eventStartDay
+        let isEnd = targetDay == eventEndDay
+        
+        // 제목 표시 여부 결정: 시작일이거나 주의 시작일(일요일)
+        let showTitle = isStart || weekPosition == 0
+        
+        return ContinuousEventInfo(
+            event: event,
+            showTitle: showTitle,
+            isStart: isStart,
+            isEnd: isEnd,
+            weekPosition: weekPosition
+        )
     }
 
     /// 4개 초과시 추가 개수 (이제 동적으로 계산)
@@ -250,17 +295,28 @@ struct CalendarDay: Identifiable, Hashable {
     }
 }
 
+// MARK: - 연속 이벤트 표시 정보
+struct ContinuousEventInfo: Hashable {
+    let event: CalendarEvent
+    let showTitle: Bool  // 해당 날짜에 제목을 표시할지
+    let isStart: Bool    // 연속 바의 시작점인지
+    let isEnd: Bool      // 연속 바의 끝점인지
+    let weekPosition: Int // 해당 주에서의 위치 (0-6)
+}
+
 // MARK: - 달력 표시 아이템 (이벤트 or 할일 or 공휴일)
 enum CalendarDisplayItem: Identifiable, Hashable {
     case event(CalendarEvent)
     case reminder(CalendarReminder)
     case holiday(CalendarHoliday)
+    case continuousEvent(ContinuousEventInfo)
     
     var id: String {
         switch self {
         case .event(let event): return "event_\(event.id)"
         case .reminder(let reminder): return "reminder_\(reminder.id)"
         case .holiday(let holiday): return "holiday_\(holiday.id)"
+        case .continuousEvent(let info): return "continuous_\(info.event.id)_\(info.weekPosition)"
         }
     }
     
@@ -269,6 +325,7 @@ enum CalendarDisplayItem: Identifiable, Hashable {
         case .event(let event): return event.displayTitle
         case .reminder(let reminder): return reminder.displayTitle
         case .holiday(let holiday): return holiday.displayTitle
+        case .continuousEvent(let info): return info.showTitle ? info.event.displayTitle : ""
         }
     }
     
@@ -277,6 +334,7 @@ enum CalendarDisplayItem: Identifiable, Hashable {
         case .event(let event): return event.timeDisplayText
         case .reminder(let reminder): return reminder.timeDisplayText
         case .holiday: return nil // 공휴일은 시간 표시 없음
+        case .continuousEvent(let info): return info.showTitle ? info.event.timeDisplayText : nil
         }
     }
     
@@ -287,6 +345,7 @@ enum CalendarDisplayItem: Identifiable, Hashable {
             return reminder.priorityColor ?? reminder.calendarColor
         case .holiday: 
             return CGColor(red: 0.61, green: 0.15, blue: 0.69, alpha: 1.0) // 공휴일은 보라색 (#9C27B0)
+        case .continuousEvent(let info): return info.event.calendarColor
         }
     }
     
@@ -295,6 +354,14 @@ enum CalendarDisplayItem: Identifiable, Hashable {
         case .event: return false
         case .reminder(let reminder): return reminder.isCompleted
         case .holiday: return false
+        case .continuousEvent: return false
+        }
+    }
+    
+    var continuousInfo: ContinuousEventInfo? {
+        switch self {
+        case .continuousEvent(let info): return info
+        default: return nil
         }
     }
 }

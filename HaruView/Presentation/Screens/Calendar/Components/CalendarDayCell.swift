@@ -178,43 +178,110 @@ struct EventBar: View {
     let isCompact: Bool
     
     var body: some View {
-        HStack(spacing: 2) {
-            // 왼쪽 색상 인디케이터
-            switch item {
-            case .event(_:):
-                Rectangle()
-                    .fill(Color(item.color))
-                    .frame(width: 2)
-            case .reminder(_):
-                EmptyView()
-            case .holiday(_):
-                Rectangle()
-                    .fill(Color(item.color))
-                    .frame(width: 2)
-            }
-            
-            // 제목 텍스트 - Canvas로 모든 언어 처리
-            Canvas { context, size in
-                let text = Text(item.title)
-                    .font(.pretendardRegular(size: isCompact ? 9 : 11))
-                    .foregroundStyle(
-                        item.isCompleted ?
-                        Color(hexCode: "6E5C49").opacity(0.5) :
-                        Color(hexCode: "40392B")
-                    )
+        switch item {
+        case .continuousEvent(let info):
+            // 연속 이벤트는 별도 컴포넌트 사용
+            ContinuousEventBar(info: info, isCompact: isCompact)
+        default:
+            // 기존 이벤트, 할일, 공휴일
+            HStack(spacing: 2) {
+                // 왼쪽 색상 인디케이터
+                switch item {
+                case .event(_:):
+                    Rectangle()
+                        .fill(Color(item.color))
+                        .frame(width: 2)
+                case .reminder(_):
+                    EmptyView()
+                case .holiday(_):
+                    Rectangle()
+                        .fill(Color(item.color))
+                        .frame(width: 2)
+                case .continuousEvent(_):
+                    EmptyView() // 이미 위에서 처리됨
+                }
                 
-                context.draw(text, at: CGPoint(x: 0, y: size.height / 2), anchor: .leading)
+                // 제목 텍스트 - Canvas로 모든 언어 처리 (텍스트가 있을 때만)
+                if !item.title.isEmpty {
+                    Canvas { context, size in
+                        let text = Text(item.title)
+                            .font(.pretendardRegular(size: isCompact ? 9 : 11))
+                            .foregroundStyle(
+                                item.isCompleted ?
+                                Color(hexCode: "6E5C49").opacity(0.5) :
+                                Color(hexCode: "40392B")
+                            )
+                        
+                        context.draw(text, at: CGPoint(x: 0, y: size.height / 2), anchor: .leading)
+                    }
+                    .clipped()
+                }
+                
+                Spacer(minLength: 0)
             }
-            .clipped()
-            
-            Spacer(minLength: 0)
+            .padding(.horizontal, 2)
+            .padding(.vertical, 1)
+            .background(
+                RoundedRectangle(cornerRadius: 4, style: .continuous)
+                    .fill(Color(item.color).opacity(0.1))
+            )
         }
-        .padding(.horizontal, 2)
-        .padding(.vertical, 1)
-        .background(
-            RoundedRectangle(cornerRadius: 4, style: .continuous)
-                .fill(Color(item.color).opacity(0.1))
-        )
+    }
+}
+
+// MARK: - 연속 이벤트 바 컴포넌트
+struct ContinuousEventBar: View {
+    let info: ContinuousEventInfo
+    let isCompact: Bool
+    
+    var body: some View {
+        GeometryReader { geometry in
+            let cellWidth = geometry.size.width
+            let barHeight = geometry.size.height
+            
+            // 연속 배경의 시작/끝에 따라 확장
+            let extraWidth: CGFloat = 8 // 셀 경계를 넘어서는 너비
+            let xOffset: CGFloat = info.isStart ? 0 : -extraWidth
+            let barWidth: CGFloat = cellWidth + (info.isStart ? 0 : extraWidth) + (info.isEnd ? 0 : extraWidth)
+            
+            ZStack(alignment: .leading) {
+                // 연결된 배경
+                RoundedRectangle(cornerRadius: 4, style: .continuous)
+                    .fill(Color(info.event.calendarColor).opacity(0.1))
+                    .frame(width: barWidth, height: barHeight)
+                    .offset(x: xOffset)
+                
+                // 왼쪽 색상 인디케이터 (시작일이거나 제목을 표시하는 날)
+                if info.isStart || info.showTitle {
+                    Rectangle()
+                        .fill(Color(info.event.calendarColor))
+                        .frame(width: 2, height: barHeight)
+                }
+                
+                // 텍스트 (제목 표시할 때만)
+                if info.showTitle {
+                    HStack {
+                        if info.isStart || info.showTitle {
+                            Spacer().frame(width: 4) // 색상 바 뒤 여백
+                        }
+                        
+                        Canvas { context, size in
+                            let text = Text(info.event.displayTitle)
+                                .font(.pretendardRegular(size: isCompact ? 9 : 11))
+                                .foregroundStyle(Color(hexCode: "40392B"))
+                            
+                            context.draw(text, at: CGPoint(x: 0, y: size.height / 2), anchor: .leading)
+                        }
+                        .clipped()
+                        
+                        Spacer()
+                    }
+                    .padding(.horizontal, 2)
+                }
+            }
+        }
+        .frame(height: isCompact ? 12 : 16)
+        .clipped()
     }
 }
 

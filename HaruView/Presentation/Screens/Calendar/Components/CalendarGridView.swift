@@ -15,10 +15,10 @@ struct CalendarGridView: View {
     let onDateTap: (Date) -> Void
     let onDateLongPress: (Date) -> Void
     
-    private let columns = Array(repeating: GridItem(.flexible(), spacing: 1), count: 7)
+    private let columns = Array(repeating: GridItem(.flexible(), spacing: 0), count: 7)
     
     var body: some View {
-        LazyVGrid(columns: columns, spacing: 2) {
+        LazyVGrid(columns: columns, spacing: 0) {
             ForEach(monthData.calendarDates, id: \.self) { date in
                 CalendarDayCell(
                     date: date,
