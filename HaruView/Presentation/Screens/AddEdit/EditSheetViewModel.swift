@@ -41,6 +41,11 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
     @Published var showRecurringEditOptions: Bool = false
     @Published var pendingSaveAction: (() -> Void)? = nil
     @Published var saveCompleted: Bool = false
+    
+    // 삭제 관련 상태
+    @Published var isDeleting: Bool = false
+    @Published var showDeleteConfirmation: Bool = false
+    @Published var deleteCompleted: Bool = false
 
     var isEdit: Bool { true }
     var hasChanges: Bool {
@@ -88,14 +93,16 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
 
     private let editEvent: EditEventUseCase
     private let editReminder: EditReminderUseCase
+    private let deleteObject: DeleteObjectUseCase
     private let objectId: String
     private let originalEvent: Event?
     private let originalReminder: Reminder?
 
     // Event 편집용 초기화
-    init(event: Event, editEvent: EditEventUseCase, editReminder: EditReminderUseCase, availableCalendars: [EventCalendar] = []) {
+    init(event: Event, editEvent: EditEventUseCase, editReminder: EditReminderUseCase, deleteObject: DeleteObjectUseCase, availableCalendars: [EventCalendar] = []) {
         self.editEvent = editEvent
         self.editReminder = editReminder
+        self.deleteObject = deleteObject
         self.objectId = event.id
         self.originalEvent = event
         self.originalReminder = nil
@@ -107,9 +114,10 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
     }
 
     // Reminder 편집용 초기화
-    init(reminder: Reminder, editEvent: EditEventUseCase, editReminder: EditReminderUseCase, availableCalendars: [EventCalendar] = []) {
+    init(reminder: Reminder, editEvent: EditEventUseCase, editReminder: EditReminderUseCase, deleteObject: DeleteObjectUseCase, availableCalendars: [EventCalendar] = []) {
         self.editEvent = editEvent
         self.editReminder = editReminder
+        self.deleteObject = deleteObject
         self.objectId = reminder.id
         self.originalEvent = nil
         self.originalReminder = reminder
@@ -125,10 +133,11 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
         event: Event,
         editEvent: EditEventUseCase,
         editReminder: EditReminderUseCase,
+        deleteObject: DeleteObjectUseCase,
         availableCalendars: [EventCalendar] = [],
         availableReminderCalendars: [ReminderCalendar] = []
     ) {
-        self.init(event: event, editEvent: editEvent, editReminder: editReminder, availableCalendars: availableCalendars)
+        self.init(event: event, editEvent: editEvent, editReminder: editReminder, deleteObject: deleteObject, availableCalendars: availableCalendars)
         self.availableReminderCalendars = availableReminderCalendars
     }
     
@@ -137,10 +146,11 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
         reminder: Reminder,
         editEvent: EditEventUseCase,
         editReminder: EditReminderUseCase,
+        deleteObject: DeleteObjectUseCase,
         availableCalendars: [EventCalendar] = [],
         availableReminderCalendars: [ReminderCalendar] = []
     ) {
-        self.init(reminder: reminder, editEvent: editEvent, editReminder: editReminder, availableCalendars: availableCalendars)
+        self.init(reminder: reminder, editEvent: editEvent, editReminder: editReminder, deleteObject: deleteObject, availableCalendars: availableCalendars)
         self.availableReminderCalendars = availableReminderCalendars
         initializeWithReminder(reminder)
     }
@@ -415,5 +425,46 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
     
     func setReminderPriority(_ priority: Int) {
         reminderPriority = priority
+    }
+    
+    // MARK: - 삭제 관련 메서드
+    func requestDelete() {
+        showDeleteConfirmation = true
+    }
+    
+    func cancelDelete() {
+        showDeleteConfirmation = false
+    }
+    
+    func confirmDelete() async {
+        showDeleteConfirmation = false
+        isDeleting = true
+        error = nil
+        
+        let result: Result<Void, TodayBoardError>
+        
+        switch mode {
+        case .event:
+            if let originalEvent = originalEvent, originalEvent.hasRecurrence {
+                // 반복 일정인 경우 - 이 일정만 삭제
+                result = await deleteObject(.eventWithSpan(objectId, .thisEventOnly))
+            } else {
+                // 일반 일정
+                result = await deleteObject(.event(objectId))
+            }
+        case .reminder:
+            result = await deleteObject(.reminder(objectId))
+        }
+        
+        await MainActor.run {
+            switch result {
+            case .success:
+                isDeleting = false
+                deleteCompleted = true
+            case .failure(let deleteError):
+                isDeleting = false
+                error = deleteError
+            }
+        }
     }
 }

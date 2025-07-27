@@ -74,6 +74,37 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                 Button(vm.isEdit ? "편집 취소하기" : "저장 안 하고 닫기", role: .destructive) { dismiss() }
                 Button(vm.isEdit ? "계속 편집" : "계속 작성", role: .cancel) {}
             }
+            .confirmationDialog(
+                vm.mode == .event ? "일정을 삭제하시겠습니까?" : "할일을 삭제하시겠습니까?",
+                isPresented: Binding<Bool>(
+                    get: { 
+                        if let editVM = vm as? EditSheetViewModel {
+                            return editVM.showDeleteConfirmation
+                        }
+                        return false
+                    },
+                    set: { newValue in 
+                        if let editVM = vm as? EditSheetViewModel, !newValue {
+                            editVM.cancelDelete()
+                        }
+                    }
+                )
+            ) {
+                Button("삭제", role: .destructive) {
+                    if let editVM = vm as? EditSheetViewModel {
+                        Task {
+                            await editVM.confirmDelete()
+                        }
+                    }
+                }
+                Button("취소", role: .cancel) {
+                    if let editVM = vm as? EditSheetViewModel {
+                        editVM.cancelDelete()
+                    }
+                }
+            } message: {
+                Text("삭제된 항목은 복구할 수 없습니다.")
+            }
         }
         .interactiveDismissDisabled(isDirty || vm.isSaving)
         .modifier(EditRecurrenceViewModifier(vm: vm))
@@ -82,6 +113,12 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
         }
         .onChange(of: vm.saveCompleted) { _, newValue in
             if newValue && vm.error == nil && !vm.showRecurringEditOptions {
+                dismiss()
+                onSave()
+            }
+        }
+        .onChange(of: (vm as? EditSheetViewModel)?.deleteCompleted) { _, newValue in
+            if newValue == true {
                 dismiss()
                 onSave()
             }
@@ -109,6 +146,11 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                 )
                 
                 footerError
+                
+                // 편집 모드에서만 삭제 버튼 표시
+                if vm is EditSheetViewModel {
+                    deleteButton
+                }
             }
             .padding(20)
             .contentShape(Rectangle())
@@ -136,6 +178,11 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                 )
                 
                 footerError
+                
+                // 편집 모드에서만 삭제 버튼 표시
+                if vm is EditSheetViewModel {
+                    deleteButton
+                }
             }
             .padding(20)
             .contentShape(Rectangle())
@@ -151,6 +198,41 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                 Text(String(format: NSLocalizedString("⚠️ 오류: %@", comment: ""), e.localizedDescription))
                     .font(.jakartaRegular(size: 14))
                     .foregroundStyle(.red)
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var deleteButton: some View {
+        if let editVM = vm as? EditSheetViewModel {
+            VStack(spacing: 0) {
+                // 구분선
+                Divider()
+                    .padding(.vertical, 20)
+                
+                // 삭제 버튼
+                Button {
+                    editVM.requestDelete()
+                } label: {
+                    HStack {
+                        if editVM.isDeleting {
+                            ProgressView()
+                                .scaleEffect(0.8)
+                                .padding(.trailing, 8)
+                        }
+                        
+                        Text(vm.mode == .event ? "일정 삭제" : "할일 삭제")
+                            .font(.pretendardSemiBold(size: 16))
+                    }
+                    .foregroundStyle(.red)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 50)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .stroke(.red.opacity(0.3), lineWidth: 1)
+                    )
+                }
+                .disabled(editVM.isDeleting)
             }
         }
     }

@@ -120,6 +120,7 @@ final class DIContainer {
             event: event,
             editEvent: makeEditEventUseCase(),
             editReminder: makeEditReminderUseCase(),
+            deleteObject: makeDeleteEventUseCase(),
             availableCalendars: availableCalendars,
             availableReminderCalendars: availableReminderCalendars
         )
@@ -134,6 +135,7 @@ final class DIContainer {
             reminder: reminder,
             editEvent: makeEditEventUseCase(),
             editReminder: makeEditReminderUseCase(),
+            deleteObject: makeDeleteEventUseCase(),
             availableCalendars: availableCalendars,
             availableReminderCalendars: availableReminderCalendars
         )
