@@ -21,7 +21,6 @@ struct DayDetailSheet: View {
     // 편집/삭제 관련 상태
     @State private var editingEvent: Event?
     @State private var editingReminder: Reminder?
-    @State private var showToast: Bool = false
     
     // 추가 관련 상태
     @State private var showAddSheet: Bool = false
@@ -89,36 +88,26 @@ struct DayDetailSheet: View {
             }
         }
         .sheet(item: $editingEvent) { event in
-            AddSheet(vm: di.makeEditSheetVM(event: event)) {
-                showToast = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    showToast = false
-                }
+            AddSheet(vm: di.makeEditSheetVM(event: event)) { isDeleted in
+                ToastManager.shared.show(isDeleted ? .delete : .success)
                 // 편집 완료 후 데이터 리로드
                 loadCalendarDayData()
             }
         }
         .sheet(item: $editingReminder) { reminder in
-            AddSheet(vm: di.makeEditSheetVM(reminder: reminder)) {
-                showToast = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    showToast = false
-                }
+            AddSheet(vm: di.makeEditSheetVM(reminder: reminder)) { isDeleted in
+                ToastManager.shared.show(isDeleted ? .delete : .success)
                 // 편집 완료 후 데이터 리로드
                 loadCalendarDayData()
             }
         }
         .sheet(isPresented: $showAddSheet) {
-            AddSheet(vm: di.makeAddSheetVMWithDate(initialDate)) {
-                showToast = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    showToast = false
-                }
+            AddSheet(vm: di.makeAddSheetVMWithDate(initialDate)) { isDeleted in
+                ToastManager.shared.show(isDeleted ? .delete : .success)
                 // 추가 완료 후 데이터 리로드
                 loadCalendarDayData()
             }
         }
-        .overlay(toastOverlay)
         .overlay(deletionOverlay)
         .onAppear {
             loadCalendarDayData()
@@ -433,29 +422,7 @@ struct DayDetailSheet: View {
         }
     }
     
-    // MARK: - Toast & Deletion Overlays
-    private var toastOverlay: some View {
-        Group {
-            if showToast {
-                VStack {
-                    Spacer()
-                    Text("변경사항이 저장되었습니다")
-                        .font(.pretendardSemiBold(size: 14))
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 8)
-                        .background(
-                            Capsule()
-                                .fill(Color.black.opacity(0.8))
-                        )
-                        .padding(.bottom, 50)
-                }
-                .transition(.move(edge: .bottom).combined(with: .opacity))
-                .animation(.easeInOut, value: showToast)
-            }
-        }
-    }
-    
+    // MARK: - Deletion Overlay
     private var deletionOverlay: some View {
         Group {
             if isDeletingEvent {
@@ -727,10 +694,7 @@ struct DayDetailSheet: View {
             switch result {
             case .success:
                 currentDeletingEvent = nil
-                showToast = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    showToast = false
-                }
+                ToastManager.shared.show(.delete)
                 // 삭제 후 데이터 리로드
                 loadCalendarDayData()
             case .failure(let error):
@@ -759,10 +723,7 @@ struct DayDetailSheet: View {
             switch result {
             case .success:
                 currentDeletingEvent = nil
-                showToast = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    showToast = false
-                }
+                ToastManager.shared.show(.delete)
                 // 삭제 후 데이터 리로드
                 loadCalendarDayData()
             case .failure(let error):
@@ -780,10 +741,7 @@ struct DayDetailSheet: View {
             await MainActor.run {
                 switch result {
                 case .success:
-                    showToast = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                        showToast = false
-                    }
+                    ToastManager.shared.show(.delete)
                     // 삭제 후 데이터 리로드
                     loadCalendarDayData()
                 case .failure(let error):
@@ -802,10 +760,7 @@ struct DayDetailSheet: View {
             await MainActor.run {
                 switch result {
                 case .success:
-                    showToast = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                        showToast = false
-                    }
+                    ToastManager.shared.show(.success)
                     // 토글 후 데이터 리로드
                     loadCalendarDayData()
                 case .failure(let error):

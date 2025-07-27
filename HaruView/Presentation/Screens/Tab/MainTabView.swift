@@ -67,6 +67,7 @@ struct MainTabView: View {
             // 커스텀 탭 바
             HaruTabBar(selectedTab: $selectedTab)
         }
+        .withGlobalToast()
         .ignoresSafeArea(.keyboard) // 키보드 올라올 때 탭바 숨기지 않음
         .ignoresSafeArea(.all, edges: .bottom) // 탭바 하단 영역 무시
     }

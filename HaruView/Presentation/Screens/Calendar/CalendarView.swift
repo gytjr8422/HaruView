@@ -109,7 +109,8 @@ struct CalendarView: View {
         }
         .sheet(isPresented: $showAddSheet) {
             if let date = quickAddDate {
-                AddSheet(vm: di.makeAddSheetVMWithDate(date)) {
+                AddSheet(vm: di.makeAddSheetVMWithDate(date)) { isDeleted in
+                    ToastManager.shared.show(isDeleted ? .delete : .success)
                     vm.refresh()
                 }
             }

@@ -13,7 +13,6 @@ struct EventListSheet<VM: EventListViewModelProtocol>: View {
     @Environment(\.di) private var di
     @StateObject var vm: VM
     @State private var editingEvent: Event?
-    @State private var showToast: Bool = false
     
     init(vm: VM) {
         _vm = StateObject(wrappedValue: vm)
@@ -56,7 +55,6 @@ struct EventListSheet<VM: EventListViewModelProtocol>: View {
         }
         .modifier(EventListSheetsModifier(
             editingEvent: $editingEvent,
-            showToast: $showToast,
             vm: vm,
             di: di
         ))
@@ -90,7 +88,6 @@ struct EventListSheet<VM: EventListViewModelProtocol>: View {
 
 private struct EventListSheetsModifier<VM: EventListViewModelProtocol>: ViewModifier {
     @Binding var editingEvent: Event?
-    @Binding var showToast: Bool
     @ObservedObject var vm: VM
     let di: DIContainer
     @Environment(\.scenePhase) private var phase
@@ -103,37 +100,11 @@ private struct EventListSheetsModifier<VM: EventListViewModelProtocol>: ViewModi
             }
             .refreshable { vm.refresh() }
             .sheet(item: $editingEvent) { event in
-                AddSheet(vm: di.makeEditSheetVM(event: event)) {
-                    showToast = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                        showToast = false
-                    }
+                AddSheet(vm: di.makeEditSheetVM(event: event)) { isDeleted in
+                    ToastManager.shared.show(isDeleted ? .delete : .success)
                     vm.refresh()
                 }
             }
-            .overlay(
-                Group {
-                    if showToast {
-                        ToastView()
-                            .animation(.easeInOut, value: showToast)
-                            .transition(.opacity)
-                    }
-                }
-            )
-    }
-    
-    private struct ToastView: View {
-        var body: some View {
-            Text("저장이 완료되었습니다.")
-                .font(.pretendardSemiBold(size: 14))
-                .foregroundStyle(Color.white)
-                .padding(10)
-                .background(
-                    RoundedRectangle(cornerRadius: 10)
-                        .opacity(0.85)
-                )
-                .transition(.move(edge: .top).combined(with: .opacity))
-        }
     }
 }
 

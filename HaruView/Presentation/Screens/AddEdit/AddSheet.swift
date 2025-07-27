@@ -13,7 +13,7 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     @FocusState private var isTextFieldFocused: Bool
 
     @StateObject private var vm: VM
-    var onSave: () -> Void
+    var onSave: (Bool) -> Void // Bool: 삭제 여부 (true: 삭제, false: 저장)
 
     // 날짜 제한 해제: 과거 날짜도 허용하고 미래 날짜 범위 확장
     private var minDate: Date {
@@ -32,7 +32,7 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
         vm.hasChanges
     }
 
-    init(vm: VM, onSave: @escaping () -> Void) {
+    init(vm: VM, onSave: @escaping (Bool) -> Void) {
         _vm = StateObject(wrappedValue: vm)
         self.onSave = onSave
     }
@@ -114,13 +114,13 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
         .onChange(of: vm.saveCompleted) { _, newValue in
             if newValue && vm.error == nil && !vm.showRecurringEditOptions {
                 dismiss()
-                onSave()
+                onSave(false) // 저장 완료
             }
         }
         .onChange(of: (vm as? EditSheetViewModel)?.deleteCompleted) { _, newValue in
             if newValue == true {
                 dismiss()
-                onSave()
+                onSave(true) // 삭제 완료
             }
         }
     }
@@ -318,7 +318,7 @@ private class MockAddVM: AddSheetViewModelProtocol {
 }
 
 #Preview {
-    AddSheet(vm: MockAddVM(), onSave: {})
+    AddSheet(vm: MockAddVM(), onSave: { _ in })
 }
 #endif
 

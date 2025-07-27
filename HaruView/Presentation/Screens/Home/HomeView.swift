@@ -22,7 +22,6 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
     @State private var showAddSheet: Bool = false
     @State private var editingEvent: Event?
     @State private var editingReminder: Reminder?
-    @State private var showToast: Bool = false
     @State private var adHeight: CGFloat = 0
     
     init(vm: VM) {
@@ -33,7 +32,6 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
         NavigationStack {
             ZStack {
                 mainContent
-                toastOverlay
                 if permission.isAllGranted {
                     deleteHintOverlay()
                 }
@@ -52,7 +50,6 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
             showAddSheet: $showAddSheet,
             editingEvent: $editingEvent,
             editingReminder: $editingReminder,
-            showToast: $showToast,
             vm: vm,
             di: di
         ))
@@ -85,15 +82,6 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
     }
     
     // MARK: - Toast Overlay
-    private var toastOverlay: some View {
-        Group {
-            if showToast {
-                ToastView()
-                    .animation(.easeInOut, value: showToast)
-                    .transition(.opacity)
-            }
-        }
-    }
     
     @ViewBuilder
     private var content: some View {

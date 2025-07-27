@@ -13,7 +13,6 @@ struct SheetsViewModifier<VM: HomeViewModelProtocol>: ViewModifier {
     @Binding var showAddSheet: Bool
     @Binding var editingEvent: Event?
     @Binding var editingReminder: Reminder?
-    @Binding var showToast: Bool
     
     @ObservedObject var vm: VM
     let di: DIContainer
@@ -29,29 +28,20 @@ struct SheetsViewModifier<VM: HomeViewModelProtocol>: ViewModifier {
                     .presentationDetents([.fraction(0.75), .fraction(1.0)])
             }
             .sheet(isPresented: $showAddSheet) {
-                AddSheet(vm: di.makeAddSheetVM()) {
-                    showToast = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                        showToast = false
-                    }
+                AddSheet(vm: di.makeAddSheetVM()) { isDeleted in
+                    ToastManager.shared.show(isDeleted ? .delete : .success)
                 }
                 .onDisappear { vm.refresh(.storeChange) }
             }
             .sheet(item: $editingEvent) { event in
-                AddSheet(vm: di.makeEditSheetVM(event: event)) {
-                    showToast = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                        showToast = false
-                    }
+                AddSheet(vm: di.makeEditSheetVM(event: event)) { isDeleted in
+                    ToastManager.shared.show(isDeleted ? .delete : .success)
                     vm.refresh(.storeChange)
                 }
             }
             .sheet(item: $editingReminder) { rem in
-                AddSheet(vm: di.makeEditSheetVM(reminder: rem)) {
-                    showToast = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                        showToast = false
-                    }
+                AddSheet(vm: di.makeEditSheetVM(reminder: rem)) { isDeleted in
+                    ToastManager.shared.show(isDeleted ? .delete : .success)
                     vm.refresh(.storeChange)
                 }
             }
