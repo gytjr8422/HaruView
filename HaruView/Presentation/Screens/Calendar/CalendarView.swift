@@ -162,7 +162,7 @@ struct CalendarView: View {
             // 요일 헤더
             WeekdayHeaderView()
             
-            // 안정적인 TabView 기반 달력
+            // TabView 기반 달력
             if vm.monthWindow.count >= 7 {
                 StableTabCalendarView(
                     currentIndex: $vm.currentWindowIndex,
