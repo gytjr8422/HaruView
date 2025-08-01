@@ -16,15 +16,30 @@ struct HaruTextField: View {
     
     var body: some View {
         HStack {
-            TextField(LocalizedStringKey(placeholder), text: $text)
-                .focused($isFocused)
-                .font(.pretendardRegular(size: 16))
-                .padding(.leading, 10)
-                .padding(.trailing, showClearButton ? 30 : 10)
-                .frame(height: 50)
-                .onChange(of: text) { _, newValue in
-                    showClearButton = !newValue.isEmpty
+            ZStack(alignment: .leading) {
+                TextField("", text: $text)
+                    .focused($isFocused)
+                    .font(.pretendardRegular(size: 16))
+                    .foregroundStyle(Color(hexCode: "6E5C49"))
+                    .padding(.leading, 10)
+                    .padding(.trailing, showClearButton ? 30 : 10)
+                    .frame(height: 50)
+                    .onChange(of: text) { _, newValue in
+                        showClearButton = !newValue.isEmpty
+                    }
+                
+                // 커스텀 placeholder
+                if text.isEmpty {
+                    HStack {
+                        Text(placeholder)
+                            .font(.pretendardRegular(size: 16))
+                            .foregroundStyle(Color(hexCode: "6E5C49").opacity(0.5))
+                            .padding(.leading, 10)
+                        Spacer()
+                    }
+                    .allowsHitTesting(false)
                 }
+            }
 
             
             if showClearButton {

@@ -1439,6 +1439,26 @@
         }
       }
     },
+    "이동할 월을 선택하세요" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select the month to navigate to"
+          }
+        }
+      }
+    },
+    "이메일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "email"
+          }
+        }
+      }
+    },
     "이미 위치 정보를 요청 중입니다." : {
       "localizations" : {
         "en" : {
@@ -1469,42 +1489,22 @@
         }
       }
     },
-    "일" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : " "
-          }
-        }
-      }
-    },
-    "이동할 월을 선택하세요" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Select the month to navigate to"
-          }
-        }
-      }
-    },
-    "이메일" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "email"
-          }
-        }
-      }
-    },
     "이후 모든 이벤트 삭제" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Delete All Future Events"
+          }
+        }
+      }
+    },
+    "일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " "
           }
         }
       }
@@ -1682,6 +1682,9 @@
           }
         }
       }
+    },
+    "총" : {
+
     },
     "최고: %.0f°  최저: %.0f°" : {
       "localizations" : {

@@ -108,88 +108,198 @@ struct CustomRecurrenceSheet: View {
     
     var body: some View {
         NavigationStack {
-            Form {
-                Section("빈도") {
-                    Picker("반복", selection: $frequency) {
-                        Text("매일").tag(RecurrenceRuleInput.RecurrenceFrequency.daily)
-                        Text("매주").tag(RecurrenceRuleInput.RecurrenceFrequency.weekly)
-                        Text("매월").tag(RecurrenceRuleInput.RecurrenceFrequency.monthly)
-                        Text("매년").tag(RecurrenceRuleInput.RecurrenceFrequency.yearly)
-                    }
-                    
-                    HStack {
-                        Text("매")
-                        TextField("간격", value: $interval, format: .number)
-                            .keyboardType(.numberPad)
-                            .textFieldStyle(.roundedBorder)
-                        Text(frequency == .daily ? "일" :
-                             frequency == .weekly ? "주" :
-                             frequency == .monthly ? "개월" : "년")
-                    }
-                }
-                
-                if frequency == .weekly {
-                    Section("요일") {
-                        let weekdays = ["일", "월", "화", "수", "목", "금", "토"]
+            ScrollView {
+                VStack(spacing: 20) {
+                    // 빈도 섹션
+                    VStack(alignment: .leading, spacing: 12) {
                         HStack {
-                            ForEach(Array(weekdays.enumerated()), id: \.offset) { index, day in
-                                Button(action: {
-                                    let dayNumber = index + 1
-                                    if selectedWeekdays.contains(dayNumber) {
-                                        selectedWeekdays.remove(dayNumber)
-                                    } else {
-                                        selectedWeekdays.insert(dayNumber)
-                                    }
-                                }) {
-                                    Text(day)
-                                        .font(.pretendardRegular(size: 14))
-                                        .foregroundStyle(selectedWeekdays.contains(index + 1) ? .white : Color(hexCode: "A76545"))
-                                        .frame(width: 30, height: 30)
-                                        .background(
-                                            Circle()
-                                                .fill(selectedWeekdays.contains(index + 1) ? Color(hexCode: "A76545") : Color(hexCode: "A76545").opacity(0.1))
-                                        )
-                                }
-                                .buttonStyle(PlainButtonStyle())
+                            Text("빈도")
+                                .font(.pretendardBold(size: 16))
+                                .foregroundStyle(Color(hexCode: "6E5C49"))
+                            Spacer()
+                        }
+                        
+                        VStack(spacing: 12) {
+                            // 반복 종류 선택
+                            Picker("반복", selection: $frequency) {
+                                Text("매일").tag(RecurrenceRuleInput.RecurrenceFrequency.daily)
+                                Text("매주").tag(RecurrenceRuleInput.RecurrenceFrequency.weekly)
+                                Text("매월").tag(RecurrenceRuleInput.RecurrenceFrequency.monthly)
+                                Text("매년").tag(RecurrenceRuleInput.RecurrenceFrequency.yearly)
+                            }
+                            .pickerStyle(.segmented)
+                            
+                            // 간격 설정
+                            HStack {
+                                Text("매")
+                                    .font(.pretendardRegular(size: 14))
+                                    .foregroundStyle(Color(hexCode: "6E5C49"))
+                                
+                                TextField("간격", value: $interval, format: .number)
+                                    .keyboardType(.numberPad)
+                                    .font(.pretendardRegular(size: 14))
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 8)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .fill(Color(hexCode: "FFFCF5"))
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 8)
+                                                    .stroke(Color(hexCode: "A76545").opacity(0.3), lineWidth: 1)
+                                            )
+                                    )
+                                    .frame(width: 60)
+                                
+                                Text(frequency == .daily ? "일" :
+                                     frequency == .weekly ? "주" :
+                                     frequency == .monthly ? "개월" : "년")
+                                    .font(.pretendardRegular(size: 14))
+                                    .foregroundStyle(Color(hexCode: "6E5C49"))
+                                
+                                Spacer()
                             }
                         }
-                        .frame(maxWidth: .infinity)
-                    }
-                }
-                
-                Section("종료 조건") {
-                    Picker("종료", selection: $endCondition) {
-                        Text("끝나지 않음").tag(RecurrenceRuleInput.EndCondition.never)
-                        Text("특정 날짜").tag(RecurrenceRuleInput.EndCondition.endDate(endDate))
-                        Text("횟수 제한").tag(RecurrenceRuleInput.EndCondition.occurrenceCount(occurrenceCount))
+                        .padding(16)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color(hexCode: "C2966B").opacity(0.09))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(Color(hexCode: "C2966B").opacity(0.3), lineWidth: 1)
+                                )
+                        )
                     }
                     
-                    switch endCondition {
-                    case .endDate:
-                        DatePicker("종료 날짜", selection: $endDate, displayedComponents: .date)
-                    case .occurrenceCount:
-                        HStack {
-                            TextField("횟수", value: $occurrenceCount, format: .number)
-                                .keyboardType(.numberPad)
-                                .textFieldStyle(.roundedBorder)
-                            Text("회")
+                    // 요일 선택 섹션 (매주일 때만)
+                    if frequency == .weekly {
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack {
+                                Text("요일")
+                                    .font(.pretendardBold(size: 16))
+                                    .foregroundStyle(Color(hexCode: "6E5C49"))
+                                Spacer()
+                            }
+                            
+                            let weekdays = ["일", "월", "화", "수", "목", "금", "토"]
+                            HStack(spacing: 8) {
+                                ForEach(Array(weekdays.enumerated()), id: \.offset) { index, day in
+                                    Button(action: {
+                                        let dayNumber = index + 1
+                                        if selectedWeekdays.contains(dayNumber) {
+                                            selectedWeekdays.remove(dayNumber)
+                                        } else {
+                                            selectedWeekdays.insert(dayNumber)
+                                        }
+                                    }) {
+                                        Text(day)
+                                            .font(.pretendardMedium(size: 14))
+                                            .foregroundStyle(selectedWeekdays.contains(index + 1) ? .white : Color(hexCode: "A76545"))
+                                            .frame(width: 36, height: 36)
+                                            .background(
+                                                Circle()
+                                                    .fill(selectedWeekdays.contains(index + 1) ? Color(hexCode: "A76545") : Color(hexCode: "A76545").opacity(0.1))
+                                            )
+                                    }
+                                    .buttonStyle(PlainButtonStyle())
+                                }
+                            }
+                            .padding(16)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(Color(hexCode: "C2966B").opacity(0.09))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .stroke(Color(hexCode: "C2966B").opacity(0.3), lineWidth: 1)
+                                    )
+                            )
                         }
-                    case .never:
-                        EmptyView()
+                    }
+                    
+                    // 종료 조건 섹션
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack {
+                            Text("종료 조건")
+                                .font(.pretendardBold(size: 16))
+                                .foregroundStyle(Color(hexCode: "6E5C49"))
+                            Spacer()
+                        }
+                        
+                        VStack(spacing: 12) {
+                            Picker("종료", selection: $endCondition) {
+                                Text("끝나지 않음").tag(RecurrenceRuleInput.EndCondition.never)
+                                Text("특정 날짜").tag(RecurrenceRuleInput.EndCondition.endDate(endDate))
+                                Text("횟수 제한").tag(RecurrenceRuleInput.EndCondition.occurrenceCount(occurrenceCount))
+                            }
+                            .pickerStyle(.segmented)
+                            
+                            switch endCondition {
+                            case .endDate:
+                                DatePicker("종료 날짜", selection: $endDate, displayedComponents: .date)
+                                    .font(.pretendardRegular(size: 14))
+                                    .foregroundStyle(Color(hexCode: "6E5C49"))
+                            case .occurrenceCount:
+                                HStack {
+                                    Text("총")
+                                        .font(.pretendardRegular(size: 14))
+                                        .foregroundStyle(Color(hexCode: "6E5C49"))
+                                    
+                                    TextField("횟수", value: $occurrenceCount, format: .number)
+                                        .keyboardType(.numberPad)
+                                        .font(.pretendardRegular(size: 14))
+                                        .padding(.horizontal, 12)
+                                        .padding(.vertical, 8)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 8)
+                                                .fill(Color(hexCode: "FFFCF5"))
+                                                .overlay(
+                                                    RoundedRectangle(cornerRadius: 8)
+                                                        .stroke(Color(hexCode: "A76545").opacity(0.3), lineWidth: 1)
+                                                )
+                                        )
+                                        .frame(width: 60)
+                                    
+                                    Text("회")
+                                        .font(.pretendardRegular(size: 14))
+                                        .foregroundStyle(Color(hexCode: "6E5C49"))
+                                    
+                                    Spacer()
+                                }
+                            case .never:
+                                EmptyView()
+                            }
+                        }
+                        .padding(16)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color(hexCode: "C2966B").opacity(0.09))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(Color(hexCode: "C2966B").opacity(0.3), lineWidth: 1)
+                                )
+                        )
                     }
                 }
+                .padding(.horizontal, 20)
+                .padding(.top, 20)
             }
+            .background(Color(hexCode: "FFFCF5"))
             .navigationTitle("반복 설정")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("취소") { dismiss() }
+                    Button("취소") { 
+                        dismiss() 
+                    }
+                    .font(.pretendardRegular(size: 16))
+                    .foregroundStyle(Color(hexCode: "6E5C49"))
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("완료") {
                         createRecurrenceRule()
                         dismiss()
                     }
+                    .font(.pretendardMedium(size: 16))
+                    .foregroundStyle(Color(hexCode: "A76545"))
                 }
             }
         }

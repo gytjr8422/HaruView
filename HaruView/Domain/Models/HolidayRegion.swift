@@ -8,7 +8,7 @@
 import Foundation
 
 struct HolidayRegion: Identifiable, Hashable, Codable {
-    let id = UUID()
+    var id = UUID()
     let localeIdentifier: String
     let displayName: String
     let flagEmoji: String
