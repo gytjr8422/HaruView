@@ -426,6 +426,9 @@
         }
       }
     },
+    "공휴일 국가 설정" : {
+
+    },
     "구독" : {
       "localizations" : {
         "en" : {
@@ -435,6 +438,9 @@
           }
         }
       }
+    },
+    "국가 검색" : {
+
     },
     "금요일" : {
       "localizations" : {
@@ -577,6 +583,9 @@
           }
         }
       }
+    },
+    "달력 설정" : {
+
     },
     "달력 준비 중..." : {
       "localizations" : {
@@ -865,6 +874,9 @@
         }
       }
     },
+    "버전 1.0" : {
+
+    },
     "보통" : {
       "localizations" : {
         "en" : {
@@ -1028,6 +1040,9 @@
         }
       }
     },
+    "설정" : {
+
+    },
     "설정 방식" : {
       "localizations" : {
         "en" : {
@@ -1148,6 +1163,9 @@
           }
         }
       }
+    },
+    "앱 정보" : {
+
     },
     "업데이트 중..." : {
       "localizations" : {
@@ -1411,42 +1429,12 @@
         }
       }
     },
-    "일" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : " "
-          }
-        }
-      }
-    },
     "이동" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Go"
-          }
-        }
-      }
-    },
-    "이동할 월을 선택하세요" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Select the month to navigate to"
-          }
-        }
-      }
-    },
-    "이메일" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "email"
           }
         }
       }
@@ -1477,6 +1465,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "All Future Events"
+          }
+        }
+      }
+    },
+    "일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " "
+          }
+        }
+      }
+    },
+    "이동할 월을 선택하세요" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select the month to navigate to"
+          }
+        }
+      }
+    },
+    "이메일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "email"
           }
         }
       }
@@ -1863,6 +1881,9 @@
           }
         }
       }
+    },
+    "현재 설정" : {
+
     },
     "화요일" : {
       "localizations" : {

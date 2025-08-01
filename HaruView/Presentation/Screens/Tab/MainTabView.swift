@@ -9,6 +9,7 @@ import SwiftUI
 
 enum TabItem: CaseIterable, Identifiable {
     case home
+    case add
     case calendar
     
     var id: String { rawValue }
@@ -16,6 +17,7 @@ enum TabItem: CaseIterable, Identifiable {
     var rawValue: String {
         switch self {
         case .home: return "home"
+        case .add: return "add"
         case .calendar: return "calendar"
         }
     }
@@ -23,6 +25,7 @@ enum TabItem: CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .home: return String(localized: "오늘")
+        case .add: return String(localized: "추가")
         case .calendar: return String(localized: "달력")
         }
     }
@@ -30,6 +33,7 @@ enum TabItem: CaseIterable, Identifiable {
     var iconName: String {
         switch self {
         case .home: return "\(currentDay).square"
+        case .add: return "plus"
         case .calendar: return "calendar"
         }
     }
@@ -37,6 +41,7 @@ enum TabItem: CaseIterable, Identifiable {
     var selectedIconName: String {
         switch self {
         case .home: return "\(currentDay).square.fill"
+        case .add: return "plus.circle.fill"
         case .calendar: return "calendar"
         }
     }
@@ -48,6 +53,7 @@ enum TabItem: CaseIterable, Identifiable {
 
 struct MainTabView: View {
     @State private var selectedTab: TabItem = .home
+    @State private var showAddSheet = false
     @Environment(\.di) private var di
     
     var body: some View {
@@ -57,12 +63,21 @@ struct MainTabView: View {
                 switch selectedTab {
                 case .home:
                     HomeView(vm: di.makeHomeVM())
+                case .add:
+                    // 추가 탭은 실제 화면이 없고 시트만 띄움
+                    EmptyView()
                 case .calendar:
                     CalendarView()
                         .transition(.opacity)
                 }
             }
             .animation(.easeInOut(duration: 0.2), value: selectedTab)
+            .onChange(of: selectedTab) { oldValue, newValue in
+                if newValue == .add {
+                    showAddSheet = true
+                    selectedTab = oldValue // 이전 탭으로 되돌림
+                }
+            }
             
             // 커스텀 탭 바
             HaruTabBar(selectedTab: $selectedTab)
@@ -70,6 +85,12 @@ struct MainTabView: View {
         .withGlobalToast()
         .ignoresSafeArea(.keyboard) // 키보드 올라올 때 탭바 숨기지 않음
         .ignoresSafeArea(.all, edges: .bottom) // 탭바 하단 영역 무시
+        .sheet(isPresented: $showAddSheet) {
+            AddSheet(vm: di.makeAddSheetVM()) { _ in
+                // AddSheet이 저장되거나 닫힐 때 처리
+                showAddSheet = false
+            }
+        }
     }
 }
 
@@ -126,6 +147,7 @@ struct TabBarButton: View {
                 selectedTab = tab
             }
         } label: {
+            // 모든 탭 동일한 디자인
             VStack(spacing: 4) {
                 ZStack {
                     // 선택된 탭의 배경

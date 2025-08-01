@@ -10,7 +10,6 @@ import SwiftUI
 struct SheetsViewModifier<VM: HomeViewModelProtocol>: ViewModifier {
     @Binding var showEventSheet: Bool
     @Binding var showReminderSheet: Bool
-    @Binding var showAddSheet: Bool
     @Binding var editingEvent: Event?
     @Binding var editingReminder: Reminder?
     
@@ -26,12 +25,6 @@ struct SheetsViewModifier<VM: HomeViewModelProtocol>: ViewModifier {
             .sheet(isPresented: $showReminderSheet) {
                 ReminderListSheet(vm: di.makeReminderListVM())
                     .presentationDetents([.fraction(0.75), .fraction(1.0)])
-            }
-            .sheet(isPresented: $showAddSheet) {
-                AddSheet(vm: di.makeAddSheetVM()) { isDeleted in
-                    ToastManager.shared.show(isDeleted ? .delete : .success)
-                }
-                .onDisappear { vm.refresh(.storeChange) }
             }
             .sheet(item: $editingEvent) { event in
                 AddSheet(vm: di.makeEditSheetVM(event: event)) { isDeleted in

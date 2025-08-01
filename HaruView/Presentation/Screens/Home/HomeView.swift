@@ -19,7 +19,6 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
     
     @State private var showEventSheet: Bool = false
     @State private var showReminderSheet: Bool = false
-    @State private var showAddSheet: Bool = false
     @State private var editingEvent: Event?
     @State private var editingReminder: Reminder?
     @State private var adHeight: CGFloat = 0
@@ -47,7 +46,6 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
         .modifier(SheetsViewModifier(
             showEventSheet: $showEventSheet,
             showReminderSheet: $showReminderSheet,
-            showAddSheet: $showAddSheet,
             editingEvent: $editingEvent,
             editingReminder: $editingReminder,
             vm: vm,
@@ -60,9 +58,6 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
         content
             .toolbar {
                 dateView
-                if permission.eventState == .granted && permission.reminderState == .granted {
-                    addButton
-                }
             }
             .navigationBarTitleDisplayMode(.inline)
             .background(Color(hexCode: "FFFCF5"))
@@ -125,18 +120,16 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                         accessDeniedView
                     }
                     
-                    if !showAddSheet {
-                        // 네이티브 광고
-                        NativeAdBanner(height: $adHeight)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: adHeight == 0 ? 200 : adHeight)   // 로드 전엔 임시 높이
-                            .padding(10)
-                            .background(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(Color(hexCode: "6E5C49").opacity(0.2), lineWidth: 1)
-                            )
-                            .padding(.top, 10)
-                    }
+                    // 네이티브 광고
+                    NativeAdBanner(height: $adHeight)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: adHeight == 0 ? 200 : adHeight)   // 로드 전엔 임시 높이
+                        .padding(10)
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color(hexCode: "6E5C49").opacity(0.2), lineWidth: 1)
+                        )
+                        .padding(.top, 10)
                     
                 }
                 .padding(.horizontal, 20)
@@ -290,41 +283,6 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
         }
     }
     
-    
-    private var addButton: some ToolbarContent {
-        ToolbarItem(placement: .navigationBarTrailing) {
-            if vm.state.error == nil {
-                Button {
-                    // 1) 광고가 있으면 먼저 보여주고
-                    if let root = UIApplication.shared.connectedScenes
-                        .compactMap({ ($0 as? UIWindowScene)?.keyWindow })
-                        .first?.rootViewController {
-                        AdManager.shared.show(from: root) {
-                            // 2) 광고 닫힌 뒤 AddSheet 열기
-                            showAddSheet = true
-                        }
-                    } else {
-                        showAddSheet = true
-                    }
-                } label: {
-                    Image(systemName: "plus")
-                        .foregroundStyle(Color(hexCode: "A76545"))
-                        .font(.system(size: 15, weight: .bold))
-                        .padding(.horizontal, 25)
-                        .padding(.vertical, 4)
-                        .background(Color(hexCode: "C2966B").opacity(0.09))
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color(hexCode: "C2966B").opacity(0.09),
-                                        lineWidth: 1)
-                                .shadow(radius: 10)
-                        }
-                }
-                .padding(.trailing, 6)
-            }
-        }
-    }
 
     
     private var dateView: some ToolbarContent {
