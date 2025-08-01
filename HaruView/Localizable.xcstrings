@@ -14,6 +14,9 @@
         }
       }
     },
+    "(%lld)" : {
+
+    },
     "%.0f°" : {
       "localizations" : {
         "en" : {
@@ -1012,6 +1015,9 @@
         }
       }
     },
+    "새로운 할 일을 추가해보세요!" : {
+
+    },
     "생일" : {
       "localizations" : {
         "en" : {
@@ -1184,6 +1190,7 @@
       }
     },
     "오늘 할 일" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1404,26 +1411,6 @@
         }
       }
     },
-    "이동할 월을 선택하세요" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Select the month to navigate to"
-          }
-        }
-      }
-    },
-    "이후 모든 이벤트" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All Future Events"
-          }
-        }
-      }
-    },
     "일" : {
       "localizations" : {
         "en" : {
@@ -1440,6 +1427,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Go"
+          }
+        }
+      }
+    },
+    "이동할 월을 선택하세요" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select the month to navigate to"
           }
         }
       }
@@ -1470,6 +1467,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Event time"
+          }
+        }
+      }
+    },
+    "이후 모든 이벤트" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All Future Events"
           }
         }
       }
@@ -1604,6 +1611,9 @@
           }
         }
       }
+    },
+    "전체 할 일" : {
+
     },
     "제목 입력" : {
       "localizations" : {
@@ -1820,6 +1830,9 @@
           }
         }
       }
+    },
+    "할 일이 없습니다" : {
+
     },
     "할일 삭제" : {
       "localizations" : {
