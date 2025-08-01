@@ -197,13 +197,13 @@ struct RecurrenceRuleInput {
             }
         }
         
-//        if let daysOfWeek = daysOfWeek, !daysOfWeek.isEmpty {
-//            let dayNames = ["", "일", "월", "화", "수", "목", "금", "토"]
-//            let selectedDays = daysOfWeek.compactMap {
-//                dayNames.indices.contains($0.dayOfWeek) ? dayNames[$0.dayOfWeek] : nil
-//            }
-//            result += " (\(selectedDays.joined(separator: ",")))"
-//        }
+        if let daysOfWeek = daysOfWeek, !daysOfWeek.isEmpty {
+            let dayNames = ["", "일", "월", "화", "수", "목", "금", "토"]
+            let selectedDays = daysOfWeek.compactMap {
+                dayNames.indices.contains($0.dayOfWeek) ? dayNames[$0.dayOfWeek] : nil
+            }
+            result += " (\(selectedDays.joined(separator: ",")))"
+        }
         
         switch endCondition {
         case .never:

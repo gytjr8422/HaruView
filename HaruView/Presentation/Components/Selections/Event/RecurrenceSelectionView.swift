@@ -131,25 +131,29 @@ struct CustomRecurrenceSheet: View {
                 if frequency == .weekly {
                     Section("요일") {
                         let weekdays = ["일", "월", "화", "수", "목", "금", "토"]
-                        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7)) {
+                        HStack {
                             ForEach(Array(weekdays.enumerated()), id: \.offset) { index, day in
-                                Button(day) {
+                                Button(action: {
                                     let dayNumber = index + 1
                                     if selectedWeekdays.contains(dayNumber) {
                                         selectedWeekdays.remove(dayNumber)
                                     } else {
                                         selectedWeekdays.insert(dayNumber)
                                     }
+                                }) {
+                                    Text(day)
+                                        .font(.pretendardRegular(size: 14))
+                                        .foregroundStyle(selectedWeekdays.contains(index + 1) ? .white : Color(hexCode: "A76545"))
+                                        .frame(width: 30, height: 30)
+                                        .background(
+                                            Circle()
+                                                .fill(selectedWeekdays.contains(index + 1) ? Color(hexCode: "A76545") : Color(hexCode: "A76545").opacity(0.1))
+                                        )
                                 }
-                                .font(.pretendardRegular(size: 14))
-                                .foregroundStyle(selectedWeekdays.contains(index + 1) ? .white : Color(hexCode: "A76545"))
-                                .frame(width: 30, height: 30)
-                                .background(
-                                    Circle()
-                                        .fill(selectedWeekdays.contains(index + 1) ? Color(hexCode: "A76545") : Color(hexCode: "A76545").opacity(0.1))
-                                )
+                                .buttonStyle(PlainButtonStyle())
                             }
                         }
+                        .frame(maxWidth: .infinity)
                     }
                 }
                 
@@ -192,6 +196,13 @@ struct CustomRecurrenceSheet: View {
         .onAppear {
             initializeFromExistingRule()
         }
+        .onChange(of: frequency) { _, newFrequency in
+            if newFrequency == .weekly && selectedWeekdays.isEmpty {
+                // 매주로 변경했는데 선택된 요일이 없으면 현재 요일로 설정
+                let currentWeekday = Calendar.current.component(.weekday, from: Date())
+                selectedWeekdays = [currentWeekday]
+            }
+        }
     }
     
     private func createRecurrenceRule() {
@@ -226,6 +237,16 @@ struct CustomRecurrenceSheet: View {
             
             if let daysOfWeek = existing.daysOfWeek {
                 selectedWeekdays = Set(daysOfWeek.map { $0.dayOfWeek })
+            } else if existing.frequency == .weekly {
+                // 매주 반복이지만 특정 요일이 없으면, 현재 요일로 기본 설정
+                let currentWeekday = Calendar.current.component(.weekday, from: Date())
+                selectedWeekdays = [currentWeekday]
+            }
+        } else {
+            // 새로 생성할 때는 현재 요일로 기본 설정
+            if frequency == .weekly {
+                let currentWeekday = Calendar.current.component(.weekday, from: Date())
+                selectedWeekdays = [currentWeekday]
             }
         }
     }
