@@ -274,41 +274,25 @@ extension EventKitRepository {
         return "calendar_\(year)_\(String(format: "%02d", month))"
     }
     
-    /// 간단한 메모리 캐시 (나중에 필요시 확장)
-    private static var monthCache: [String: CalendarMonth] = [:]
-    private static let cacheQueue = DispatchQueue(label: "calendar.cache", attributes: .concurrent)
+    /// 통합 캐시 매니저 사용
+    private var cacheManager: CalendarCacheManager {
+        CalendarCacheManager.shared
+    }
     
     /// 캐시에서 월 데이터 조회
     func getCachedMonth(year: Int, month: Int) -> CalendarMonth? {
         let key = cacheKey(for: year, month: month)
-        return Self.cacheQueue.sync {
-            Self.monthCache[key]
-        }
+        return cacheManager.getCachedMonth(for: key)
     }
     
     /// 월 데이터 캐시에 저장
     func setCachedMonth(_ month: CalendarMonth) {
         let key = cacheKey(for: month.year, month: month.month)
-        Self.cacheQueue.async(flags: .barrier) {
-            Self.monthCache[key] = month
-        }
+        cacheManager.setCachedMonth(month, for: key)
     }
     
-    /// 캐시 정리 (메모리 절약)
+    /// 캐시 정리 (통합 캐시 매니저에 위임)
     func clearOldCache() {
-        let calendar = Calendar.current
-        let now = Date()
-        let currentComponents = calendar.dateComponents([.year, .month], from: now)
-        
-        guard let currentYear = currentComponents.year,
-              let currentMonth = currentComponents.month else { return }
-        
-        Self.cacheQueue.async(flags: .barrier) {
-            Self.monthCache = Self.monthCache.filter { key, month in
-                // 현재 월 기준 ±2개월 데이터만 유지
-                let monthDiff = (month.year - currentYear) * 12 + (month.month - currentMonth)
-                return abs(monthDiff) <= 3
-            }
-        }
+        cacheManager.clearExpiredCache()
     }
 }

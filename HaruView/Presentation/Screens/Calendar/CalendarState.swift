@@ -22,8 +22,7 @@ struct CalendarState: Equatable {
     var selectedDate: Date? = nil
     var viewMode: CalendarViewMode = .month
     
-    // 캐시된 월 데이터 (성능 최적화)
-    var cachedMonths: [String: CalendarMonth] = [:]
+    // 캐시 매니저는 직접 접근하지 않고 메서드에서 사용
     
     // 초기화
     init(date: Date = Date()) {
@@ -40,7 +39,7 @@ struct CalendarState: Equatable {
     
     // 캐시 키 생성
     func cacheKey(year: Int, month: Int) -> String {
-        return "\(year)-\(String(format: "%02d", month))"
+        return "calendar_\(year)_\(String(format: "%02d", month))"
     }
     
     // 현재 월 캐시 키
@@ -50,20 +49,17 @@ struct CalendarState: Equatable {
     
     // 캐시에서 월 데이터 조회
     func getCachedMonth(year: Int, month: Int) -> CalendarMonth? {
-        return cachedMonths[cacheKey(year: year, month: month)]
+        return CalendarCacheManager.shared.getCachedMonth(for: cacheKey(year: year, month: month))
     }
     
     // 월 데이터 캐시에 저장
-    mutating func setCachedMonth(_ month: CalendarMonth) {
-        cachedMonths[cacheKey(year: month.year, month: month.month)] = month
+    func setCachedMonth(_ month: CalendarMonth) {
+        CalendarCacheManager.shared.setCachedMonth(month, for: cacheKey(year: month.year, month: month.month))
     }
     
-    // 오래된 캐시 정리 (현재 월 기준 ±2개월만 유지)
-    mutating func clearOldCache() {
-        cachedMonths = cachedMonths.filter { key, month in
-            let monthDiff = (month.year - currentYear) * 12 + (month.month - currentMonth)
-            return abs(monthDiff) <= 3
-        }
+    // 오래된 캐시 정리
+    func clearOldCache() {
+        CalendarCacheManager.shared.clearExpiredCache()
     }
 }
 

@@ -111,9 +111,12 @@ struct CalendarView: View {
             if let date = quickAddDate {
                 AddSheet(vm: di.makeAddSheetVMWithDate(date)) { isDeleted in
                     ToastManager.shared.show(isDeleted ? .delete : .success)
-                    // 일정 추가/삭제 후 모든 캐시를 삭제하고 강제 새로고침
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                        vm.forceRefresh()
+                    // 선택적 업데이트 사용 - 해당 날짜만 업데이트
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        if let targetDate = quickAddDate {
+                            let affectedDates = [targetDate]
+                            vm.selectiveUpdateManager.scheduleDateRangeUpdate(dates: affectedDates)
+                        }
                     }
                 }
             }
@@ -146,12 +149,27 @@ struct CalendarView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: .EKEventStoreChanged)) { _ in
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                vm.forceRefresh()
+                // 현재 보고 있는 월과 인접 월만 선택적 업데이트
+                let currentDate = vm.state.currentMonthFirstDay
+                let calendar = Calendar.current
+                let affectedDates = (-1...1).compactMap { offset in
+                    calendar.date(byAdding: .month, value: offset, to: currentDate)
+                }
+                vm.selectiveUpdateManager.scheduleDateRangeUpdate(dates: affectedDates)
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: .calendarNeedsRefresh)) { _ in
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                vm.forceRefresh()
+                // 현재 보고 있는 월만 선택적 업데이트
+                let currentDate = vm.state.currentMonthFirstDay
+                vm.selectiveUpdateManager.scheduleDateRangeUpdate(dates: [currentDate])
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .calendarSelectiveUpdate)) { notification in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                if let dates = notification.userInfo?["dates"] as? [Date] {
+                    vm.selectiveUpdateManager.scheduleDateRangeUpdate(dates: dates)
+                }
             }
         }
     }

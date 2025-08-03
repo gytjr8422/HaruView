@@ -176,78 +176,9 @@ struct CalendarDay: Identifiable, Hashable {
         events.count + reminders.count + holidays.count
     }
     
-    /// 표시할 아이템들 (연속 이벤트 처리 포함)
+    /// 표시할 아이템들 (캐시된 계산 결과 사용)
     var displayItems: [CalendarDisplayItem] {
-        var items: [CalendarDisplayItem] = []
-        
-        // 이벤트를 시간순으로 정렬
-        let sortedEvents = events.sorted { event1, event2 in
-            // 하루 종일 일정은 뒤로
-            if event1.isAllDay != event2.isAllDay {
-                return !event1.isAllDay
-            }
-            
-            // 시간이 있는 경우 시간순
-            if let time1 = event1.startTime, let time2 = event2.startTime {
-                return time1 < time2
-            }
-            
-            // 제목순
-            return event1.title < event2.title
-        }
-        
-        // 할일을 우선순위순으로 정렬
-        let sortedReminders = reminders.sorted { reminder1, reminder2 in
-            // 완료된 할일은 뒤로
-            if reminder1.isCompleted != reminder2.isCompleted {
-                return !reminder1.isCompleted
-            }
-            
-            // 우선순위 (낮은 숫자가 높은 우선순위)
-            let priority1 = reminder1.priority == 0 ? Int.max : reminder1.priority
-            let priority2 = reminder2.priority == 0 ? Int.max : reminder2.priority
-            
-            if priority1 != priority2 {
-                return priority1 < priority2
-            }
-            
-            // 시간이 있는 할일 우선
-            let hasTime1 = reminder1.dueTime != nil
-            let hasTime2 = reminder2.dueTime != nil
-            
-            if hasTime1 != hasTime2 {
-                return hasTime1
-            }
-            
-            // 시간순
-            if let time1 = reminder1.dueTime, let time2 = reminder2.dueTime {
-                return time1 < time2
-            }
-            
-            return reminder1.title < reminder2.title
-        }
-        
-        // 공휴일 먼저 (가장 우선)
-        for holiday in holidays {
-            items.append(.holiday(holiday))
-        }
-        
-        // 이벤트 처리 (연속 이벤트 로직 적용)
-        for event in sortedEvents {
-            let continuousInfo = createContinuousEventInfo(for: event, on: date)
-            if let info = continuousInfo {
-                items.append(.continuousEvent(info))
-            } else {
-                items.append(.event(event))
-            }
-        }
-        
-        // 할일 처리
-        for reminder in sortedReminders {
-            items.append(.reminder(reminder))
-        }
-        
-        return items
+        return CalendarCacheManager.shared.getOrComputeDisplayItems(for: self)
     }
     
     /// 연속 이벤트 정보 생성
