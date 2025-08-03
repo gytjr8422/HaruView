@@ -854,6 +854,9 @@
         }
       }
     },
+    "반복 일정입니다. 어떻게 삭제하시겠습니까?" : {
+
+    },
     "반복 일정입니다. 어떻게 편집하시겠습니까?" : {
       "localizations" : {
         "en" : {
@@ -1429,6 +1432,26 @@
         }
       }
     },
+    "이후 모든 이벤트 편집" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit All Following Events"
+          }
+        }
+      }
+    },
+    "일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " "
+          }
+        }
+      }
+    },
     "이동" : {
       "localizations" : {
         "en" : {
@@ -1495,26 +1518,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Delete All Future Events"
-          }
-        }
-      }
-    },
-    "일" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : " "
-          }
-        }
-      }
-    },
-    "이후 모든 이벤트 편집" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Edit All Following Events"
           }
         }
       }

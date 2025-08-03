@@ -45,6 +45,8 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
     // 삭제 관련 상태
     @Published var isDeleting: Bool = false
     @Published var showDeleteConfirmation: Bool = false
+    @Published var showRecurringDeleteOptions: Bool = false
+    @Published var pendingDeleteAction: (() -> Void)? = nil
     @Published var deleteCompleted: Bool = false
 
     var isEdit: Bool { true }
@@ -438,6 +440,25 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
     
     func confirmDelete() async {
         showDeleteConfirmation = false
+        
+        // 반복 일정인 경우 사용자에게 삭제 범위를 묻기
+        if mode == .event, let originalEvent = originalEvent, originalEvent.hasRecurrence {
+            Task { @MainActor in
+                self.pendingDeleteAction = {
+                    Task {
+                        await self.performDelete()
+                    }
+                }
+                self.showRecurringDeleteOptions = true
+            }
+            return
+        }
+        
+        await performDelete()
+    }
+    
+    /// 실제 삭제 수행
+    private func performDelete(deleteSpan: EventDeletionSpan = .thisEventOnly) async {
         isDeleting = true
         error = nil
         
@@ -446,8 +467,8 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
         switch mode {
         case .event:
             if let originalEvent = originalEvent, originalEvent.hasRecurrence {
-                // 반복 일정인 경우 - 이 일정만 삭제
-                result = await deleteObject(.eventWithSpan(objectId, .thisEventOnly))
+                // 반복 일정인 경우 - 선택된 범위로 삭제
+                result = await deleteObject(.eventWithSpan(objectId, deleteSpan))
             } else {
                 // 일반 일정
                 result = await deleteObject(.event(objectId))
@@ -466,5 +487,21 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
                 error = deleteError
             }
         }
+    }
+    
+    /// 반복 일정 삭제 범위 선택
+    func deleteEventWithSpan(_ span: EventDeletionSpan) {
+        showRecurringDeleteOptions = false
+        pendingDeleteAction = nil
+        
+        Task {
+            await performDelete(deleteSpan: span)
+        }
+    }
+    
+    /// 반복 일정 삭제 취소
+    func cancelEventDelete() {
+        showRecurringDeleteOptions = false
+        pendingDeleteAction = nil
     }
 }

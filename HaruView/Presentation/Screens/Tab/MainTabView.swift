@@ -33,7 +33,7 @@ enum TabItem: CaseIterable, Identifiable {
     var iconName: String {
         switch self {
         case .home: return "\(currentDay).square"
-        case .add: return "plus"
+        case .add: return "plus.circle"
         case .calendar: return "calendar"
         }
     }
@@ -162,24 +162,35 @@ struct TabBarButton: View {
                     }
                     
                     // 아이콘
-                    Image(systemName: isSelected ? tab.selectedIconName : tab.iconName)
-                        .font(.system(size: 24, weight: isSelected ? .semibold : .medium))
+                    if tab != .add {
+                        Image(systemName: isSelected ? tab.selectedIconName : tab.iconName)
+                            .font(.system(size: 24, weight: isSelected ? .semibold : .medium))
+                            .foregroundStyle(
+                                isSelected
+                                ? Color(hexCode: "A76545")
+                                : Color(hexCode: "6E5C49").opacity(0.6)
+                            )
+                            .scaleEffect(isSelected ? 1.1 : 1.0)
+                    } else {
+                        Image(systemName: tab.iconName)
+                            .font(.system(size: 36, weight: .light))
+                            .foregroundStyle(Color(hexCode: "A76545").opacity(0.6))
+                            .shadow(color: .black.opacity(0.1), radius: 2, x: 1, y: 1)
+                            .shadow(color: .black.opacity(0.1), radius: 8, x: 4, y: 4)
+                            .offset(y: -1)
+                    }
+                }
+                
+                // 라벨
+                if tab != .add {
+                    Text(tab.title)
+                        .font(.pretendardMedium(size: 11))
                         .foregroundStyle(
                             isSelected
                             ? Color(hexCode: "A76545")
                             : Color(hexCode: "6E5C49").opacity(0.6)
                         )
-                        .scaleEffect(isSelected ? 1.1 : 1.0)
                 }
-                
-                // 라벨
-                Text(tab.title)
-                    .font(.pretendardMedium(size: 11))
-                    .foregroundStyle(
-                        isSelected
-                        ? Color(hexCode: "A76545")
-                        : Color(hexCode: "6E5C49").opacity(0.6)
-                    )
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 4)
