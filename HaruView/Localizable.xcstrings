@@ -351,6 +351,9 @@
         }
       }
     },
+    "HaruView" : {
+
+    },
     "iOS 캘린더 앱에서 원하는 국가의 공휴일 캘린더를 구독하면 하루뷰에서도 해당 공휴일을 볼 수 있어요." : {
 
     },
@@ -650,6 +653,9 @@
           }
         }
       }
+    },
+    "뒤로" : {
+
     },
     "로딩 중..." : {
       "localizations" : {
@@ -1456,36 +1462,6 @@
         }
       }
     },
-    "이동" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Go"
-          }
-        }
-      }
-    },
-    "일" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : " "
-          }
-        }
-      }
-    },
-    "이동할 월을 선택하세요" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Select the month to navigate to"
-          }
-        }
-      }
-    },
     "이메일" : {
       "localizations" : {
         "en" : {
@@ -1516,22 +1492,52 @@
         }
       }
     },
-    "이후 모든 이벤트" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All Future Events"
-          }
-        }
-      }
-    },
     "이후 모든 이벤트 삭제" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Delete All Future Events"
+          }
+        }
+      }
+    },
+    "일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " "
+          }
+        }
+      }
+    },
+    "이동" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go"
+          }
+        }
+      }
+    },
+    "이동할 월을 선택하세요" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select the month to navigate to"
+          }
+        }
+      }
+    },
+    "이후 모든 이벤트" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All Future Events"
           }
         }
       }

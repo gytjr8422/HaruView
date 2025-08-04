@@ -9,95 +9,213 @@ import SwiftUI
 
 struct SettingsView: View {
     @StateObject private var settings = AppSettings.shared
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
-        List {
-                Section {
-                    // 공휴일 표시 여부 토글
-                    HStack {
-                        Image(systemName: "calendar.badge.plus")
-                            .foregroundStyle(Color(hexCode: "A76545"))
-                            .frame(width: 24)
-                        
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("공휴일 표시")
-                                .font(.pretendardRegular(size: 16))
-                            
-                            Text("달력에 공휴일을 표시합니다")
-                                .font(.pretendardRegular(size: 12))
-                                .foregroundStyle(.secondary)
-                        }
-                        
-                        Spacer()
-                        
-                        Toggle("", isOn: $settings.showHolidays)
-                            .labelsHidden()
-                            .tint(Color(hexCode: "A76545"))
-                            .onChange(of: settings.showHolidays) { _, newValue in
-                                // 햅틱 피드백
-                                let impactFeedback = UIImpactFeedbackGenerator(style: .light)
-                                impactFeedback.impactOccurred()
-                            }
-                    }
+        ZStack {
+            Color(hexCode: "FFFCF5")
+                .ignoresSafeArea()
+            
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 20) {
+                    // 달력 설정 섹션
+                    calendarSettingsSection
                     
-                    // 공휴일 국가 설정 (공휴일 표시가 켜져있을 때만)
-                    if settings.showHolidays {
-                        NavigationLink {
-                            HolidayRegionSettingView()
-                        } label: {
-                            HStack {
-                                Image(systemName: "calendar.badge.clock")
-                                    .foregroundStyle(Color(hexCode: "A76545"))
-                                    .frame(width: 24)
-                                
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text("공휴일 국가 설정")
-                                        .font(.pretendardRegular(size: 16))
-                                    
-                                    Text(settings.holidayRegion.displayName)
-                                        .font(.pretendardRegular(size: 12))
-                                        .foregroundStyle(.secondary)
-                                }
-                                
-                                Spacer()
-                                
-                                Text(settings.holidayRegion.flagEmoji)
-                                    .font(.system(size: 18))
-                            }
-                        }
-                        .transition(.opacity.combined(with: .move(edge: .top)))
-                    }
-                    
-                } header: {
-                    Text("달력 설정")
-                        .font(.pretendardMedium(size: 14))
-                        .foregroundStyle(.secondary)
+                    // 앱 정보 섹션
+                    appInfoSection
                 }
-                
-                Section {
-                    HStack {
-                        Image(systemName: "info.circle")
-                            .foregroundStyle(Color(hexCode: "A76545"))
-                            .frame(width: 24)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 70)
+            }
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("설정")
+                    .font(.pretendardSemiBold(size: 18))
+                    .foregroundStyle(Color(hexCode: "40392B"))
+            }
+        }
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    dismiss()
+                }) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 16, weight: .semibold))
                         
-                        Text("앱 정보")
+                        Text("뒤로")
                             .font(.pretendardRegular(size: 16))
-                        
-                        Spacer()
-                        
-                        Text("버전 \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")")
-                            .font(.pretendardRegular(size: 14))
-                            .foregroundStyle(.secondary)
                     }
+                    .foregroundStyle(Color(hexCode: "A76545"))
+                }
+            }
+        }
+        .gesture(
+            DragGesture()
+                .onEnded { value in
+                    if value.translation.width > 100 && abs(value.translation.height) < 50 {
+                        dismiss()
+                    }
+                }
+        )
+    }
+    
+    // MARK: - 달력 설정 섹션
+    private var calendarSettingsSection: some View {
+        VStack(spacing: 0) {
+            // 섹션 헤더
+            HStack {
+                Text("달력 설정")
+                    .font(.pretendardBold(size: 17))
+                    .foregroundStyle(.secondary)
+                Spacer()
+            }
+            .padding(.bottom, 12)
+            
+            VStack(spacing: 0) {
+                // 공휴일 표시 토글
+                holidayToggleCard
+                
+                // 공휴일 국가 설정 (조건부)
+                if settings.showHolidays {
+                    Divider()
+                        .padding(.horizontal, 16)
+                        .background(Color(hexCode: "6E5C49").opacity(0.1))
                     
-                } header: {
-                    Text("앱 정보")
-                        .font(.pretendardMedium(size: 14))
-                        .foregroundStyle(.secondary)
+                    holidayRegionCard
+                }
+            }
+            .background(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(Color(hexCode: "FFFCF5"))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color(hexCode: "6E5C49").opacity(0.2), lineWidth: 1)
+            )
+        }
+    }
+    
+    // MARK: - 공휴일 표시 토글 카드
+    private var holidayToggleCard: some View {
+        HStack(spacing: 16) {
+            Image(systemName: "calendar.badge.plus")
+                .font(.system(size: 20, weight: .medium))
+                .foregroundStyle(Color(hexCode: "A76545"))
+                .frame(width: 24, height: 24)
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text("공휴일 표시")
+                    .font(.pretendardRegular(size: 16))
+                    .foregroundStyle(Color(hexCode: "40392B"))
+                
+                Text("달력에 공휴일을 표시합니다")
+                    .font(.pretendardRegular(size: 12))
+                    .foregroundStyle(Color(hexCode: "6E5C49"))
+            }
+            
+            Spacer()
+            
+            Toggle("", isOn: $settings.showHolidays)
+                .labelsHidden()
+                .tint(Color(hexCode: "A76545"))
+                .onChange(of: settings.showHolidays) { _, newValue in
+                    let impactFeedback = UIImpactFeedbackGenerator(style: .light)
+                    impactFeedback.impactOccurred()
                 }
         }
-        .navigationTitle("설정")
-        .navigationBarTitleDisplayMode(.large)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 14)
+    }
+    
+    // MARK: - 공휴일 국가 설정 카드
+    private var holidayRegionCard: some View {
+        NavigationLink {
+            HolidayRegionSettingView()
+        } label: {
+            HStack(spacing: 16) {
+                Image(systemName: "calendar.badge.clock")
+                    .font(.system(size: 20, weight: .medium))
+                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .frame(width: 24, height: 24)
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("공휴일 국가 설정")
+                        .font(.pretendardRegular(size: 16))
+                        .foregroundStyle(Color(hexCode: "40392B"))
+                    
+                    Text(settings.holidayRegion.displayName)
+                        .font(.pretendardRegular(size: 12))
+                        .foregroundStyle(Color(hexCode: "6E5C49"))
+                }
+                
+                Spacer()
+                
+                HStack(spacing: 8) {
+                    Text(settings.holidayRegion.flagEmoji)
+                        .font(.system(size: 18))
+                    
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundStyle(Color(hexCode: "6E5C49").opacity(0.6))
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+        }
+        .buttonStyle(PlainButtonStyle())
+        .transition(.opacity.combined(with: .move(edge: .top)))
+    }
+    
+    // MARK: - 앱 정보 섹션
+    private var appInfoSection: some View {
+        VStack(spacing: 0) {
+            // 섹션 헤더
+            HStack {
+                Text("앱 정보")
+                    .font(.pretendardBold(size: 17))
+                    .foregroundStyle(.secondary)
+                Spacer()
+            }
+            .padding(.bottom, 12)
+            
+            // 앱 정보 카드
+            HStack(spacing: 16) {
+                Image(systemName: "info.circle")
+                    .font(.system(size: 20, weight: .medium))
+                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .frame(width: 24, height: 24)
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("앱 정보")
+                        .font(.pretendardRegular(size: 16))
+                        .foregroundStyle(Color(hexCode: "40392B"))
+                    
+                    Text("HaruView")
+                        .font(.pretendardRegular(size: 12))
+                        .foregroundStyle(Color(hexCode: "6E5C49"))
+                }
+                
+                Spacer()
+                
+                Text("버전 \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")")
+                    .font(.pretendardRegular(size: 14))
+                    .foregroundStyle(Color(hexCode: "6E5C49"))
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+            .background(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(Color(hexCode: "FFFCF5"))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color(hexCode: "6E5C49").opacity(0.2), lineWidth: 1)
+            )
+        }
     }
     
 }
@@ -105,3 +223,4 @@ struct SettingsView: View {
 #Preview {
     SettingsView()
 }
+

@@ -28,15 +28,13 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
     }
     
     var body: some View {
-        NavigationStack {
-            ZStack {
-                mainContent
-                if permission.isAllGranted {
-                    deleteHintOverlay()
-                }
+        ZStack {
+            mainContent
+            if permission.isAllGranted {
+                deleteHintOverlay()
             }
-            .animation(.easeInOut, value: showHint)
         }
+        .animation(.easeInOut, value: showHint)
         .onAppear {
             if !didShowHint {
                 showHint = true
@@ -308,6 +306,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                     .font(.system(size: 18, weight: .medium))
                     .foregroundStyle(Color(hexCode: "A76545"))
             }
+            .padding(.trailing, 10)
         }
     }
     

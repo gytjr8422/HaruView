@@ -58,18 +58,21 @@ struct MainTabView: View {
     
     var body: some View {
         ZStack(alignment: .bottom) {
-            // 메인 콘텐츠
-            Group {
-                switch selectedTab {
-                case .home:
+            // 메인 콘텐츠 - 각 탭별로 독립적인 NavigationStack 유지
+            ZStack {
+                // Home 탭 - 항상 생성되어 네비게이션 상태 유지
+                NavigationStack {
                     HomeView(vm: di.makeHomeVM())
-                case .add:
-                    // 추가 탭은 실제 화면이 없고 시트만 띄움
-                    EmptyView()
-                case .calendar:
-                    CalendarView()
-                        .transition(.opacity)
                 }
+                .opacity(selectedTab == .home ? 1 : 0)
+                .allowsHitTesting(selectedTab == .home)
+                
+                // Calendar 탭 - 항상 생성되어 네비게이션 상태 유지
+                NavigationStack {
+                    CalendarView()
+                }
+                .opacity(selectedTab == .calendar ? 1 : 0)
+                .allowsHitTesting(selectedTab == .calendar)
             }
             .animation(.easeInOut(duration: 0.2), value: selectedTab)
             .onChange(of: selectedTab) { oldValue, newValue in

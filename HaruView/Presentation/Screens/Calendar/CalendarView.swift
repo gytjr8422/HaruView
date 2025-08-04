@@ -27,82 +27,80 @@ struct CalendarView: View {
     }
     
     var body: some View {
-        NavigationStack {
-            ZStack {
-                Color(hexCode: "FFFCF5")
-                    .ignoresSafeArea()
-                
-                if vm.isLoading && vm.monthWindow.isEmpty {
-                    loadingView
-                } else if let error = vm.error, vm.monthWindow.isEmpty {
-                    errorView(error)
-                } else if !vm.monthWindow.isEmpty {
-                    calendarContent
-                } else {
-                    emptyStateView
-                }
+        ZStack {
+            Color(hexCode: "FFFCF5")
+                .ignoresSafeArea()
+            
+            if vm.isLoading && vm.monthWindow.isEmpty {
+                loadingView
+            } else if let error = vm.error, vm.monthWindow.isEmpty {
+                errorView(error)
+            } else if !vm.monthWindow.isEmpty {
+                calendarContent
+            } else {
+                emptyStateView
             }
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                // 왼쪽: 이전 달 버튼
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            vm.moveToDirectPreviousMonth()
-                        }
-                    }) {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundStyle(Color(hexCode: "A76545"))
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            // 왼쪽: 이전 달 버튼
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        vm.moveToDirectPreviousMonth()
                     }
-                    .padding(.top, 10)
-                }
-                
-                // 중앙: 월/년 + 오늘 버튼 (터치로 월/년 선택)
-                ToolbarItem(placement: .principal) {
-                    VStack(spacing: 2) {
-                        Button(action: {
-                            let impactFeedback = UIImpactFeedbackGenerator(style: .light)
-                            impactFeedback.impactOccurred()
-                            showMonthYearPicker = true
-                        }) {
-                            HStack(spacing: 4) {
-                                Text(vm.monthDisplayText)
-                                    .font(.pretendardSemiBold(size: 18))
-                                    .foregroundStyle(Color(hexCode: "40392B"))
-                                
-                                // 시각적 힌트 아이콘
-                                Image(systemName: "chevron.down")
-                                    .font(.system(size: 12, weight: .medium))
-                                    .foregroundStyle(Color(hexCode: "A76545").opacity(0.7))
-                            }
-                        }
-                        .buttonStyle(PlainButtonStyle())
-                        
-                        Button("오늘") {
-                            withAnimation(.easeInOut(duration: 0.3)) {
-                                vm.moveToToday()
-                            }
-                        }
-                        .font(.pretendardRegular(size: 12))
+                }) {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(Color(hexCode: "A76545"))
-                    }
-                    .padding(.top, 10)
                 }
-                
-                // 오른쪽: 다음 달 버튼
-                ToolbarItem(placement: .navigationBarTrailing) {
+                .padding(.top, 10)
+            }
+            
+            // 중앙: 월/년 + 오늘 버튼 (터치로 월/년 선택)
+            ToolbarItem(placement: .principal) {
+                VStack(spacing: 2) {
                     Button(action: {
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            vm.moveToDirectNextMonth()
-                        }
+                        let impactFeedback = UIImpactFeedbackGenerator(style: .light)
+                        impactFeedback.impactOccurred()
+                        showMonthYearPicker = true
                     }) {
-                        Image(systemName: "chevron.right")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundStyle(Color(hexCode: "A76545"))
+                        HStack(spacing: 4) {
+                            Text(vm.monthDisplayText)
+                                .font(.pretendardSemiBold(size: 18))
+                                .foregroundStyle(Color(hexCode: "40392B"))
+                            
+                            // 시각적 힌트 아이콘
+                            Image(systemName: "chevron.down")
+                                .font(.system(size: 12, weight: .medium))
+                                .foregroundStyle(Color(hexCode: "A76545").opacity(0.7))
+                        }
                     }
-                    .padding(.top, 10)
+                    .buttonStyle(PlainButtonStyle())
+                    
+                    Button("오늘") {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            vm.moveToToday()
+                        }
+                    }
+                    .font(.pretendardRegular(size: 12))
+                    .foregroundStyle(Color(hexCode: "A76545"))
                 }
+                .padding(.top, 10)
+            }
+            
+            // 오른쪽: 다음 달 버튼
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: {
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        vm.moveToDirectNextMonth()
+                    }
+                }) {
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(Color(hexCode: "A76545"))
+                }
+                .padding(.top, 10)
             }
         }
         .sheet(isPresented: $showDayDetail) {
