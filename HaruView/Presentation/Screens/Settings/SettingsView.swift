@@ -85,27 +85,11 @@ struct SettingsView: View {
                         
                         Spacer()
                         
-                        Text("버전 1.0")
+                        Text("버전 \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")")
                             .font(.pretendardRegular(size: 14))
                             .foregroundStyle(.secondary)
                     }
                     
-                    // 디버깅 버튼 (임시)
-                    Button {
-                        debugHolidayCalendars()
-                    } label: {
-                        HStack {
-                            Image(systemName: "ladybug")
-                                .foregroundStyle(Color(hexCode: "A76545"))
-                                .frame(width: 24)
-                            
-                            Text("공휴일 캘린더 디버그")
-                                .font(.pretendardRegular(size: 16))
-                                .foregroundStyle(.primary)
-                            
-                            Spacer()
-                        }
-                    }
                 } header: {
                     Text("앱 정보")
                         .font(.pretendardMedium(size: 14))
@@ -116,10 +100,6 @@ struct SettingsView: View {
         .navigationBarTitleDisplayMode(.large)
     }
     
-    private func debugHolidayCalendars() {
-        let eventKitService = EventKitService()
-        eventKitService.debugHolidayCalendars()
-    }
 }
 
 #Preview {

@@ -151,8 +151,34 @@ struct HolidayRegionSettingView: View {
                                         .foregroundStyle(.secondary)
                                 }
                             }
+                            
+                            // 캘린더 앱 바로 열기 버튼
+                            Button {
+                                openCalendarApp()
+                            } label: {
+                                HStack {
+                                    Image(systemName: "calendar.badge.plus")
+                                        .foregroundStyle(Color(hexCode: "A76545"))
+                                    
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text("캘린더 앱에서 추가")
+                                            .font(.pretendardMedium(size: 16))
+                                            .foregroundStyle(.primary)
+                                        
+                                        Text("iOS 캘린더 앱을 바로 열어서 공휴일을 추가하세요")
+                                            .font(.pretendardRegular(size: 14))
+                                            .foregroundStyle(.secondary)
+                                    }
+                                    
+                                    Spacer()
+                                    
+                                    Image(systemName: "arrow.up.right")
+                                        .font(.system(size: 14, weight: .medium))
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
                         } header: {
-                            Text("사용 가능한 공휴일 캘린더")
+                            Text("추가 공휴일 캘린더")
                                 .font(.pretendardMedium(size: 14))
                                 .foregroundStyle(.secondary)
                         }
@@ -165,6 +191,38 @@ struct HolidayRegionSettingView: View {
             .sheet(isPresented: $showCalendarGuide) {
                 HolidayCalendarGuideView()
             }
+        }
+    }
+    
+    /// 캘린더 앱 열기
+    private func openCalendarApp() {
+        // 햅틱 피드백
+        let impactFeedback = UIImpactFeedbackGenerator(style: .light)
+        impactFeedback.impactOccurred()
+        
+        // 캘린더 앱 열기 (여러 URL 스킴 시도)
+        let calendarURLs = [
+            "calshow://",           // iOS 캘린더 앱 기본 스킴
+            "x-apple-calendar://",  // 대체 스킴
+            "calendar://"           // 추가 대체 스킴
+        ]
+        
+        for urlString in calendarURLs {
+            if let url = URL(string: urlString),
+               UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url, options: [:]) { success in
+                    if !success {
+                        // 실패 시 다음 URL 시도
+                        print("캘린더 앱 열기 실패: \(urlString)")
+                    }
+                }
+                return
+            }
+        }
+        
+        // 모든 스킴이 실패할 경우 설정 앱으로 이동
+        if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {
+            UIApplication.shared.open(settingsUrl)
         }
     }
 }

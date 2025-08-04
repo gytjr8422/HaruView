@@ -159,44 +159,6 @@ final class EventKitService {
         return store.calendars(for: .reminder)
     }
     
-    // MARK: - 공휴일 캘린더 디버깅용 메서드
-    func debugHolidayCalendars() {
-        let allCalendars = store.calendars(for: .event)
-        print("\n🔍 [HOLIDAY DEBUG] EventKit 캘린더 전체 분석:")
-        print("총 \(allCalendars.count)개 캘린더 발견\n")
-        
-        for (index, calendar) in allCalendars.enumerated() {
-            let isSubscription = calendar.type == .subscription
-            let isHoliday = calendar.title.lowercased().contains("holiday") || 
-                           calendar.title.lowercased().contains("휴일") ||
-                           calendar.title.lowercased().contains("공휴일")
-            
-            print("[\(index + 1)] \(calendar.title)")
-            print("  - ID: \(calendar.calendarIdentifier)")
-            print("  - 타입: \(typeDescription(calendar.type))")
-            print("  - 소스: \(calendar.source.title)")
-            print("  - 구독 캘린더: \(isSubscription ? "예" : "아니오")")
-            print("  - 공휴일 캘린더: \(isHoliday ? "예" : "아니오")")
-            print("  - 편집 가능: \(calendar.allowsContentModifications ? "예" : "아니오")")
-            print("")
-        }
-        
-        let holidayCalendars = allCalendars.filter { calendar in
-            calendar.title.lowercased().contains("holiday") || 
-            calendar.title.lowercased().contains("휴일") ||
-            calendar.title.lowercased().contains("공휴일")
-        }
-        
-        print("🎉 공휴일 캘린더: \(holidayCalendars.count)개")
-        for calendar in holidayCalendars {
-            print("  - \(calendar.title) (타입: \(typeDescription(calendar.type)))")
-        }
-        
-        if holidayCalendars.isEmpty {
-            print("❗ 공휴일 캘린더가 없습니다.")
-            print("iOS 캘린더 앱에서 '캘린더 > 캘린더 추가 > 공휴일 캘린더 추가'를 통해 추가해야 합니다.")
-        }
-    }
     
     // MARK: - 사용 가능한 공휴일 캘린더 목록 조회
     func getAvailableHolidayRegions() -> [String] {
@@ -229,16 +191,6 @@ final class EventKitService {
         return !holidayCalendars.isEmpty
     }
     
-    private func typeDescription(_ type: EKCalendarType) -> String {
-        switch type {
-        case .local: return "로컬"
-        case .calDAV: return "CalDAV"
-        case .exchange: return "Exchange"
-        case .subscription: return "구독"
-        case .birthday: return "생일"
-        @unknown default: return "알 수 없음"
-        }
-    }
 
 }
 

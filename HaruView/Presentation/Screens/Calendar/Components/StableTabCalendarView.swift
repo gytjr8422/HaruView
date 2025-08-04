@@ -14,6 +14,7 @@ struct StableTabCalendarView: View {
     let onPageChange: (Int) -> Void
     let onDateTap: (Date) -> Void
     let onDateLongPress: (Date) -> Void
+    let onRefresh: () async -> Void
     
     var body: some View {
         TabView(selection: $currentIndex) {
@@ -23,7 +24,8 @@ struct StableTabCalendarView: View {
                     selectedDate: selectedDate,
                     isCurrentDisplayedMonth: index == currentIndex,
                     onDateTap: onDateTap,
-                    onDateLongPress: onDateLongPress
+                    onDateLongPress: onDateLongPress,
+                    onRefresh: onRefresh
                 )
                 .tag(index)
             }
@@ -50,6 +52,7 @@ struct StableTabCalendarView: View {
         selectedDate: Date(),
         onPageChange: { _ in },
         onDateTap: { _ in },
-        onDateLongPress: { _ in }
+        onDateLongPress: { _ in },
+        onRefresh: { }
     )
 }

@@ -55,6 +55,7 @@ struct CalendarView: View {
                             .font(.system(size: 16, weight: .semibold))
                             .foregroundStyle(Color(hexCode: "A76545"))
                     }
+                    .padding(.top, 10)
                 }
                 
                 // 중앙: 월/년 + 오늘 버튼 (터치로 월/년 선택)
@@ -86,6 +87,7 @@ struct CalendarView: View {
                         .font(.pretendardRegular(size: 12))
                         .foregroundStyle(Color(hexCode: "A76545"))
                     }
+                    .padding(.top, 10)
                 }
                 
                 // 오른쪽: 다음 달 버튼
@@ -99,6 +101,7 @@ struct CalendarView: View {
                             .font(.system(size: 16, weight: .semibold))
                             .foregroundStyle(Color(hexCode: "A76545"))
                     }
+                    .padding(.top, 10)
                 }
             }
         }
@@ -204,6 +207,9 @@ struct CalendarView: View {
                         
                         quickAddDate = date
                         showAddSheet = true
+                    },
+                    onRefresh: {
+                        await performRefresh()
                     }
                 )
             } else {
@@ -319,6 +325,25 @@ struct CalendarView: View {
         }
         
         return nil
+    }
+    
+    /// Pull-to-refresh 액션
+    private func performRefresh() async {
+        // 햅틱 피드백
+        let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
+        impactFeedback.impactOccurred()
+        
+        // 캐시 무효화 및 EventKit 재조회
+        await MainActor.run {
+            // 캐시 전체 클리어
+            CalendarCacheManager.shared.clearAllCache()
+            
+            // 완전한 재로드 (오늘 버튼과 동일한 방식)
+            vm.refresh(force: true)
+        }
+        
+        // 공휴일 설정 변경 확인을 위한 추가 지연
+        try? await Task.sleep(nanoseconds: 500_000_000) // 0.5초
     }
 }
 

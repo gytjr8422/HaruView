@@ -241,6 +241,16 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
     
     /// 새로고침 (점진적 업데이트 사용)
     func refresh() {
+        refresh(force: false)
+    }
+    
+    /// 새로고침 (force 옵션으로 완전 재로드 가능)
+    func refresh(force: Bool) {
+        if force {
+            // 강제 새로고침: 전체 윈도우 재로드
+            loadMonthWindow()
+            return
+        }
         // 기존 데이터를 유지하면서 백그라운드에서 새 데이터 로드
         progressiveUpdateManager.startProgressiveUpdate(
             for: state.currentYear,

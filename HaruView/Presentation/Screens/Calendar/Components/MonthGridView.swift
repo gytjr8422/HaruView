@@ -13,11 +13,12 @@ struct MonthGridView: View {
     let isCurrentDisplayedMonth: Bool
     let onDateTap: (Date) -> Void
     let onDateLongPress: (Date) -> Void
+    let onRefresh: () async -> Void
     
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 0), count: 7)
     
     var body: some View {
-        VStack(spacing: 0) {
+        ScrollView {
             LazyVGrid(columns: columns, spacing: 0) {
                 ForEach(monthData.calendarDates, id: \.self) { date in
                     CalendarDayCell(
@@ -39,6 +40,9 @@ struct MonthGridView: View {
             .transition(.opacity)
             
             Spacer(minLength: 20)
+        }
+        .refreshable {
+            await onRefresh()
         }
     }
     
