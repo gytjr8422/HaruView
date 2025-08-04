@@ -75,7 +75,7 @@ struct Provider: AppIntentTimelineProvider {
         
         // 앱과 동일한 정렬 로직 적용
         let sortedEvents = ekEvents
-            .filter { $0.calendar.title != "대한민국 공휴일" }
+            .filter { !isHolidayCalendar($0.calendar) }
             .map { event in
                 // 하루 종일 이벤트 감지 로직 (앱과 동일)
                 let compsStart = Calendar.current.dateComponents([.hour, .minute], from: event.startDate)
@@ -195,5 +195,14 @@ struct Provider: AppIntentTimelineProvider {
 
         // 5. 제목 기준 (알파벳 순)
         return a.title < b.title
+    }
+    
+    /// 공휴일 캘린더인지 확인하는 헬퍼 메서드
+    private func isHolidayCalendar(_ calendar: EKCalendar) -> Bool {
+        let titleLower = calendar.title.lowercased()
+        return titleLower.contains("holiday") || 
+               titleLower.contains("휴일") ||
+               titleLower.contains("공휴일") ||
+               calendar.calendarIdentifier.contains("holiday")
     }
 } 

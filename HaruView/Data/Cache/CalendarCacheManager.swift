@@ -136,9 +136,12 @@ final class CalendarCacheManager: ObservableObject {
             return reminder1.title < reminder2.title
         }
         
-        // 공휴일 먼저 (가장 우선)
-        for holiday in calendarDay.holidays {
-            items.append(.holiday(holiday))
+        // 공휴일 먼저 (가장 우선) - 설정에 따라 표시 여부 결정
+        let showHolidays = UserDefaults.standard.object(forKey: "showHolidays") as? Bool ?? true
+        if showHolidays {
+            for holiday in calendarDay.holidays {
+                items.append(.holiday(holiday))
+            }
         }
         
         // 이벤트 처리 (연속 이벤트 로직 적용)
@@ -205,6 +208,12 @@ final class CalendarCacheManager: ObservableObject {
     func clearAllCache() {
         cacheQueue.async(flags: .barrier) { [weak self] in
             self?.monthCache.removeAll()
+            self?.displayItemsCache.removeAll()
+        }
+    }
+    
+    func clearDisplayItemsCache() {
+        cacheQueue.async(flags: .barrier) { [weak self] in
             self?.displayItemsCache.removeAll()
         }
     }

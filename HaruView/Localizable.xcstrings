@@ -155,6 +155,9 @@
         }
       }
     },
+    "%lld개 국가의 공휴일을 더 이용할 수 있어요" : {
+
+    },
     "%lld개월마다" : {
       "localizations" : {
         "en" : {
@@ -255,6 +258,9 @@
         }
       }
     },
+    "• 공휴일 캘린더는 해당 국가의 언어로만 제공될 수 있습니다\n• 일부 국가의 공휴일 캘린더는 제공되지 않을 수 있습니다\n• 추가한 캘린더는 iOS 캘린더 앱에서도 함께 표시됩니다" : {
+
+    },
     "+%lld" : {
       "localizations" : {
         "en" : {
@@ -345,6 +351,9 @@
         }
       }
     },
+    "iOS 캘린더 앱에서 원하는 국가의 공휴일 캘린더를 구독하면 하루뷰에서도 해당 공휴일을 볼 수 있어요." : {
+
+    },
     "Key" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -427,6 +436,15 @@
       }
     },
     "공휴일 국가 설정" : {
+
+    },
+    "공휴일 캘린더 디버그" : {
+
+    },
+    "공휴일 캘린더 추가" : {
+
+    },
+    "공휴일 표시" : {
 
     },
     "구독" : {
@@ -544,6 +562,9 @@
         }
       }
     },
+    "다른 국가의 공휴일 추가하기" : {
+
+    },
     "다시 시도" : {
       "localizations" : {
         "en" : {
@@ -596,6 +617,9 @@
           }
         }
       }
+    },
+    "달력에 공휴일을 표시합니다" : {
+
     },
     "달력을 불러오는 중..." : {
       "localizations" : {
@@ -919,6 +943,9 @@
           }
         }
       }
+    },
+    "사용 가능한 공휴일 캘린더" : {
+
     },
     "사용 가능한 목록이 없습니다" : {
       "localizations" : {
@@ -1432,12 +1459,12 @@
         }
       }
     },
-    "이후 모든 이벤트 편집" : {
+    "이동" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Edit All Following Events"
+            "value" : "Go"
           }
         }
       }
@@ -1448,16 +1475,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : " "
-          }
-        }
-      }
-    },
-    "이동" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Go"
           }
         }
       }
@@ -1518,6 +1535,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Delete All Future Events"
+          }
+        }
+      }
+    },
+    "이후 모든 이벤트 편집" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit All Following Events"
           }
         }
       }
@@ -1686,6 +1713,9 @@
         }
       }
     },
+    "주의사항" : {
+
+    },
     "총" : {
 
     },
@@ -1714,6 +1744,12 @@
           }
         }
       }
+    },
+    "추가 공휴일 캘린더" : {
+
+    },
+    "추가 방법" : {
+
     },
     "취소" : {
       "localizations" : {

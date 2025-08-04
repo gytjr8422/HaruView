@@ -19,7 +19,7 @@ extension EventKitRepository {
             
             let filtered = events
                 .filter { event in
-                    let isNotHoliday = event.calendar.title != "대한민국 공휴일"
+                    let isNotHoliday = !isHolidayCalendar(event.calendar)
                     
                     // 하루 종일 이벤트와 일반 이벤트를 다르게 처리
                     let isInRange: Bool
@@ -263,6 +263,15 @@ extension EventKitRepository {
         }
         
         return .success(calendarMonths)
+    }
+    
+    /// 공휴일 캘린더인지 확인하는 헬퍼 메서드
+    private func isHolidayCalendar(_ calendar: EKCalendar) -> Bool {
+        let titleLower = calendar.title.lowercased()
+        return titleLower.contains("holiday") || 
+               titleLower.contains("휴일") ||
+               titleLower.contains("공휴일") ||
+               calendar.calendarIdentifier.contains("holiday")
     }
 }
 

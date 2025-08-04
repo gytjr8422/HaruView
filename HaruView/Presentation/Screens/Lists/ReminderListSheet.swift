@@ -39,6 +39,8 @@ struct ReminderListSheet<VM: ReminderListViewModelProtocol>: View {
                         .padding(.bottom, 16)
                     }
                     
+                    Divider()
+                    
                     // 마감일 없는 할 일 섹션
                     if !noDeadlineReminders.isEmpty {
                         sectionHeader(title: "언제든 할 일", count: noDeadlineReminders.count)

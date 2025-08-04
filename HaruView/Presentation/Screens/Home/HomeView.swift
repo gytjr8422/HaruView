@@ -58,6 +58,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
         content
             .toolbar {
                 dateView
+                settingsButton
             }
             .navigationBarTitleDisplayMode(.inline)
             .background(Color(hexCode: "FFFCF5"))
@@ -298,6 +299,18 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                 Spacer()
             }
             .padding(.horizontal, 10)
+        }
+    }
+    
+    private var settingsButton: some ToolbarContent {
+        ToolbarItem(placement: .navigationBarTrailing) {
+            NavigationLink {
+                SettingsView()
+            } label: {
+                Image(systemName: "gearshape")
+                    .font(.system(size: 18, weight: .medium))
+                    .foregroundStyle(Color(hexCode: "A76545"))
+            }
         }
     }
     
