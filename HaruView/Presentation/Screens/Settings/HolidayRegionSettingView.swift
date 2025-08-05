@@ -9,188 +9,352 @@ import SwiftUI
 
 struct HolidayRegionSettingView: View {
     @StateObject private var settings = AppSettings.shared
-    @State private var searchText = ""
-    @State private var showCalendarGuide = false
+    @Environment(\.dismiss) private var dismiss
+    @State private var subscribedCalendars: [HolidayCalendarInfo] = []
     
     private let eventKitService = EventKitService()
     
-    private var regionsByContinent: [HolidayRegion.Continent: [HolidayRegion]] {
-        let filtered = filteredRegions
-        return Dictionary(grouping: filtered, by: { $0.continent })
-    }
-    
-    private var filteredRegions: [HolidayRegion] {
-        let baseRegions = if searchText.isEmpty {
-            HolidayRegion.availableRegions
-        } else {
-            HolidayRegion.availableRegions.filter { region in
-                region.displayName.localizedCaseInsensitiveContains(searchText)
-            }
-        }
-        
-        // 사용 가능한 공휴일 캘린더가 있는 지역만 표시
-        return baseRegions.filter { region in
-            eventKitService.hasHolidayCalendarFor(region: region)
-        }
-    }
-    
-    private var unavailableRegions: [HolidayRegion] {
-        let baseRegions = if searchText.isEmpty {
-            HolidayRegion.availableRegions
-        } else {
-            HolidayRegion.availableRegions.filter { region in
-                region.displayName.localizedCaseInsensitiveContains(searchText)
-            }
-        }
-        
-        return baseRegions.filter { region in
-            !eventKitService.hasHolidayCalendarFor(region: region)
-        }
-    }
-    
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
-                // 검색 바
-                HStack {
-                    Image(systemName: "magnifyingglass")
-                        .foregroundStyle(.secondary)
+        ZStack {
+            Color(hexCode: "FFFCF5")
+                .ignoresSafeArea()
+            
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 20) {
+                    // 안내 섹션
+                    guideSection
                     
-                    TextField("국가 검색", text: $searchText)
-                        .font(.pretendardRegular(size: 16))
+                    // 구독된 공휴일 캘린더 섹션
+                    if !subscribedCalendars.isEmpty {
+                        subscribedCalendarsSection
+                    } else {
+                        emptyStateSection
+                    }
+                    
+                    // 캘린더 앱에서 추가하는 방법 섹션
+                    addCalendarGuideSection
                 }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .background(Color(.systemGray6))
-                .cornerRadius(10)
-                .padding(.horizontal, 16)
-                .padding(.top, 8)
-                
-                // 현재 선택된 국가
-                if searchText.isEmpty {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("현재 설정")
-                            .font(.pretendardMedium(size: 14))
-                            .foregroundStyle(.secondary)
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 70)
+            }
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("공휴일 캘린더 설정")
+                    .font(.pretendardSemiBold(size: 18))
+                    .foregroundStyle(Color(hexCode: "40392B"))
+            }
+        }
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    dismiss()
+                }) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 16, weight: .semibold))
                         
-                        HStack {
-                            Text(settings.holidayRegion.flagEmoji)
-                                .font(.system(size: 24))
+                        Text("뒤로")
+                            .font(.pretendardRegular(size: 16))
+                    }
+                    .foregroundStyle(Color(hexCode: "A76545"))
+                }
+            }
+            
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: {
+                    refreshSubscribedCalendars()
+                }) {
+                    Image(systemName: "arrow.clockwise")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(Color(hexCode: "A76545"))
+                }
+            }
+        }
+        .gesture(
+            DragGesture()
+                .onEnded { value in
+                    if value.translation.width > 100 && abs(value.translation.height) < 50 {
+                        dismiss()
+                    }
+                }
+        )
+        .onAppear {
+            refreshSubscribedCalendars()
+        }
+        .refreshable {
+            await refreshSubscribedCalendarsAsync()
+        }
+    }
+    
+    // MARK: - 안내 섹션
+    private var guideSection: some View {
+        VStack(spacing: 0) {
+            HStack {
+                Text("공휴일 캘린더 선택")
+                    .font(.pretendardBold(size: 17))
+                    .foregroundStyle(.secondary)
+                Spacer()
+            }
+            .padding(.bottom, 12)
+            
+            HStack(spacing: 16) {
+                Image(systemName: "info.circle")
+                    .font(.system(size: 20, weight: .medium))
+                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .frame(width: 24, height: 24)
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("iOS 캘린더 앱에서 구독한 공휴일만 표시됩니다")
+                        .font(.pretendardRegular(size: 16))
+                        .foregroundStyle(Color(hexCode: "40392B"))
+                    
+                    Text("원하는 공휴일 캘린더를 선택하세요")
+                        .font(.pretendardRegular(size: 12))
+                        .foregroundStyle(Color(hexCode: "6E5C49"))
+                }
+                
+                Spacer()
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+            .background(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(Color(hexCode: "A76545").opacity(0.1))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color(hexCode: "A76545").opacity(0.3), lineWidth: 1)
+            )
+        }
+    }
+    
+    // MARK: - 구독된 캘린더 섹션
+    private var subscribedCalendarsSection: some View {
+        VStack(spacing: 0) {
+            HStack {
+                Text("구독된 공휴일 캘린더")
+                    .font(.pretendardBold(size: 17))
+                    .foregroundStyle(.secondary)
+                Spacer()
+                
+                Text("\(subscribedCalendars.count)개")
+                    .font(.pretendardMedium(size: 14))
+                    .foregroundStyle(Color(hexCode: "A76545"))
+            }
+            .padding(.bottom, 12)
+            
+            VStack(spacing: 0) {
+                ForEach(Array(subscribedCalendars.enumerated()), id: \.element.id) { index, calendar in
+                    if index > 0 {
+                        Divider()
+                            .padding(.horizontal, 16)
+                            .background(Color(hexCode: "6E5C49").opacity(0.1))
+                    }
+                    
+                    HStack(spacing: 16) {
+                        // 캘린더 색상 인디케이터
+                        Circle()
+                            .fill(Color(calendar.color))
+                            .frame(width: 12, height: 12)
+                        
+                        // 국기 이모지
+                        Text(calendar.flagEmoji)
+                            .font(.system(size: 20))
+                        
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(calendar.countryName)
+                                .font(.pretendardRegular(size: 16))
+                                .foregroundStyle(Color(hexCode: "40392B"))
                             
-                            Text(settings.holidayRegion.displayName)
-                                .font(.pretendardSemiBold(size: 16))
-                                .foregroundStyle(Color(hexCode: "A76545"))
-                            
-                            Spacer()
-                            
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundStyle(Color(hexCode: "A76545"))
+                            Text(calendar.title)
+                                .font(.pretendardRegular(size: 12))
+                                .foregroundStyle(Color(hexCode: "6E5C49"))
                         }
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 12)
-                        .background(Color(hexCode: "A76545").opacity(0.1))
-                        .cornerRadius(12)
+                        
+                        Spacer()
+                        
+                        // 토글 스위치
+                        Toggle("", isOn: Binding(
+                            get: { settings.selectedHolidayCalendarIds.contains(calendar.id) },
+                            set: { isSelected in
+                                if isSelected {
+                                    settings.selectedHolidayCalendarIds.insert(calendar.id)
+                                } else {
+                                    settings.selectedHolidayCalendarIds.remove(calendar.id)
+                                }
+                                
+                                let impactFeedback = UIImpactFeedbackGenerator(style: .light)
+                                impactFeedback.impactOccurred()
+                            }
+                        ))
+                        .labelsHidden()
+                        .tint(Color(hexCode: "A76545"))
                     }
                     .padding(.horizontal, 16)
-                    .padding(.top, 16)
+                    .padding(.vertical, 14)
                 }
+            }
+            .background(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(Color(hexCode: "FFFCF5"))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color(hexCode: "6E5C49").opacity(0.2), lineWidth: 1)
+            )
+        }
+    }
+    
+    // MARK: - 빈 상태 섹션
+    private var emptyStateSection: some View {
+        VStack(spacing: 0) {
+            HStack {
+                Text("구독된 공휴일 캘린더")
+                    .font(.pretendardBold(size: 17))
+                    .foregroundStyle(.secondary)
+                Spacer()
+            }
+            .padding(.bottom, 12)
+            
+            VStack(spacing: 16) {
+                Image(systemName: "calendar.badge.exclamationmark")
+                    .font(.system(size: 48))
+                    .foregroundStyle(Color(hexCode: "6E5C49").opacity(0.6))
                 
-                // 국가 목록
-                List {
-                    // 사용 가능한 지역들
-                    ForEach(HolidayRegion.Continent.allCases, id: \.self) { continent in
-                        if let regions = regionsByContinent[continent], !regions.isEmpty {
-                            Section(continent.rawValue) {
-                                ForEach(regions, id: \.id) { region in
-                                    RegionRow(
-                                        region: region,
-                                        isSelected: region.localeIdentifier == settings.holidayRegion.localeIdentifier,
-                                        isAvailable: true
-                                    ) {
-                                        withAnimation(.easeInOut(duration: 0.2)) {
-                                            settings.holidayRegion = region
-                                        }
-                                        
-                                        // 햅틱 피드백
-                                        let impactFeedback = UIImpactFeedbackGenerator(style: .light)
-                                        impactFeedback.impactOccurred()
-                                        
-                                        // 달력 새로고침 알림
-                                        NotificationCenter.default.post(name: .calendarNeedsRefresh, object: nil)
-                                    }
-                                }
-                            }
-                        }
-                    }
+                VStack(spacing: 8) {
+                    Text("구독된 공휴일 캘린더가 없습니다")
+                        .font(.pretendardSemiBold(size: 16))
+                        .foregroundStyle(Color(hexCode: "40392B"))
                     
-                    // 사용 불가능한 지역들 (안내와 함께)
-                    if !unavailableRegions.isEmpty {
-                        Section {
-                            Button {
-                                showCalendarGuide = true
-                            } label: {
-                                HStack {
-                                    Image(systemName: "info.circle")
-                                        .foregroundStyle(.orange)
-                                    
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        Text("추가 공휴일 캘린더")
-                                            .font(.pretendardMedium(size: 16))
-                                            .foregroundStyle(.primary)
-                                        
-                                        Text("\(unavailableRegions.count)개 국가의 공휴일을 더 이용할 수 있어요")
-                                            .font(.pretendardRegular(size: 14))
-                                            .foregroundStyle(.secondary)
-                                    }
-                                    
-                                    Spacer()
-                                    
-                                    Image(systemName: "chevron.right")
-                                        .font(.system(size: 14, weight: .medium))
-                                        .foregroundStyle(.secondary)
-                                }
-                            }
-                            
-                            // 캘린더 앱 바로 열기 버튼
-                            Button {
-                                openCalendarApp()
-                            } label: {
-                                HStack {
-                                    Image(systemName: "calendar.badge.plus")
-                                        .foregroundStyle(Color(hexCode: "A76545"))
-                                    
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        Text("캘린더 앱에서 추가")
-                                            .font(.pretendardMedium(size: 16))
-                                            .foregroundStyle(.primary)
-                                        
-                                        Text("iOS 캘린더 앱을 바로 열어서 공휴일을 추가하세요")
-                                            .font(.pretendardRegular(size: 14))
-                                            .foregroundStyle(.secondary)
-                                    }
-                                    
-                                    Spacer()
-                                    
-                                    Image(systemName: "arrow.up.right")
-                                        .font(.system(size: 14, weight: .medium))
-                                        .foregroundStyle(.secondary)
-                                }
-                            }
-                        } header: {
-                            Text("추가 공휴일 캘린더")
-                                .font(.pretendardMedium(size: 14))
-                                .foregroundStyle(.secondary)
-                        }
-                    }
+                    Text("iOS 캘린더 앱에서 원하는 국가의\n공휴일 캘린더를 먼저 구독해주세요")
+                        .font(.pretendardRegular(size: 14))
+                        .foregroundStyle(Color(hexCode: "6E5C49"))
+                        .multilineTextAlignment(.center)
                 }
-                .listStyle(InsetGroupedListStyle())
             }
-            .navigationTitle("공휴일 국가 설정")
-            .navigationBarTitleDisplayMode(.large)
-            .sheet(isPresented: $showCalendarGuide) {
-                HolidayCalendarGuideView()
+            .padding(.vertical, 32)
+            .frame(maxWidth: .infinity)
+            .background(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(Color(hexCode: "FFFCF5"))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color(hexCode: "6E5C49").opacity(0.2), lineWidth: 1)
+            )
+        }
+    }
+    
+    // MARK: - 캘린더 추가 가이드 섹션
+    private var addCalendarGuideSection: some View {
+        VStack(spacing: 0) {
+            HStack {
+                Text("공휴일 캘린더 추가하기")
+                    .font(.pretendardBold(size: 17))
+                    .foregroundStyle(.secondary)
+                Spacer()
             }
+            .padding(.bottom, 12)
+            
+            VStack(spacing: 0) {
+                // 캘린더 앱 열기 버튼
+                Button {
+                    openCalendarApp()
+                } label: {
+                    HStack(spacing: 16) {
+                        Image(systemName: "calendar.badge.plus")
+                            .font(.system(size: 20, weight: .medium))
+                            .foregroundStyle(Color(hexCode: "A76545"))
+                            .frame(width: 24, height: 24)
+                        
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("캘린더 앱에서 추가")
+                                .font(.pretendardRegular(size: 16))
+                                .foregroundStyle(Color(hexCode: "40392B"))
+                            
+                            Text("iOS 캘린더 앱을 열어서 공휴일을 구독하세요")
+                                .font(.pretendardRegular(size: 12))
+                                .foregroundStyle(Color(hexCode: "6E5C49"))
+                        }
+                        
+                        Spacer()
+                        
+                        Image(systemName: "arrow.up.right")
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundStyle(Color(hexCode: "6E5C49").opacity(0.6))
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 14)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(PlainButtonStyle())
+                .contentShape(Rectangle())
+                
+                Divider()
+                    .padding(.horizontal, 16)
+                    .background(Color(hexCode: "6E5C49").opacity(0.1))
+                
+                // 도움말 네비게이션 링크
+                NavigationLink {
+                    HolidayGuideView()
+                } label: {
+                    HStack(spacing: 16) {
+                        Image(systemName: "questionmark.circle")
+                            .font(.system(size: 20, weight: .medium))
+                            .foregroundStyle(.orange)
+                            .frame(width: 24, height: 24)
+                        
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("추가 방법 보기")
+                                .font(.pretendardRegular(size: 16))
+                                .foregroundStyle(Color(hexCode: "40392B"))
+                            
+                            Text("단계별 가이드를 확인하세요")
+                                .font(.pretendardRegular(size: 12))
+                                .foregroundStyle(Color(hexCode: "6E5C49"))
+                        }
+                        
+                        Spacer()
+                        
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundStyle(Color(hexCode: "6E5C49").opacity(0.6))
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 14)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(PlainButtonStyle())
+                .contentShape(Rectangle())
+            }
+            .background(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(Color(hexCode: "FFFCF5"))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color(hexCode: "6E5C49").opacity(0.2), lineWidth: 1)
+            )
+        }
+    }
+    
+    // MARK: - 메서드들
+    private func refreshSubscribedCalendars() {
+        subscribedCalendars = eventKitService.getSubscribedHolidayCalendars()
+        
+        // 햅틱 피드백
+        let impactFeedback = UIImpactFeedbackGenerator(style: .light)
+        impactFeedback.impactOccurred()
+        
+        print("📅 구독된 공휴일 캘린더 새로고침: \(subscribedCalendars.count)개")
+    }
+    
+    private func refreshSubscribedCalendarsAsync() async {
+        await MainActor.run {
+            refreshSubscribedCalendars()
         }
     }
     
@@ -212,7 +376,6 @@ struct HolidayRegionSettingView: View {
                UIApplication.shared.canOpenURL(url) {
                 UIApplication.shared.open(url, options: [:]) { success in
                     if !success {
-                        // 실패 시 다음 URL 시도
                         print("캘린더 앱 열기 실패: \(urlString)")
                     }
                 }
@@ -223,151 +386,6 @@ struct HolidayRegionSettingView: View {
         // 모든 스킴이 실패할 경우 설정 앱으로 이동
         if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {
             UIApplication.shared.open(settingsUrl)
-        }
-    }
-}
-
-struct RegionRow: View {
-    let region: HolidayRegion
-    let isSelected: Bool
-    let isAvailable: Bool
-    let onTap: () -> Void
-    
-    var body: some View {
-        Button(action: onTap) {
-            HStack {
-                Text(region.flagEmoji)
-                    .font(.system(size: 24))
-                
-                Text(region.displayName)
-                    .font(.pretendardRegular(size: 16))
-                    .foregroundStyle(isAvailable ? .primary : .secondary)
-                
-                Spacer()
-                
-                if isSelected {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(Color(hexCode: "A76545"))
-                }
-            }
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(PlainButtonStyle())
-        .disabled(!isAvailable)
-    }
-}
-
-// MARK: - 공휴일 캘린더 추가 가이드 뷰
-struct HolidayCalendarGuideView: View {
-    @Environment(\.dismiss) private var dismiss
-    
-    var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    // 헤더
-                    VStack(alignment: .leading, spacing: 12) {
-                        Image(systemName: "calendar.badge.plus")
-                            .font(.system(size: 48))
-                            .foregroundStyle(Color(hexCode: "A76545"))
-                        
-                        Text("다른 국가의 공휴일 추가하기")
-                            .font(.pretendardBold(size: 24))
-                        
-                        Text("iOS 캘린더 앱에서 원하는 국가의 공휴일 캘린더를 구독하면 하루뷰에서도 해당 공휴일을 볼 수 있어요.")
-                            .font(.pretendardRegular(size: 16))
-                            .foregroundStyle(.secondary)
-                    }
-                    .padding(.bottom, 8)
-                    
-                    // 단계별 가이드
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text("추가 방법")
-                            .font(.pretendardSemiBold(size: 18))
-                        
-                        GuideStep(
-                            number: 1,
-                            title: "캘린더 앱 열기",
-                            description: "iOS 기본 캘린더 앱을 실행하세요"
-                        )
-                        
-                        GuideStep(
-                            number: 2,
-                            title: "캘린더 메뉴 접근",
-                            description: "하단의 '캘린더' 탭을 선택하세요"
-                        )
-                        
-                        GuideStep(
-                            number: 3,
-                            title: "캘린더 추가",
-                            description: "좌측 하단의 '캘린더 추가'를 선택하세요"
-                        )
-                        
-                        GuideStep(
-                            number: 4,
-                            title: "공휴일 캘린더 추가",
-                            description: "'공휴일 캘린더 추가'를 선택하고 원하는 국가를 추가하세요"
-                        )
-                        
-                        GuideStep(
-                            number: 5,
-                            title: "하루뷰 새로고침",
-                            description: "하루뷰로 돌아와서 새로고침하면 해당 국가의 공휴일이 표시됩니다"
-                        )
-                    }
-                    
-                    // 주의사항
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("주의사항")
-                            .font(.pretendardSemiBold(size: 18))
-                        
-                        Text("• 공휴일 캘린더는 해당 국가의 언어로만 제공될 수 있습니다\n• 일부 국가의 공휴일 캘린더는 제공되지 않을 수 있습니다\n• 추가한 캘린더는 iOS 캘린더 앱에서도 함께 표시됩니다")
-                            .font(.pretendardRegular(size: 14))
-                            .foregroundStyle(.secondary)
-                    }
-                    .padding(16)
-                    .background(Color(.systemGray6))
-                    .cornerRadius(12)
-                }
-                .padding(20)
-            }
-            .navigationTitle("공휴일 캘린더 추가")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("완료") {
-                        dismiss()
-                    }
-                    .foregroundStyle(Color(hexCode: "A76545"))
-                }
-            }
-        }
-    }
-}
-
-struct GuideStep: View {
-    let number: Int
-    let title: String
-    let description: String
-    
-    var body: some View {
-        HStack(alignment: .top, spacing: 12) {
-            // 번호 원
-            Text("\(number)")
-                .font(.pretendardSemiBold(size: 14))
-                .foregroundStyle(.white)
-                .frame(width: 24, height: 24)
-                .background(Color(hexCode: "A76545"))
-                .clipShape(Circle())
-            
-            VStack(alignment: .leading, spacing: 4) {
-                Text(title)
-                    .font(.pretendardSemiBold(size: 16))
-                
-                Text(description)
-                    .font(.pretendardRegular(size: 14))
-                    .foregroundStyle(.secondary)
-            }
         }
     }
 }

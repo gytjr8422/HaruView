@@ -10,6 +10,9 @@ import SwiftUI
 struct SettingsView: View {
     @StateObject private var settings = AppSettings.shared
     @Environment(\.dismiss) private var dismiss
+    @State private var subscribedCalendars: [HolidayCalendarInfo] = []
+    
+    private let eventKitService = EventKitService()
     
     var body: some View {
         ZStack {
@@ -61,6 +64,36 @@ struct SettingsView: View {
                     }
                 }
         )
+        .onAppear {
+            loadSubscribedCalendars()
+        }
+    }
+    
+    // MARK: - 계산된 프로퍼티들
+    private var selectedCalendars: [HolidayCalendarInfo] {
+        return subscribedCalendars.filter { calendar in
+            settings.selectedHolidayCalendarIds.contains(calendar.id)
+        }
+    }
+    
+    private var holidayStatusText: String {
+        let selectedCount = selectedCalendars.count
+        let totalCount = subscribedCalendars.count
+        
+        if totalCount == 0 {
+            return "구독된 캘린더 없음"
+        } else if selectedCount == 0 {
+            return "선택된 캘린더 없음"
+        } else if selectedCount == 1 {
+            return selectedCalendars.first?.countryName ?? "1개 선택됨"
+        } else {
+            return "\(selectedCount)개 선택됨"
+        }
+    }
+    
+    // MARK: - 메서드들
+    private func loadSubscribedCalendars() {
+        subscribedCalendars = eventKitService.getSubscribedHolidayCalendars()
     }
     
     // MARK: - 달력 설정 섹션
@@ -143,30 +176,27 @@ struct SettingsView: View {
                     .frame(width: 24, height: 24)
                 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("공휴일 국가 설정")
+                    Text("공휴일 캘린더 설정")
                         .font(.pretendardRegular(size: 16))
                         .foregroundStyle(Color(hexCode: "40392B"))
                     
-                    Text(settings.holidayRegion.displayName)
+                    Text(holidayStatusText)
                         .font(.pretendardRegular(size: 12))
                         .foregroundStyle(Color(hexCode: "6E5C49"))
                 }
                 
                 Spacer()
                 
-                HStack(spacing: 8) {
-                    Text(settings.holidayRegion.flagEmoji)
-                        .font(.system(size: 18))
-                    
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 12, weight: .medium))
-                        .foregroundStyle(Color(hexCode: "6E5C49").opacity(0.6))
-                }
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundStyle(Color(hexCode: "6E5C49").opacity(0.6))
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 14)
+            .contentShape(Rectangle())
         }
         .buttonStyle(PlainButtonStyle())
+        .contentShape(Rectangle())
         .transition(.opacity.combined(with: .move(edge: .top)))
     }
     

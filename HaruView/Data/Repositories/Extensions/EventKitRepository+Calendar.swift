@@ -53,6 +53,7 @@ extension EventKitRepository {
     }
     
     /// 특정 날짜 범위의 공휴일 조회
+    @MainActor
     func fetchHolidays(from startDate: Date, to endDate: Date) -> Result<[CalendarHoliday], TodayBoardError> {
         return service.fetchHolidaysBetween(startDate, endDate)
     }
@@ -105,7 +106,7 @@ extension EventKitRepository {
         // 이벤트, 할일, 공휴일을 병렬로 조회
         async let eventsResult = fetchEvents(from: gridStartDate, to: gridEndDate)
         async let remindersResult = fetchReminders(from: gridStartDate, to: gridEndDate)
-        let holidaysResult = fetchHolidays(from: gridStartDate, to: gridEndDate)
+        let holidaysResult = await fetchHolidays(from: gridStartDate, to: gridEndDate)
         
         let events: [Event]
         let reminders: [Reminder]
@@ -206,7 +207,7 @@ extension EventKitRepository {
         
         async let eventsResult = fetchEvents(from: dayStart, to: dayEnd)
         async let remindersResult = fetchReminders(from: dayStart, to: dayEnd)
-        let holidaysResult = fetchHolidays(from: dayStart, to: dayEnd)
+        let holidaysResult = await fetchHolidays(from: dayStart, to: dayEnd)
         
         switch (await eventsResult, await remindersResult, holidaysResult) {
         case (.success(let events), .success(let reminders), .success(let holidays)):
@@ -271,6 +272,8 @@ extension EventKitRepository {
         return titleLower.contains("holiday") || 
                titleLower.contains("휴일") ||
                titleLower.contains("공휴일") ||
+               titleLower.contains("祝日") ||  // 일본어
+               titleLower.contains("祭日") ||  // 일본어 축일
                calendar.calendarIdentifier.contains("holiday")
     }
 }

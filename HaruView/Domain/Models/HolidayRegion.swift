@@ -83,9 +83,21 @@ class AppSettings: ObservableObject {
         }
     }
     
+    // 선택된 공휴일 캘린더 ID들
+    @Published var selectedHolidayCalendarIds: Set<String> {
+        didSet {
+            let array = Array(selectedHolidayCalendarIds)
+            UserDefaults.standard.set(array, forKey: "selectedHolidayCalendarIds")
+            clearDisplayItemsCache()
+            // 달력 새로고침 알림
+            NotificationCenter.default.post(name: .calendarNeedsRefresh, object: nil)
+        }
+    }
+    
     private init() {
         self.holidayRegion = Self.loadHolidayRegion()
         self.showHolidays = UserDefaults.standard.object(forKey: "showHolidays") as? Bool ?? true
+        self.selectedHolidayCalendarIds = Set(UserDefaults.standard.stringArray(forKey: "selectedHolidayCalendarIds") ?? [])
     }
     
     // Main actor 격리 없이 접근 가능한 현재 설정 조회 메서드

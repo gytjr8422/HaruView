@@ -42,83 +42,60 @@ final class EventKitService {
         return .success(events)
     }
     
-    // MARK: - 공휴일 fetch
-    func fetchHolidaysBetween(_ start: Date, _ end: Date) -> Result<[CalendarHoliday], TodayBoardError> {
-        // 사용자가 선택한 공휴일 지역 가져오기
-        let selectedRegion = AppSettings.shared.getCurrentHolidayRegion()
-        
-        // iOS에서 제공하는 Holiday calendar 찾기
-        let holidayCalendars = store.calendars(for: .event).filter { calendar in
+    // MARK: - 구독된 공휴일 캘린더 목록 조회
+    func getSubscribedHolidayCalendars() -> [HolidayCalendarInfo] {
+        let allCalendars = store.calendars(for: .event)
+        let holidayCalendars = allCalendars.filter { calendar in
             let titleLower = calendar.title.lowercased()
-            
-            // 기본 공휴일 키워드 검사
-            let hasHolidayKeyword = titleLower.contains("holiday") || 
-                                   titleLower.contains("휴일") ||
-                                   titleLower.contains("공휴일") ||
-                                   calendar.calendarIdentifier.contains("holiday")
-            
-            if !hasHolidayKeyword {
-                return false
-            }
-            
-            // "자동" 모드인 경우 모든 공휴일 캘린더 포함
-            if selectedRegion.localeIdentifier == "auto" {
-                return true
-            }
-            
-            // 특정 지역이 선택된 경우 해당 지역과 매칭
-            return matchesRegion(calendar: calendar, localeIdentifier: selectedRegion.localeIdentifier)
+            return titleLower.contains("holiday") || 
+                   titleLower.contains("휴일") ||
+                   titleLower.contains("공휴일") ||
+                   titleLower.contains("祝日") ||  // 일본어
+                   titleLower.contains("祭日")     // 일본어 축일
         }
         
-        guard !holidayCalendars.isEmpty else {
+        return holidayCalendars.map { calendar in
+            HolidayCalendarInfo(
+                id: calendar.calendarIdentifier,
+                title: calendar.title,
+                color: calendar.cgColor
+            )
+        }
+    }
+    
+    // MARK: - 선택된 공휴일 캘린더만 필터링해서 fetch
+    @MainActor
+    func fetchHolidaysBetween(_ start: Date, _ end: Date) -> Result<[CalendarHoliday], TodayBoardError> {
+        // 공휴일 표시가 비활성화된 경우 빈 배열 반환
+        guard AppSettings.shared.showHolidays else {
             return .success([])
         }
         
-        let predicate = store.predicateForEvents(withStart: start, end: end, calendars: holidayCalendars)
+        // 선택된 공휴일 캘린더 ID들 가져오기
+        let selectedCalendarIds = AppSettings.shared.selectedHolidayCalendarIds
+        guard !selectedCalendarIds.isEmpty else {
+            return .success([])
+        }
+        
+        // 선택된 캘린더들만 필터링
+        let selectedCalendars = store.calendars(for: .event).filter { calendar in
+            selectedCalendarIds.contains(calendar.calendarIdentifier)
+        }
+        
+        guard !selectedCalendars.isEmpty else {
+            return .success([])
+        }
+        
+        let predicate = store.predicateForEvents(withStart: start, end: end, calendars: selectedCalendars)
         let holidayEvents = store.events(matching: predicate)
         
         let holidays = holidayEvents.map { event in
-            CalendarHoliday(title: event.title ?? "공휴일", date: event.startDate)
+            CalendarHoliday(title: event.title ?? "공휴일", date: event.startDate, calendarColor: event.calendar.cgColor)
         }
         
         return .success(holidays)
     }
     
-    // MARK: - 지역별 공휴일 캘린더 매칭
-    private func matchesRegion(calendar: EKCalendar, localeIdentifier: String) -> Bool {
-        let titleLower = calendar.title.lowercased()
-        let countryCode = String(localeIdentifier.suffix(2)).lowercased()
-        
-        // 주요 국가별 매칭 로직
-        let countryKeywords: [String: [String]] = [
-            "kr": ["korea", "한국", "대한민국"],
-            "us": ["united states", "us", "america", "미국"],
-            "jp": ["japan", "일본", "jpn"],
-            "cn": ["china", "중국", "中国"],
-            "hk": ["hong kong", "홍콩"],
-            "gb": ["united kingdom", "uk", "britain", "영국"],
-            "de": ["germany", "deutschland", "독일"],
-            "fr": ["france", "프랑스"],
-            "ca": ["canada", "캐나다"],
-            "au": ["australia", "호주"],
-            "it": ["italy", "italia", "이탈리아"],
-            "es": ["spain", "españa", "스페인"],
-            "mx": ["mexico", "méxico", "멕시코"],
-            "br": ["brazil", "brasil", "브라질"],
-            "in": ["india", "인도"],
-            "se": ["sweden", "sverige", "스웨덴"]
-        ]
-        
-        // 선택된 국가의 키워드들과 매칭
-        if let keywords = countryKeywords[countryCode] {
-            return keywords.contains { keyword in
-                titleLower.contains(keyword)
-            }
-        }
-        
-        // 기본적으로 국가 코드가 포함되어 있는지 확인
-        return titleLower.contains(countryCode)
-    }
     
     // MARK: 리마인더 조회 (완료+미완료 모두)
     func fetchRemindersBetween(_ start: Date, _ end: Date) async -> Result<[EKReminder], TodayBoardError> {
@@ -159,37 +136,6 @@ final class EventKitService {
         return store.calendars(for: .reminder)
     }
     
-    
-    // MARK: - 사용 가능한 공휴일 캘린더 목록 조회
-    func getAvailableHolidayRegions() -> [String] {
-        let allCalendars = store.calendars(for: .event)
-        let holidayCalendars = allCalendars.filter { calendar in
-            calendar.title.lowercased().contains("holiday") || 
-            calendar.title.lowercased().contains("휴일") ||
-            calendar.title.lowercased().contains("공휴일")
-        }
-        
-        return holidayCalendars.map { $0.title }
-    }
-    
-    // MARK: - 특정 지역의 공휴일 캘린더 존재 여부 확인
-    func hasHolidayCalendarFor(region: HolidayRegion) -> Bool {
-        if region.localeIdentifier == "auto" {
-            return !getAvailableHolidayRegions().isEmpty
-        }
-        
-        let allCalendars = store.calendars(for: .event)
-        let holidayCalendars = allCalendars.filter { calendar in
-            let titleLower = calendar.title.lowercased()
-            let hasHolidayKeyword = titleLower.contains("holiday") || 
-                                   titleLower.contains("휴일") ||
-                                   titleLower.contains("공휴일")
-            
-            return hasHolidayKeyword && matchesRegion(calendar: calendar, localeIdentifier: region.localeIdentifier)
-        }
-        
-        return !holidayCalendars.isEmpty
-    }
     
 
 }

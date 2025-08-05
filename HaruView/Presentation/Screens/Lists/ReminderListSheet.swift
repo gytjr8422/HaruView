@@ -120,6 +120,7 @@ struct ReminderListSheet<VM: ReminderListViewModelProtocol>: View {
             
             Spacer()
         }
+        .padding(.top, 12)
         .padding(.bottom, 5)
     }
     

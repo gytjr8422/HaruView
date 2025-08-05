@@ -76,11 +76,13 @@ struct CalendarHoliday: Identifiable, Hashable {
     let id: String
     let title: String
     let date: Date
+    let calendarColor: CGColor?
     
-    init(title: String, date: Date) {
+    init(title: String, date: Date, calendarColor: CGColor? = nil) {
         self.id = "holiday_\(ISO8601DateFormatter().string(from: date))_\(title)"
         self.title = title
         self.date = date
+        self.calendarColor = calendarColor
     }
     
     /// 달력 셀에 표시할 제목
