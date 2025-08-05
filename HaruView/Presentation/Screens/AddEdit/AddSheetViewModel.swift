@@ -97,6 +97,9 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
     }
     @Published var endDate: Date = Calendar.current.date(byAdding: .hour, value: 1, to: .now)!
     @Published var dueDate: Date? = nil
+    
+    // 초기 설정값들 (달력에서 선택된 경우 구분하기 위해)
+    private var initialDueDate: Date? = nil
 
     @Published var isAllDay: Bool = false {
         didSet {
@@ -151,7 +154,7 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
                    recurrenceRule != nil
         case .reminder:
             return !currentTitle.isEmpty ||
-                   dueDate != nil ||
+                   dueDate != initialDueDate ||
                    reminderPriority > 0 ||
                    !reminderNotes.isEmpty ||
                    !reminderURL.isEmpty ||
@@ -241,6 +244,12 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
     // MARK: - 반복 규칙 관리
     func setRecurrenceRule(_ rule: RecurrenceRuleInput?) {
         recurrenceRule = rule
+    }
+    
+    // MARK: - 초기값 설정 (달력에서 선택된 경우)
+    func setInitialDueDate(_ date: Date?) {
+        initialDueDate = date
+        dueDate = date
     }
     
     // MARK: - Private Methods

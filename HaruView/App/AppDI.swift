@@ -238,7 +238,7 @@ extension DIContainer {
         let calendar = Calendar.current
         vm.startDate = calendar.date(bySettingHour: 9, minute: 0, second: 0, of: date) ?? date
         vm.endDate = calendar.date(byAdding: .hour, value: 1, to: vm.startDate) ?? vm.startDate
-        vm.dueDate = date
+        vm.setInitialDueDate(date)  // 초기값으로 설정 (변경사항으로 카운트하지 않음)
         
         return vm
     }
