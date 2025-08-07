@@ -9,6 +9,7 @@ import SwiftUI
 import Combine
 import CoreLocation
 import WidgetKit
+import EventKit
 
 // 프로토콜 수정
 protocol HomeViewModelProtocol: ObservableObject {
@@ -130,7 +131,11 @@ final class HomeViewModel: ObservableObject, @preconcurrency HomeViewModelProtoc
             state.isLoading = true
             defer { state.isLoading = false }
 
-            switch await fetchData() {
+            // 권한이 이미 부여된 상태인지 확인
+            let hasPermissions = EKEventStore.authorizationStatus(for: .event) == .fullAccess &&
+                               EKEventStore.authorizationStatus(for: .reminder) == .fullAccess
+            
+            switch await fetchData(skipPermissionCheck: hasPermissions) {
             case .success(let ov): state.overview = ov
             case .failure(let err): state.error  = err
             }

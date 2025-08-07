@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import SwiftUI
+import EventKit
 
 protocol EventListViewModelProtocol: ObservableObject {
     var events: [Event] { get }
@@ -47,7 +48,11 @@ final class EventListViewModel: ObservableObject, @preconcurrency EventListViewM
     
     func load() {
         Task {
-            switch await fetchToday() {
+            // 권한이 이미 부여된 상태인지 확인
+            let hasPermissions = EKEventStore.authorizationStatus(for: .event) == .fullAccess &&
+                               EKEventStore.authorizationStatus(for: .reminder) == .fullAccess
+            
+            switch await fetchToday(skipPermissionCheck: hasPermissions) {
             case .success(let overview): self.events = overview.events
             case .failure(let error): self.error = error
             }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import EventKit
 
 protocol ReminderListViewModelProtocol: ObservableObject {
     var reminders: [Reminder] { get }
@@ -33,7 +34,11 @@ final class ReminderListViewModel: ObservableObject, @preconcurrency ReminderLis
     
     func load() {
         Task {
-            switch await fetchToday() {
+            // 권한이 이미 부여된 상태인지 확인
+            let hasPermissions = EKEventStore.authorizationStatus(for: .event) == .fullAccess &&
+                               EKEventStore.authorizationStatus(for: .reminder) == .fullAccess
+            
+            switch await fetchToday(skipPermissionCheck: hasPermissions) {
             case .success(let overview): self.reminders = overview.reminders
             case .failure(let error): self.error = error
             }

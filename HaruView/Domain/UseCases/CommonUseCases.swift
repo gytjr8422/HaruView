@@ -18,10 +18,13 @@ struct FetchTodayOverviewUseCase {
         self.reminders = reminders
     }
 
-    func callAsFunction() async -> Result<TodayOverview, TodayBoardError> {
-        if EKEventStore.authorizationStatus(for: .event) != .fullAccess ||
-           EKEventStore.authorizationStatus(for: .reminder) != .fullAccess {
-            return .success(.placeholder)
+    func callAsFunction(skipPermissionCheck: Bool = false) async -> Result<TodayOverview, TodayBoardError> {
+        // 권한 체크를 스킵하지 않는 경우에만 권한 확인
+        if !skipPermissionCheck {
+            if EKEventStore.authorizationStatus(for: .event) != .fullAccess ||
+               EKEventStore.authorizationStatus(for: .reminder) != .fullAccess {
+                return .success(.placeholder)
+            }
         }
 
         async let eRes = events.fetchEvent()
