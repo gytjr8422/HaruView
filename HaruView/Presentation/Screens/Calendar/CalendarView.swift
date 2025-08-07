@@ -148,29 +148,10 @@ struct CalendarView: View {
                 vm.refresh()
             }
         }
-        .onReceive(NotificationCenter.default.publisher(for: .EKEventStoreChanged)) { _ in
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                // 현재 보고 있는 월과 인접 월만 선택적 업데이트
-                let currentDate = vm.state.currentMonthFirstDay
-                let calendar = Calendar.current
-                let affectedDates = (-1...1).compactMap { offset in
-                    calendar.date(byAdding: .month, value: offset, to: currentDate)
-                }
-                vm.selectiveUpdateManager.scheduleDateRangeUpdate(dates: affectedDates)
-            }
-        }
-        .onReceive(NotificationCenter.default.publisher(for: .calendarNeedsRefresh)) { _ in
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                // 현재 보고 있는 월만 선택적 업데이트
-                let currentDate = vm.state.currentMonthFirstDay
-                vm.selectiveUpdateManager.scheduleDateRangeUpdate(dates: [currentDate])
-            }
-        }
-        .onReceive(NotificationCenter.default.publisher(for: .calendarSelectiveUpdate)) { notification in
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                if let dates = notification.userInfo?["dates"] as? [Date] {
-                    vm.selectiveUpdateManager.scheduleDateRangeUpdate(dates: dates)
-                }
+        .onReceive(NotificationCenter.default.publisher(for: .calendarDataUpdated)) { notification in
+            // 모든 업데이트를 하나의 경로로 통합 - 즉시 처리
+            if let updatedMonths = notification.userInfo?["updatedMonths"] as? [CalendarMonth] {
+                vm.handleCalendarDataUpdate(updatedMonths)
             }
         }
     }

@@ -304,7 +304,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
             } label: {
                 Image(systemName: "gearshape")
                     .font(.system(size: 18, weight: .medium))
-                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .foregroundStyle(Color(hexCode: "A76545").opacity(0.8))
             }
             .padding(.trailing, 10)
         }

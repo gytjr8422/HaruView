@@ -2,7 +2,14 @@
   "sourceLanguage" : "ko",
   "strings" : {
     "Reminder ID" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reminder ID"
+          }
+        }
+      }
     },
     "오늘의 미리알림을 표시합니다" : {
       "localizations" : {

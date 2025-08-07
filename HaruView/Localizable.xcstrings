@@ -15,7 +15,14 @@
       }
     },
     "(%lld)" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(%lld)"
+          }
+        }
+      }
     },
     "%.0f°" : {
       "localizations" : {
@@ -156,7 +163,14 @@
       }
     },
     "%lld개" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld items"
+          }
+        }
+      }
     },
     "%lld개월마다" : {
       "localizations" : {
@@ -349,19 +363,54 @@
       }
     },
     "HaruView" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HaruView"
+          }
+        }
+      }
     },
     "iOS 캘린더 앱에서 구독한 공휴일만 표시됩니다" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only holidays subscribed from iOS Calendar app are displayed"
+          }
+        }
+      }
     },
     "iOS 캘린더 앱에서 원하는 국가의\n공휴일 캘린더를 구독해보세요" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subscribe to holiday calendars for your desired countries\nfrom the iOS Calendar app"
+          }
+        }
+      }
     },
     "iOS 캘린더 앱에서 원하는 국가의\n공휴일 캘린더를 먼저 구독해주세요" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please first subscribe to holiday calendars for your desired countries\nfrom the iOS Calendar app"
+          }
+        }
+      }
     },
     "iOS 캘린더 앱을 열어서 공휴일을 구독하세요" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open iOS Calendar app to subscribe to holidays"
+          }
+        }
+      }
     },
     "Key" : {
       "extractionState" : "manual",
@@ -445,19 +494,54 @@
       }
     },
     "공휴일 캘린더 선택" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select Holiday Calendar"
+          }
+        }
+      }
     },
     "공휴일 캘린더 설정" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Holiday Calendar Settings"
+          }
+        }
+      }
     },
     "공휴일 캘린더 추가 방법" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How to Add Holiday Calendar"
+          }
+        }
+      }
     },
     "공휴일 캘린더 추가하기" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Holiday Calendar"
+          }
+        }
+      }
     },
     "공휴일 표시" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Holidays"
+          }
+        }
+      }
     },
     "구독" : {
       "localizations" : {
@@ -470,10 +554,24 @@
       }
     },
     "구독된 공휴일 캘린더" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subscribed Holiday Calendars"
+          }
+        }
+      }
     },
     "구독된 공휴일 캘린더가 없습니다" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No subscribed holiday calendars"
+          }
+        }
+      }
     },
     "금요일" : {
       "localizations" : {
@@ -588,10 +686,24 @@
       }
     },
     "단계별 가이드" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Step-by-Step Guide"
+          }
+        }
+      }
     },
     "단계별 가이드를 확인하세요" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check the step-by-step guide"
+          }
+        }
+      }
     },
     "닫기" : {
       "localizations" : {
@@ -624,7 +736,14 @@
       }
     },
     "달력 설정" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calendar Settings"
+          }
+        }
+      }
     },
     "달력 준비 중..." : {
       "localizations" : {
@@ -637,7 +756,14 @@
       }
     },
     "달력에 공휴일을 표시합니다" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Display holidays on calendar"
+          }
+        }
+      }
     },
     "달력을 불러오는 중..." : {
       "localizations" : {
@@ -670,7 +796,14 @@
       }
     },
     "뒤로" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back"
+          }
+        }
+      }
     },
     "로딩 중..." : {
       "localizations" : {
@@ -900,7 +1033,14 @@
       }
     },
     "반복 일정입니다. 어떻게 삭제하시겠습니까?" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is a recurring event. How would you like to delete it?"
+          }
+        }
+      }
     },
     "반복 일정입니다. 어떻게 편집하시겠습니까?" : {
       "localizations" : {
@@ -923,7 +1063,14 @@
       }
     },
     "버전 %@" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version %@"
+          }
+        }
+      }
     },
     "보통" : {
       "localizations" : {
@@ -1076,7 +1223,14 @@
       }
     },
     "새로운 할 일을 추가해보세요!" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try adding a new task!"
+          }
+        }
+      }
     },
     "생일" : {
       "localizations" : {
@@ -1089,7 +1243,14 @@
       }
     },
     "설정" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        }
+      }
     },
     "설정 방식" : {
       "localizations" : {
@@ -1213,7 +1374,14 @@
       }
     },
     "앱 정보" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App Info"
+          }
+        }
+      }
     },
     "업데이트 중..." : {
       "localizations" : {
@@ -1251,17 +1419,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No events today."
-          }
-        }
-      }
-    },
-    "오늘 할 일" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Today's tasks"
           }
         }
       }
@@ -1358,7 +1515,14 @@
       }
     },
     "원하는 공휴일 캘린더를 선택하세요" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select the holiday calendar you want"
+          }
+        }
+      }
     },
     "월" : {
       "localizations" : {
@@ -1480,12 +1644,22 @@
         }
       }
     },
-    "이메일" : {
+    "이동" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "email"
+            "value" : "Go"
+          }
+        }
+      }
+    },
+    "이후 모든 이벤트 삭제" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete All Future Events"
           }
         }
       }
@@ -1500,22 +1674,22 @@
         }
       }
     },
-    "이동" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Go"
-          }
-        }
-      }
-    },
     "이동할 월을 선택하세요" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Select the month to navigate to"
+          }
+        }
+      }
+    },
+    "이메일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "email"
           }
         }
       }
@@ -1546,16 +1720,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "All Future Events"
-          }
-        }
-      }
-    },
-    "이후 모든 이벤트 삭제" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete All Future Events"
           }
         }
       }
@@ -1682,7 +1846,14 @@
       }
     },
     "전체 할 일" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All Tasks"
+          }
+        }
+      }
     },
     "제목 입력" : {
       "localizations" : {
@@ -1735,7 +1906,14 @@
       }
     },
     "총" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total"
+          }
+        }
+      }
     },
     "최고: %.0f°  최저: %.0f°" : {
       "localizations" : {
@@ -1764,7 +1942,14 @@
       }
     },
     "추가 방법 보기" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View How to Add"
+          }
+        }
+      }
     },
     "취소" : {
       "localizations" : {
@@ -1797,7 +1982,14 @@
       }
     },
     "캘린더 앱에서 추가" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add from Calendar App"
+          }
+        }
+      }
     },
     "캘린더와 미리알림 모두 접근 권한이 필요해요." : {
       "localizations" : {
@@ -1910,7 +2102,14 @@
       }
     },
     "할 일이 없습니다" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No tasks"
+          }
+        }
+      }
     },
     "할일 삭제" : {
       "localizations" : {

@@ -406,15 +406,38 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
         return false
     }
     
+    // MARK: - Public Update Methods
+    
+    /// 통합 캘린더 데이터 업데이트 핸들러
+    func handleCalendarDataUpdate(_ updatedMonths: [CalendarMonth]) {
+        for updatedMonth in updatedMonths {
+            // monthWindow에서 해당하는 월을 찾아서 교체
+            if let windowIndex = monthWindow.firstIndex(where: { 
+                $0.year == updatedMonth.year && $0.month == updatedMonth.month 
+            }) {
+                monthWindow[windowIndex] = updatedMonth
+                
+                // 현재 월인 경우 currentWindowIndex도 업데이트
+                if updatedMonth.year == state.currentYear && updatedMonth.month == state.currentMonth {
+                    currentWindowIndex = windowIndex
+                    state.currentMonthData = updatedMonth
+                }
+            }
+        }
+        
+        // UI 강제 새로고침
+        objectWillChange.send()
+    }
+    
     // MARK: - Private Methods
     
     private func bindEventKitChanges() {
         eventKitService.changePublisher
-            .debounce(for: .milliseconds(800), scheduler: RunLoop.main) // 디바운싱 시간 증가
+            .debounce(for: .milliseconds(300), scheduler: RunLoop.main) // 디바운싱 시간 단축
             .sink { [weak self] in
                 guard let self = self else { return }
                 
-                // 선택적 업데이트 사용 - 현재 보고 있는 월과 인접 월만 업데이트
+                // 모든 EventKit 변경도 SelectiveUpdateManager를 통해 처리
                 let currentDate = self.state.currentMonthFirstDay
                 let calendar = Calendar.current
                 
@@ -424,7 +447,7 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
                 
                 self.selectiveUpdateManager.scheduleDateRangeUpdate(dates: affectedDates)
                 
-                // 위젯은 여전히 새로고침 (하지만 덜 빈번하게)
+                // 위젯 새로고침
                 WidgetRefreshService.shared.refreshWithDebounce()
             }
             .store(in: &cancellables)

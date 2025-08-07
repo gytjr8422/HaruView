@@ -151,6 +151,18 @@ struct HolidayGuideView: View {
                     description: "검색 결과에서 'Holidays in [국가명]' 형태의 캘린더를 선택하세요",
                     icon: "checkmark.circle"
                 )
+                
+                Divider()
+                    .padding(.horizontal, 16)
+                    .background(Color(hexCode: "6E5C49").opacity(0.1))
+                
+                // 6단계
+                guideStepView(
+                    step: "6",
+                    title: "앱으로 돌아오기",
+                    description: "하루뷰 앱으로 돌아와서 달력을 아래로 당기거나 '오늘' 버튼을 눌러 새로고침하세요",
+                    icon: "arrow.clockwise"
+                )
             }
             .background(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)

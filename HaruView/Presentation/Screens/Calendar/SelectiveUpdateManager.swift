@@ -35,7 +35,8 @@ final class SelectiveUpdateManager: ObservableObject {
     // MARK: - Private Properties
     private let cacheManager = CalendarCacheManager.shared
     private var updateTimer: Timer?
-    private let updateDelay: TimeInterval = 0.1 // 100ms 지연으로 업데이트 배치
+    private let updateDelay: TimeInterval = 0.05 // 50ms 지연으로 업데이트 배치 (더 빠르게)
+    private var currentUpdateTask: Task<Void, Never>?
     
     // MARK: - Public Methods
     
@@ -135,14 +136,18 @@ final class SelectiveUpdateManager: ObservableObject {
     private func processUpdates() {
         guard !pendingUpdates.isEmpty && !isUpdating else { return }
         
+        // 이전 업데이트 태스크가 있으면 취소
+        currentUpdateTask?.cancel()
+        
         isUpdating = true
         let updates = pendingUpdates
         pendingUpdates.removeAll()
         
-        Task {
+        currentUpdateTask = Task {
             await applyUpdates(updates)
             await MainActor.run {
                 self.isUpdating = false
+                self.currentUpdateTask = nil
             }
         }
     }
@@ -201,25 +206,37 @@ final class SelectiveUpdateManager: ObservableObject {
         let smartLoader = SmartDataLoader.shared
         var updatedMonths: [CalendarMonth] = []
         
-        for monthKey in monthKeys {
-            let components = monthKey.split(separator: "_")
-            if components.count == 2,
-               let year = Int(components[0]),
-               let month = Int(components[1]) {
-                
-                // 백그라운드에서 해당 월 데이터 새로 로드
-                let result = await smartLoader.loadCurrentMonth(year: year, month: month)
-                
-                if case .success(let calendarMonth) = result {
-                    // 캐시에 새 데이터 저장
-                    let cacheKey = "calendar_\(year)_\(String(format: "%02d", month))"
-                    cacheManager.setCachedMonth(calendarMonth, for: cacheKey)
-                    updatedMonths.append(calendarMonth)
+        // 모든 월을 병렬로 로드
+        await withTaskGroup(of: CalendarMonth?.self) { group in
+            for monthKey in monthKeys {
+                group.addTask {
+                    let components = monthKey.split(separator: "_")
+                    guard components.count == 2,
+                          let year = Int(components[0]),
+                          let month = Int(components[1]) else {
+                        return nil
+                    }
+                    
+                    let result = await smartLoader.loadCurrentMonth(year: year, month: month)
+                    if case .success(let calendarMonth) = result {
+                        return calendarMonth
+                    }
+                    return nil
+                }
+            }
+            
+            for await calendarMonth in group {
+                if let month = calendarMonth {
+                    updatedMonths.append(month)
+                    
+                    // 캐시에 새 데이터 저장 (원자적으로)
+                    let cacheKey = "calendar_\(month.year)_\(String(format: "%02d", month.month))"
+                    cacheManager.setCachedMonth(month, for: cacheKey)
                 }
             }
         }
         
-        // UI 업데이트 알림 발송
+        // UI 업데이트 알림 발송 (모든 데이터가 로드된 후)
         if !updatedMonths.isEmpty {
             await MainActor.run {
                 NotificationCenter.default.post(

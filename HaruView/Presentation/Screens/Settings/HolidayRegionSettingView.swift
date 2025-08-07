@@ -348,8 +348,6 @@ struct HolidayRegionSettingView: View {
         // 햅틱 피드백
         let impactFeedback = UIImpactFeedbackGenerator(style: .light)
         impactFeedback.impactOccurred()
-        
-        print("📅 구독된 공휴일 캘린더 새로고침: \(subscribedCalendars.count)개")
     }
     
     private func refreshSubscribedCalendarsAsync() async {
