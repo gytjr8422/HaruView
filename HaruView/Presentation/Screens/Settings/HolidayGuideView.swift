@@ -52,14 +52,9 @@ struct HolidayGuideView: View {
                 }
             }
         }
-        .gesture(
-            DragGesture()
-                .onEnded { value in
-                    if value.translation.width > 100 && abs(value.translation.height) < 50 {
-                        dismiss()
-                    }
-                }
-        )
+        .improvedSwipeBack {
+            dismiss()
+        }
     }
     
     // MARK: - 제목 섹션

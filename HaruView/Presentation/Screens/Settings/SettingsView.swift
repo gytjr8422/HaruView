@@ -56,14 +56,9 @@ struct SettingsView: View {
                 }
             }
         }
-        .gesture(
-            DragGesture()
-                .onEnded { value in
-                    if value.translation.width > 100 && abs(value.translation.height) < 50 {
-                        dismiss()
-                    }
-                }
-        )
+        .improvedSwipeBack {
+            dismiss()
+        }
         .onAppear {
             loadSubscribedCalendars()
         }
@@ -196,7 +191,6 @@ struct SettingsView: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(PlainButtonStyle())
-        .contentShape(Rectangle())
         .transition(.opacity.combined(with: .move(edge: .top)))
     }
     

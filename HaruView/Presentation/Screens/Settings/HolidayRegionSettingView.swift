@@ -73,14 +73,9 @@ struct HolidayRegionSettingView: View {
                 }
             }
         }
-        .gesture(
-            DragGesture()
-                .onEnded { value in
-                    if value.translation.width > 100 && abs(value.translation.height) < 50 {
-                        dismiss()
-                    }
-                }
-        )
+        .improvedSwipeBack {
+            dismiss()
+        }
         .onAppear {
             refreshSubscribedCalendars()
         }
@@ -291,7 +286,6 @@ struct HolidayRegionSettingView: View {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(PlainButtonStyle())
-                .contentShape(Rectangle())
                 
                 Divider()
                     .padding(.horizontal, 16)
@@ -328,7 +322,6 @@ struct HolidayRegionSettingView: View {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(PlainButtonStyle())
-                .contentShape(Rectangle())
             }
             .background(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
