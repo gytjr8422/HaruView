@@ -201,20 +201,18 @@ struct EventBar: View {
                     EmptyView() // 이미 위에서 처리됨
                 }
                 
-                // 제목 텍스트 - Canvas로 모든 언어 처리 (텍스트가 있을 때만)
+                // 제목 텍스트 - 최적화된 Text 뷰 사용 (텍스트가 있을 때만)
                 if !item.title.isEmpty {
-                    Canvas { context, size in
-                        let text = Text(item.title)
-                            .font(.pretendardRegular(size: isCompact ? 9 : 11))
-                            .foregroundStyle(
-                                item.isCompleted ?
-                                Color(hexCode: "6E5C49").opacity(0.5) :
-                                Color(hexCode: "40392B")
-                            )
-                        
-                        context.draw(text, at: CGPoint(x: 0, y: size.height / 2), anchor: .leading)
-                    }
-                    .clipped()
+                    Text(item.title)
+                        .font(.pretendardRegular(size: isCompact ? 9 : 11))
+                        .foregroundStyle(
+                            item.isCompleted ?
+                            Color(hexCode: "6E5C49").opacity(0.5) :
+                            Color(hexCode: "40392B")
+                        )
+                        .lineLimit(1)
+                        .truncationMode(.tail)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 
                 Spacer(minLength: 0)
@@ -265,14 +263,12 @@ struct ContinuousEventBar: View {
                             Spacer().frame(width: 4) // 색상 바 뒤 여백
                         }
                         
-                        Canvas { context, size in
-                            let text = Text(info.event.displayTitle)
-                                .font(.pretendardRegular(size: isCompact ? 9 : 11))
-                                .foregroundStyle(Color(hexCode: "40392B"))
-                            
-                            context.draw(text, at: CGPoint(x: 0, y: size.height / 2), anchor: .leading)
-                        }
-                        .clipped()
+                        Text(info.event.displayTitle)
+                            .font(.pretendardRegular(size: isCompact ? 9 : 11))
+                            .foregroundStyle(Color(hexCode: "40392B"))
+                            .lineLimit(1)
+                            .truncationMode(.tail)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                         
                         Spacer()
                     }

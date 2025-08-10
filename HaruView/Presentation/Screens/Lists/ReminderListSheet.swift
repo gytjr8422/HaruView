@@ -91,7 +91,7 @@ struct ReminderListSheet<VM: ReminderListViewModelProtocol>: View {
         let today = Date()
         
         return vm.reminders.filter { reminder in
-            guard let dueDate = reminder.due else { return false }
+            guard reminder.due != nil else { return false }
             return reminder.shouldDisplay(on: today)
         }
     }
