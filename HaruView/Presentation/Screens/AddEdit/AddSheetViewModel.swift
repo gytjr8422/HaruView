@@ -42,7 +42,7 @@ protocol AddSheetViewModelProtocol: ObservableObject {
     var availableCalendars: [EventCalendar] { get }
     
     // Reminder 관련 확장 프로퍼티들
-    var reminderType: ReminderType { get set }
+    var reminderType: ReminderType? { get set }
     var reminderPriority: Int { get set }
     var reminderNotes: String { get set }
     var reminderURL: String { get set }
@@ -135,7 +135,7 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
     @Published var availableCalendars: [EventCalendar] = []
     
     // 미리알림 추가 프로퍼티
-    @Published var reminderType: ReminderType = .onDate
+    @Published var reminderType: ReminderType? = nil
     @Published var reminderPriority: Int = 0
     @Published var reminderNotes: String = ""
     @Published var reminderURL: String = ""
@@ -224,7 +224,7 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
                 location: reminderLocation.isEmpty ? nil : reminderLocation,
                 alarms: reminderAlarms,
                 calendarId: selectedReminderCalendar?.id,
-                reminderType: reminderType
+                reminderType: reminderType ?? .onDate
             )
             let res = await addReminder(reminderInput)
             handle(res)

@@ -19,13 +19,11 @@ struct BasicReminderInfoSection<VM: AddSheetViewModelProtocol>: View {
             HaruTextField(text: $vm.currentTitle, placeholder: String(localized: "제목 입력"))
                 .focused(isTextFieldFocused)
             
-            // 할일 타입 선택
-            ReminderTypeSelectionView(selectedType: $vm.reminderType)
-            
-            // 마감일 선택기
+            // 마감일 선택기 (할일 타입 선택 포함)
             ReminderDueDatePicker(
                 dueDate: $vm.dueDate,
                 includeTime: $vm.includeTime,
+                reminderType: $vm.reminderType,
                 isTextFieldFocused: isTextFieldFocused
             )
             

@@ -8,11 +8,12 @@
 import SwiftUI
 
 struct ReminderDueDatePicker: View {
-    @Binding var dueDate: Date?  // Optional로 변경
+    @Binding var dueDate: Date?
     @Binding var includeTime: Bool
+    @Binding var reminderType: ReminderType?  // 할일 타입 바인딩 추가
     @State private var selectedMode: DueDateMode = .none
     @State private var selectedField: DateTimeField? = nil
-    @State private var internalDate: Date = Date()  // 내부용 Date
+    @State private var internalDate: Date = Date()
     
     var isTextFieldFocused: FocusState<Bool>.Binding
     
@@ -62,6 +63,15 @@ struct ReminderDueDatePicker: View {
                 Spacer()
             }
             .padding(.bottom, selectedMode == .none ? 0 : 16)
+            
+            // 할일 타입 선택 (날짜가 있을 때만 표시)
+            if selectedMode != .none {
+                ReminderTypeSelectionView(selectedType: Binding(
+                    get: { reminderType ?? .onDate },
+                    set: { reminderType = $0 }
+                ))
+                .padding(.bottom, 16)
+            }
             
             // 선택된 날짜/시간 표시 (없음이 아닐 때만)
             if selectedMode != .none {
@@ -156,12 +166,19 @@ struct ReminderDueDatePicker: View {
         case .none:
             includeTime = false
             dueDate = nil
+            reminderType = nil  // 날짜 없을 때는 타입도 nil
         case .dateOnly:
             includeTime = false
             dueDate = internalDate
+            if reminderType == nil {
+                reminderType = .onDate  // 기본값 설정
+            }
         case .dateTime:
             includeTime = true
             dueDate = internalDate
+            if reminderType == nil {
+                reminderType = .onDate  // 기본값 설정
+            }
         }
     }
     
@@ -216,6 +233,7 @@ struct ReminderDueDatePicker: View {
                         ReminderDueDatePicker(
                             dueDate: $dueDate,
                             includeTime: $includeTime,
+                            reminderType: .constant(.onDate),
                             isTextFieldFocused: $isFocused
                         )
                         .padding(.horizontal, 20)

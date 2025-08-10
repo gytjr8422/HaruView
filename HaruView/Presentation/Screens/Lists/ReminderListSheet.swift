@@ -22,7 +22,7 @@ struct ReminderListSheet<VM: ReminderListViewModelProtocol>: View {
         NavigationStack {
             ScrollView(showsIndicators: false) {
                 LazyVStack(alignment: .leading, spacing: 0) {
-                    // 오늘 마감인 할 일 섹션
+                    // 오늘 표시되는 할 일 섹션
                     if !todayReminders.isEmpty {
                         sectionHeader(title: "오늘 할 일", count: todayReminders.count)
                         
@@ -86,15 +86,13 @@ struct ReminderListSheet<VM: ReminderListViewModelProtocol>: View {
     
     // MARK: - Computed Properties
     
-    /// 오늘 마감인 할 일들
+    /// 오늘 표시될 할 일들 (마감일이 오늘이거나, untilDate 타입으로 오늘까지 표시되는 것들)
     private var todayReminders: [Reminder] {
-        let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
+        let today = Date()
         
         return vm.reminders.filter { reminder in
             guard let dueDate = reminder.due else { return false }
-            let reminderDate = calendar.startOfDay(for: dueDate)
-            return calendar.isDate(reminderDate, inSameDayAs: today)
+            return reminder.shouldDisplay(on: today)
         }
     }
     

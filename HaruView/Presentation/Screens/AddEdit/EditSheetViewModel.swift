@@ -29,7 +29,7 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
     @Published var availableCalendars: [EventCalendar] = []
     
     // 미리알림용 프로퍼티
-    @Published var reminderType: ReminderType = .onDate
+    @Published var reminderType: ReminderType? = nil
     @Published var reminderPriority: Int = 0
     @Published var reminderNotes: String = ""
     @Published var reminderURL: String = ""
@@ -83,7 +83,7 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
             if currentTitle != original.title { return true }
             let newDue: Date? = includeTime ? dueDate : nil
             if original.due != newDue { return true }
-            if reminderType != original.reminderType { return true }
+            if (reminderType ?? .onDate) != original.reminderType { return true }
             if reminderPriority != original.priority { return true }
             if reminderNotes != (original.notes ?? "") { return true }
             if reminderURL != (original.url?.absoluteString ?? "") { return true }
@@ -258,7 +258,7 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
                  location: reminderLocation.isEmpty ? nil : reminderLocation,
                  alarms: reminderAlarms,
                  calendarId: selectedReminderCalendar?.id,
-                 reminderType: reminderType
+                 reminderType: reminderType ?? .onDate
              )
              let res = await editReminder(reminderEdit)
              handle(res)
