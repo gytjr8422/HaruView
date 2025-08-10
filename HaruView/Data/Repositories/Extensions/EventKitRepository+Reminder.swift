@@ -14,22 +14,25 @@ extension EventKitRepository {
     func fetchReminder() async -> Result<[Reminder], TodayBoardError> {
         
         let todayStart = cal.startOfDay(for: Date())
-        let todayEnd   = cal.date(byAdding: .day, value: 1, to: todayStart)!
+        let todayEnd = cal.date(byAdding: .day, value: 1, to: todayStart)!
+        // service에서 모든 리마인더를 반환하므로 범위는 의미없지만 API 호환성을 위해 유지
         let ekRes = await service.fetchRemindersBetween(todayStart, todayEnd)
         return ekRes.map { rems in
             
-            let filtered = rems.filter { rem in
-                guard let due = rem.dueDateComponents?.date else {
-                    return true
-                }
+            let mappedReminders = rems
+                .sorted(by: Self.sortRule)
+                .map(Self.mapReminder)
+            
+            // 새로운 필터링 로직: ReminderType에 따른 표시 여부 결정
+            let filtered = mappedReminders.filter { reminder in
+                // 마감일이 없으면 항상 표시 (기존 동작 유지)
+                guard reminder.due != nil else { return true }
                 
-                let isInToday = due >= todayStart && due < todayEnd
-                return isInToday
+                // shouldDisplay 메서드를 사용하여 오늘 표시 여부 결정
+                return reminder.shouldDisplay(on: Date())
             }
             
             return filtered
-                .sorted(by: Self.sortRule)
-                .map(Self.mapReminder)
         }
     }
     

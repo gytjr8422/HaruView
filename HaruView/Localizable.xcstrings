@@ -352,6 +352,9 @@
         }
       }
     },
+    "D-%lld" : {
+
+    },
     "Exchange" : {
       "localizations" : {
         "en" : {
@@ -1644,32 +1647,22 @@
         }
       }
     },
-    "이동" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Go"
-          }
-        }
-      }
-    },
-    "이후 모든 이벤트 삭제" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete All Future Events"
-          }
-        }
-      }
-    },
     "일" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : " "
+          }
+        }
+      }
+    },
+    "이동" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go"
           }
         }
       }
@@ -1720,6 +1713,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "All Future Events"
+          }
+        }
+      }
+    },
+    "이후 모든 이벤트 삭제" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete All Future Events"
           }
         }
       }

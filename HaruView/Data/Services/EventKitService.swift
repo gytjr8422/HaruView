@@ -112,15 +112,8 @@ final class EventKitService {
                 
                 self.store.fetchReminders(matching: cmpPred) { completedReminders in
                     bucket.append(contentsOf: completedReminders ?? [])
-                    // 조회 범위와 겹치는지 필터링
-                    let filtered = bucket.filter { rem in
-                        guard let due = rem.dueDateComponents?.date else { return true }
-                        
-                        let isInRange = due >= start && due < end
-                        return isInRange
-                    }
-                    
-                    cont.resume(returning: .success(filtered))
+                    // 모든 리마인더를 반환 - Repository에서 shouldDisplay로 필터링
+                    cont.resume(returning: .success(bucket))
                 }
             }
         }

@@ -289,6 +289,7 @@ private class MockAddVM: AddSheetViewModelProtocol {
     var selectedCalendar: EventCalendar? = nil
     var availableCalendars: [EventCalendar] = []
     
+    var reminderType: ReminderType = .onDate
     var reminderPriority: Int = 0
     var reminderNotes: String = ""
     var reminderURL: String = ""

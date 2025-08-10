@@ -17,6 +17,17 @@ struct ReminderInput {
     let location: String?
     let alarms: [AlarmInput]
     let calendarId: String?  // 특정 캘린더에 저장하고 싶을 때
+    let reminderType: ReminderType // 할일 타입
+    
+    /// notes 필드에 타입 메타데이터를 포함한 최종 노트
+    var finalNotes: String {
+        let metadata = reminderType.metadataString
+        if let existingNotes = notes, !existingNotes.isEmpty {
+            return "\(metadata)\n\(existingNotes)"
+        } else {
+            return metadata
+        }
+    }
 }
 
 struct ReminderEdit {
@@ -30,8 +41,19 @@ struct ReminderEdit {
     let location: String?
     let alarms: [AlarmInput]
     let calendarId: String?
+    let reminderType: ReminderType // 할일 타입
     
-    init(id: String, title: String, due: Date?, includesTime: Bool, priority: Int, notes: String?, url: URL?, location: String?, alarms: [AlarmInput], calendarId: String? = nil) {
+    /// notes 필드에 타입 메타데이터를 포함한 최종 노트
+    var finalNotes: String {
+        let metadata = reminderType.metadataString
+        if let existingNotes = notes, !existingNotes.isEmpty {
+            return "\(metadata)\n\(existingNotes)"
+        } else {
+            return metadata
+        }
+    }
+    
+    init(id: String, title: String, due: Date?, includesTime: Bool, priority: Int, notes: String?, url: URL?, location: String?, alarms: [AlarmInput], calendarId: String? = nil, reminderType: ReminderType = .onDate) {
         self.id = id
         self.title = title
         self.due = due
@@ -42,6 +64,7 @@ struct ReminderEdit {
         self.location = location
         self.alarms = alarms
         self.calendarId = calendarId
+        self.reminderType = reminderType
     }
 }
 

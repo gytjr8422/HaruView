@@ -7,6 +7,67 @@
 
 import SwiftUI
 
+// MARK: - 할일 타입 선택 컴포넌트
+struct ReminderTypeSelectionView: View {
+    @Binding var selectedType: ReminderType
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            
+            // 타입 선택 버튼들
+            VStack(spacing: 8) {
+                ForEach(ReminderType.allCases, id: \.rawValue) { type in
+                    Button {
+                        selectedType = type
+                        
+                        // 햅틱 피드백
+                        let impactFeedback = UIImpactFeedbackGenerator(style: .light)
+                        impactFeedback.impactOccurred()
+                    } label: {
+                        HStack(spacing: 12) {
+                            // 라디오 버튼
+                            Image(systemName: selectedType == type ? "largecircle.fill.circle" : "circle")
+                                .font(.system(size: 18, weight: .medium))
+                                .foregroundStyle(selectedType == type ? Color(hexCode: "A76545") : Color(hexCode: "6E5C49").opacity(0.5))
+                            
+                            Image(systemName: type.iconName)
+                                .font(.system(size: 16, weight: .medium))
+                                .foregroundStyle(selectedType == type ? Color(hexCode: "A76545") : Color(hexCode: "6E5C49"))
+                                .frame(width: 20, height: 20)
+                            
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(type.displayText)
+                                    .font(.pretendardRegular(size: 15))
+                                    .foregroundStyle(selectedType == type ? Color(hexCode: "40392B") : Color(hexCode: "6E5C49"))
+                                
+                                Text(type.description)
+                                    .font(.pretendardRegular(size: 11))
+                                    .foregroundStyle(Color(hexCode: "6E5C49").opacity(0.8))
+                            }
+                            
+                            Spacer()
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
+                        .background(
+                            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                .fill(selectedType == type ? Color(hexCode: "A76545").opacity(0.05) : Color.clear)
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(
+                                    selectedType == type ? Color(hexCode: "A76545").opacity(0.2) : Color.clear,
+                                    lineWidth: 1
+                                )
+                        )
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                }
+            }
+        }
+    }
+}
+
 // MARK: - 우선순위 선택 컴포넌트
 struct PrioritySelectionView: View {
     @Binding var selectedPriority: Int

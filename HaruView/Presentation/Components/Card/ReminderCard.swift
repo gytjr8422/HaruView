@@ -52,11 +52,32 @@ struct ReminderCard: View {
                     .opacity(reminder.isCompleted ? 0.5 : 1)
             }
             
-            Text(reminder.title)
-                .lineLimit(1)
-                .font(.pretendardRegular(size: 17))
-                .strikethrough(reminder.isCompleted)
-                .opacity(reminder.isCompleted ? 0.5 : 1)
+            VStack(alignment: .leading, spacing: 2) {
+                HStack(spacing: 4) {
+                    Text(reminder.title)
+                        .lineLimit(1)
+                        .font(.pretendardRegular(size: 17))
+                        .strikethrough(reminder.isCompleted)
+                        .opacity(reminder.isCompleted ? 0.5 : 1)
+                }
+                
+                // 타입별 상태 텍스트
+                if reminder.reminderType == .untilDate, let due = reminder.due {
+                    let daysLeft = Calendar.current.dateComponents([.day], from: Date(), to: due).day ?? 0
+                    if daysLeft > 0 {
+                        Text("D-\(daysLeft)")
+                            .font(.jakartaRegular(size: 11))
+                            .foregroundStyle(Color(hexCode: "A76545"))
+                            .opacity(reminder.isCompleted ? 0.4 : 1)
+                    } else if daysLeft == 0 {
+                        Text("마감")
+                            .font(.jakartaRegular(size: 11))
+                            .foregroundStyle(Color(hexCode: "FF5722"))
+                            .opacity(reminder.isCompleted ? 0.4 : 1)
+                    }
+                }
+            }
+            
             Spacer()
             
             if let due = reminder.due {

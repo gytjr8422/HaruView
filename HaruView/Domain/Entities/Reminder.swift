@@ -21,6 +21,29 @@ struct Reminder: Identifiable, Equatable {
     let hasAlarms: Bool
     let alarms: [ReminderAlarm]
     let calendar: ReminderCalendar
+    
+    // 할일 타입 (notes에서 파싱)
+    var reminderType: ReminderType {
+        return ReminderType.parse(from: notes)
+    }
+    
+    /// 특정 날짜에 이 할일이 표시되어야 하는지 확인
+    func shouldDisplay(on date: Date) -> Bool {
+        guard let due = due else { return false }
+        
+        let calendar = Calendar.current
+        let targetDate = calendar.startOfDay(for: date)
+        let dueDate = calendar.startOfDay(for: due)
+        
+        switch reminderType {
+        case .onDate:
+            // 특정 날짜에만 표시: 마감일과 정확히 일치할 때만
+            return targetDate == dueDate
+        case .untilDate:
+            // 마감일까지 표시: 오늘부터 마감일까지
+            return targetDate <= dueDate
+        }
+    }
 }
 
 // MARK: - 리마인더 알람
