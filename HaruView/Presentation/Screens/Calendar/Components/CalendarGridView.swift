@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct CalendarGridView: View {
     let monthData: CalendarMonth
     let selectedDate: Date?
@@ -33,6 +31,7 @@ struct CalendarGridView: View {
                         onDateLongPress(date)
                     }
                 )
+                .equatable()
             }
         }
     }
