@@ -22,9 +22,14 @@ struct Reminder: Identifiable, Equatable {
     let alarms: [ReminderAlarm]
     let calendar: ReminderCalendar
     
-    // 할일 타입 (notes에서 파싱)
+    // 할일 타입 (URL에서 파싱)
     var reminderType: ReminderType {
-        return ReminderType.parse(from: notes)
+        return ReminderType.parse(from: url)
+    }
+    
+    // 사용자가 입력한 실제 URL (ReminderType URL 제외)
+    var userURL: URL? {
+        return ReminderType.extractUserURL(from: url)
     }
     
     /// 특정 날짜에 이 할일이 표시되어야 하는지 확인

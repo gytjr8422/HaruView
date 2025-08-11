@@ -19,14 +19,14 @@ struct ReminderInput {
     let calendarId: String?  // 특정 캘린더에 저장하고 싶을 때
     let reminderType: ReminderType // 할일 타입
     
-    /// notes 필드에 타입 메타데이터를 포함한 최종 노트
-    var finalNotes: String {
-        let metadata = reminderType.metadataString
-        if let existingNotes = notes, !existingNotes.isEmpty {
-            return "\(metadata)\n\(existingNotes)"
-        } else {
-            return metadata
-        }
+    /// 사용자가 입력한 notes를 그대로 반환 (메타데이터 없음)
+    var finalNotes: String? {
+        return notes
+    }
+    
+    /// URL과 ReminderType을 조합하여 저장할 URL 생성
+    var finalURL: URL? {
+        return ReminderType.createStoredURL(userURL: url, reminderType: reminderType)
     }
 }
 
@@ -43,14 +43,14 @@ struct ReminderEdit {
     let calendarId: String?
     let reminderType: ReminderType // 할일 타입
     
-    /// notes 필드에 타입 메타데이터를 포함한 최종 노트
-    var finalNotes: String {
-        let metadata = reminderType.metadataString
-        if let existingNotes = notes, !existingNotes.isEmpty {
-            return "\(metadata)\n\(existingNotes)"
-        } else {
-            return metadata
-        }
+    /// 사용자가 입력한 notes를 그대로 반환 (메타데이터 없음)
+    var finalNotes: String? {
+        return notes
+    }
+    
+    /// URL과 ReminderType을 조합하여 저장할 URL 생성
+    var finalURL: URL? {
+        return ReminderType.createStoredURL(userURL: url, reminderType: reminderType)
     }
     
     init(id: String, title: String, due: Date?, includesTime: Bool, priority: Int, notes: String?, url: URL?, location: String?, alarms: [AlarmInput], calendarId: String? = nil, reminderType: ReminderType = .onDate) {

@@ -86,7 +86,7 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
             if (reminderType ?? .onDate) != original.reminderType { return true }
             if reminderPriority != original.priority { return true }
             if reminderNotes != (original.notes ?? "") { return true }
-            if reminderURL != (original.url?.absoluteString ?? "") { return true }
+            if reminderURL != (original.userURL?.absoluteString ?? "") { return true }
             if reminderLocation != (original.location ?? "") { return true }
             if reminderAlarms.count != original.alarms.count { return true }
             return false
@@ -349,7 +349,7 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
         reminderType = reminder.reminderType
         reminderPriority = reminder.priority
         reminderNotes = reminder.notes ?? ""
-        reminderURL = reminder.url?.absoluteString ?? ""
+        reminderURL = reminder.userURL?.absoluteString ?? "" // 사용자 URL만 표시
         reminderLocation = reminder.location ?? ""
         
         // 현재 리마인더의 캘린더 찾기

@@ -77,8 +77,8 @@ extension EventKitService {
     
     private func applyReminderInput(_ input: ReminderInput, to reminder: EKReminder) {
         reminder.title = input.title
-        reminder.notes = input.finalNotes // 타입 메타데이터가 포함된 노트 사용
-        reminder.url = input.url
+        reminder.notes = input.finalNotes // 사용자 노트만 저장 (메타데이터 없음)
+        reminder.url = input.finalURL // ReminderType이 인코딩된 URL 사용
         reminder.location = input.location
         reminder.priority = input.priority
         
@@ -106,8 +106,8 @@ extension EventKitService {
     
     private func applyReminderEdit(_ edit: ReminderEdit, to reminder: EKReminder) {
         reminder.title = edit.title
-        reminder.notes = edit.finalNotes // 타입 메타데이터가 포함된 노트 사용
-        reminder.url = edit.url
+        reminder.notes = edit.finalNotes // 사용자 노트만 저장 (메타데이터 없음)
+        reminder.url = edit.finalURL // ReminderType이 인코딩된 URL 사용
         reminder.location = edit.location
         reminder.priority = edit.priority
         

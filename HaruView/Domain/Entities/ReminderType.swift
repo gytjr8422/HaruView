@@ -42,22 +42,30 @@ enum ReminderType: String, CaseIterable, Codable {
         }
     }
     
-    /// notes 필드에 저장할 메타데이터 형태
-    var metadataString: String {
-        return "HARUVIEW_TYPE:\(rawValue)"
+    /// URL에서 ReminderType을 파싱 (메타데이터 대신 사용)
+    /// haruview-reminder-type://ON 또는 haruview-reminder-type://UNTIL 형태로 저장
+    static func parse(from url: URL?) -> ReminderType {
+        guard let url = url,
+              url.scheme == "haruview-reminder-type",
+              let host = url.host else { return .onDate }
+        
+        return ReminderType(rawValue: host) ?? .onDate
     }
     
-    /// notes에서 타입 파싱
-    static func parse(from notes: String?) -> ReminderType {
-        guard let notes = notes else { return .onDate }
-        
-        if notes.contains("HARUVIEW_TYPE:UNTIL") {
-            return .untilDate
-        } else if notes.contains("HARUVIEW_TYPE:ON") {
-            return .onDate
-        }
-        
-        // 기본값은 기존 동작과 동일하게
-        return .onDate
+    /// ReminderType을 URL 형태로 인코딩
+    var encodedURL: URL? {
+        return URL(string: "haruview-reminder-type://\(rawValue)")
+    }
+    
+    /// 실제 사용자 URL과 ReminderType URL을 분리하는 헬퍼 메서드들
+    static func extractUserURL(from storedURL: URL?) -> URL? {
+        guard let url = storedURL,
+              url.scheme != "haruview-reminder-type" else { return nil }
+        return url
+    }
+    
+    static func createStoredURL(userURL: URL?, reminderType: ReminderType) -> URL? {
+        // 사용자가 실제 URL을 입력한 경우 그것을 사용, 아니면 ReminderType URL만 저장
+        return userURL ?? reminderType.encodedURL
     }
 }
