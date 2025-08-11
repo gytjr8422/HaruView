@@ -76,13 +76,13 @@ struct SettingsView: View {
         let totalCount = subscribedCalendars.count
         
         if totalCount == 0 {
-            return "구독된 캘린더 없음"
+            return String(localized: "구독된 캘린더 없음")
         } else if selectedCount == 0 {
-            return "선택된 캘린더 없음"
+            return String(localized: "선택된 캘린더 없음")
         } else if selectedCount == 1 {
-            return selectedCalendars.first?.countryName ?? "1개 선택됨"
+            return selectedCalendars.first?.countryName ?? String(localized: "1개 선택됨")
         } else {
-            return "\(selectedCount)개 선택됨"
+            return String(localized: "\(selectedCount)개 선택됨")
         }
     }
     

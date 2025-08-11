@@ -172,6 +172,16 @@
         }
       }
     },
+    "%lld개 선택됨" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld selected"
+          }
+        }
+      }
+    },
     "%lld개월마다" : {
       "localizations" : {
         "en" : {
@@ -292,6 +302,16 @@
         }
       }
     },
+    "1개 선택됨" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 selected"
+          }
+        }
+      }
+    },
     "1시간" : {
       "localizations" : {
         "en" : {
@@ -353,6 +373,16 @@
       }
     },
     "D-%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "D-%lld"
+          }
+        }
+      }
+    },
+    "D-Day" : {
 
     },
     "Exchange" : {
@@ -572,6 +602,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No subscribed holiday calendars"
+          }
+        }
+      }
+    },
+    "구독된 캘린더 없음" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No subscribed calendars"
           }
         }
       }
@@ -844,6 +884,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Due date"
+          }
+        }
+      }
+    },
+    "마감일까지" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Until due date"
+          }
+        }
+      }
+    },
+    "마감일까지 매일 표시됩니다" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Displayed daily until due date"
           }
         }
       }
@@ -1241,6 +1301,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Birthday"
+          }
+        }
+      }
+    },
+    "선택된 캘린더 없음" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No calendars selected "
           }
         }
       }
@@ -1652,7 +1722,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : " "
+            "value" : "day(s)"
           }
         }
       }
@@ -2034,6 +2104,16 @@
         }
       }
     },
+    "특정 날짜에" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On specific date"
+          }
+        }
+      }
+    },
     "편집" : {
       "localizations" : {
         "en" : {
@@ -2140,6 +2220,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Long-press an item to edit/delete it!"
+          }
+        }
+      }
+    },
+    "해당 날짜에만 표시됩니다" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only displayed on that date"
           }
         }
       }

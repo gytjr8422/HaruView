@@ -16,9 +16,9 @@ enum ReminderType: String, CaseIterable, Codable {
     var displayText: String {
         switch self {
         case .onDate:
-            return "특정 날짜에"
+            return String(localized: "특정 날짜에")
         case .untilDate:
-            return "마감일까지"
+            return String(localized: "마감일까지")
         }
     }
     
@@ -26,9 +26,9 @@ enum ReminderType: String, CaseIterable, Codable {
     var description: String {
         switch self {
         case .onDate:
-            return "해당 날짜에만 표시됩니다"
+            return String(localized: "해당 날짜에만 표시됩니다")
         case .untilDate:
-            return "마감일까지 매일 표시됩니다"
+            return String(localized: "마감일까지 매일 표시됩니다")
         }
     }
     

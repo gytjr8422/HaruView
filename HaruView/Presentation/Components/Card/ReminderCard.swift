@@ -63,14 +63,17 @@ struct ReminderCard: View {
                 
                 // 타입별 상태 텍스트
                 if reminder.reminderType == .untilDate, let due = reminder.due {
-                    let daysLeft = Calendar.current.dateComponents([.day], from: Date(), to: due).day ?? 0
+                    let calendar = Calendar.current
+                    let today = calendar.startOfDay(for: Date())
+                    let dueDate = calendar.startOfDay(for: due)
+                    let daysLeft = calendar.dateComponents([.day], from: today, to: dueDate).day ?? 0
                     if daysLeft > 0 {
                         Text("D-\(daysLeft)")
                             .font(.jakartaRegular(size: 11))
                             .foregroundStyle(Color(hexCode: "A76545"))
                             .opacity(reminder.isCompleted ? 0.4 : 1)
                     } else if daysLeft == 0 {
-                        Text("마감")
+                        Text("D-Day")
                             .font(.jakartaRegular(size: 11))
                             .foregroundStyle(Color(hexCode: "FF5722"))
                             .opacity(reminder.isCompleted ? 0.4 : 1)
