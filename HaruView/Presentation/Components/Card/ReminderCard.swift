@@ -83,7 +83,8 @@ struct ReminderCard: View {
             
             Spacer()
             
-            if let due = reminder.due {
+            // "특정 날짜에" 설정된 할일만 시간 표시, "마감일까지" 설정된 할일은 시간 숨김
+            if let due = reminder.due, reminder.reminderType == .onDate {
                 Text(DateFormatter.localizedString(from: due, dateStyle: .none, timeStyle: .short))
                     .lineLimit(1)
                     .font(.jakartaRegular(size: 15))

@@ -99,6 +99,7 @@ struct CalendarReminder: Identifiable, Hashable {
     let isCompleted: Bool
     let priority: Int
     let calendarColor: CGColor
+    let reminderType: ReminderType
     
     init(from reminder: Reminder) {
         self.id = reminder.id
@@ -107,6 +108,7 @@ struct CalendarReminder: Identifiable, Hashable {
         self.isCompleted = reminder.isCompleted
         self.priority = reminder.priority
         self.calendarColor = reminder.calendar.color
+        self.reminderType = reminder.reminderType
     }
     
     /// 달력 셀에 표시할 제목 (원본 그대로 + 상태 아이콘)
@@ -115,9 +117,9 @@ struct CalendarReminder: Identifiable, Hashable {
         return icon + title
     }
     
-    /// 시간 표시 텍스트
+    /// 시간 표시 텍스트 ("특정 날짜에" 설정된 할일만 시간 표시)
     var timeDisplayText: String? {
-        guard let dueTime = dueTime else { return nil }
+        guard let dueTime = dueTime, reminderType == .onDate else { return nil }
         
         let formatter = DateFormatter()
         formatter.timeStyle = .short
