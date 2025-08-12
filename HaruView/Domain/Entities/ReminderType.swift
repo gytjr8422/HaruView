@@ -43,7 +43,7 @@ enum ReminderType: String, CaseIterable, Codable {
     }
     
     /// URL에서 ReminderType을 파싱 (메타데이터 대신 사용)
-    /// haruview-reminder-type://ON 또는 haruview-reminder-type://UNTIL 형태로 저장
+    /// haruview-reminder-type://ON?includeTime=true 또는 haruview-reminder-type://UNTIL 형태로 저장
     static func parse(from url: URL?) -> ReminderType {
         guard let url = url,
               url.scheme == "haruview-reminder-type",
@@ -52,9 +52,29 @@ enum ReminderType: String, CaseIterable, Codable {
         return ReminderType(rawValue: host) ?? .onDate
     }
     
+    /// URL에서 includeTime 정보를 파싱
+    static func parseIncludeTime(from url: URL?) -> Bool {
+        guard let url = url,
+              url.scheme == "haruview-reminder-type" else { return true }
+        
+        let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        let includeTimeValue = components?.queryItems?.first(where: { $0.name == "includeTime" })?.value
+        
+        return includeTimeValue == "true"
+    }
+    
     /// ReminderType을 URL 형태로 인코딩
+    func encodedURL(includeTime: Bool) -> URL? {
+        var components = URLComponents()
+        components.scheme = "haruview-reminder-type"
+        components.host = rawValue
+        components.queryItems = [URLQueryItem(name: "includeTime", value: "\(includeTime)")]
+        return components.url
+    }
+    
+    /// 기존 호환성을 위한 메서드 (기본값: includeTime = true)
     var encodedURL: URL? {
-        return URL(string: "haruview-reminder-type://\(rawValue)")
+        return encodedURL(includeTime: true)
     }
     
     /// 실제 사용자 URL과 ReminderType URL을 분리하는 헬퍼 메서드들
@@ -64,9 +84,14 @@ enum ReminderType: String, CaseIterable, Codable {
         return url
     }
     
-    static func createStoredURL(userURL: URL?, reminderType: ReminderType) -> URL? {
+    static func createStoredURL(userURL: URL?, reminderType: ReminderType, includeTime: Bool) -> URL? {
         // 사용자가 실제 URL을 입력한 경우 그것을 사용, 아니면 ReminderType URL만 저장
-        return userURL ?? reminderType.encodedURL
+        return userURL ?? reminderType.encodedURL(includeTime: includeTime)
+    }
+    
+    /// 기존 호환성을 위한 메서드
+    static func createStoredURL(userURL: URL?, reminderType: ReminderType) -> URL? {
+        return createStoredURL(userURL: userURL, reminderType: reminderType, includeTime: true)
     }
 }
 

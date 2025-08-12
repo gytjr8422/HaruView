@@ -27,6 +27,11 @@ struct Reminder: Identifiable, Equatable {
         return ReminderType.parse(from: url)
     }
     
+    // 시간 포함 여부 (URL에서 파싱)
+    var includeTime: Bool {
+        return ReminderType.parseIncludeTime(from: url)
+    }
+    
     // 사용자가 입력한 실제 URL (ReminderType URL 제외)
     var userURL: URL? {
         return ReminderType.extractUserURL(from: url)

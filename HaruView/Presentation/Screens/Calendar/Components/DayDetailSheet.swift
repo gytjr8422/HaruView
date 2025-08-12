@@ -509,7 +509,7 @@ struct DayDetailSheet: View {
                             isCompleted: $0.isCompleted,
                             priority: $0.priority,
                             notes: nil,
-                            url: nil,
+                            url: ReminderType.createStoredURL(userURL: nil, reminderType: $0.reminderType, includeTime: $0.includeTime),
                             location: nil,
                             hasAlarms: false,
                             alarms: [],

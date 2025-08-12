@@ -82,8 +82,8 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
         case .reminder:
             guard let original = originalReminder else { return false }
             if currentTitle != original.title { return true }
-            let newDue: Date? = includeTime ? dueDate : nil
-            if original.due != newDue { return true }
+            if original.due != dueDate { return true }
+            if includeTime != original.includeTime { return true }
             if (reminderType ?? .onDate) != original.reminderType { return true }
             if reminderPriority != original.priority { return true }
             if reminderNotes != (original.notes ?? "") { return true }
@@ -347,7 +347,7 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
     private func initializeWithReminder(_ reminder: Reminder) {
         currentTitle = reminder.title
         dueDate = reminder.due
-        includeTime = reminder.due != nil
+        includeTime = reminder.includeTime
         reminderType = reminder.reminderType
         reminderPriority = reminder.priority
         reminderNotes = reminder.notes ?? ""

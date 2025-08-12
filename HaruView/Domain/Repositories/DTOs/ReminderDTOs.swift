@@ -25,9 +25,9 @@ struct ReminderInput {
         return notes
     }
     
-    /// URL과 ReminderType을 조합하여 저장할 URL 생성
+    /// URL과 ReminderType, includeTime을 조합하여 저장할 URL 생성
     var finalURL: URL? {
-        return ReminderType.createStoredURL(userURL: url, reminderType: reminderType)
+        return ReminderType.createStoredURL(userURL: url, reminderType: reminderType, includeTime: includesTime)
     }
     
     /// 최종 알림 목록 (프리셋 + 커스텀 알림)
@@ -63,9 +63,9 @@ struct ReminderEdit {
         return notes
     }
     
-    /// URL과 ReminderType을 조합하여 저장할 URL 생성
+    /// URL과 ReminderType, includeTime을 조합하여 저장할 URL 생성
     var finalURL: URL? {
-        return ReminderType.createStoredURL(userURL: url, reminderType: reminderType)
+        return ReminderType.createStoredURL(userURL: url, reminderType: reminderType, includeTime: includesTime)
     }
     
     /// 최종 알림 목록 (프리셋 + 커스텀 알림)
