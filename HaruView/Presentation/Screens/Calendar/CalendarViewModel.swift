@@ -917,7 +917,8 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
             location: nil,
             alarms: [],
             calendarId: nil,
-            reminderType: .onDate
+            reminderType: .onDate,
+            alarmPreset: nil
         )
         
         let result = await addReminder(input)

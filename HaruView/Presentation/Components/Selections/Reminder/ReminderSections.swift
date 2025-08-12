@@ -68,6 +68,7 @@ struct ReminderTypeSelectionView: View {
     }
 }
 
+
 // MARK: - 우선순위 선택 컴포넌트
 struct PrioritySelectionView: View {
     @Binding var selectedPriority: Int
@@ -273,89 +274,190 @@ struct ReminderDetailInputViews {
     }
 }
 
-// MARK: - 리마인더용 알람 선택 뷰 (기존 AlarmSelectionView와 유사하지만 리마인더용)
+// MARK: - 리마인더용 알람 선택 뷰 (프리셋 + 사용자 지원)
 struct ReminderAlarmSelectionView: View {
     @Binding var alarms: [AlarmInput]
+    @Binding var alarmPreset: ReminderAlarmPreset?
+    let dueDate: Date?
+    let includeTime: Bool
     @State private var showCustomAlarm = false
     
+    private var dueDateMode: DueDateMode {
+        if dueDate == nil {
+            return .none
+        } else if includeTime {
+            return .dateTime
+        } else {
+            return .dateOnly
+        }
+    }
+    
+    private var availablePresets: [ReminderAlarmPreset] {
+        return ReminderAlarmPreset.availablePresets(for: dueDateMode)
+    }
+    
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            if alarms.isEmpty {
-                Text("알림이 설정되지 않았습니다")
-                    .font(.pretendardRegular(size: 14))
-                    .foregroundStyle(.secondary)
-                    .padding(.vertical, 8)
-            } else {
-                VStack {
-                    HStack {
-                        Text("미리알림 앱에서 알림이 울려요.")
-                            .font(.pretendardRegular(size: 14))
-                            .foregroundStyle(.secondary)
-                            .padding(.vertical, 5)
-                        Spacer()
-                    }
-                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2), spacing: 5) {
-                        ForEach(Array(alarms.enumerated()), id: \.offset) { index, alarm in
-                            HStack {
-                                Text(alarm.description)
-                                    .font(.pretendardRegular(size: 14))
-                                
-                                Spacer()
-                                
-                                Button {
-                                    alarms.remove(at: index)
-                                } label: {
-                                    Image(systemName: "xmark")
-                                        .font(.system(size: 14))
+        VStack(alignment: .leading, spacing: 16) {
+            // 빠른 설정 섹션 - 날짜+시간 모드에서는 기존 AlarmInput.presets 사용
+            if dueDateMode == .dateTime {
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("빠른 설정")
+                        .font(.pretendardSemiBold(size: 16))
+                        .foregroundStyle(Color(hexCode: "40392B"))
+                    
+                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 8) {
+                        ForEach(AlarmInput.presets.prefix(6), id: \.description) { preset in
+                            Button {
+                                if !alarms.contains(where: { $0.description == preset.description }) {
+                                    alarms.append(preset)
                                 }
+                                alarmPreset = .custom  // 기존 방식 사용 시 사용자 설정으로 설정
+                            } label: {
+                                Text(preset.description)
+                                    .font(.pretendardRegular(size: 14))
+                                    .foregroundStyle(Color(hexCode: "A76545"))
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 10)
+                                    .frame(maxWidth: .infinity)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .fill(Color(hexCode: "A76545").opacity(0.1))
+                                    )
                             }
-                            .foregroundStyle(.white)
-                            .padding(.horizontal,12)
-                            .padding(.vertical, 12)
-                            .frame(maxWidth: .infinity)
-                            .background(
-                                RoundedRectangle(cornerRadius: 16)
-                                    .fill(Color(hexCode: "A76545"))
-                            )
+                            .buttonStyle(PlainButtonStyle())
+                        }
+                    }
+                }
+            } else {
+                // 프리셋 선택 섹션 (없음, 날짜만 모드용)
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("빠른 설정")
+                        .font(.pretendardSemiBold(size: 16))
+                        .foregroundStyle(Color(hexCode: "40392B"))
+                    
+                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2), spacing: 8) {
+                        ForEach(availablePresets, id: \.rawValue) { preset in
+                            Button {
+                                // 프리셋 선택 시 기존 사용자 알림 초기화
+                                if preset != .custom {
+                                    alarms.removeAll()
+                                    alarmPreset = preset
+                                } else {
+                                    alarmPreset = .custom
+                                }
+                            } label: {
+                                HStack(spacing: 8) {
+                                    Image(systemName: preset.iconName)
+                                        .font(.system(size: 14))
+                                        .foregroundStyle(alarmPreset == preset ? .white : Color(hexCode: "A76545"))
+                                    
+                                    Text(preset.displayText)
+                                        .font(.pretendardRegular(size: 13))
+                                        .foregroundStyle(alarmPreset == preset ? .white : Color(hexCode: "A76545"))
+                                        .lineLimit(1)
+                                }
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 10)
+                                .frame(maxWidth: .infinity)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(alarmPreset == preset ? Color(hexCode: "A76545") : Color(hexCode: "A76545").opacity(0.1))
+                                )
+                            }
+                            .buttonStyle(PlainButtonStyle())
                         }
                     }
                 }
             }
             
-            // 빠른 설정 버튼들
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 8) {
-                ForEach(AlarmInput.presets.prefix(6), id: \.description) { preset in
-                    Button {
-                        if !alarms.contains(where: { $0.description == preset.description }) {
-                            alarms.append(preset)
+            // 사용자 알림 섹션 (사용자 설정 선택 시 또는 기존 알림이 있을 때)
+            if alarmPreset == .custom || !alarms.isEmpty {
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack {
+                        Text("사용자 알림")
+                            .font(.pretendardSemiBold(size: 16))
+                            .foregroundStyle(Color(hexCode: "40392B"))
+                        
+                        Spacer()
+                        
+                        Button {
+                            showCustomAlarm = true
+                        } label: {
+                            Image(systemName: "plus.circle")
+                                .font(.system(size: 18))
+                                .foregroundStyle(Color(hexCode: "A76545"))
                         }
-                    } label: {
-                        Text(preset.description)
+                    }
+                    
+                    if alarms.isEmpty {
+                        Text("알림이 설정되지 않았습니다")
                             .font(.pretendardRegular(size: 14))
-                            .foregroundStyle(Color(hexCode: "A76545"))
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 12)
-                            .frame(maxWidth: .infinity)
-                            .background(
-                                RoundedRectangle(cornerRadius: 16)
-                                    .fill(Color(hexCode: "A76545").opacity(0.1))
-                            )
+                            .foregroundStyle(.secondary)
+                            .padding(.vertical, 8)
+                    } else {
+                        VStack(spacing: 8) {
+                            HStack {
+                                Text("미리알림 앱에서 알림이 울려요.")
+                                    .font(.pretendardRegular(size: 12))
+                                    .foregroundStyle(.secondary)
+                                Spacer()
+                            }
+                            
+                            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2), spacing: 8) {
+                                ForEach(Array(alarms.enumerated()), id: \.offset) { index, alarm in
+                                    HStack {
+                                        Text(alarm.description)
+                                            .font(.pretendardRegular(size: 14))
+                                        
+                                        Spacer()
+                                        
+                                        Button {
+                                            alarms.remove(at: index)
+                                        } label: {
+                                            Image(systemName: "xmark")
+                                                .font(.system(size: 12))
+                                        }
+                                    }
+                                    .foregroundStyle(.white)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 10)
+                                    .frame(maxWidth: .infinity)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .fill(Color(hexCode: "A76545"))
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
         .sheet(isPresented: $showCustomAlarm) {
             CustomReminderAlarmSheet(alarms: $alarms)
+                .presentationDetents([.fraction(0.5)])
+        }
+        .onChange(of: dueDateMode) { oldValue, newValue in
+            // 마감일 모드가 바뀌면 적절한 기본 프리셋으로 설정
+            if alarmPreset == nil || !availablePresets.contains(alarmPreset!) {
+                switch newValue {
+                case .none:
+                    alarmPreset = .dailyMorning9AM
+                case .dateOnly:
+                    alarmPreset = .sameDayMorning9AM
+                case .dateTime:
+                    alarmPreset = .custom
+                }
+            }
         }
     }
 }
 
-// MARK: - 커스텀 리마인더 알람 설정 시트
+// MARK: - 사용자 리마인더 알람 설정 시트
 struct CustomReminderAlarmSheet: View {
     @Binding var alarms: [AlarmInput]
     @Environment(\.dismiss) private var dismiss
     
-    @State private var selectedType: AlarmInput.AlarmType = .display
     @State private var triggerMode: TriggerMode = .relative
     @State private var relativeMinutes: Int = 15
     @State private var absoluteDate: Date = Date()
@@ -363,46 +465,45 @@ struct CustomReminderAlarmSheet: View {
     enum TriggerMode: String, CaseIterable {
         case relative = "상대적"
         case absolute = "절대적"
+        
+        var displayText: String {
+            switch self {
+            case .relative:
+                return "미리 알림"
+            case .absolute:
+                return "특정 시간"
+            }
+        }
+        
+        var iconName: String {
+            switch self {
+            case .relative:
+                return "clock.badge.questionmark"
+            case .absolute:
+                return "clock"
+            }
+        }
     }
     
     var body: some View {
         NavigationStack {
-            Form {
-                Section("알림 타입") {
-                    Picker("타입", selection: $selectedType) {
-                        Text("알림").tag(AlarmInput.AlarmType.display)
-                        Text("이메일").tag(AlarmInput.AlarmType.email)
-                        Text("소리").tag(AlarmInput.AlarmType.sound)
+            VStack(spacing: 0) {
+                // 헤더
+                HStack {
+                    Button("취소") {
+                        dismiss()
                     }
-                    .pickerStyle(.segmented)
-                }
-                
-                Section("알림 시간") {
-                    Picker("설정 방식", selection: $triggerMode) {
-                        ForEach(TriggerMode.allCases, id: \.self) { mode in
-                            Text(mode.rawValue).tag(mode)
-                        }
-                    }
-                    .pickerStyle(.segmented)
+                    .font(.pretendardRegular(size: 16))
+                    .foregroundStyle(Color(hexCode: "A76545"))
                     
-                    if triggerMode == .relative {
-                        HStack {
-                            TextField("분", value: $relativeMinutes, format: .number)
-                                .keyboardType(.numberPad)
-                            Text("분 전")
-                        }
-                    } else {
-                        DatePicker("알림 시간", selection: $absoluteDate)
-                    }
-                }
-            }
-            .navigationTitle("알림 추가")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("취소") { dismiss() }
-                }
-                ToolbarItem(placement: .confirmationAction) {
+                    Spacer()
+                    
+                    Text("알림 추가")
+                        .font(.pretendardSemiBold(size: 18))
+                        .foregroundStyle(Color(hexCode: "40392B"))
+                    
+                    Spacer()
+                    
                     Button("추가") {
                         let trigger: AlarmInput.AlarmTrigger
                         if triggerMode == .relative {
@@ -411,12 +512,110 @@ struct CustomReminderAlarmSheet: View {
                             trigger = .absolute(absoluteDate)
                         }
                         
-                        let alarm = AlarmInput(type: selectedType, trigger: trigger)
+                        let alarm = AlarmInput(type: .display, trigger: trigger) // 알림 타입 고정
                         alarms.append(alarm)
                         dismiss()
                     }
+                    .font(.pretendardSemiBold(size: 16))
+                    .foregroundStyle(Color(hexCode: "A76545"))
                 }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 16)
+                .background(Color(hexCode: "FFFCF5"))
+                
+                Divider()
+                    .background(Color.gray.opacity(0.3))
+                
+                // 컨텐츠
+                VStack(spacing: 24) {
+                    // 알림 방식 선택
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text("알림 방식")
+                            .font(.pretendardSemiBold(size: 16))
+                            .foregroundStyle(Color(hexCode: "40392B"))
+                        
+                        HStack(spacing: 12) {
+                            ForEach(TriggerMode.allCases, id: \.self) { mode in
+                                Button {
+                                    triggerMode = mode
+                                } label: {
+                                    HStack(spacing: 8) {
+                                        Image(systemName: mode.iconName)
+                                            .font(.system(size: 14))
+                                            .foregroundStyle(triggerMode == mode ? .white : Color(hexCode: "A76545"))
+                                        
+                                        Text(mode.displayText)
+                                            .font(.pretendardRegular(size: 14))
+                                            .foregroundStyle(triggerMode == mode ? .white : Color(hexCode: "A76545"))
+                                    }
+                                    .padding(.horizontal, 16)
+                                    .padding(.vertical, 12)
+                                    .frame(maxWidth: .infinity)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .fill(triggerMode == mode ? Color(hexCode: "A76545") : Color(hexCode: "A76545").opacity(0.1))
+                                    )
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                            }
+                        }
+                    }
+                    
+                    // 시간 설정
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text(triggerMode == .relative ? "몇 분 전에 알림받을까요?" : "언제 알림받을까요?")
+                            .font(.pretendardSemiBold(size: 16))
+                            .foregroundStyle(Color(hexCode: "40392B"))
+                        
+                        if triggerMode == .relative {
+                            VStack(spacing: 12) {
+                                HStack {
+                                    TextField("", value: $relativeMinutes, format: .number)
+                                        .keyboardType(.numberPad)
+                                        .font(.pretendardRegular(size: 16))
+                                        .multilineTextAlignment(.center)
+                                        .padding(.horizontal, 16)
+                                        .padding(.vertical, 12)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 8)
+                                                .stroke(Color(hexCode: "A76545").opacity(0.3), lineWidth: 1)
+                                                .background(
+                                                    RoundedRectangle(cornerRadius: 8)
+                                                        .fill(Color(hexCode: "FFFCF5"))
+                                                )
+                                        )
+                                    
+                                    Text("분 전")
+                                        .font(.pretendardRegular(size: 16))
+                                        .foregroundStyle(Color(hexCode: "40392B"))
+                                }
+                                
+                                Text("할일 마감 시간 \(relativeMinutes)분 전에 알려드릴게요")
+                                    .font(.pretendardRegular(size: 12))
+                                    .foregroundStyle(.secondary)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                        } else {
+                            VStack(spacing: 12) {
+                                DatePicker("", selection: $absoluteDate, displayedComponents: [.date, .hourAndMinute])
+                                    .datePickerStyle(.compact)
+                                    .environment(\.locale, Locale(identifier: "ko_KR"))
+                                    .accentColor(Color(hexCode: "A76545"))
+                                
+                                Text("선택한 시간에 정확히 알려드릴게요")
+                                    .font(.pretendardRegular(size: 12))
+                                    .foregroundStyle(.secondary)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                        }
+                    }
+                    
+                    Spacer()
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 24)
             }
+            .background(Color(hexCode: "FFFCF5"))
         }
     }
 }
@@ -430,7 +629,12 @@ struct CustomReminderAlarmSheet: View {
 
         ReminderDetailInputViews.NotesInputView(notes: .constant(""))
 
-        ReminderAlarmSelectionView(alarms: .constant([]))
+        ReminderAlarmSelectionView(
+            alarms: .constant([]),
+            alarmPreset: .constant(.sameDayMorning9AM),
+            dueDate: Date(),
+            includeTime: false
+        )
     }
     .padding()
 }

@@ -11,6 +11,8 @@ struct ReminderDueDatePicker: View {
     @Binding var dueDate: Date?
     @Binding var includeTime: Bool
     @Binding var reminderType: ReminderType?  // 할일 타입 바인딩 추가
+    @Binding var alarmPreset: ReminderAlarmPreset?  // 알림 프리셋 바인딩 추가
+    @Binding var customAlarms: [AlarmInput]  // 커스텀 알림 바인딩 추가
     @State private var selectedMode: DueDateMode = .none
     @State private var selectedField: DateTimeField? = nil
     @State private var internalDate: Date = Date()
@@ -20,18 +22,6 @@ struct ReminderDueDatePicker: View {
     // 날짜 제한 해제: 과거/미래 모든 날짜 허용
     var minDate: Date { Date.distantPast }
     var maxDate: Date { Date.distantFuture }
-    
-    enum DueDateMode: CaseIterable {
-        case none, dateOnly, dateTime
-        
-        var title: String {
-            switch self {
-            case .none: return String(localized: "없음")
-            case .dateOnly: return String(localized: "날짜만")
-            case .dateTime: return String(localized: "날짜+시간")
-            }
-        }
-    }
     
     enum DateTimeField {
         case dueDate
@@ -72,6 +62,7 @@ struct ReminderDueDatePicker: View {
                 ))
                 .padding(.bottom, 16)
             }
+            
             
             // 선택된 날짜/시간 표시 (없음이 아닐 때만)
             if selectedMode != .none {
@@ -167,17 +158,29 @@ struct ReminderDueDatePicker: View {
             includeTime = false
             dueDate = nil
             reminderType = nil  // 날짜 없을 때는 타입도 nil
+            // 마감일 없는 할일용 기본 알림 프리셋
+            if alarmPreset == nil {
+                alarmPreset = .dailyMorning9AM
+            }
         case .dateOnly:
             includeTime = false
             dueDate = internalDate
             if reminderType == nil {
                 reminderType = .onDate  // 기본값 설정
             }
+            // 날짜만 있는 할일용 기본 알림 프리셋
+            if alarmPreset == nil || !ReminderAlarmPreset.availablePresets(for: .dateOnly).contains(alarmPreset!) {
+                alarmPreset = .sameDayMorning9AM
+            }
         case .dateTime:
             includeTime = true
             dueDate = internalDate
             if reminderType == nil {
                 reminderType = .onDate  // 기본값 설정
+            }
+            // 날짜+시간 할일은 커스텀 알림만 사용
+            if alarmPreset == nil || !ReminderAlarmPreset.availablePresets(for: .dateTime).contains(alarmPreset!) {
+                alarmPreset = .custom
             }
         }
     }
@@ -234,6 +237,8 @@ struct ReminderDueDatePicker: View {
                             dueDate: $dueDate,
                             includeTime: $includeTime,
                             reminderType: .constant(.onDate),
+                            alarmPreset: .constant(.sameDayMorning9AM),
+                            customAlarms: .constant([]),
                             isTextFieldFocused: $isFocused
                         )
                         .padding(.horizontal, 20)

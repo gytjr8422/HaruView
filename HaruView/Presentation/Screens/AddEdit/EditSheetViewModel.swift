@@ -35,6 +35,7 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
     @Published var reminderURL: String = ""
     @Published var reminderLocation: String = ""
     @Published var reminderAlarms: [AlarmInput] = []
+    @Published var reminderAlarmPreset: ReminderAlarmPreset? = nil
     @Published var selectedReminderCalendar: ReminderCalendar? = nil
     @Published var availableReminderCalendars: [ReminderCalendar] = []
     
@@ -258,7 +259,8 @@ final class EditSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMo
                  location: reminderLocation.isEmpty ? nil : reminderLocation,
                  alarms: reminderAlarms,
                  calendarId: selectedReminderCalendar?.id,
-                 reminderType: reminderType ?? .onDate
+                 reminderType: reminderType ?? .onDate,
+                 alarmPreset: reminderAlarmPreset
              )
              let res = await editReminder(reminderEdit)
              handle(res)

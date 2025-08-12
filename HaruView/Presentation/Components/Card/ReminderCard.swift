@@ -52,7 +52,7 @@ struct ReminderCard: View {
                     .opacity(reminder.isCompleted ? 0.5 : 1)
             }
             
-            VStack(alignment: .leading, spacing: 2) {
+            HStack {
                 HStack(spacing: 4) {
                     Text(reminder.title)
                         .lineLimit(1)
@@ -60,7 +60,7 @@ struct ReminderCard: View {
                         .strikethrough(reminder.isCompleted)
                         .opacity(reminder.isCompleted ? 0.5 : 1)
                 }
-                
+                Spacer()
                 // 타입별 상태 텍스트
                 if reminder.reminderType == .untilDate, let due = reminder.due {
                     let calendar = Calendar.current
@@ -69,12 +69,12 @@ struct ReminderCard: View {
                     let daysLeft = calendar.dateComponents([.day], from: today, to: dueDate).day ?? 0
                     if daysLeft > 0 {
                         Text("D-\(daysLeft)")
-                            .font(.jakartaRegular(size: 11))
+                            .font(.jakartaRegular(size: 15))
                             .foregroundStyle(Color(hexCode: "A76545"))
                             .opacity(reminder.isCompleted ? 0.4 : 1)
                     } else if daysLeft == 0 {
                         Text("D-Day")
-                            .font(.jakartaRegular(size: 11))
+                            .font(.jakartaRegular(size: 15))
                             .foregroundStyle(Color(hexCode: "FF5722"))
                             .opacity(reminder.isCompleted ? 0.4 : 1)
                     }

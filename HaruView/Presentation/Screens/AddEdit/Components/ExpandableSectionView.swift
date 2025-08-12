@@ -166,7 +166,12 @@ struct ExpandableSectionView<VM: AddSheetViewModelProtocol>: View {
                     case .details:
                         reminderDetailsSection
                     case .alarms:
-                        ReminderAlarmSelectionView(alarms: $vm.reminderAlarms)
+                        ReminderAlarmSelectionView(
+                            alarms: $vm.reminderAlarms,
+                            alarmPreset: $vm.reminderAlarmPreset,
+                            dueDate: vm.dueDate,
+                            includeTime: vm.includeTime
+                        )
                     case .priority:
                         PrioritySelectionView(selectedPriority: $vm.reminderPriority)
                     case .calendar:

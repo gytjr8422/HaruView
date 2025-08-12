@@ -100,8 +100,8 @@ extension EventKitService {
             reminder.calendar = store.defaultCalendarForNewReminders()
         }
         
-        // 알람 설정
-        applyAlarmsToReminder(input.alarms, to: reminder)
+        // 알람 설정 (프리셋 + 커스텀 알림)
+        applyAlarmsToReminder(input.finalAlarms, to: reminder)
     }
     
     private func applyReminderEdit(_ edit: ReminderEdit, to reminder: EKReminder) {
@@ -127,8 +127,8 @@ extension EventKitService {
             reminder.calendar = calendar
         }
         
-        // 알람 설정 (기존 알람 제거 후 새로 추가)
-        applyAlarmsToReminder(edit.alarms, to: reminder)
+        // 알람 설정 (기존 알람 제거 후 새로 추가, 프리셋 + 커스텀 알림)
+        applyAlarmsToReminder(edit.finalAlarms, to: reminder)
     }
     
     private func applyAlarmsToReminder(_ alarms: [AlarmInput], to reminder: EKReminder) {

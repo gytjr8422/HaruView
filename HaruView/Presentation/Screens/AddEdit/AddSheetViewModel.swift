@@ -48,6 +48,7 @@ protocol AddSheetViewModelProtocol: ObservableObject {
     var reminderURL: String { get set }
     var reminderLocation: String { get set }
     var reminderAlarms: [AlarmInput] { get set }
+    var reminderAlarmPreset: ReminderAlarmPreset? { get set }
     var selectedReminderCalendar: ReminderCalendar? { get set }
     var availableReminderCalendars: [ReminderCalendar] { get }
 
@@ -141,6 +142,7 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
     @Published var reminderURL: String = ""
     @Published var reminderLocation: String = ""
     @Published var reminderAlarms: [AlarmInput] = []
+    @Published var reminderAlarmPreset: ReminderAlarmPreset? = nil
     @Published var selectedReminderCalendar: ReminderCalendar? = nil
     @Published var availableReminderCalendars: [ReminderCalendar] = []
 
@@ -224,7 +226,8 @@ final class AddSheetViewModel: ObservableObject, @preconcurrency AddSheetViewMod
                 location: reminderLocation.isEmpty ? nil : reminderLocation,
                 alarms: reminderAlarms,
                 calendarId: selectedReminderCalendar?.id,
-                reminderType: reminderType ?? .onDate
+                reminderType: reminderType ?? .onDate,
+                alarmPreset: reminderAlarmPreset
             )
             let res = await addReminder(reminderInput)
             handle(res)

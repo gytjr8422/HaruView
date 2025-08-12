@@ -295,6 +295,7 @@ private class MockAddVM: AddSheetViewModelProtocol {
     var reminderURL: String = ""
     var reminderLocation: String = ""
     var reminderAlarms: [AlarmInput] = []
+    var reminderAlarmPreset: ReminderAlarmPreset? = nil
     var selectedReminderCalendar: ReminderCalendar? = nil
     var availableReminderCalendars: [ReminderCalendar] = []
     
