@@ -306,7 +306,7 @@ struct ReminderAlarmSelectionView: View {
                         .foregroundStyle(Color(hexCode: "40392B"))
                     
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 8) {
-                        ForEach(AlarmInput.presets.prefix(6), id: \.description) { preset in
+                        ForEach(AlarmInput.presets.prefix(5), id: \.description) { preset in
                             Button {
                                 if !alarms.contains(where: { $0.description == preset.description }) {
                                     alarms.append(preset)
@@ -326,6 +326,31 @@ struct ReminderAlarmSelectionView: View {
                             }
                             .buttonStyle(PlainButtonStyle())
                         }
+                        
+                        // 사용자 설정 버튼 추가
+                        Button {
+                            showCustomAlarm = true
+                            alarmPreset = .custom
+                        } label: {
+                            HStack(spacing: 6) {
+                                Image(systemName: "slider.horizontal.3")
+                                    .font(.system(size: 12))
+                                    .foregroundStyle(Color(hexCode: "A76545"))
+                                
+                                Text("사용자 설정")
+                                    .font(.pretendardRegular(size: 14))
+                                    .foregroundStyle(Color(hexCode: "A76545"))
+                                    .lineLimit(1)
+                            }
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 10)
+                            .frame(maxWidth: .infinity)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(Color(hexCode: "A76545").opacity(0.1))
+                            )
+                        }
+                        .buttonStyle(PlainButtonStyle())
                     }
                 }
             } else {
@@ -434,7 +459,7 @@ struct ReminderAlarmSelectionView: View {
             }
         }
         .sheet(isPresented: $showCustomAlarm) {
-            CustomReminderAlarmSheet(alarms: $alarms)
+            CustomReminderAlarmSheet(alarms: $alarms, dueDateMode: dueDateMode)
                 .presentationDetents([.fraction(0.5)])
         }
         .onChange(of: dueDateMode) { oldValue, newValue in
@@ -444,7 +469,7 @@ struct ReminderAlarmSelectionView: View {
                 case .none:
                     alarmPreset = .dailyMorning9AM
                 case .dateOnly:
-                    alarmPreset = .sameDayMorning9AM
+                    alarmPreset = Optional.none
                 case .dateTime:
                     alarmPreset = .custom
                 }
@@ -456,9 +481,19 @@ struct ReminderAlarmSelectionView: View {
 // MARK: - 사용자 리마인더 알람 설정 시트
 struct CustomReminderAlarmSheet: View {
     @Binding var alarms: [AlarmInput]
+    let dueDateMode: DueDateMode
     @Environment(\.dismiss) private var dismiss
     
     @State private var triggerMode: TriggerMode = .relative
+    
+    private var availableTriggerModes: [TriggerMode] {
+        switch dueDateMode {
+        case .none, .dateOnly:
+            return [.absolute] // 절대 시간만 허용
+        case .dateTime:
+            return TriggerMode.allCases // 모든 옵션 허용
+        }
+    }
     @State private var relativeMinutes: Int = 15
     @State private var absoluteDate: Date = Date()
     
@@ -528,42 +563,44 @@ struct CustomReminderAlarmSheet: View {
                 
                 // 컨텐츠
                 VStack(spacing: 24) {
-                    // 알림 방식 선택
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text("알림 방식")
-                            .font(.pretendardSemiBold(size: 16))
-                            .foregroundStyle(Color(hexCode: "40392B"))
-                        
-                        HStack(spacing: 12) {
-                            ForEach(TriggerMode.allCases, id: \.self) { mode in
-                                Button {
-                                    triggerMode = mode
-                                } label: {
-                                    HStack(spacing: 8) {
-                                        Image(systemName: mode.iconName)
-                                            .font(.system(size: 14))
-                                            .foregroundStyle(triggerMode == mode ? .white : Color(hexCode: "A76545"))
-                                        
-                                        Text(mode.displayText)
-                                            .font(.pretendardRegular(size: 14))
-                                            .foregroundStyle(triggerMode == mode ? .white : Color(hexCode: "A76545"))
+                    // 알림 방식 선택 (dateTime 모드에서만 표시)
+                    if dueDateMode == .dateTime {
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text("알림 방식")
+                                .font(.pretendardSemiBold(size: 16))
+                                .foregroundStyle(Color(hexCode: "40392B"))
+                            
+                            HStack(spacing: 12) {
+                                ForEach(availableTriggerModes, id: \.self) { mode in
+                                    Button {
+                                        triggerMode = mode
+                                    } label: {
+                                        HStack(spacing: 8) {
+                                            Image(systemName: mode.iconName)
+                                                .font(.system(size: 14))
+                                                .foregroundStyle(triggerMode == mode ? .white : Color(hexCode: "A76545"))
+                                            
+                                            Text(mode.displayText)
+                                                .font(.pretendardRegular(size: 14))
+                                                .foregroundStyle(triggerMode == mode ? .white : Color(hexCode: "A76545"))
+                                        }
+                                        .padding(.horizontal, 16)
+                                        .padding(.vertical, 12)
+                                        .frame(maxWidth: .infinity)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 12)
+                                                .fill(triggerMode == mode ? Color(hexCode: "A76545") : Color(hexCode: "A76545").opacity(0.1))
+                                        )
                                     }
-                                    .padding(.horizontal, 16)
-                                    .padding(.vertical, 12)
-                                    .frame(maxWidth: .infinity)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 12)
-                                            .fill(triggerMode == mode ? Color(hexCode: "A76545") : Color(hexCode: "A76545").opacity(0.1))
-                                    )
+                                    .buttonStyle(PlainButtonStyle())
                                 }
-                                .buttonStyle(PlainButtonStyle())
                             }
                         }
                     }
                     
                     // 시간 설정
                     VStack(alignment: .leading, spacing: 16) {
-                        Text(triggerMode == .relative ? "몇 분 전에 알림받을까요?" : "언제 알림받을까요?")
+                        Text(dueDateMode == .dateTime && triggerMode == .relative ? "몇 분 전에 알림받을까요?" : "언제 알림받을까요?")
                             .font(.pretendardSemiBold(size: 16))
                             .foregroundStyle(Color(hexCode: "40392B"))
                         
@@ -589,11 +626,6 @@ struct CustomReminderAlarmSheet: View {
                                         .font(.pretendardRegular(size: 16))
                                         .foregroundStyle(Color(hexCode: "40392B"))
                                 }
-                                
-                                Text("할일 마감 시간 \(relativeMinutes)분 전에 알려드릴게요")
-                                    .font(.pretendardRegular(size: 12))
-                                    .foregroundStyle(.secondary)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
                             }
                         } else {
                             VStack(spacing: 12) {
@@ -601,11 +633,6 @@ struct CustomReminderAlarmSheet: View {
                                     .datePickerStyle(.compact)
                                     .environment(\.locale, Locale(identifier: "ko_KR"))
                                     .accentColor(Color(hexCode: "A76545"))
-                                
-                                Text("선택한 시간에 정확히 알려드릴게요")
-                                    .font(.pretendardRegular(size: 12))
-                                    .foregroundStyle(.secondary)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
                             }
                         }
                     }
@@ -616,6 +643,10 @@ struct CustomReminderAlarmSheet: View {
                 .padding(.top, 24)
             }
             .background(Color(hexCode: "FFFCF5"))
+        }
+        .onAppear {
+            // dueDateMode에 따라 적절한 triggerMode로 초기화
+            triggerMode = availableTriggerModes.first ?? .relative
         }
     }
 }
@@ -631,7 +662,7 @@ struct CustomReminderAlarmSheet: View {
 
         ReminderAlarmSelectionView(
             alarms: .constant([]),
-            alarmPreset: .constant(.sameDayMorning9AM),
+            alarmPreset: .constant(Optional.none),
             dueDate: Date(),
             includeTime: false
         )

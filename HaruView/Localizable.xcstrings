@@ -828,11 +828,45 @@
         }
       }
     },
+    "당일 아침 8시" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Same day 8 AM"
+          }
+        }
+      }
+    },
+    "당일 아침 9시" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Same day 9 AM"
+          }
+        }
+      }
+    },
     "당일 오전 8시" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Same day 8 AM"
+          }
+        }
+      }
     },
     "당일 오전 9시" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Same day 9 AM"
+          }
+        }
+      }
     },
     "데이터를 불러올 수 없습니다" : {
       "localizations" : {
@@ -980,17 +1014,45 @@
         }
       }
     },
-    "매일 아침 9시에 알림" : {
-
+    "매일 아침 9시" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daily 9 AM"
+          }
+        }
+      }
     },
     "매일 오전 9시" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daily 9 AM"
+          }
+        }
+      }
     },
     "매일 오후 6시" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daily 6 PM"
+          }
+        }
+      }
     },
-    "매일 저녁 6시에 알림" : {
-
+    "매일 저녁 6시" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daily 6 PM"
+          }
+        }
+      }
     },
     "매주" : {
       "localizations" : {
@@ -1023,7 +1085,14 @@
       }
     },
     "몇 분 전에 알림받을까요?" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How many minutes before do you want to be notified?"
+          }
+        }
+      }
     },
     "목록" : {
       "extractionState" : "manual",
@@ -1166,16 +1235,6 @@
         }
       }
     },
-    "분" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "minutes"
-          }
-        }
-      }
-    },
     "분 전" : {
       "localizations" : {
         "en" : {
@@ -1197,7 +1256,14 @@
       }
     },
     "빠른 설정" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quick Settings"
+          }
+        }
+      }
     },
     "사용 가능한 목록이 없습니다" : {
       "localizations" : {
@@ -1230,7 +1296,14 @@
       }
     },
     "사용자 알림" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom Notifications"
+          }
+        }
+      }
     },
     "삭제" : {
       "localizations" : {
@@ -1342,25 +1415,12 @@
         }
       }
     },
-    "선택한 시간에 정확히 알려드릴게요" : {
-
-    },
     "설정" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Settings"
-          }
-        }
-      }
-    },
-    "설정 방식" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Configuration Mode"
           }
         }
       }
@@ -1437,20 +1497,24 @@
       }
     },
     "알림 방식" : {
-
-    },
-    "알림 시간" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alert Time"
+            "value" : "Notification Method"
           }
         }
       }
     },
     "알림 없음" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Notifications"
+          }
+        }
+      }
     },
     "알림 추가" : {
       "localizations" : {
@@ -1461,19 +1525,6 @@
           }
         }
       }
-    },
-    "알림 타입" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alert Type"
-          }
-        }
-      }
-    },
-    "알림을 받지 않음" : {
-
     },
     "알림이 설정되지 않았습니다" : {
       "localizations" : {
@@ -1496,7 +1547,14 @@
       }
     },
     "언제 알림받을까요?" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When would you like to be notified?"
+          }
+        }
+      }
     },
     "업데이트 중..." : {
       "localizations" : {
@@ -1769,6 +1827,26 @@
         }
       }
     },
+    "이후 모든 이벤트" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All Future Events"
+          }
+        }
+      }
+    },
+    "이후 모든 이벤트 편집" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit All Following Events"
+          }
+        }
+      }
+    },
     "일" : {
       "localizations" : {
         "en" : {
@@ -1819,32 +1897,12 @@
         }
       }
     },
-    "이후 모든 이벤트" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All Future Events"
-          }
-        }
-      }
-    },
     "이후 모든 이벤트 삭제" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Delete All Future Events"
-          }
-        }
-      }
-    },
-    "이후 모든 이벤트 편집" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Edit All Following Events"
           }
         }
       }
@@ -1941,7 +1999,24 @@
       }
     },
     "전날 오후 9시" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Previous day 9 PM"
+          }
+        }
+      }
+    },
+    "전날 저녁 9시" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Previous day 9 PM"
+          }
+        }
+      }
     },
     "전체 보기" : {
       "localizations" : {
@@ -2024,7 +2099,14 @@
       }
     },
     "직접 알림 시간을 설정" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set custom notification time"
+          }
+        }
+      }
     },
     "총" : {
       "localizations" : {
@@ -2118,16 +2200,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Both calendar and reminder permissions are required."
-          }
-        }
-      }
-    },
-    "타입" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Type"
           }
         }
       }
@@ -2242,15 +2314,6 @@
         }
       }
     },
-    "할일 당일 아침 8시에 알림" : {
-
-    },
-    "할일 당일 아침 9시에 알림" : {
-
-    },
-    "할일 마감 시간 %lld분 전에 알려드릴게요" : {
-
-    },
     "할일 삭제" : {
       "localizations" : {
         "en" : {
@@ -2260,9 +2323,6 @@
           }
         }
       }
-    },
-    "할일 전날 저녁 9시에 알림" : {
-
     },
     "할일을 삭제하시겠습니까?" : {
       "localizations" : {

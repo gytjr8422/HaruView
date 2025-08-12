@@ -170,7 +170,7 @@ struct ReminderDueDatePicker: View {
             }
             // 날짜만 있는 할일용 기본 알림 프리셋
             if alarmPreset == nil || !ReminderAlarmPreset.availablePresets(for: .dateOnly).contains(alarmPreset!) {
-                alarmPreset = .sameDayMorning9AM
+                alarmPreset = Optional.none
             }
         case .dateTime:
             includeTime = true
@@ -237,7 +237,7 @@ struct ReminderDueDatePicker: View {
                             dueDate: $dueDate,
                             includeTime: $includeTime,
                             reminderType: .constant(.onDate),
-                            alarmPreset: .constant(.sameDayMorning9AM),
+                            alarmPreset: .constant(Optional.none),
                             customAlarms: .constant([]),
                             isTextFieldFocused: $isFocused
                         )

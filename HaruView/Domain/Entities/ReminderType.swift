@@ -109,19 +109,19 @@ enum ReminderAlarmPreset: String, CaseIterable, Codable {
     var description: String {
         switch self {
         case .dailyMorning9AM:
-            return String(localized: "매일 아침 9시에 알림")
+            return String(localized: "매일 아침 9시")
         case .dailyEvening6PM:
-            return String(localized: "매일 저녁 6시에 알림")
+            return String(localized: "매일 저녁 6시")
         case .sameDayMorning9AM:
-            return String(localized: "할일 당일 아침 9시에 알림")
+            return String(localized: "당일 아침 9시")
         case .sameDayMorning8AM:
-            return String(localized: "할일 당일 아침 8시에 알림")
+            return String(localized: "당일 아침 8시")
         case .dayBeforeEvening9PM:
-            return String(localized: "할일 전날 저녁 9시에 알림")
+            return String(localized: "전날 저녁 9시")
         case .custom:
             return String(localized: "직접 알림 시간을 설정")
         case .none:
-            return String(localized: "알림을 받지 않음")
+            return String(localized: "알림 없음")
         }
     }
     
