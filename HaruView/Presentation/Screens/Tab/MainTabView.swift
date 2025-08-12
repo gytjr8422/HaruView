@@ -75,15 +75,12 @@ struct MainTabView: View {
                 .allowsHitTesting(selectedTab == .calendar)
             }
             .animation(.easeInOut(duration: 0.2), value: selectedTab)
-            .onChange(of: selectedTab) { oldValue, newValue in
-                if newValue == .add {
-                    showAddSheet = true
-                    selectedTab = oldValue // 이전 탭으로 되돌림
-                }
-            }
             
             // 커스텀 탭 바
-            HaruTabBar(selectedTab: $selectedTab)
+            HaruTabBar(selectedTab: $selectedTab) {
+                // Add 버튼이 눌렸을 때의 콜백
+                showAddSheet = true
+            }
         }
         .withGlobalToast()
         .ignoresSafeArea(.keyboard) // 키보드 올라올 때 탭바 숨기지 않음
@@ -100,6 +97,7 @@ struct MainTabView: View {
 struct HaruTabBar: View {
     @Binding var selectedTab: TabItem
     @Namespace private var tabIndicator
+    let onAddTapped: () -> Void
     
     var body: some View {
         HStack(spacing: 0) {
@@ -107,7 +105,8 @@ struct HaruTabBar: View {
                 TabBarButton(
                     tab: tab,
                     selectedTab: $selectedTab,
-                    namespace: tabIndicator
+                    namespace: tabIndicator,
+                    onAddTapped: onAddTapped
                 )
             }
         }
@@ -139,6 +138,7 @@ struct TabBarButton: View {
     let tab: TabItem
     @Binding var selectedTab: TabItem
     let namespace: Namespace.ID
+    let onAddTapped: () -> Void
     
     private var isSelected: Bool {
         selectedTab == tab
@@ -146,8 +146,12 @@ struct TabBarButton: View {
     
     var body: some View {
         Button {
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                selectedTab = tab
+            if tab == .add {
+                onAddTapped()
+            } else {
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                    selectedTab = tab
+                }
             }
         } label: {
             // 모든 탭 동일한 디자인
