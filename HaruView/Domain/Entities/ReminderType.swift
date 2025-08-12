@@ -43,24 +43,43 @@ enum ReminderType: String, CaseIterable, Codable {
     }
     
     /// URL에서 ReminderType을 파싱 (메타데이터 대신 사용)
-    /// haruview-reminder-type://ON?includeTime=true 또는 haruview-reminder-type://UNTIL 형태로 저장
+    /// haruview-reminder-type://ON?includeTime=true 또는 사용자URL?haruview_type=ON&haruview_time=true 형태로 저장
     static func parse(from url: URL?) -> ReminderType {
-        guard let url = url,
-              url.scheme == "haruview-reminder-type",
-              let host = url.host else { return .onDate }
+        guard let url = url else { return .onDate }
         
-        return ReminderType(rawValue: host) ?? .onDate
+        let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        
+        // 1. 기존 방식: haruview-reminder-type:// 체크
+        if url.scheme == "haruview-reminder-type", let host = url.host {
+            return ReminderType(rawValue: host) ?? .onDate
+        }
+        
+        // 2. 새 방식: 쿼리 파라미터에서 추출
+        if let typeValue = components?.queryItems?.first(where: { $0.name == "haruview_type" })?.value {
+            return ReminderType(rawValue: typeValue) ?? .onDate
+        }
+        
+        return .onDate // 기본값
     }
     
     /// URL에서 includeTime 정보를 파싱
     static func parseIncludeTime(from url: URL?) -> Bool {
-        guard let url = url,
-              url.scheme == "haruview-reminder-type" else { return true }
+        guard let url = url else { return true }
         
         let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
-        let includeTimeValue = components?.queryItems?.first(where: { $0.name == "includeTime" })?.value
         
-        return includeTimeValue == "true"
+        // 1. 기존 방식: haruview-reminder-type:// 체크
+        if url.scheme == "haruview-reminder-type" {
+            let includeTimeValue = components?.queryItems?.first(where: { $0.name == "includeTime" })?.value
+            return includeTimeValue == "true"
+        }
+        
+        // 2. 새 방식: 쿼리 파라미터에서 추출
+        if let timeValue = components?.queryItems?.first(where: { $0.name == "haruview_time" })?.value {
+            return timeValue == "true"
+        }
+        
+        return true // 기본값
     }
     
     /// ReminderType을 URL 형태로 인코딩
@@ -79,14 +98,46 @@ enum ReminderType: String, CaseIterable, Codable {
     
     /// 실제 사용자 URL과 ReminderType URL을 분리하는 헬퍼 메서드들
     static func extractUserURL(from storedURL: URL?) -> URL? {
-        guard let url = storedURL,
-              url.scheme != "haruview-reminder-type" else { return nil }
-        return url
+        guard let url = storedURL else { return nil }
+        
+        // haruview-reminder-type:// 스킴이면 사용자 URL이 아님
+        if url.scheme == "haruview-reminder-type" { return nil }
+        
+        // 일반 URL에서 메타데이터 쿼리 제거
+        var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        let originalQueryItems = components?.queryItems
+        
+        components?.queryItems = originalQueryItems?.filter { 
+            $0.name != "haruview_type" && $0.name != "haruview_time" 
+        }
+        
+        // 쿼리가 모두 제거되면 nil로 설정
+        if components?.queryItems?.isEmpty == true {
+            components?.queryItems = nil
+        }
+        
+        return components?.url
     }
     
     static func createStoredURL(userURL: URL?, reminderType: ReminderType, includeTime: Bool) -> URL? {
-        // 사용자가 실제 URL을 입력한 경우 그것을 사용, 아니면 ReminderType URL만 저장
-        return userURL ?? reminderType.encodedURL(includeTime: includeTime)
+        if let userURL = userURL {
+            // 사용자 URL에 메타데이터 쿼리 추가
+            var components = URLComponents(url: userURL, resolvingAgainstBaseURL: false)
+            var queryItems = components?.queryItems ?? []
+            
+            // 기존 메타데이터 쿼리 제거 (중복 방지)
+            queryItems = queryItems.filter { $0.name != "haruview_type" && $0.name != "haruview_time" }
+            
+            // 메타데이터 쿼리 추가
+            queryItems.append(URLQueryItem(name: "haruview_type", value: reminderType.rawValue))
+            queryItems.append(URLQueryItem(name: "haruview_time", value: "\(includeTime)"))
+            
+            components?.queryItems = queryItems
+            return components?.url
+        } else {
+            // 사용자 URL이 없으면 기존대로 메타데이터 URL만
+            return reminderType.encodedURL(includeTime: includeTime)
+        }
     }
     
     /// 기존 호환성을 위한 메서드

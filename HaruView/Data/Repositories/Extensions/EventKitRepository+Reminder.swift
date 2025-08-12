@@ -76,8 +76,8 @@ extension EventKitRepository {
         }
         
         // 3. ReminderType 우선순위 ("특정 날짜에"가 "마감일까지"보다 먼저)
-        let lhsIsUntilDate = lhs.url?.absoluteString.contains("haruview-reminder-type://UNTIL") == true
-        let rhsIsUntilDate = rhs.url?.absoluteString.contains("haruview-reminder-type://UNTIL") == true
+        let lhsIsUntilDate = isUntilDate(lhs.url)
+        let rhsIsUntilDate = isUntilDate(rhs.url)
         
         if lhsIsUntilDate != rhsIsUntilDate {
             return !lhsIsUntilDate // onDate(false)가 untilDate(true)보다 먼저
@@ -111,6 +111,24 @@ extension EventKitRepository {
 
         // 5. 제목: 알파벳 순
         return lhs.title < rhs.title
+    }
+    
+    // MARK: - Helper Methods
+    private static func isUntilDate(_ url: URL?) -> Bool {
+        guard let url = url else { return false }
+        let urlString = url.absoluteString
+        
+        // 1. 기존 방식: haruview-reminder-type://UNTIL 체크
+        if urlString.contains("haruview-reminder-type://UNTIL") {
+            return true
+        }
+        
+        // 2. 새 방식: 쿼리 파라미터 체크
+        if urlString.contains("haruview_type=UNTIL") {
+            return true
+        }
+        
+        return false
     }
 }
 

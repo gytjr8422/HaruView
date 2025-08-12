@@ -158,9 +158,19 @@ struct Provider: AppIntentTimelineProvider {
                                 
                                 // URL에서 ReminderType 추출
                                 let reminderType: WidgetReminderType
-                                if let url = reminder.url?.absoluteString,
-                                   url.contains("haruview-reminder-type://UNTIL") {
-                                    reminderType = .untilDate
+                                if let url = reminder.url {
+                                    let urlString = url.absoluteString
+                                    
+                                    // 1. 기존 방식: haruview-reminder-type://UNTIL 체크
+                                    if urlString.contains("haruview-reminder-type://UNTIL") {
+                                        reminderType = .untilDate
+                                    }
+                                    // 2. 새 방식: 쿼리 파라미터 체크
+                                    else if urlString.contains("haruview_type=UNTIL") {
+                                        reminderType = .untilDate
+                                    } else {
+                                        reminderType = .onDate // 기본값
+                                    }
                                 } else {
                                     reminderType = .onDate // 기본값
                                 }
