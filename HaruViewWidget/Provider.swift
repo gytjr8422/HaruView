@@ -144,14 +144,34 @@ struct Provider: AppIntentTimelineProvider {
                             .map { reminder in
                                 // 앱과 동일한 매핑 로직 적용
                                 let hasTime = reminder.dueDateComponents?.hour != nil || reminder.dueDateComponents?.minute != nil
-                                let due = hasTime ? reminder.dueDateComponents?.date : nil
+                                let due: Date?
+                                if hasTime {
+                                    due = reminder.dueDateComponents?.date
+                                } else {
+                                    // 날짜만 있는 경우 해당 날짜의 시작 시간으로 설정 (앱과 동일)
+                                    if let originalDate = reminder.dueDateComponents?.date {
+                                        due = Calendar.current.startOfDay(for: originalDate)
+                                    } else {
+                                        due = nil
+                                    }
+                                }
+                                
+                                // URL에서 ReminderType 추출
+                                let reminderType: WidgetReminderType
+                                if let url = reminder.url?.absoluteString,
+                                   url.contains("haruview-reminder-type://UNTIL") {
+                                    reminderType = .untilDate
+                                } else {
+                                    reminderType = .onDate // 기본값
+                                }
                                 
                                 return ReminderItem(
                                     id: reminder.calendarItemIdentifier,
                                     title: reminder.title ?? "제목 없음",
-                                    dueDate: due, // 시간이 없으면 nil로 설정
+                                    dueDate: due,
                                     priority: reminder.priority,
-                                    isCompleted: reminder.isCompleted
+                                    isCompleted: reminder.isCompleted,
+                                    reminderType: reminderType
                                 )
                             }
                             .sorted(by: reminderSortRule)
@@ -175,22 +195,46 @@ struct Provider: AppIntentTimelineProvider {
         let bPriority = b.priority == 0 ? Int.max : b.priority
 
         if aPriority != bPriority {
-            return aPriority < bPriority // 숫자가 작을수록 앞에
+            return aPriority < bPriority // 숫자가 작을수록 앞에 (1=높음, 5=보통, 9=낮음)
         }
         
-        // 3. 시간 설정 여부 (시간 설정된 항목을 먼저)
-        let aHasTime = a.dueDate != nil
-        let bHasTime = b.dueDate != nil
+        // 3. ReminderType 우선순위 ("특정 날짜에"가 "마감일까지"보다 먼저)
+        let aType = a.reminderType
+        let bType = b.reminderType
         
-        if aHasTime != bHasTime {
-            return aHasTime // 시간이 설정된 항목이 앞에
+        if aType != bType {
+            if aType == .onDate && bType == .untilDate {
+                return true  // "특정 날짜에"가 먼저
+            } else if aType == .untilDate && bType == .onDate {
+                return false // "마감일까지"가 나중
+            }
         }
         
-        // 4. 마감일 기준 (빠른 순)
+        // 4. 마감일 긴급도 기준
+        let today = Calendar.current.startOfDay(for: Date())
         let aDue = a.dueDate ?? .distantFuture
         let bDue = b.dueDate ?? .distantFuture
-        if aDue != bDue {
-            return aDue < bDue
+        
+        // 마감일이 없으면 가장 마지막
+        if aDue == .distantFuture && bDue == .distantFuture {
+            return a.title < b.title
+        } else if aDue == .distantFuture {
+            return false
+        } else if bDue == .distantFuture {
+            return true
+        }
+        
+        // 오늘부터 마감일까지의 차이 계산 (음수면 지난 일정)
+        // 날짜만 비교 - 시간 정보는 무시
+        let calendar = Calendar.current
+        let aDueDay = calendar.startOfDay(for: aDue)
+        let bDueDay = calendar.startOfDay(for: bDue)
+        
+        let aDaysFromToday = calendar.dateComponents([.day], from: today, to: aDueDay).day ?? Int.max
+        let bDaysFromToday = calendar.dateComponents([.day], from: today, to: bDueDay).day ?? Int.max
+        
+        if aDaysFromToday != bDaysFromToday {
+            return aDaysFromToday < bDaysFromToday // 오늘에 가까운 것부터
         }
 
         // 5. 제목 기준 (알파벳 순)

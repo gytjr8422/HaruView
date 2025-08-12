@@ -165,9 +165,57 @@ final class HomeViewModel: ObservableObject, @preconcurrency HomeViewModelProtoc
     }
     
     private func reminderSortRule(_ a: Reminder, _ b: Reminder) -> Bool {
+        // 1. 완료 여부 기준 (미완료 먼저)
         if a.isCompleted != b.isCompleted { return !a.isCompleted }
-        let da = a.due ?? .distantFuture, db = b.due ?? .distantFuture
-        return da != db ? da < db : a.title < b.title
+        
+        // 2. 우선순위 기준 (priority == 0은 가장 낮은 순위로 처리)
+        let aPriority = a.priority == 0 ? Int.max : a.priority
+        let bPriority = b.priority == 0 ? Int.max : b.priority
+        
+        if aPriority != bPriority {
+            return aPriority < bPriority // 숫자가 작을수록 앞에 (1=높음, 5=보통, 9=낮음)
+        }
+        
+        // 3. ReminderType 우선순위 ("특정 날짜에"가 "마감일까지"보다 먼저)
+        let aType = a.reminderType
+        let bType = b.reminderType
+        
+        if aType != bType {
+            if aType == .onDate && bType == .untilDate {
+                return true  // "특정 날짜에"가 먼저
+            } else if aType == .untilDate && bType == .onDate {
+                return false // "마감일까지"가 나중
+            }
+        }
+        
+        // 4. 마감일 긴급도 기준
+        let today = Calendar.current.startOfDay(for: Date())
+        let aDue = a.due ?? .distantFuture
+        let bDue = b.due ?? .distantFuture
+        
+        // 마감일이 없으면 가장 마지막
+        if aDue == .distantFuture && bDue == .distantFuture {
+            return a.title < b.title
+        } else if aDue == .distantFuture {
+            return false
+        } else if bDue == .distantFuture {
+            return true
+        }
+        
+        // 오늘부터 마감일까지의 차이 계산 (음수면 지난 일정)
+        // 날짜만 비교 - 시간 정보는 무시
+        let calendar = Calendar.current
+        let aDueDay = calendar.startOfDay(for: aDue)
+        let bDueDay = calendar.startOfDay(for: bDue)
+        
+        let aDaysFromToday = calendar.dateComponents([.day], from: today, to: aDueDay).day ?? Int.max
+        let bDaysFromToday = calendar.dateComponents([.day], from: today, to: bDueDay).day ?? Int.max
+        
+        if aDaysFromToday != bDaysFromToday {
+            return aDaysFromToday < bDaysFromToday // 오늘에 가까운 것부터
+        }
+        
+        return a.title < b.title
     }
 }
 

@@ -25,10 +25,17 @@ struct CalendarEvent {
     let calendarColor: CGColor
 }
 
+// ReminderType enum for widget
+enum WidgetReminderType {
+    case onDate
+    case untilDate
+}
+
 struct ReminderItem: Identifiable {
     let id: String
     let title: String
     let dueDate: Date?
     let priority: Int
     let isCompleted: Bool
+    let reminderType: WidgetReminderType
 }

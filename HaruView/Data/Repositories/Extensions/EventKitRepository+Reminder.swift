@@ -67,7 +67,7 @@ extension EventKitRepository {
             return !lhs.isCompleted
         }
         
-        // 2. 우선순위: 낮은 숫자(높은 우선순위)가 먼저
+        // 2. 우선순위: 낮은 숫자(높은 우선순위)가 먼저 (priority == 0은 가장 낮은 순위)
         let lhsPriority = lhs.priority == 0 ? Int.max : lhs.priority
         let rhsPriority = rhs.priority == 0 ? Int.max : rhs.priority
 
@@ -75,19 +75,38 @@ extension EventKitRepository {
             return lhsPriority < rhsPriority
         }
         
-        // 3. 시간 설정 여부: 시간이 설정된 것이 먼저
-        let lhsHasTime = lhs.dueDateComponents?.hour != nil || lhs.dueDateComponents?.minute != nil
-        let rhsHasTime = rhs.dueDateComponents?.hour != nil || rhs.dueDateComponents?.minute != nil
+        // 3. ReminderType 우선순위 ("특정 날짜에"가 "마감일까지"보다 먼저)
+        let lhsIsUntilDate = lhs.url?.absoluteString.contains("haruview-reminder-type://UNTIL") == true
+        let rhsIsUntilDate = rhs.url?.absoluteString.contains("haruview-reminder-type://UNTIL") == true
         
-        if lhsHasTime != rhsHasTime {
-            return lhsHasTime
+        if lhsIsUntilDate != rhsIsUntilDate {
+            return !lhsIsUntilDate // onDate(false)가 untilDate(true)보다 먼저
         }
         
-        // 4. 마감일: 빠른 마감일이 먼저
+        // 4. 마감일 긴급도 기준 (오늘에 가까운 것부터)
+        let today = Calendar.current.startOfDay(for: Date())
         let lDue = lhs.dueDateComponents?.date ?? .distantFuture
         let rDue = rhs.dueDateComponents?.date ?? .distantFuture
-        if lDue != rDue {
-            return lDue < rDue
+        
+        // 마감일이 없으면 가장 마지막
+        if lDue == .distantFuture && rDue == .distantFuture {
+            return lhs.title < rhs.title
+        } else if lDue == .distantFuture {
+            return false
+        } else if rDue == .distantFuture {
+            return true
+        }
+        
+        // 날짜만 비교 - 시간 정보는 무시
+        let calendar = Calendar.current
+        let lDueDay = calendar.startOfDay(for: lDue)
+        let rDueDay = calendar.startOfDay(for: rDue)
+        
+        let lDaysFromToday = calendar.dateComponents([.day], from: today, to: lDueDay).day ?? Int.max
+        let rDaysFromToday = calendar.dateComponents([.day], from: today, to: rDueDay).day ?? Int.max
+        
+        if lDaysFromToday != rDaysFromToday {
+            return lDaysFromToday < rDaysFromToday // 오늘에 가까운 것부터
         }
 
         // 5. 제목: 알파벳 순

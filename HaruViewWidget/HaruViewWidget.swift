@@ -118,8 +118,8 @@ extension ConfigurationAppIntent {
                     CalendarEvent(title: "개인 일정", startDate: Date().addingTimeInterval(3600), endDate: Date().addingTimeInterval(7200), isAllDay: false, calendarColor: UIColor.systemPurple.cgColor)
                 ],
                 reminders: [
-                    ReminderItem(id: "1", title: "프로젝트 마감", dueDate: Date(), priority: 1, isCompleted: false),
-                    ReminderItem(id: "1", title: "프로젝트2 시작", dueDate: Date(), priority: 1, isCompleted: false)
+                    ReminderItem(id: "1", title: "프로젝트 마감", dueDate: Date(), priority: 1, isCompleted: false, reminderType: .onDate),
+                    ReminderItem(id: "2", title: "프로젝트2 시작", dueDate: Date(), priority: 1, isCompleted: false, reminderType: .untilDate)
                 ])
     SimpleEntry(date: .now, configuration: .starEyes, events: [], reminders: [])
 }

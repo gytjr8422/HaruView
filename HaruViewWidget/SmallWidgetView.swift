@@ -144,7 +144,7 @@ struct SmallRemindersWidget: View {
         reminders: []
     )
     
-    return SmallWidgetView(entry: sampleEntry)
+    SmallWidgetView(entry: sampleEntry)
         .background(Color(hexCode: "FFFCF5"))
 }
 
@@ -158,12 +158,12 @@ struct SmallRemindersWidget: View {
         }(),
         events: [],
         reminders: [
-            ReminderItem(id: "1", title: "프로젝트 마감", dueDate: Date(), priority: 1, isCompleted: false),
-            ReminderItem(id: "2", title: "보고서 작성", dueDate: Date(), priority: 2, isCompleted: true),
-            ReminderItem(id: "3", title: "회의 준비", dueDate: Date(), priority: 3, isCompleted: false)
+            ReminderItem(id: "1", title: "프로젝트 마감", dueDate: Date(), priority: 1, isCompleted: false, reminderType: .onDate),
+            ReminderItem(id: "2", title: "보고서 작성", dueDate: Date(), priority: 2, isCompleted: true, reminderType: .untilDate),
+            ReminderItem(id: "3", title: "회의 준비", dueDate: Date(), priority: 3, isCompleted: false, reminderType: .onDate)
         ]
     )
     
-    return SmallWidgetView(entry: sampleEntry)
+    SmallWidgetView(entry: sampleEntry)
         .background(Color(hexCode: "FFFCF5"))
 }

@@ -145,14 +145,14 @@ struct LargeWidgetView: View {
             CalendarEvent(title: "저녁 식사", startDate: Date().addingTimeInterval(14400), endDate: Date().addingTimeInterval(18000), isAllDay: false, calendarColor: UIColor.systemOrange.cgColor)
         ],
         reminders: [
-            ReminderItem(id: "1", title: "프로젝트 마감", dueDate: Date(), priority: 1, isCompleted: false),
-            ReminderItem(id: "2", title: "보고서 작성", dueDate: Date(), priority: 2, isCompleted: true),
-            ReminderItem(id: "3", title: "회의 준비", dueDate: Date(), priority: 3, isCompleted: false),
-            ReminderItem(id: "4", title: "이메일 확인", dueDate: Date(), priority: 1, isCompleted: false)
+            ReminderItem(id: "1", title: "프로젝트 마감", dueDate: Date(), priority: 1, isCompleted: false, reminderType: .onDate),
+            ReminderItem(id: "2", title: "보고서 작성", dueDate: Date(), priority: 2, isCompleted: true, reminderType: .untilDate),
+            ReminderItem(id: "3", title: "회의 준비", dueDate: Date(), priority: 3, isCompleted: false, reminderType: .onDate),
+            ReminderItem(id: "4", title: "이메일 확인", dueDate: Date(), priority: 1, isCompleted: false, reminderType: .untilDate)
         ]
     )
     
-    return LargeWidgetView(entry: sampleEntry)
+    LargeWidgetView(entry: sampleEntry)
         .background(Color(hexCode: "FFFCF5"))
 }
 

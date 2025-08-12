@@ -137,11 +137,11 @@ struct CheckboxToggleStyle: ToggleStyle {
             CalendarEvent(title: "프로젝트 회의", startDate: Date().addingTimeInterval(7200), endDate: Date().addingTimeInterval(10800), isAllDay: false, calendarColor: UIColor.systemRed.cgColor)
         ],
         reminders: [
-            ReminderItem(id: "1", title: "프로젝트 마감", dueDate: Date(), priority: 1, isCompleted: false),
-            ReminderItem(id: "2", title: "보고서 작성", dueDate: Date(), priority: 2, isCompleted: true)
+            ReminderItem(id: "1", title: "프로젝트 마감", dueDate: Date(), priority: 1, isCompleted: false, reminderType: .onDate),
+            ReminderItem(id: "2", title: "보고서 작성", dueDate: Date(), priority: 2, isCompleted: true, reminderType: .untilDate)
         ]
     )
     
-    return MediumWidgetView(entry: sampleEntry)
+    MediumWidgetView(entry: sampleEntry)
         .background(Color(hexCode: "FFFCF5"))
 }
