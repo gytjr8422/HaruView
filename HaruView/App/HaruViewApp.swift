@@ -18,7 +18,6 @@ struct HaruViewApp: App {
     private let di = DIContainer.shared
     
     init() {
-        _ = AdManager.shared
     }
     
     var body: some Scene {
@@ -40,15 +39,14 @@ import AppTrackingTransparency
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        // 1. 광고 SDK 초기화
-        MobileAds.shared.start { status in
-            // 2. 초기화 완료 후 AdManager 초기화
-            _ = AdManager.shared
-        }
-        
-        // 3. ATT 권한 요청
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            ATTrackingManager.requestTrackingAuthorization { status in }
+        // ATT 권한 요청
+        DispatchQueue.main.async {
+            ATTrackingManager.requestTrackingAuthorization { status in
+                // ATT 완료 후 광고 SDK 초기화
+                MobileAds.shared.start { _ in
+                    _ = AdManager.shared
+                }
+            }
         }
         return true
     }
