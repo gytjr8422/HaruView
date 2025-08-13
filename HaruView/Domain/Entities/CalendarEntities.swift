@@ -119,9 +119,20 @@ struct CalendarReminder: Identifiable, Hashable {
         return icon + title
     }
     
-    /// 시간 표시 텍스트 ("특정 날짜에" 설정되고 "날짜+시간"인 할일만 시간 표시)
+    /// 시간 표시 텍스트 ("특정 날짜에" 설정되고 "날짜+시간"인 할일만 시간 표시) - HomeView용
     var timeDisplayText: String? {
         guard let dueTime = dueTime, reminderType == .onDate, includeTime else { return nil }
+        
+        let formatter = DateFormatter()
+        formatter.timeStyle = .short
+        formatter.locale = Locale.current
+        
+        return formatter.string(from: dueTime)
+    }
+    
+    /// 시간 표시 텍스트 (모든 타입에서 "날짜+시간"이면 시간 표시) - DayDetailSheet용
+    var detailTimeDisplayText: String? {
+        guard let dueTime = dueTime, includeTime else { return nil }
         
         let formatter = DateFormatter()
         formatter.timeStyle = .short

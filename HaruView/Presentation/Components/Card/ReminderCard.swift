@@ -52,43 +52,89 @@ struct ReminderCard: View {
                     .opacity(reminder.isCompleted ? 0.5 : 1)
             }
             
-            HStack {
-                HStack(spacing: 4) {
-                    Text(reminder.title)
-                        .lineLimit(1)
-                        .font(.pretendardRegular(size: 17))
-                        .strikethrough(reminder.isCompleted)
-                        .opacity(reminder.isCompleted ? 0.5 : 1)
-                }
-                Spacer()
-                // 타입별 상태 텍스트
+            // "마감일까지" 타입의 D-Day 여부에 따른 조건부 레이아웃
+            Group {
                 if reminder.reminderType == .untilDate, let due = reminder.due {
                     let calendar = Calendar.current
                     let today = calendar.startOfDay(for: Date())
                     let dueDate = calendar.startOfDay(for: due)
                     let daysLeft = calendar.dateComponents([.day], from: today, to: dueDate).day ?? 0
-                    if daysLeft > 0 {
-                        Text("D-\(daysLeft)")
-                            .font(.jakartaRegular(size: 15))
-                            .foregroundStyle(Color(hexCode: "A76545"))
-                            .opacity(reminder.isCompleted ? 0.4 : 1)
-                    } else if daysLeft == 0 {
-                        Text("D-Day")
-                            .font(.jakartaRegular(size: 15))
-                            .foregroundStyle(Color(hexCode: "FF5722"))
-                            .opacity(reminder.isCompleted ? 0.4 : 1)
+                    
+                    if daysLeft == 0 {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(reminder.title)
+                                    .lineLimit(1)
+                                    .font(.pretendardRegular(size: 17))
+                                    .strikethrough(reminder.isCompleted)
+                                    .opacity(reminder.isCompleted ? 0.5 : 1)
+                                
+                                Text("D-Day")
+                                    .font(.jakartaRegular(size: 13))
+                                    .foregroundStyle(Color(hexCode: "FF5722"))
+                                    .opacity(reminder.isCompleted ? 0.4 : 1)
+                            }
+                            Spacer()
+                        }
+                    } else if daysLeft > 0 {
+                        HStack {
+                            Text(reminder.title)
+                                .lineLimit(1)
+                                .font(.pretendardRegular(size: 17))
+                                .strikethrough(reminder.isCompleted)
+                                .opacity(reminder.isCompleted ? 0.5 : 1)
+                            
+                            Spacer()
+                            
+                            Text("D-\(daysLeft)")
+                                .font(.jakartaRegular(size: 15))
+                                .foregroundStyle(Color(hexCode: "A76545"))
+                                .opacity(reminder.isCompleted ? 0.4 : 1)
+                        }
+                    } else {
+                        HStack {
+                            Text(reminder.title)
+                                .lineLimit(1)
+                                .font(.pretendardRegular(size: 17))
+                                .strikethrough(reminder.isCompleted)
+                                .opacity(reminder.isCompleted ? 0.5 : 1)
+                            Spacer()
+                        }
+                    }
+                } else {
+                    HStack {
+                        Text(reminder.title)
+                            .lineLimit(1)
+                            .font(.pretendardRegular(size: 17))
+                            .strikethrough(reminder.isCompleted)
+                            .opacity(reminder.isCompleted ? 0.5 : 1)
+                        Spacer()
                     }
                 }
             }
             
-            Spacer()
-            
-            // "특정 날짜에" 설정되고 "날짜+시간"인 할일만 시간 표시
-            if let due = reminder.due, reminder.reminderType == .onDate, reminder.includeTime {
-                Text(DateFormatter.localizedString(from: due, dateStyle: .none, timeStyle: .short))
-                    .lineLimit(1)
-                    .font(.jakartaRegular(size: 15))
-                    .foregroundStyle(Color(hexCode: "2E2514").opacity(0.8))
+            // 시간 표시: "특정 날짜에" 또는 D-Day인 "마감일까지"에서 "날짜+시간"인 경우
+            if let due = reminder.due, reminder.includeTime {
+                let shouldShowTime: Bool = {
+                    if reminder.reminderType == .onDate {
+                        return true // "특정 날짜에"는 항상 표시
+                    } else if reminder.reminderType == .untilDate {
+                        // "마감일까지"는 D-Day인 경우만 표시
+                        let calendar = Calendar.current
+                        let today = calendar.startOfDay(for: Date())
+                        let dueDate = calendar.startOfDay(for: due)
+                        let daysLeft = calendar.dateComponents([.day], from: today, to: dueDate).day ?? 0
+                        return daysLeft == 0
+                    }
+                    return false
+                }()
+                
+                if shouldShowTime {
+                    Text(DateFormatter.localizedString(from: due, dateStyle: .none, timeStyle: .short))
+                        .lineLimit(1)
+                        .font(.jakartaRegular(size: 15))
+                        .foregroundStyle(Color(hexCode: "2E2514").opacity(0.8))
+                }
             }
         }
         .contentShape(Rectangle())

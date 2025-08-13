@@ -268,15 +268,6 @@ struct DayDetailSheet: View {
                             editingEvent = fullEvent
                         }
                     }
-                    // 보조 액션: 길게 눌러서 삭제 메뉴
-                    .onLongPressGesture {
-                        let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
-                        impactFeedback.impactOccurred()
-                        
-                        if let fullEvent = findFullEvent(by: event.id) {
-                            requestEventDeletion(fullEvent)
-                        }
-                    }
                     // 컨텍스트 메뉴
                     .contextMenu {
                         Button {
@@ -353,7 +344,7 @@ struct DayDetailSheet: View {
                                 .strikethrough(reminder.isCompleted)
                                 .opacity(reminder.isCompleted ? 0.5 : 1)
                             
-                            if let timeText = reminder.timeDisplayText {
+                            if let timeText = reminder.detailTimeDisplayText {
                                 Text(timeText)
                                     .lineLimit(1)
                                     .font(.jakartaRegular(size: 15))
@@ -371,13 +362,6 @@ struct DayDetailSheet: View {
                         if let fullReminder = findFullReminder(by: reminder.id) {
                             editingReminder = fullReminder
                         }
-                    }
-                    // 보조 액션: 길게 눌러서 삭제
-                    .onLongPressGesture {
-                        let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
-                        impactFeedback.impactOccurred()
-                        
-                        deleteReminder(reminder.id)
                     }
                     // 컨텍스트 메뉴
                     .contextMenu {
@@ -405,7 +389,7 @@ struct DayDetailSheet: View {
                             Label("삭제", systemImage: "trash")
                         }
                     }
-                    
+//                    
                     if index < reminders.count - 1 {
                         Divider()
                             .padding(.horizontal, 16)
