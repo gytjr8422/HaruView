@@ -45,14 +45,14 @@ struct EventDateTimePicker: View {
                             HStack {
                                 Text("하루 종일")
                                     .font(.system(size: 25, weight: .light))
-                                    .foregroundStyle(selectedField == .start ? Color(hexCode: "A76545") : .primary)
+                                    .foregroundStyle(selectedField == .start ? .haruPrimary : .primary)
                                 Spacer()
                             }
                         } else {
                             HStack(alignment: .bottom, spacing: 3) {
                                 Text(formatTime(startDate))
                                     .font(.system(size: 25, weight: .light))
-                                    .foregroundStyle(selectedField == .start ? Color(hexCode: "A76545") : .primary)
+                                    .foregroundStyle(selectedField == .start ? .haruPrimary : .primary)
                                 Text("시작")
                                     .font(.system(size: 12, weight: .light))
                                     .padding(.bottom, 2)
@@ -87,7 +87,7 @@ struct EventDateTimePicker: View {
                             HStack(alignment: .bottom, spacing: 3) {
                                 Text(formatTime(endDate))
                                     .font(.system(size: 25, weight: .light))
-                                    .foregroundStyle(selectedField == .end ? Color(hexCode: "A76545") : .primary)
+                                    .foregroundStyle(selectedField == .end ? .haruPrimary : .primary)
                                 Text("종료")
                                     .font(.system(size: 12, weight: .light))
                                     .padding(.bottom, 2)
@@ -107,12 +107,12 @@ struct EventDateTimePicker: View {
                         endDate = Calendar.current.date(byAdding: .minute, value: 15, to: startDate) ?? startDate
                     }
                     .font(.system(size: 12, weight: .medium))
-                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .foregroundStyle(.haruPrimary)
                     .padding(.horizontal, 14)
                     .padding(.vertical, 7)
                     .background(
                         RoundedRectangle(cornerRadius: 16)
-                            .fill(Color(hexCode: "A76545").opacity(0.1))
+                            .fill(.haruPrimary.opacity(0.1))
                     )
                     
                     Button("30분") {
@@ -120,12 +120,12 @@ struct EventDateTimePicker: View {
                         endDate = Calendar.current.date(byAdding: .minute, value: 30, to: startDate) ?? startDate
                     }
                     .font(.system(size: 12, weight: .medium))
-                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .foregroundStyle(.haruPrimary)
                     .padding(.horizontal, 14)
                     .padding(.vertical, 7)
                     .background(
                         RoundedRectangle(cornerRadius: 16)
-                            .fill(Color(hexCode: "A76545").opacity(0.1))
+                            .fill(.haruPrimary.opacity(0.1))
                     )
                     
                     Button("1시간") {
@@ -133,12 +133,12 @@ struct EventDateTimePicker: View {
                         endDate = Calendar.current.date(byAdding: .hour, value: 1, to: startDate) ?? startDate
                     }
                     .font(.system(size: 12, weight: .medium))
-                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .foregroundStyle(.haruPrimary)
                     .padding(.horizontal, 14)
                     .padding(.vertical, 7)
                     .background(
                         RoundedRectangle(cornerRadius: 16)
-                            .fill(Color(hexCode: "A76545").opacity(0.1))
+                            .fill(.haruPrimary.opacity(0.1))
                     )
                     
                     Button("1시간 30분") {
@@ -146,12 +146,12 @@ struct EventDateTimePicker: View {
                         endDate = Calendar.current.date(byAdding: .minute, value: 90, to: startDate) ?? startDate
                     }
                     .font(.system(size: 12, weight: .medium))
-                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .foregroundStyle(.haruPrimary)
                     .padding(.horizontal, 14)
                     .padding(.vertical, 7)
                     .background(
                         RoundedRectangle(cornerRadius: 16)
-                            .fill(Color(hexCode: "A76545").opacity(0.1))
+                            .fill(.haruPrimary.opacity(0.1))
                     )
                     
                     Button("2시간") {
@@ -159,12 +159,12 @@ struct EventDateTimePicker: View {
                         endDate = Calendar.current.date(byAdding: .hour, value: 2, to: startDate) ?? startDate
                     }
                     .font(.system(size: 12, weight: .medium))
-                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .foregroundStyle(.haruPrimary)
                     .padding(.horizontal, 14)
                     .padding(.vertical, 7)
                     .background(
                         RoundedRectangle(cornerRadius: 16)
-                            .fill(Color(hexCode: "A76545").opacity(0.1))
+                            .fill(.haruPrimary.opacity(0.1))
                     )
                 }
             }

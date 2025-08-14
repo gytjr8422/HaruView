@@ -37,7 +37,7 @@ struct MonthYearPickerSheet: View {
             VStack(spacing: 20) {
                 Text("이동할 월을 선택하세요")
                     .font(.pretendardSemiBold(size: 18))
-                    .foregroundStyle(Color(hexCode: "40392B"))
+                    .foregroundStyle(.haruTextPrimary)
                     .padding(.top, 20)
                 
                 HStack(spacing: 20) {
@@ -67,7 +67,7 @@ struct MonthYearPickerSheet: View {
                 
                 Spacer()
             }
-            .background(Color(hexCode: "FFFCF5"))
+            .background(.haruBackground)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -75,7 +75,7 @@ struct MonthYearPickerSheet: View {
                         dismiss()
                     }
                     .font(.pretendardRegular(size: 16))
-                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .foregroundStyle(.haruPrimary)
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -84,13 +84,13 @@ struct MonthYearPickerSheet: View {
                         dismiss()
                     }
                     .font(.pretendardSemiBold(size: 16))
-                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .foregroundStyle(.haruPrimary)
                 }
                 
                 ToolbarItem(placement: .principal) {
                     Text("년/월 선택")
                         .font(.pretendardSemiBold(size: 17))
-                        .foregroundStyle(Color(hexCode: "40392B"))
+                        .foregroundStyle(.haruTextPrimary)
                 }
             }
         }

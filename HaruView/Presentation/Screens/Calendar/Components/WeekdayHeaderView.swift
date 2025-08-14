@@ -22,9 +22,9 @@ struct WeekdayHeaderView: View {
                 Text(weekday)
                     .font(.pretendardRegular(size: 14))
                     .foregroundStyle(
-                        index == 0 ? Color(hexCode: "FF5722") : // 일요일 빨간색
-                        index == 6 ? Color(hexCode: "2196F3") : // 토요일 파란색
-                        Color(hexCode: "6E5C49").opacity(0.7)   // 평일 회색
+                        index == 0 ? .haruPriorityHigh : // 일요일 빨간색
+                        index == 6 ? .haruSaturday : // 토요일 파란색
+                        .haruSecondary.opacity(0.7)   // 평일 회색
                     )
                     .frame(maxWidth: .infinity)
                     .padding(.top, 12)
@@ -32,7 +32,7 @@ struct WeekdayHeaderView: View {
             }
         }
         .background(
-            Color(hexCode: "FFFCF5")
+            .haruBackground
         )
     }
 }

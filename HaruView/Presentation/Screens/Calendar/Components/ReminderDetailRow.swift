@@ -14,12 +14,12 @@ struct ReminderDetailRow: View {
         HStack(spacing: 12) {
             Image(systemName: reminder.isCompleted ? "checkmark.circle.fill" : "circle")
                 .font(.system(size: 20))
-                .foregroundStyle(reminder.isCompleted ? Color(hexCode: "A76545") : .secondary)
+                .foregroundStyle(reminder.isCompleted ? .haruPrimary : .secondary)
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(reminder.title)
                     .font(.pretendardSemiBold(size: 16))
-                    .foregroundStyle(Color(hexCode: "40392B"))
+                    .foregroundStyle(.haruTextPrimary)
                     .strikethrough(reminder.isCompleted)
                 
                 if let timeText = reminder.timeDisplayText {
@@ -48,7 +48,7 @@ struct ReminderDetailRow: View {
         .padding(.vertical, 12)
         .background(
             RoundedRectangle(cornerRadius: 8)
-                .fill(Color(hexCode: "C2966B").opacity(0.1))
+                .fill(.haruAccent.opacity(0.1))
         )
         .padding(.horizontal, 20)
     }

@@ -20,7 +20,7 @@ struct RecurrenceSelectionView: View {
 //                    showCustomRecurrence = true
 //                }
 //                .font(.pretendardRegular(size: 14))
-//                .foregroundStyle(Color(hexCode: "A76545"))
+//                .foregroundStyle(.haruPrimary)
 //            }
             
             if let rule = recurrenceRule {
@@ -43,7 +43,7 @@ struct RecurrenceSelectionView: View {
                 .frame(maxWidth: .infinity)
                 .background(
                     RoundedRectangle(cornerRadius: 16)
-                        .fill(Color(hexCode: "A76545"))
+                        .fill(.haruPrimary)
                 )
             } else {
                 Text("반복하지 않음")
@@ -60,13 +60,13 @@ struct RecurrenceSelectionView: View {
                     } label: {
                         Text(preset.description)
                             .font(.pretendardRegular(size: 14))
-                            .foregroundStyle(Color(hexCode: "A76545"))
+                            .foregroundStyle(.haruPrimary)
                             .padding(.horizontal, 20)
                             .padding(.vertical, 12)
                             .frame(maxWidth: .infinity)
                             .background(
                                 RoundedRectangle(cornerRadius: 16)
-                                    .fill(Color(hexCode: "A76545").opacity(0.1))
+                                    .fill(.haruPrimary.opacity(0.1))
                             )
                     }
                 }
@@ -77,13 +77,13 @@ struct RecurrenceSelectionView: View {
                 } label: {
                     Text("사용자 설정")
                         .font(.pretendardRegular(size: 14))
-                        .foregroundStyle(Color(hexCode: "A76545"))
+                        .foregroundStyle(.haruPrimary)
                         .padding(.horizontal, 20)
                         .padding(.vertical, 12)
                         .frame(maxWidth: .infinity)
                         .background(
                             RoundedRectangle(cornerRadius: 16)
-                                .stroke(Color(hexCode: "A76545"), lineWidth: 1)
+                                .stroke(.haruPrimary, lineWidth: 1)
                         )
                 }
             }
@@ -115,7 +115,7 @@ struct CustomRecurrenceSheet: View {
                         HStack {
                             Text("빈도")
                                 .font(.pretendardBold(size: 16))
-                                .foregroundStyle(Color(hexCode: "6E5C49"))
+                                .foregroundStyle(.haruSecondary)
                             Spacer()
                         }
                         
@@ -133,7 +133,7 @@ struct CustomRecurrenceSheet: View {
                             HStack {
                                 Text("매")
                                     .font(.pretendardRegular(size: 14))
-                                    .foregroundStyle(Color(hexCode: "6E5C49"))
+                                    .foregroundStyle(.haruSecondary)
                                 
                                 TextField("간격", value: $interval, format: .number)
                                     .keyboardType(.numberPad)
@@ -142,10 +142,10 @@ struct CustomRecurrenceSheet: View {
                                     .padding(.vertical, 8)
                                     .background(
                                         RoundedRectangle(cornerRadius: 8)
-                                            .fill(Color(hexCode: "FFFCF5"))
+                                            .fill(.haruBackground)
                                             .overlay(
                                                 RoundedRectangle(cornerRadius: 8)
-                                                    .stroke(Color(hexCode: "A76545").opacity(0.3), lineWidth: 1)
+                                                    .stroke(.haruPrimary.opacity(0.3), lineWidth: 1)
                                             )
                                     )
                                     .frame(width: 60)
@@ -154,7 +154,7 @@ struct CustomRecurrenceSheet: View {
                                      frequency == .weekly ? "주" :
                                      frequency == .monthly ? "개월" : "년")
                                     .font(.pretendardRegular(size: 14))
-                                    .foregroundStyle(Color(hexCode: "6E5C49"))
+                                    .foregroundStyle(.haruSecondary)
                                 
                                 Spacer()
                             }
@@ -162,10 +162,10 @@ struct CustomRecurrenceSheet: View {
                         .padding(16)
                         .background(
                             RoundedRectangle(cornerRadius: 12)
-                                .fill(Color(hexCode: "C2966B").opacity(0.09))
+                                .fill(.haruAccent.opacity(0.09))
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 12)
-                                        .stroke(Color(hexCode: "C2966B").opacity(0.3), lineWidth: 1)
+                                        .stroke(.haruAccent.opacity(0.3), lineWidth: 1)
                                 )
                         )
                     }
@@ -176,7 +176,7 @@ struct CustomRecurrenceSheet: View {
                             HStack {
                                 Text("요일")
                                     .font(.pretendardBold(size: 16))
-                                    .foregroundStyle(Color(hexCode: "6E5C49"))
+                                    .foregroundStyle(.haruSecondary)
                                 Spacer()
                             }
                             
@@ -193,11 +193,11 @@ struct CustomRecurrenceSheet: View {
                                     }) {
                                         Text(day)
                                             .font(.pretendardMedium(size: 14))
-                                            .foregroundStyle(selectedWeekdays.contains(index + 1) ? .white : Color(hexCode: "A76545"))
+                                            .foregroundStyle(selectedWeekdays.contains(index + 1) ? .white : .haruPrimary)
                                             .frame(width: 36, height: 36)
                                             .background(
                                                 Circle()
-                                                    .fill(selectedWeekdays.contains(index + 1) ? Color(hexCode: "A76545") : Color(hexCode: "A76545").opacity(0.1))
+                                                    .fill(selectedWeekdays.contains(index + 1) ? .haruPrimary : .haruPrimary.opacity(0.1))
                                             )
                                     }
                                     .buttonStyle(PlainButtonStyle())
@@ -206,10 +206,10 @@ struct CustomRecurrenceSheet: View {
                             .padding(16)
                             .background(
                                 RoundedRectangle(cornerRadius: 12)
-                                    .fill(Color(hexCode: "C2966B").opacity(0.09))
+                                    .fill(.haruAccent.opacity(0.09))
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 12)
-                                            .stroke(Color(hexCode: "C2966B").opacity(0.3), lineWidth: 1)
+                                            .stroke(.haruAccent.opacity(0.3), lineWidth: 1)
                                     )
                             )
                         }
@@ -220,7 +220,7 @@ struct CustomRecurrenceSheet: View {
                         HStack {
                             Text("종료 조건")
                                 .font(.pretendardBold(size: 16))
-                                .foregroundStyle(Color(hexCode: "6E5C49"))
+                                .foregroundStyle(.haruSecondary)
                             Spacer()
                         }
                         
@@ -236,12 +236,12 @@ struct CustomRecurrenceSheet: View {
                             case .endDate:
                                 DatePicker("종료 날짜", selection: $endDate, displayedComponents: .date)
                                     .font(.pretendardRegular(size: 14))
-                                    .foregroundStyle(Color(hexCode: "6E5C49"))
+                                    .foregroundStyle(.haruSecondary)
                             case .occurrenceCount:
                                 HStack {
                                     Text("총")
                                         .font(.pretendardRegular(size: 14))
-                                        .foregroundStyle(Color(hexCode: "6E5C49"))
+                                        .foregroundStyle(.haruSecondary)
                                     
                                     TextField("횟수", value: $occurrenceCount, format: .number)
                                         .keyboardType(.numberPad)
@@ -250,17 +250,17 @@ struct CustomRecurrenceSheet: View {
                                         .padding(.vertical, 8)
                                         .background(
                                             RoundedRectangle(cornerRadius: 8)
-                                                .fill(Color(hexCode: "FFFCF5"))
+                                                .fill(.haruBackground)
                                                 .overlay(
                                                     RoundedRectangle(cornerRadius: 8)
-                                                        .stroke(Color(hexCode: "A76545").opacity(0.3), lineWidth: 1)
+                                                        .stroke(.haruPrimary.opacity(0.3), lineWidth: 1)
                                                 )
                                         )
                                         .frame(width: 60)
                                     
                                     Text("회")
                                         .font(.pretendardRegular(size: 14))
-                                        .foregroundStyle(Color(hexCode: "6E5C49"))
+                                        .foregroundStyle(.haruSecondary)
                                     
                                     Spacer()
                                 }
@@ -271,10 +271,10 @@ struct CustomRecurrenceSheet: View {
                         .padding(16)
                         .background(
                             RoundedRectangle(cornerRadius: 12)
-                                .fill(Color(hexCode: "C2966B").opacity(0.09))
+                                .fill(.haruAccent.opacity(0.09))
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 12)
-                                        .stroke(Color(hexCode: "C2966B").opacity(0.3), lineWidth: 1)
+                                        .stroke(.haruAccent.opacity(0.3), lineWidth: 1)
                                 )
                         )
                     }
@@ -282,7 +282,7 @@ struct CustomRecurrenceSheet: View {
                 .padding(.horizontal, 20)
                 .padding(.top, 20)
             }
-            .background(Color(hexCode: "FFFCF5"))
+            .background(.haruBackground)
             .navigationTitle("반복 설정")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -291,7 +291,7 @@ struct CustomRecurrenceSheet: View {
                         dismiss() 
                     }
                     .font(.pretendardRegular(size: 16))
-                    .foregroundStyle(Color(hexCode: "6E5C49"))
+                    .foregroundStyle(.haruSecondary)
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("완료") {
@@ -299,7 +299,7 @@ struct CustomRecurrenceSheet: View {
                         dismiss()
                     }
                     .font(.pretendardMedium(size: 16))
-                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .foregroundStyle(.haruPrimary)
                 }
             }
         }

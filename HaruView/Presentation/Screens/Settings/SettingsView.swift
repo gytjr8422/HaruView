@@ -16,7 +16,7 @@ struct SettingsView: View {
     
     var body: some View {
         ZStack {
-            Color(hexCode: "FFFCF5")
+            Color.haruBackground
                 .ignoresSafeArea()
             
             ScrollView(showsIndicators: false) {
@@ -36,7 +36,7 @@ struct SettingsView: View {
             ToolbarItem(placement: .principal) {
                 Text("설정")
                     .font(.pretendardSemiBold(size: 18))
-                    .foregroundStyle(Color(hexCode: "40392B"))
+                    .foregroundStyle(.haruTextPrimary)
             }
         }
         .navigationBarBackButtonHidden(true)
@@ -52,7 +52,7 @@ struct SettingsView: View {
                         Text("뒤로")
                             .font(.pretendardRegular(size: 16))
                     }
-                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .foregroundStyle(.haruPrimary)
                 }
             }
         }
@@ -111,18 +111,18 @@ struct SettingsView: View {
                 if settings.showHolidays {
                     Divider()
                         .padding(.horizontal, 16)
-                        .background(Color(hexCode: "6E5C49").opacity(0.1))
+                        .background(.haruSecondary.opacity(0.1))
                     
                     holidayRegionCard
                 }
             }
             .background(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(Color(hexCode: "FFFCF5"))
+                    .fill(.haruBackground)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color(hexCode: "6E5C49").opacity(0.2), lineWidth: 1)
+                    .stroke(.haruSecondary.opacity(0.2), lineWidth: 1)
             )
         }
     }
@@ -132,24 +132,24 @@ struct SettingsView: View {
         HStack(spacing: 16) {
             Image(systemName: "calendar.badge.plus")
                 .font(.system(size: 20, weight: .medium))
-                .foregroundStyle(Color(hexCode: "A76545"))
+                .foregroundStyle(.haruPrimary)
                 .frame(width: 24, height: 24)
             
             VStack(alignment: .leading, spacing: 4) {
                 Text("공휴일 표시")
                     .font(.pretendardRegular(size: 16))
-                    .foregroundStyle(Color(hexCode: "40392B"))
+                    .foregroundStyle(.haruTextPrimary)
                 
                 Text("달력에 공휴일을 표시합니다")
                     .font(.pretendardRegular(size: 12))
-                    .foregroundStyle(Color(hexCode: "6E5C49"))
+                    .foregroundStyle(.haruSecondary)
             }
             
             Spacer()
             
             Toggle("", isOn: $settings.showHolidays)
                 .labelsHidden()
-                .tint(Color(hexCode: "A76545"))
+                .tint(.haruPrimary)
                 .onChange(of: settings.showHolidays) { _, newValue in
                     let impactFeedback = UIImpactFeedbackGenerator(style: .light)
                     impactFeedback.impactOccurred()
@@ -167,24 +167,24 @@ struct SettingsView: View {
             HStack(spacing: 16) {
                 Image(systemName: "calendar.badge.clock")
                     .font(.system(size: 20, weight: .medium))
-                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .foregroundStyle(.haruPrimary)
                     .frame(width: 24, height: 24)
                 
                 VStack(alignment: .leading, spacing: 4) {
                     Text("공휴일 캘린더 설정")
                         .font(.pretendardRegular(size: 16))
-                        .foregroundStyle(Color(hexCode: "40392B"))
+                        .foregroundStyle(.haruTextPrimary)
                     
                     Text(holidayStatusText)
                         .font(.pretendardRegular(size: 12))
-                        .foregroundStyle(Color(hexCode: "6E5C49"))
+                        .foregroundStyle(.haruSecondary)
                 }
                 
                 Spacer()
                 
                 Image(systemName: "chevron.right")
                     .font(.system(size: 12, weight: .medium))
-                    .foregroundStyle(Color(hexCode: "6E5C49").opacity(0.6))
+                    .foregroundStyle(.haruSecondary.opacity(0.6))
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 14)
@@ -210,34 +210,34 @@ struct SettingsView: View {
             HStack(spacing: 16) {
                 Image(systemName: "info.circle")
                     .font(.system(size: 20, weight: .medium))
-                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .foregroundStyle(.haruPrimary)
                     .frame(width: 24, height: 24)
                 
                 VStack(alignment: .leading, spacing: 4) {
                     Text("앱 정보")
                         .font(.pretendardRegular(size: 16))
-                        .foregroundStyle(Color(hexCode: "40392B"))
+                        .foregroundStyle(.haruTextPrimary)
                     
                     Text("HaruView")
                         .font(.pretendardRegular(size: 12))
-                        .foregroundStyle(Color(hexCode: "6E5C49"))
+                        .foregroundStyle(.haruSecondary)
                 }
                 
                 Spacer()
                 
                 Text("버전 \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")")
                     .font(.pretendardRegular(size: 14))
-                    .foregroundStyle(Color(hexCode: "6E5C49"))
+                    .foregroundStyle(.haruSecondary)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 14)
             .background(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(Color(hexCode: "FFFCF5"))
+                    .fill(.haruBackground)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color(hexCode: "6E5C49").opacity(0.2), lineWidth: 1)
+                    .stroke(.haruSecondary.opacity(0.2), lineWidth: 1)
             )
         }
     }

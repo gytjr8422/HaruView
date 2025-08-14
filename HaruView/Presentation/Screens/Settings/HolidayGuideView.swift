@@ -12,7 +12,7 @@ struct HolidayGuideView: View {
     
     var body: some View {
         ZStack {
-            Color(hexCode: "FFFCF5")
+            Color.haruBackground
                 .ignoresSafeArea()
             
             ScrollView(showsIndicators: false) {
@@ -32,7 +32,7 @@ struct HolidayGuideView: View {
             ToolbarItem(placement: .principal) {
                 Text("공휴일 캘린더 추가 방법")
                     .font(.pretendardSemiBold(size: 18))
-                    .foregroundStyle(Color(hexCode: "40392B"))
+                    .foregroundStyle(.haruTextPrimary)
             }
         }
         .navigationBarBackButtonHidden(true)
@@ -48,7 +48,7 @@ struct HolidayGuideView: View {
                         Text("뒤로")
                             .font(.pretendardRegular(size: 16))
                     }
-                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .foregroundStyle(.haruPrimary)
                 }
             }
         }
@@ -62,16 +62,16 @@ struct HolidayGuideView: View {
         VStack(spacing: 16) {
             Image(systemName: "calendar.badge.plus")
                 .font(.system(size: 48))
-                .foregroundStyle(Color(hexCode: "A76545"))
+                .foregroundStyle(.haruPrimary)
             
             VStack(spacing: 8) {
                 Text("공휴일 캘린더 추가하기")
                     .font(.pretendardBold(size: 20))
-                    .foregroundStyle(Color(hexCode: "40392B"))
+                    .foregroundStyle(.haruTextPrimary)
                 
                 Text("iOS 캘린더 앱에서 원하는 국가의\n공휴일 캘린더를 구독해보세요")
                     .font(.pretendardRegular(size: 16))
-                    .foregroundStyle(Color(hexCode: "6E5C49"))
+                    .foregroundStyle(.haruSecondary)
                     .multilineTextAlignment(.center)
             }
         }
@@ -101,7 +101,7 @@ struct HolidayGuideView: View {
                 
                 Divider()
                     .padding(.horizontal, 16)
-                    .background(Color(hexCode: "6E5C49").opacity(0.1))
+                    .background(.haruSecondary.opacity(0.1))
                 
                 // 2단계
                 guideStepView(
@@ -113,7 +113,7 @@ struct HolidayGuideView: View {
                 
                 Divider()
                     .padding(.horizontal, 16)
-                    .background(Color(hexCode: "6E5C49").opacity(0.1))
+                    .background(.haruSecondary.opacity(0.1))
                 
                 // 3단계
                 guideStepView(
@@ -125,7 +125,7 @@ struct HolidayGuideView: View {
                 
                 Divider()
                     .padding(.horizontal, 16)
-                    .background(Color(hexCode: "6E5C49").opacity(0.1))
+                    .background(.haruSecondary.opacity(0.1))
                 
                 // 4단계
                 guideStepView(
@@ -137,7 +137,7 @@ struct HolidayGuideView: View {
                 
                 Divider()
                     .padding(.horizontal, 16)
-                    .background(Color(hexCode: "6E5C49").opacity(0.1))
+                    .background(.haruSecondary.opacity(0.1))
                 
                 // 5단계
                 guideStepView(
@@ -149,7 +149,7 @@ struct HolidayGuideView: View {
                 
                 Divider()
                     .padding(.horizontal, 16)
-                    .background(Color(hexCode: "6E5C49").opacity(0.1))
+                    .background(.haruSecondary.opacity(0.1))
                 
                 // 6단계
                 guideStepView(
@@ -161,11 +161,11 @@ struct HolidayGuideView: View {
             }
             .background(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(Color(hexCode: "FFFCF5"))
+                    .fill(.haruBackground)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color(hexCode: "6E5C49").opacity(0.2), lineWidth: 1)
+                    .stroke(.haruSecondary.opacity(0.2), lineWidth: 1)
             )
         }
     }
@@ -176,7 +176,7 @@ struct HolidayGuideView: View {
             // 단계 번호
             ZStack {
                 Circle()
-                    .fill(Color(hexCode: "A76545"))
+                    .fill(.haruPrimary)
                     .frame(width: 32, height: 32)
                 
                 Text(step)
@@ -187,18 +187,18 @@ struct HolidayGuideView: View {
             // 아이콘
             Image(systemName: icon)
                 .font(.system(size: 20, weight: .medium))
-                .foregroundStyle(Color(hexCode: "A76545"))
+                .foregroundStyle(.haruPrimary)
                 .frame(width: 24, height: 24)
             
             // 내용
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
                     .font(.pretendardSemiBold(size: 16))
-                    .foregroundStyle(Color(hexCode: "40392B"))
+                    .foregroundStyle(.haruTextPrimary)
                 
                 Text(description)
                     .font(.pretendardRegular(size: 14))
-                    .foregroundStyle(Color(hexCode: "6E5C49"))
+                    .foregroundStyle(.haruSecondary)
             }
             
             Spacer()

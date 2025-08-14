@@ -17,12 +17,12 @@ struct AddSheetHeader: View {
                 VStack(spacing: 4) {
                     Text(seg.localized)
                         .font(.pretendardBold(size: 16))
-                        .foregroundStyle(selected == seg ? Color(hexCode: "A76545") : .secondary)
+                        .foregroundStyle(selected == seg ? .haruPrimary : .secondary)
                     ZStack {
                         Capsule().fill(Color.clear).frame(height: 3)
                         if selected == seg {
                             Capsule()
-                                .fill(Color(hexCode: "A76545"))
+                                .fill(.haruPrimary)
                                 .frame(height: 3)
                                 .matchedGeometryEffect(id: "indicator", in: indicatorNS)
                         }

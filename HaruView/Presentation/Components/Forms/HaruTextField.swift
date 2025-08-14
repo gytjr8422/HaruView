@@ -20,7 +20,7 @@ struct HaruTextField: View {
                 TextField("", text: $text)
                     .focused($isFocused)
                     .font(.pretendardRegular(size: 16))
-                    .foregroundStyle(Color(hexCode: "6E5C49"))
+                    .foregroundStyle(.haruSecondary)
                     .padding(.leading, 10)
                     .padding(.trailing, showClearButton ? 30 : 10)
                     .frame(height: 50)
@@ -33,7 +33,7 @@ struct HaruTextField: View {
                     HStack {
                         Text(placeholder)
                             .font(.pretendardRegular(size: 16))
-                            .foregroundStyle(Color(hexCode: "6E5C49").opacity(0.5))
+                            .foregroundStyle(.haruSecondary.opacity(0.5))
                             .padding(.leading, 10)
                         Spacer()
                     }
@@ -48,7 +48,7 @@ struct HaruTextField: View {
                 }) {
                     Image(systemName: "xmark.circle.fill")
                         .font(.system(size: 16))
-                        .foregroundStyle(Color(hexCode: "A76545"))
+                        .foregroundStyle(.haruPrimary)
                 }
                 .padding(.trailing, 10)
                 .transition(.scale)
@@ -56,7 +56,7 @@ struct HaruTextField: View {
         }
         .background(
             RoundedRectangle(cornerRadius: 8)
-                .stroke(isFocused ? Color(hexCode: "A76545") : .gray, lineWidth: 1)
+                .stroke(isFocused ? .haruPrimary : .gray, lineWidth: 1)
         )
         .onChange(of: isFocused) { _, newValue in
             withAnimation {

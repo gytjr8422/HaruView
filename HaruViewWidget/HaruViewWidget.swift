@@ -61,7 +61,7 @@ struct HaruViewWidgetEntryView: View {
     var body: some View {
         ZStack {
             // 앱과 동일한 배경색
-            Color(hexCode: "FFFCF5")
+            Color.haruWidgetBackground
             
             switch family {
             case .systemSmall:
@@ -85,7 +85,7 @@ struct HaruViewWidget: Widget {
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
             HaruViewWidgetEntryView(entry: entry)
-                .containerBackground(Color(hexCode: "FFFCF5"), for: .widget)
+                .containerBackground(Color.haruWidgetBackground, for: .widget)
         }
         .configurationDisplayName("하루뷰 Widget")
         .description("오늘의 캘린더 일정과 미리알림을 한눈에 확인하세요")

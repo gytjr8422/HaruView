@@ -16,7 +16,7 @@ struct HolidayRegionSettingView: View {
     
     var body: some View {
         ZStack {
-            Color(hexCode: "FFFCF5")
+            Color.haruBackground
                 .ignoresSafeArea()
             
             ScrollView(showsIndicators: false) {
@@ -43,7 +43,7 @@ struct HolidayRegionSettingView: View {
             ToolbarItem(placement: .principal) {
                 Text("공휴일 캘린더 설정")
                     .font(.pretendardSemiBold(size: 18))
-                    .foregroundStyle(Color(hexCode: "40392B"))
+                    .foregroundStyle(.haruTextPrimary)
             }
         }
         .navigationBarBackButtonHidden(true)
@@ -59,7 +59,7 @@ struct HolidayRegionSettingView: View {
                         Text("뒤로")
                             .font(.pretendardRegular(size: 16))
                     }
-                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .foregroundStyle(.haruPrimary)
                 }
             }
             
@@ -69,7 +69,7 @@ struct HolidayRegionSettingView: View {
                 }) {
                     Image(systemName: "arrow.clockwise")
                         .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(Color(hexCode: "A76545"))
+                        .foregroundStyle(.haruPrimary)
                 }
             }
         }
@@ -98,17 +98,17 @@ struct HolidayRegionSettingView: View {
             HStack(spacing: 16) {
                 Image(systemName: "info.circle")
                     .font(.system(size: 20, weight: .medium))
-                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .foregroundStyle(.haruPrimary)
                     .frame(width: 24, height: 24)
                 
                 VStack(alignment: .leading, spacing: 4) {
                     Text("iOS 캘린더 앱에서 구독한 공휴일만 표시됩니다")
                         .font(.pretendardRegular(size: 16))
-                        .foregroundStyle(Color(hexCode: "40392B"))
+                        .foregroundStyle(.haruTextPrimary)
                     
                     Text("원하는 공휴일 캘린더를 선택하세요")
                         .font(.pretendardRegular(size: 12))
-                        .foregroundStyle(Color(hexCode: "6E5C49"))
+                        .foregroundStyle(.haruSecondary)
                 }
                 
                 Spacer()
@@ -117,11 +117,11 @@ struct HolidayRegionSettingView: View {
             .padding(.vertical, 14)
             .background(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(Color(hexCode: "A76545").opacity(0.1))
+                    .fill(.haruPrimary.opacity(0.1))
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color(hexCode: "A76545").opacity(0.3), lineWidth: 1)
+                    .stroke(.haruPrimary.opacity(0.3), lineWidth: 1)
             )
         }
     }
@@ -137,7 +137,7 @@ struct HolidayRegionSettingView: View {
                 
                 Text("\(subscribedCalendars.count)개")
                     .font(.pretendardMedium(size: 14))
-                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .foregroundStyle(.haruPrimary)
             }
             .padding(.bottom, 12)
             
@@ -146,7 +146,7 @@ struct HolidayRegionSettingView: View {
                     if index > 0 {
                         Divider()
                             .padding(.horizontal, 16)
-                            .background(Color(hexCode: "6E5C49").opacity(0.1))
+                            .background(.haruSecondary.opacity(0.1))
                     }
                     
                     HStack(spacing: 16) {
@@ -162,11 +162,11 @@ struct HolidayRegionSettingView: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(calendar.countryName)
                                 .font(.pretendardRegular(size: 16))
-                                .foregroundStyle(Color(hexCode: "40392B"))
+                                .foregroundStyle(.haruTextPrimary)
                             
                             Text(calendar.title)
                                 .font(.pretendardRegular(size: 12))
-                                .foregroundStyle(Color(hexCode: "6E5C49"))
+                                .foregroundStyle(.haruSecondary)
                         }
                         
                         Spacer()
@@ -186,7 +186,7 @@ struct HolidayRegionSettingView: View {
                             }
                         ))
                         .labelsHidden()
-                        .tint(Color(hexCode: "A76545"))
+                        .tint(.haruPrimary)
                     }
                     .padding(.horizontal, 16)
                     .padding(.vertical, 14)
@@ -194,11 +194,11 @@ struct HolidayRegionSettingView: View {
             }
             .background(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(Color(hexCode: "FFFCF5"))
+                    .fill(.haruBackground)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color(hexCode: "6E5C49").opacity(0.2), lineWidth: 1)
+                    .stroke(.haruSecondary.opacity(0.2), lineWidth: 1)
             )
         }
     }
@@ -217,16 +217,16 @@ struct HolidayRegionSettingView: View {
             VStack(spacing: 16) {
                 Image(systemName: "calendar.badge.exclamationmark")
                     .font(.system(size: 48))
-                    .foregroundStyle(Color(hexCode: "6E5C49").opacity(0.6))
+                    .foregroundStyle(.haruSecondary.opacity(0.6))
                 
                 VStack(spacing: 8) {
                     Text("구독된 공휴일 캘린더가 없습니다")
                         .font(.pretendardSemiBold(size: 16))
-                        .foregroundStyle(Color(hexCode: "40392B"))
+                        .foregroundStyle(.haruTextPrimary)
                     
                     Text("iOS 캘린더 앱에서 원하는 국가의\n공휴일 캘린더를 먼저 구독해주세요")
                         .font(.pretendardRegular(size: 14))
-                        .foregroundStyle(Color(hexCode: "6E5C49"))
+                        .foregroundStyle(.haruSecondary)
                         .multilineTextAlignment(.center)
                 }
             }
@@ -234,11 +234,11 @@ struct HolidayRegionSettingView: View {
             .frame(maxWidth: .infinity)
             .background(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(Color(hexCode: "FFFCF5"))
+                    .fill(.haruBackground)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color(hexCode: "6E5C49").opacity(0.2), lineWidth: 1)
+                    .stroke(.haruSecondary.opacity(0.2), lineWidth: 1)
             )
         }
     }
@@ -262,24 +262,24 @@ struct HolidayRegionSettingView: View {
                     HStack(spacing: 16) {
                         Image(systemName: "calendar.badge.plus")
                             .font(.system(size: 20, weight: .medium))
-                            .foregroundStyle(Color(hexCode: "A76545"))
+                            .foregroundStyle(.haruPrimary)
                             .frame(width: 24, height: 24)
                         
                         VStack(alignment: .leading, spacing: 4) {
                             Text("캘린더 앱에서 추가")
                                 .font(.pretendardRegular(size: 16))
-                                .foregroundStyle(Color(hexCode: "40392B"))
+                                .foregroundStyle(.haruTextPrimary)
                             
                             Text("iOS 캘린더 앱을 열어서 공휴일을 구독하세요")
                                 .font(.pretendardRegular(size: 12))
-                                .foregroundStyle(Color(hexCode: "6E5C49"))
+                                .foregroundStyle(.haruSecondary)
                         }
                         
                         Spacer()
                         
                         Image(systemName: "arrow.up.right")
                             .font(.system(size: 12, weight: .medium))
-                            .foregroundStyle(Color(hexCode: "6E5C49").opacity(0.6))
+                            .foregroundStyle(.haruSecondary.opacity(0.6))
                     }
                     .padding(.horizontal, 16)
                     .padding(.vertical, 14)
@@ -289,7 +289,7 @@ struct HolidayRegionSettingView: View {
                 
                 Divider()
                     .padding(.horizontal, 16)
-                    .background(Color(hexCode: "6E5C49").opacity(0.1))
+                    .background(.haruSecondary.opacity(0.1))
                 
                 // 도움말 네비게이션 링크
                 NavigationLink {
@@ -304,18 +304,18 @@ struct HolidayRegionSettingView: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("추가 방법 보기")
                                 .font(.pretendardRegular(size: 16))
-                                .foregroundStyle(Color(hexCode: "40392B"))
+                                .foregroundStyle(.haruTextPrimary)
                             
                             Text("단계별 가이드를 확인하세요")
                                 .font(.pretendardRegular(size: 12))
-                                .foregroundStyle(Color(hexCode: "6E5C49"))
+                                .foregroundStyle(.haruSecondary)
                         }
                         
                         Spacer()
                         
                         Image(systemName: "chevron.right")
                             .font(.system(size: 12, weight: .medium))
-                            .foregroundStyle(Color(hexCode: "6E5C49").opacity(0.6))
+                            .foregroundStyle(.haruSecondary.opacity(0.6))
                     }
                     .padding(.horizontal, 16)
                     .padding(.vertical, 14)
@@ -325,11 +325,11 @@ struct HolidayRegionSettingView: View {
             }
             .background(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(Color(hexCode: "FFFCF5"))
+                    .fill(.haruBackground)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color(hexCode: "6E5C49").opacity(0.2), lineWidth: 1)
+                    .stroke(.haruSecondary.opacity(0.2), lineWidth: 1)
             )
         }
     }

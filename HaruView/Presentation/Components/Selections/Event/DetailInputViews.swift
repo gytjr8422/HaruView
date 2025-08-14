@@ -38,11 +38,11 @@ struct NotesInputView: View {
                     .focused($isFocused)
                     .frame(minHeight: 80)
                     .scrollContentBackground(.hidden)
-                    .background(Color(hexCode: "FFFCF5"))
+                    .background(.haruBackground)
                     .padding(8)
                     .background(
                         RoundedRectangle(cornerRadius: 8)
-                            .stroke(isFocused ? Color(hexCode: "A76545") : Color.gray, lineWidth: 1)
+                            .stroke(isFocused ? .haruPrimary : Color.gray, lineWidth: 1)
                     )
                     .font(.pretendardRegular(size: 16))
                 

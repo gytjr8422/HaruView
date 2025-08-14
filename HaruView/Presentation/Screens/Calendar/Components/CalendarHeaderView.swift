@@ -19,11 +19,11 @@ struct CalendarHeaderView: View {
             Button(action: onPreviousMonth) {
                 Image(systemName: "chevron.left")
                     .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .foregroundStyle(.haruPrimary)
                     .frame(width: 32, height: 32)
                     .background(
                         Circle()
-                            .fill(Color(hexCode: "A76545").opacity(0.1))
+                            .fill(.haruPrimary.opacity(0.1))
                     )
             }
             .buttonStyle(PlainButtonStyle())
@@ -34,18 +34,18 @@ struct CalendarHeaderView: View {
             VStack(spacing: 2) {
                 Text(monthDisplayText)
                     .font(.museumMedium(size: 19))
-                    .foregroundStyle(Color(hexCode: "40392B"))
+                    .foregroundStyle(.haruTextPrimary)
                 
                 // 오늘로 이동 버튼 (작은 텍스트)
                 Button(action: onToday) {
                     Text("오늘")
                         .font(.pretendardRegular(size: 12))
-                        .foregroundStyle(Color(hexCode: "A76545"))
+                        .foregroundStyle(.haruPrimary)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
                         .background(
                             Capsule()
-                                .fill(Color(hexCode: "A76545").opacity(0.1))
+                                .fill(.haruPrimary.opacity(0.1))
                         )
                 }
                 .buttonStyle(PlainButtonStyle())
@@ -57,11 +57,11 @@ struct CalendarHeaderView: View {
             Button(action: onNextMonth) {
                 Image(systemName: "chevron.right")
                     .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .foregroundStyle(.haruPrimary)
                     .frame(width: 32, height: 32)
                     .background(
                         Circle()
-                            .fill(Color(hexCode: "A76545").opacity(0.1))
+                            .fill(.haruPrimary.opacity(0.1))
                     )
             }
             .buttonStyle(PlainButtonStyle())

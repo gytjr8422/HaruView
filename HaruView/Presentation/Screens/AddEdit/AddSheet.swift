@@ -66,7 +66,7 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                     }
                 }
             }
-            .background(Color(hexCode: "FFFCF5"))
+            .background(.haruBackground)
             .toolbar { leadingToolbar; toolbarTitle; saveToolbar }
             .navigationBarTitleDisplayMode(.inline)
             .confirmationDialog(vm.isEdit ? "편집 내용이 저장되지 않습니다." : "작성 내용이 저장되지 않습니다.",

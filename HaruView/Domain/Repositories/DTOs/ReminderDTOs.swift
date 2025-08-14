@@ -117,9 +117,9 @@ extension ReminderInput {
         var color: Color {
             switch self {
             case .none: return .secondary
-            case .high: return Color(hexCode: "FF5722")
-            case .medium: return Color(hexCode: "FFC107")
-            case .low: return Color(hexCode: "4CAF50")
+            case .high: return .haruPriorityHigh
+            case .medium: return .haruPriorityMedium
+            case .low: return .haruPriorityLow
             }
         }
         

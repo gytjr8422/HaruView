@@ -21,7 +21,7 @@ struct EventDetailRow: View {
                 Text(event.title)
                     .lineLimit(1)
                     .font(.pretendardSemiBold(size: 16))
-                    .foregroundStyle(Color(hexCode: "40392B"))
+                    .foregroundStyle(.haruTextPrimary)
                 
                 if let timeText = event.timeDisplayText {
                     Text(timeText)
@@ -41,7 +41,7 @@ struct EventDetailRow: View {
             if event.hasAlarms {
                 Image(systemName: "bell.fill")
                     .font(.system(size: 12))
-                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .foregroundStyle(.haruPrimary)
             }
         }
         .padding(.horizontal, 20)

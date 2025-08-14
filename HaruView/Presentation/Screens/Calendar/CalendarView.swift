@@ -28,7 +28,7 @@ struct CalendarView: View {
     
     var body: some View {
         ZStack {
-            Color(hexCode: "FFFCF5")
+            Color.haruBackground
                 .ignoresSafeArea()
             
             if vm.isLoading && vm.monthWindow.isEmpty {
@@ -52,7 +52,7 @@ struct CalendarView: View {
                 }) {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(Color(hexCode: "A76545"))
+                        .foregroundStyle(.haruPrimary)
                 }
                 .padding(.top, 10)
             }
@@ -68,12 +68,12 @@ struct CalendarView: View {
                         HStack(spacing: 4) {
                             Text(vm.monthDisplayText)
                                 .font(.pretendardSemiBold(size: 18))
-                                .foregroundStyle(Color(hexCode: "40392B"))
+                                .foregroundStyle(.haruTextPrimary)
                             
                             // 시각적 힌트 아이콘
                             Image(systemName: "chevron.down")
                                 .font(.system(size: 12, weight: .medium))
-                                .foregroundStyle(Color(hexCode: "A76545").opacity(0.7))
+                                .foregroundStyle(.haruPrimary.opacity(0.7))
                         }
                     }
                     .buttonStyle(PlainButtonStyle())
@@ -84,7 +84,7 @@ struct CalendarView: View {
                         }
                     }
                     .font(.pretendardRegular(size: 12))
-                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .foregroundStyle(.haruPrimary)
                 }
                 .padding(.top, 10)
             }
@@ -98,7 +98,7 @@ struct CalendarView: View {
                 }) {
                     Image(systemName: "chevron.right")
                         .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(Color(hexCode: "A76545"))
+                        .foregroundStyle(.haruPrimary)
                 }
                 .padding(.top, 10)
             }
@@ -217,7 +217,7 @@ struct CalendarView: View {
             
             Text("달력을 불러오는 중...")
                 .font(.pretendardRegular(size: 16))
-                .foregroundStyle(Color(hexCode: "6E5C49"))
+                .foregroundStyle(.haruSecondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -230,7 +230,7 @@ struct CalendarView: View {
             
             Text("달력을 불러올 수 없습니다")
                 .font(.pretendardSemiBold(size: 18))
-                .foregroundStyle(Color(hexCode: "40392B"))
+                .foregroundStyle(.haruTextPrimary)
             
             Text(error.description)
                 .font(.pretendardRegular(size: 14))
@@ -244,7 +244,7 @@ struct CalendarView: View {
             .foregroundStyle(.white)
             .padding(.horizontal, 20)
             .padding(.vertical, 10)
-            .background(Color(hexCode: "A76545"))
+            .background(.haruPrimary)
             .cornerRadius(8)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -255,17 +255,17 @@ struct CalendarView: View {
         VStack(spacing: 16) {
             Image(systemName: "calendar")
                 .font(.system(size: 50))
-                .foregroundStyle(Color(hexCode: "A76545"))
+                .foregroundStyle(.haruPrimary)
             
             Text("달력 데이터가 없습니다")
                 .font(.pretendardSemiBold(size: 18))
-                .foregroundStyle(Color(hexCode: "40392B"))
+                .foregroundStyle(.haruTextPrimary)
             
             Button("새로고침") {
                 vm.loadCurrentMonth()
             }
             .font(.pretendardRegular(size: 16))
-            .foregroundStyle(Color(hexCode: "A76545"))
+            .foregroundStyle(.haruPrimary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }

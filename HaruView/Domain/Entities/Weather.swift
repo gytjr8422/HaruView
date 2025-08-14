@@ -289,59 +289,59 @@ extension WeatherSnapshot.Condition {
         switch self {
         case .clear, .mostlyClear:
             return .init(renderingMode: .monochrome,
-                         styles: [Color(hexCode: "FDB813")]) // 햇빛 노란색
+                         styles: [.haruWeatherSun]) // 햇빛 노란색
 
         case .partlyCloudy, .mostlyCloudy:
             return .init(renderingMode: .palette,
-                         styles: [Color.gray, Color(hexCode: "FDB813")]) // 구름 + 해
+                         styles: [Color.gray, .haruWeatherSun]) // 구름 + 해
 
         case .cloudy:
             return .init(renderingMode: .monochrome,
-                         styles: [Color(hexCode: "9CA3AF")])
+                         styles: [.haruWeatherGray])
 
         case .rain, .drizzle, .showers:
             return .init(renderingMode: .monochrome,
-                         styles: [Color(hexCode: "5DADE2")])
+                         styles: [.haruWeatherBlue])
 
         case .snow, .flurries:
             return .init(renderingMode: .monochrome,
-                         styles: [Color(hexCode: "6EC1E4")])
+                         styles: [.haruWeatherLightBlue])
 
         case .thunderstorms:
             return .init(renderingMode: .palette,
-                         styles: [Color.gray, Color(hexCode: "F4D03F"), Color(hexCode: "3498DB")]) // 구름, 번개, 비
+                         styles: [Color.gray, .haruWeatherLightning, .haruWeatherRain]) // 구름, 번개, 비
 
         case .foggy:
             return .init(renderingMode: .monochrome,
-                         styles: [Color(hexCode: "AAB2BD")])
+                         styles: [.haruWeatherFog])
 
         case .haze:
             return .init(renderingMode: .monochrome,
-                         styles: [Color(hexCode: "F4C27A")])
+                         styles: [.haruWeatherSand])
 
         case .smoke:
             return .init(renderingMode: .monochrome,
-                         styles: [Color(hexCode: "B0B0B0")])
+                         styles: [.haruWeatherAsh])
 
         case .windy, .breezy:
             return .init(renderingMode: .monochrome,
-                         styles: [Color(hexCode: "58D68D")])
+                         styles: [.haruWeatherTornado])
 
         case .hot:
             return .init(renderingMode: .monochrome,
-                         styles: [Color(hexCode: "FF5733")]) // 붉은 오렌지
+                         styles: [.haruWeatherHot]) // 붉은 오렌지
 
         case .cold:
             return .init(renderingMode: .monochrome,
-                         styles: [Color(hexCode: "3498DB")]) // 차가운 파랑
+                         styles: [.haruWeatherRain]) // 차가운 파랑
 
         case .blizzard:
             return .init(renderingMode: .monochrome,
-                         styles: [Color(hexCode: "AED6F1")])
+                         styles: [.haruWeatherWind])
 
         case .hurricane, .tropicalStorm:
             return .init(renderingMode: .monochrome,
-                         styles: [Color(hexCode: "5DADE2")])
+                         styles: [.haruWeatherBlue])
         }
     }
 }

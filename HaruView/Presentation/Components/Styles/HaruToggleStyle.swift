@@ -12,7 +12,7 @@ struct HaruToggleStyle: ToggleStyle {
     func makeBody(configuration: Self.Configuration) -> some View {
         HStack {
             RoundedRectangle(cornerRadius: 20)
-                .fill(configuration.isOn ? Color(hexCode: "A76545"): Color.gray)
+                .fill(configuration.isOn ? .haruPrimary : Color.gray)
                 .frame(width: 46, height: 24)
                 .overlay(
                     Circle()

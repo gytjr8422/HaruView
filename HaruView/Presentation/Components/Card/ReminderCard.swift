@@ -12,16 +12,7 @@ struct ReminderCard: View {
     let onToggle: () -> Void
     
     var priorityColor: Color {
-        switch reminder.priority {
-        case 1:
-            return Color(hexCode: "FF5722")
-        case 5:
-            return Color(hexCode: "FFC107")
-        case 9:
-            return Color(hexCode: "4CAF50")
-        default:
-            return .secondary
-        }
+        return Color.haruPriorityColor(for: reminder.priority)
     }
     
     var prioritySymbol: String {
@@ -40,7 +31,7 @@ struct ReminderCard: View {
     var body: some View {
         HStack {
             Image(systemName: reminder.isCompleted ? "checkmark.circle.fill" : "circle")
-                .foregroundStyle(reminder.isCompleted ? Color(hexCode: "A76545") : .secondary)
+                .foregroundStyle(reminder.isCompleted ? .haruCompleted : .secondary)
                 .font(.custom("", size: 22))
                 .onTapGesture { onToggle() }
                 .animation(.smooth, value: 1)
@@ -71,7 +62,7 @@ struct ReminderCard: View {
                                 
                                 Text("D-Day")
                                     .font(.jakartaRegular(size: 13))
-                                    .foregroundStyle(Color(hexCode: "FF5722"))
+                                    .foregroundStyle(.haruDDay)
                                     .opacity(reminder.isCompleted ? 0.4 : 1)
                             }
                             Spacer()
@@ -88,7 +79,7 @@ struct ReminderCard: View {
                             
                             Text("D-\(daysLeft)")
                                 .font(.jakartaRegular(size: 15))
-                                .foregroundStyle(Color(hexCode: "A76545"))
+                                .foregroundStyle(.haruCountdown)
                                 .opacity(reminder.isCompleted ? 0.4 : 1)
                         }
                     } else {
@@ -133,7 +124,7 @@ struct ReminderCard: View {
                     Text(DateFormatter.localizedString(from: due, dateStyle: .none, timeStyle: .short))
                         .lineLimit(1)
                         .font(.jakartaRegular(size: 15))
-                        .foregroundStyle(Color(hexCode: "2E2514").opacity(0.8))
+                        .foregroundStyle(.haruSubtext)
                 }
             }
         }

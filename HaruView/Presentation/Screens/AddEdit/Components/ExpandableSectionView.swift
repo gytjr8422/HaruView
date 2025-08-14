@@ -75,7 +75,7 @@ struct ExpandableSectionView<VM: AddSheetViewModelProtocol>: View {
                 } label: {
                     Image(systemName: expandedSection == section ? "chevron.up" : "chevron.down")
                         .font(.system(size: 14, weight: .medium))
-                        .foregroundStyle(Color(hexCode: "A76545"))
+                        .foregroundStyle(.haruPrimary)
                 }
             }
             .padding(.vertical, 12)
@@ -145,7 +145,7 @@ struct ExpandableSectionView<VM: AddSheetViewModelProtocol>: View {
                 } label: {
                     Image(systemName: expandedSection == section ? "chevron.up" : "chevron.down")
                         .font(.system(size: 14, weight: .medium))
-                        .foregroundStyle(Color(hexCode: "A76545"))
+                        .foregroundStyle(.haruPrimary)
                 }
             }
             .padding(.vertical, 12)

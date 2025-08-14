@@ -34,17 +34,17 @@ struct CalendarSelectionView: View {
                             
                             if selectedCalendar?.id == calendar.id {
                                 Image(systemName: "checkmark")
-                                    .foregroundStyle(Color(hexCode: "A76545"))
+                                    .foregroundStyle(.haruPrimary)
                                     .font(.system(size: 12, weight: .bold))
                             }
                         }
                         .font(.pretendardRegular(size: 12))
-                        .foregroundStyle(Color(hexCode: "A76545"))
+                        .foregroundStyle(.haruPrimary)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 14)
                         .background(
                             RoundedRectangle(cornerRadius: 16)
-                                .fill(Color(hexCode: "A76545").opacity(0.1))
+                                .fill(.haruPrimary.opacity(0.1))
                         )
                         .contentShape(Rectangle())
                         .onTapGesture {

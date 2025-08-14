@@ -66,7 +66,7 @@ struct ReminderListSheet<VM: ReminderListViewModelProtocol>: View {
                 }
                 .padding(.horizontal, 16)
             }
-            .background(Color(hexCode: "FFFCF5"))
+            .background(.haruBackground)
             .toolbar { navigationTitleView; exitButton }
             .navigationBarTitleDisplayMode(.inline)
             .presentationDragIndicator(.visible)
@@ -110,11 +110,11 @@ struct ReminderListSheet<VM: ReminderListViewModelProtocol>: View {
         HStack {
             Text(title)
                 .font(.pretendardSemiBold(size: 18))
-                .foregroundStyle(Color(hexCode: "40392B"))
+                .foregroundStyle(.haruTextPrimary)
             
             Text("(\(count))")
                 .font(.pretendardRegular(size: 16))
-                .foregroundStyle(Color(hexCode: "6E5C49").opacity(0.7))
+                .foregroundStyle(.haruSecondary.opacity(0.7))
             
             Spacer()
         }
@@ -158,12 +158,12 @@ struct ReminderListSheet<VM: ReminderListViewModelProtocol>: View {
         VStack(spacing: 16) {
             Image(systemName: "checklist")
                 .font(.system(size: 50))
-                .foregroundStyle(Color(hexCode: "A76545").opacity(0.6))
+                .foregroundStyle(.haruPrimary.opacity(0.6))
             
             VStack(spacing: 8) {
                 Text("할 일이 없습니다")
                     .font(.pretendardSemiBold(size: 18))
-                    .foregroundStyle(Color(hexCode: "40392B"))
+                    .foregroundStyle(.haruTextPrimary)
                 
                 Text("새로운 할 일을 추가해보세요!")
                     .font(.pretendardRegular(size: 14))
@@ -187,7 +187,7 @@ struct ReminderListSheet<VM: ReminderListViewModelProtocol>: View {
             } label: {
                 Text("닫기")
                     .font(.pretendardRegular(size: 16))
-                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .foregroundStyle(.haruPrimary)
             }
         }
     }

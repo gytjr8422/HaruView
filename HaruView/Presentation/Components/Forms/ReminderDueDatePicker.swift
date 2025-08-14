@@ -40,12 +40,12 @@ struct ReminderDueDatePicker: View {
                     }) {
                         Text(mode.title)
                             .font(.system(size: 14, weight: .medium))
-                            .foregroundStyle(selectedMode == mode ? .white : Color(hexCode: "A76545"))
+                            .foregroundStyle(selectedMode == mode ? .white : .haruPrimary)
                             .padding(.horizontal, 16)
                             .padding(.vertical, 10)
                             .background(
                                 RoundedRectangle(cornerRadius: 16)
-                                    .fill(selectedMode == mode ? Color(hexCode: "A76545") : Color(hexCode: "A76545").opacity(0.1))
+                                    .fill(selectedMode == mode ? .haruPrimary : .haruPrimary.opacity(0.1))
                             )
                     }
                     .buttonStyle(PlainButtonStyle())
@@ -84,14 +84,14 @@ struct ReminderDueDatePicker: View {
                                 HStack {
                                     Text("마감일")
                                         .font(.system(size: 25, weight: .light))
-                                        .foregroundStyle(selectedField == .dueDate ? Color(hexCode: "A76545") : .primary)
+                                        .foregroundStyle(selectedField == .dueDate ? .haruPrimary : .primary)
                                     Spacer()
                                 }
                             } else {
                                 HStack(alignment: .bottom, spacing: 3) {
                                     Text(formatTime(internalDate))
                                         .font(.system(size: 25, weight: .light))
-                                        .foregroundStyle(selectedField == .dueDate ? Color(hexCode: "A76545") : .primary)
+                                        .foregroundStyle(selectedField == .dueDate ? .haruPrimary : .primary)
                                     Text("마감")
                                         .font(.system(size: 12, weight: .light))
                                         .padding(.bottom, 2)

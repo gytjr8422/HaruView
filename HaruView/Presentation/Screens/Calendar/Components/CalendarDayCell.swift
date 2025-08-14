@@ -25,20 +25,20 @@ struct CalendarDayCell: View {
         if isSelected {
             return .white
         } else if isToday {
-            return Color(hexCode: "A76545")
+            return .haruPrimary
         } else if !isCurrentMonth {
-            return Color(hexCode: "6E5C49").opacity(0.3)
+            return .haruSecondary.opacity(0.3)
         } else if calendarDay?.isHoliday == true {
-            return Color(hexCode: "9C27B0") // 공휴일은 보라색
+            return .haruHoliday // 공휴일은 보라색
         } else {
             let weekday = Calendar.current.component(.weekday, from: date)
             switch weekday {
             case 1: // 일요일
-                return Color(hexCode: "FF5722") // 일요일 헤더와 동일한 빨간색
+                return .haruPriorityHigh // 일요일 헤더와 동일한 빨간색
             case 7: // 토요일
-                return Color(hexCode: "2196F3") // 토요일 헤더와 동일한 파란색
+                return .haruSaturday // 토요일 헤더와 동일한 파란색
             default: // 평일 (월~금)
-                return Color(hexCode: "40392B")
+                return .haruTextPrimary
             }
         }
     }
@@ -69,14 +69,14 @@ struct CalendarDayCell: View {
                 // 선택된 날짜 배경
                 if isSelected {
                     Circle()
-                        .fill(Color(hexCode: "A76545"))
+                        .fill(.haruPrimary)
                         .frame(width: 28, height: 28)
                 }
                 
                 // 오늘 날짜 배경 (선택되지 않은 경우)
                 if isToday && !isSelected {
                     Circle()
-                        .stroke(Color(hexCode: "A76545"), lineWidth: 2)
+                        .stroke(.haruPrimary, lineWidth: 2)
                         .frame(width: 28, height: 28)
                 }
                 
@@ -120,7 +120,7 @@ struct CalendarDayCell: View {
         .background(
             RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .fill(
-                    isSelected ? Color(hexCode: "A76545").opacity(0.05) :
+                    isSelected ? .haruPrimary.opacity(0.05) :
                     Color.clear
                 )
         )
@@ -149,12 +149,12 @@ struct CalendarDayCell: View {
         if extraItemCount > 0 {
             Text("+\(extraItemCount)")
                 .font(.pretendardRegular(size: 8))
-                .foregroundStyle(Color(hexCode: "6E5C49").opacity(0.8))
+                .foregroundStyle(.haruSecondary.opacity(0.8))
                 .padding(.horizontal, 3)
                 .padding(.vertical, 1)
                 .background(
                     Capsule()
-                        .fill(Color(hexCode: "6E5C49").opacity(0.15))
+                        .fill(.haruSecondary.opacity(0.15))
                 )
                 .padding(.bottom, 2)
         }
@@ -219,8 +219,8 @@ struct EventBar: View {
                             .font(.pretendardRegular(size: isCompact ? 9 : 11))
                             .foregroundStyle(
                                 item.isCompleted ?
-                                Color(hexCode: "6E5C49").opacity(0.5) :
-                                Color(hexCode: "40392B")
+                                .haruSecondary.opacity(0.5) :
+                                .haruTextPrimary
                             )
                         
                         context.draw(text, at: CGPoint(x: 0, y: size.height / 2), anchor: .leading)
@@ -279,7 +279,7 @@ struct ContinuousEventBar: View {
                         Canvas { context, size in
                             let text = Text(info.event.displayTitle)
                                 .font(.pretendardRegular(size: isCompact ? 9 : 11))
-                                .foregroundStyle(Color(hexCode: "40392B"))
+                                .foregroundStyle(.haruTextPrimary)
                             
                             context.draw(text, at: CGPoint(x: 0, y: size.height / 2), anchor: .leading)
                         }

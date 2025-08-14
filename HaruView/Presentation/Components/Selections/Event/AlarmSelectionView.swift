@@ -19,7 +19,7 @@ struct AlarmSelectionView: View {
                 VStack(alignment: .leading, spacing: 12) {
                     Text("빠른 설정")
                         .font(.pretendardSemiBold(size: 16))
-                        .foregroundStyle(Color(hexCode: "40392B"))
+                        .foregroundStyle(.haruTextPrimary)
                     
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 8) {
                         ForEach(AlarmInput.presets.prefix(6), id: \.description) { preset in
@@ -30,13 +30,13 @@ struct AlarmSelectionView: View {
                             } label: {
                                 Text(preset.description)
                                     .font(.pretendardRegular(size: 14))
-                                    .foregroundStyle(Color(hexCode: "A76545"))
+                                    .foregroundStyle(.haruPrimary)
                                     .padding(.horizontal, 12)
                                     .padding(.vertical, 10)
                                     .frame(maxWidth: .infinity)
                                     .background(
                                         RoundedRectangle(cornerRadius: 12)
-                                            .fill(Color(hexCode: "A76545").opacity(0.1))
+                                            .fill(.haruPrimary.opacity(0.1))
                                     )
                             }
                             .buttonStyle(PlainButtonStyle())
@@ -50,7 +50,7 @@ struct AlarmSelectionView: View {
                         HStack {
                             Text("사용자 알림")
                                 .font(.pretendardSemiBold(size: 16))
-                                .foregroundStyle(Color(hexCode: "40392B"))
+                                .foregroundStyle(.haruTextPrimary)
                             
                             Spacer()
                             
@@ -59,7 +59,7 @@ struct AlarmSelectionView: View {
                             } label: {
                                 Image(systemName: "plus.circle")
                                     .font(.system(size: 18))
-                                    .foregroundStyle(Color(hexCode: "A76545"))
+                                    .foregroundStyle(.haruPrimary)
                             }
                         }
                         
@@ -92,7 +92,7 @@ struct AlarmSelectionView: View {
                                     .frame(maxWidth: .infinity)
                                     .background(
                                         RoundedRectangle(cornerRadius: 12)
-                                            .fill(Color(hexCode: "A76545"))
+                                            .fill(.haruPrimary)
                                     )
                                 }
                             }
@@ -104,7 +104,7 @@ struct AlarmSelectionView: View {
                         HStack {
                             Text("사용자 설정")
                                 .font(.pretendardSemiBold(size: 16))
-                                .foregroundStyle(Color(hexCode: "40392B"))
+                                .foregroundStyle(.haruTextPrimary)
                             
                             Spacer()
                             
@@ -113,7 +113,7 @@ struct AlarmSelectionView: View {
                             } label: {
                                 Image(systemName: "plus.circle")
                                     .font(.system(size: 18))
-                                    .foregroundStyle(Color(hexCode: "A76545"))
+                                    .foregroundStyle(.haruPrimary)
                             }
                         }
                         

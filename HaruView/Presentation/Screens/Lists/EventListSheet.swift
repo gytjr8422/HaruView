@@ -51,7 +51,7 @@ struct EventListSheet<VM: EventListViewModelProtocol>: View {
             .toolbar { navigationTitleView; exitButton }
             .navigationBarTitleDisplayMode(.inline)
             .presentationDragIndicator(.visible)
-            .background(Color(hexCode: "FFFCF5"))
+            .background(.haruBackground)
         }
         .modifier(EventListSheetsModifier(
             editingEvent: $editingEvent,
@@ -75,7 +75,7 @@ struct EventListSheet<VM: EventListViewModelProtocol>: View {
             } label: {
                 Text("닫기")
                     .font(.pretendardRegular(size: 16))
-                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .foregroundStyle(.haruPrimary)
             }
         }
     }

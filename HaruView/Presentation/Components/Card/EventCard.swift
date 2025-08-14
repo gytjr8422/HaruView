@@ -16,7 +16,7 @@ struct EventCard: View {
             Text(event.title)
                 .lineLimit(1)
                 .font(.pretendardSemiBold(size: 17))
-                .foregroundStyle(Color(hexCode: "40392B"))
+                .foregroundStyle(.haruTextPrimary)
                 .strikethrough(isPast)
                 .opacity(isPast ? 0.5 : 1)
             
@@ -27,18 +27,18 @@ struct EventCard: View {
                 Text(timeText)
                     .lineLimit(1)
                     .font(.jakartaRegular(size: 15))
-                    .foregroundStyle(Color(hexCode: "2E2514").opacity(0.5))
+                    .foregroundStyle(.haruTextDark.opacity(0.5))
             }
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 16)
         .background(
             RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .fill(Color(hexCode: "FFFCF5"))
+                .fill(.haruBackground)
         )
         .overlay(
             RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color(hexCode: "6E5C49").opacity(0.2), lineWidth: 1)
+                    .stroke(.haruSecondary.opacity(0.2), lineWidth: 1)
         )
         
     }

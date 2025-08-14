@@ -38,7 +38,7 @@ struct MediumWidgetView: View {
                                     Text(event.title)
                                         .font(.pretendardBold(size: 13))
                                         .lineLimit(1)
-                                        .foregroundStyle(Color(hexCode: "40392B"))
+                                        .foregroundStyle(.haruTextPrimary)
                                         .strikethrough(isPast)
                                         .opacity(isPast ? 0.5 : 1)
                                     
@@ -63,7 +63,7 @@ struct MediumWidgetView: View {
                 
                 // 구분선
                 Rectangle()
-                    .fill(Color(hexCode: "6E5C49").opacity(0.2))
+                    .fill(.haruCardBorder)
                     .frame(width: 1, height: .infinity)
                 
                 // 할 일 섹션
@@ -88,7 +88,7 @@ struct MediumWidgetView: View {
                                 } else {
                                     Button(intent: ToggleReminderIntent(reminderId: reminder.id)) {
                                         Image(systemName: reminder.isCompleted ? "checkmark.circle.fill" : "circle")
-                                            .foregroundStyle(reminder.isCompleted ? Color(hexCode: "A76545") : .gray)
+                                            .foregroundStyle(reminder.isCompleted ? .haruCompleted : .gray)
                                             .font(.system(size: 20))
                                             .contentTransition(.symbolEffect(.replace))
                                     }
@@ -101,7 +101,7 @@ struct MediumWidgetView: View {
                                     .font(.pretendardSemiBold(size: 13))
                                     .lineLimit(1)
                                     .strikethrough(reminder.isCompleted)
-                                    .foregroundStyle(reminder.isCompleted ? .gray : Color(hexCode: "40392B"))
+                                    .foregroundStyle(reminder.isCompleted ? .gray : .haruTextPrimary)
                                     .invalidatableContent()
                             }
                             
@@ -121,7 +121,7 @@ struct MediumWidgetView: View {
 struct CheckboxToggleStyle: ToggleStyle {
     func makeBody(configuration: Configuration) -> some View {
         Image(systemName: configuration.isOn ? "checkmark.circle.fill" : "circle")
-            .foregroundStyle(configuration.isOn ? Color(hexCode: "A76545") : .gray)
+            .foregroundStyle(configuration.isOn ? .haruCompleted : .gray)
             .font(.system(size: 20))
             .contentTransition(.symbolEffect(.replace))
     }
@@ -143,5 +143,5 @@ struct CheckboxToggleStyle: ToggleStyle {
     )
     
     MediumWidgetView(entry: sampleEntry)
-        .background(Color(hexCode: "FFFCF5"))
+        .background(.haruWidgetBackground)
 }

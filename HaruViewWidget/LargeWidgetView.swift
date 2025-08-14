@@ -19,11 +19,11 @@ struct LargeWidgetView: View {
                 VStack(alignment: .leading, spacing: 6) {
                     HStack(spacing: 3) {
                         Image(systemName: "calendar")
-                            .foregroundStyle(Color(hexCode: "A76545"))
+                            .foregroundStyle(.haruPrimary)
                             .font(.system(size: 10))
                         Text("일정")
                             .font(.pretendardBold(size: 11))
-                            .foregroundStyle(Color(hexCode: "40392B"))
+                            .foregroundStyle(.haruTextPrimary)
                     }
                     
                     if entry.events.isEmpty {
@@ -46,7 +46,7 @@ struct LargeWidgetView: View {
                                     Text(event.title)
                                         .font(.pretendardBold(size: 13))
                                         .lineLimit(1)
-                                        .foregroundStyle(Color(hexCode: "40392B"))
+                                        .foregroundStyle(.haruTextPrimary)
                                         .strikethrough(isPast)
                                         .opacity(isPast ? 0.5 : 1)
                                     
@@ -71,18 +71,18 @@ struct LargeWidgetView: View {
                 
                 // 구분선
                 Rectangle()
-                    .fill(Color(hexCode: "6E5C49").opacity(0.2))
+                    .fill(.haruCardBorder)
                     .frame(width: 1, height: .infinity)
                 
                 // 할 일 섹션
                 VStack(alignment: .leading, spacing: 6) {
                     HStack(spacing: 3) {
                         Image(systemName: "checklist")
-                            .foregroundStyle(Color(hexCode: "C2966B"))
+                            .foregroundStyle(.haruAccent)
                             .font(.system(size: 10))
                         Text("할 일")
                             .font(.pretendardSemiBold(size: 10))
-                            .foregroundStyle(Color(hexCode: "40392B"))
+                            .foregroundStyle(.haruTextPrimary)
                     }
                     
                     if entry.reminders.isEmpty {
@@ -104,7 +104,7 @@ struct LargeWidgetView: View {
                                 } else {
                                     Button(intent: ToggleReminderIntent(reminderId: reminder.id)) {
                                         Image(systemName: reminder.isCompleted ? "checkmark.circle.fill" : "circle")
-                                            .foregroundStyle(reminder.isCompleted ? Color(hexCode: "A76545") : .gray)
+                                            .foregroundStyle(reminder.isCompleted ? .haruPrimary : .gray)
                                             .font(.system(size: 20))
                                             .contentTransition(.symbolEffect(.replace))
                                     }
@@ -117,7 +117,7 @@ struct LargeWidgetView: View {
                                     .font(.pretendardSemiBold(size: 13))
                                     .lineLimit(1)
                                     .strikethrough(reminder.isCompleted)
-                                    .foregroundStyle(reminder.isCompleted ? .gray : Color(hexCode: "40392B"))
+                                    .foregroundStyle(reminder.isCompleted ? .gray : .haruTextPrimary)
                                     .invalidatableContent()
                             }
                             
@@ -153,6 +153,6 @@ struct LargeWidgetView: View {
     )
     
     LargeWidgetView(entry: sampleEntry)
-        .background(Color(hexCode: "FFFCF5"))
+        .background(.haruWidgetBackground)
 }
 

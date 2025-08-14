@@ -114,9 +114,9 @@ struct HaruTabBar: View {
         .padding(.vertical, 6)
         .background(
             RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .fill(Color(hexCode: "FFFCF5"))
+                .fill(.haruBackground)
                 .shadow(
-                    color: Color(hexCode: "6E5C49").opacity(0.15),
+                    color: .haruSecondary.opacity(0.15),
                     radius: 8,
                     x: 0,
                     y: -2
@@ -125,7 +125,7 @@ struct HaruTabBar: View {
         .overlay(
             RoundedRectangle(cornerRadius: 20, style: .continuous)
                 .stroke(
-                    Color(hexCode: "6E5C49").opacity(0.1),
+                    .haruSecondary.opacity(0.1),
                     lineWidth: 1
                 )
         )
@@ -160,7 +160,7 @@ struct TabBarButton: View {
                     // 선택된 탭의 배경
                     if isSelected {
                         RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .fill(Color(hexCode: "A76545").opacity(0.15))
+                            .fill(.haruSelectedBackground)
                             .frame(width: 60, height: 40)
                             .matchedGeometryEffect(
                                 id: "selectedBackground",
@@ -174,14 +174,14 @@ struct TabBarButton: View {
                             .font(.system(size: 24, weight: isSelected ? .semibold : .medium))
                             .foregroundStyle(
                                 isSelected
-                                ? Color(hexCode: "A76545")
-                                : Color(hexCode: "6E5C49").opacity(0.6)
+                                ? .haruPrimary
+                                : .haruDisabled
                             )
                             .scaleEffect(isSelected ? 1.1 : 1.0)
                     } else {
                         Image(systemName: tab.iconName)
                             .font(.system(size: 36, weight: .light))
-                            .foregroundStyle(Color(hexCode: "A76545").opacity(0.6))
+                            .foregroundStyle(.haruPrimary.opacity(0.6))
                             .shadow(color: .black.opacity(0.1), radius: 2, x: 1, y: 1)
                             .shadow(color: .black.opacity(0.1), radius: 8, x: 4, y: 4)
                             .offset(y: -1)
@@ -194,8 +194,8 @@ struct TabBarButton: View {
                         .font(.pretendardMedium(size: 11))
                         .foregroundStyle(
                             isSelected
-                            ? Color(hexCode: "A76545")
-                            : Color(hexCode: "6E5C49").opacity(0.6)
+                            ? .haruPrimary
+                            : .haruSecondary.opacity(0.6)
                         )
                 }
             }

@@ -58,7 +58,7 @@ struct DayDetailSheet: View {
                         dismiss()
                     }
                     .font(.pretendardRegular(size: 16))
-                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .foregroundStyle(.haruPrimary)
                 }
                 
                 ToolbarItem(placement: .principal) {
@@ -82,7 +82,7 @@ struct DayDetailSheet: View {
                     } label: {
                         Image(systemName: "plus")
                             .font(.system(size: 16, weight: .semibold))
-                            .foregroundStyle(Color(hexCode: "A76545"))
+                            .foregroundStyle(.haruPrimary)
                     }
                 }
             }
@@ -174,7 +174,7 @@ struct DayDetailSheet: View {
             }
             .padding(.horizontal, 20)
         }
-        .background(Color(hexCode: "FFFCF5"))
+        .background(.haruBackground)
     }
     
     private var loadingView: some View {
@@ -182,7 +182,7 @@ struct DayDetailSheet: View {
             ProgressView("로딩 중...")
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .background(Color(hexCode: "FFFCF5"))
+        .background(.haruBackground)
     }
     
     private func errorView(_ error: TodayBoardError) -> some View {
@@ -205,23 +205,23 @@ struct DayDetailSheet: View {
             .foregroundStyle(.white)
             .padding(.horizontal, 16)
             .padding(.vertical, 8)
-            .background(Color(hexCode: "A76545"))
+            .background(.haruPrimary)
             .cornerRadius(8)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(hexCode: "FFFCF5"))
+        .background(.haruBackground)
     }
     
     private var emptyView: some View {
         VStack(spacing: 20) {
             Image(systemName: "calendar.badge.plus")
                 .font(.system(size: 50))
-                .foregroundStyle(Color(hexCode: "A76545").opacity(0.7))
+                .foregroundStyle(.haruPrimary.opacity(0.7))
             
             VStack(spacing: 8) {
                 Text("이 날짜에는 일정이나 할 일이 없습니다")
                     .font(.pretendardSemiBold(size: 18))
-                    .foregroundStyle(Color(hexCode: "40392B"))
+                    .foregroundStyle(.haruTextPrimary)
                     .multilineTextAlignment(.center)
                 
                 Text("상단의 + 버튼을 누르거나 달력에서 날짜를 길게 눌러서\n일정이나 할 일을 추가할 수 있어요!")
@@ -232,7 +232,7 @@ struct DayDetailSheet: View {
         }
         .padding(.horizontal, 20)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(hexCode: "FFFCF5"))
+        .background(.haruBackground)
     }
     
     @ViewBuilder
@@ -245,7 +245,7 @@ struct DayDetailSheet: View {
                 .padding(10)
                 .background(
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color(hexCode: "6E5C49").opacity(0.2), lineWidth: 1)
+                        .stroke(.haruCardBorder, lineWidth: 1)
                 )
                 .padding(.top, 10)
         }
@@ -306,7 +306,7 @@ struct DayDetailSheet: View {
                             toggleReminder(reminder.id)
                         } label: {
                             Image(systemName: reminder.isCompleted ? "checkmark.circle.fill" : "circle")
-                                .foregroundStyle(reminder.isCompleted ? Color(hexCode: "A76545") : .secondary)
+                                .foregroundStyle(reminder.isCompleted ? .haruPrimary : .secondary)
                                 .font(.system(size: 22))
                         }
                         .buttonStyle(PlainButtonStyle())
@@ -324,9 +324,9 @@ struct DayDetailSheet: View {
                             
                             let priorityColor: Color = {
                                 switch reminder.priority {
-                                case 1: return Color(hexCode: "FF5722") // 높음
-                                case 5: return Color(hexCode: "FFC107") // 보통
-                                case 9: return Color(hexCode: "4CAF50") // 낮음
+                                case 1: return .haruPriorityHigh // 높음
+                                case 5: return .haruPriorityMedium // 보통
+                                case 9: return .haruPriorityLow // 낮음
                                 default: return .secondary
                                 }
                             }()
@@ -348,7 +348,7 @@ struct DayDetailSheet: View {
                                 Text(timeText)
                                     .lineLimit(1)
                                     .font(.jakartaRegular(size: 15))
-                                    .foregroundStyle(Color(hexCode: "2E2514").opacity(0.8))
+                                    .foregroundStyle(.haruSubtext)
                             }
                         }
                         
@@ -400,11 +400,11 @@ struct DayDetailSheet: View {
             .padding(.vertical, 6)
             .background(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(Color(hexCode: "C2966B").opacity(0.09))
+                    .fill(.haruSettingBackground)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color(hexCode: "C2966B").opacity(0.5), lineWidth: 1)
+                    .stroke(.haruSettingBorder, lineWidth: 1)
             )
         }
     }

@@ -28,21 +28,21 @@ struct ReminderTypeSelectionView: View {
                             // 라디오 버튼
                             Image(systemName: selectedType == type ? "largecircle.fill.circle" : "circle")
                                 .font(.system(size: 18, weight: .medium))
-                                .foregroundStyle(selectedType == type ? Color(hexCode: "A76545") : Color(hexCode: "6E5C49").opacity(0.5))
+                                .foregroundStyle(selectedType == type ? .haruPrimary : .haruSecondary.opacity(0.5))
                             
                             Image(systemName: type.iconName)
                                 .font(.system(size: 16, weight: .medium))
-                                .foregroundStyle(selectedType == type ? Color(hexCode: "A76545") : Color(hexCode: "6E5C49"))
+                                .foregroundStyle(selectedType == type ? .haruPrimary : .haruSecondary)
                                 .frame(width: 20, height: 20)
                             
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(type.displayText)
                                     .font(.pretendardRegular(size: 15))
-                                    .foregroundStyle(selectedType == type ? Color(hexCode: "40392B") : Color(hexCode: "6E5C49"))
+                                    .foregroundStyle(selectedType == type ? .haruTextPrimary : .haruSecondary)
                                 
                                 Text(type.description)
                                     .font(.pretendardRegular(size: 11))
-                                    .foregroundStyle(Color(hexCode: "6E5C49").opacity(0.8))
+                                    .foregroundStyle(.haruSecondary.opacity(0.8))
                             }
                             
                             Spacer()
@@ -51,12 +51,12 @@ struct ReminderTypeSelectionView: View {
                         .padding(.vertical, 12)
                         .background(
                             RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                .fill(selectedType == type ? Color(hexCode: "A76545").opacity(0.05) : Color.clear)
+                                .fill(selectedType == type ? .haruPrimary.opacity(0.05) : Color.clear)
                         )
                         .overlay(
                             RoundedRectangle(cornerRadius: 10)
                                 .stroke(
-                                    selectedType == type ? Color(hexCode: "A76545").opacity(0.2) : Color.clear,
+                                    selectedType == type ? .haruPrimary.opacity(0.2) : Color.clear,
                                     lineWidth: 1
                                 )
                         )
@@ -125,7 +125,7 @@ struct PrioritySelectionView: View {
                                 .foregroundStyle(priority.color)
                             Text(priority.localizedDescription)
                                 .font(.pretendardRegular(size: 14))
-                                .foregroundStyle(Color(hexCode: "A76545"))
+                                .foregroundStyle(.haruPrimary)
                         }
                         .padding(.horizontal, 20)
                         .padding(.vertical, 12)
@@ -169,17 +169,17 @@ struct ReminderCalendarSelectionView: View {
                             
                             if selectedCalendar?.id == calendar.id {
                                 Image(systemName: "checkmark")
-                                    .foregroundStyle(Color(hexCode: "A76545"))
+                                    .foregroundStyle(.haruPrimary)
                                     .font(.system(size: 12, weight: .bold))
                             }
                         }
                         .font(.pretendardRegular(size: 12))
-                        .foregroundStyle(Color(hexCode: "A76545"))
+                        .foregroundStyle(.haruPrimary)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 12)
                         .background(
                             RoundedRectangle(cornerRadius: 16)
-                                .fill(Color(hexCode: "A76545").opacity(0.1))
+                                .fill(.haruPrimary.opacity(0.1))
                         )
                         .contentShape(Rectangle())
                         .onTapGesture {
@@ -210,7 +210,7 @@ struct ReminderDetailInputViews {
 //                        showLocationPicker = true
 //                    }
 //                    .font(.pretendardRegular(size: 14))
-//                    .foregroundStyle(Color(hexCode: "A76545"))
+//                    .foregroundStyle(.haruPrimary)
                 }
                 
                 HaruTextField(text: $location, placeholder: String(localized: "위치 입력"))
@@ -252,11 +252,11 @@ struct ReminderDetailInputViews {
                         .focused($isFocused)
                         .frame(minHeight: 80)
                         .scrollContentBackground(.hidden)
-                        .background(Color(hexCode: "FFFCF5"))
+                        .background(.haruBackground)
                         .padding(8)
                         .background(
                             RoundedRectangle(cornerRadius: 8)
-                                .stroke(isFocused ? Color(hexCode: "A76545") : Color.gray, lineWidth: 1)
+                                .stroke(isFocused ? .haruPrimary : Color.gray, lineWidth: 1)
                         )
                         .font(.pretendardRegular(size: 16))
                     
@@ -303,7 +303,7 @@ struct ReminderAlarmSelectionView: View {
                 VStack(alignment: .leading, spacing: 12) {
                     Text("빠른 설정")
                         .font(.pretendardSemiBold(size: 16))
-                        .foregroundStyle(Color(hexCode: "40392B"))
+                        .foregroundStyle(.haruTextPrimary)
                     
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 8) {
                         ForEach(AlarmInput.presets.prefix(5), id: \.description) { preset in
@@ -315,13 +315,13 @@ struct ReminderAlarmSelectionView: View {
                             } label: {
                                 Text(preset.description)
                                     .font(.pretendardRegular(size: 14))
-                                    .foregroundStyle(Color(hexCode: "A76545"))
+                                    .foregroundStyle(.haruPrimary)
                                     .padding(.horizontal, 12)
                                     .padding(.vertical, 10)
                                     .frame(maxWidth: .infinity)
                                     .background(
                                         RoundedRectangle(cornerRadius: 12)
-                                            .fill(Color(hexCode: "A76545").opacity(0.1))
+                                            .fill(.haruPrimary.opacity(0.1))
                                     )
                             }
                             .buttonStyle(PlainButtonStyle())
@@ -335,11 +335,11 @@ struct ReminderAlarmSelectionView: View {
                             HStack(spacing: 6) {
                                 Image(systemName: "slider.horizontal.3")
                                     .font(.system(size: 12))
-                                    .foregroundStyle(Color(hexCode: "A76545"))
+                                    .foregroundStyle(.haruPrimary)
                                 
                                 Text("사용자 설정")
                                     .font(.pretendardRegular(size: 14))
-                                    .foregroundStyle(Color(hexCode: "A76545"))
+                                    .foregroundStyle(.haruPrimary)
                                     .lineLimit(1)
                             }
                             .padding(.horizontal, 12)
@@ -347,7 +347,7 @@ struct ReminderAlarmSelectionView: View {
                             .frame(maxWidth: .infinity)
                             .background(
                                 RoundedRectangle(cornerRadius: 12)
-                                    .fill(Color(hexCode: "A76545").opacity(0.1))
+                                    .fill(.haruPrimary.opacity(0.1))
                             )
                         }
                         .buttonStyle(PlainButtonStyle())
@@ -358,7 +358,7 @@ struct ReminderAlarmSelectionView: View {
                 VStack(alignment: .leading, spacing: 12) {
                     Text("빠른 설정")
                         .font(.pretendardSemiBold(size: 16))
-                        .foregroundStyle(Color(hexCode: "40392B"))
+                        .foregroundStyle(.haruTextPrimary)
                     
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2), spacing: 8) {
                         ForEach(availablePresets, id: \.rawValue) { preset in
@@ -374,11 +374,11 @@ struct ReminderAlarmSelectionView: View {
                                 HStack(spacing: 8) {
                                     Image(systemName: preset.iconName)
                                         .font(.system(size: 14))
-                                        .foregroundStyle(alarmPreset == preset ? .white : Color(hexCode: "A76545"))
+                                        .foregroundStyle(alarmPreset == preset ? .white : .haruPrimary)
                                     
                                     Text(preset.displayText)
                                         .font(.pretendardRegular(size: 13))
-                                        .foregroundStyle(alarmPreset == preset ? .white : Color(hexCode: "A76545"))
+                                        .foregroundStyle(alarmPreset == preset ? .white : .haruPrimary)
                                         .lineLimit(1)
                                 }
                                 .padding(.horizontal, 12)
@@ -386,7 +386,7 @@ struct ReminderAlarmSelectionView: View {
                                 .frame(maxWidth: .infinity)
                                 .background(
                                     RoundedRectangle(cornerRadius: 12)
-                                        .fill(alarmPreset == preset ? Color(hexCode: "A76545") : Color(hexCode: "A76545").opacity(0.1))
+                                        .fill(alarmPreset == preset ? .haruPrimary : .haruPrimary.opacity(0.1))
                                 )
                             }
                             .buttonStyle(PlainButtonStyle())
@@ -401,7 +401,7 @@ struct ReminderAlarmSelectionView: View {
                     HStack {
                         Text("사용자 알림")
                             .font(.pretendardSemiBold(size: 16))
-                            .foregroundStyle(Color(hexCode: "40392B"))
+                            .foregroundStyle(.haruTextPrimary)
                         
                         Spacer()
                         
@@ -410,7 +410,7 @@ struct ReminderAlarmSelectionView: View {
                         } label: {
                             Image(systemName: "plus.circle")
                                 .font(.system(size: 18))
-                                .foregroundStyle(Color(hexCode: "A76545"))
+                                .foregroundStyle(.haruPrimary)
                         }
                     }
                     
@@ -449,7 +449,7 @@ struct ReminderAlarmSelectionView: View {
                                     .frame(maxWidth: .infinity)
                                     .background(
                                         RoundedRectangle(cornerRadius: 12)
-                                            .fill(Color(hexCode: "A76545"))
+                                            .fill(.haruPrimary)
                                     )
                                 }
                             }
@@ -529,13 +529,13 @@ struct CustomReminderAlarmSheet: View {
                         dismiss()
                     }
                     .font(.pretendardRegular(size: 16))
-                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .foregroundStyle(.haruPrimary)
                     
                     Spacer()
                     
                     Text("알림 추가")
                         .font(.pretendardSemiBold(size: 18))
-                        .foregroundStyle(Color(hexCode: "40392B"))
+                        .foregroundStyle(.haruTextPrimary)
                     
                     Spacer()
                     
@@ -552,11 +552,11 @@ struct CustomReminderAlarmSheet: View {
                         dismiss()
                     }
                     .font(.pretendardSemiBold(size: 16))
-                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .foregroundStyle(.haruPrimary)
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 16)
-                .background(Color(hexCode: "FFFCF5"))
+                .background(.haruBackground)
                 
                 Divider()
                     .background(Color.gray.opacity(0.3))
@@ -568,7 +568,7 @@ struct CustomReminderAlarmSheet: View {
                         VStack(alignment: .leading, spacing: 16) {
                             Text("알림 방식")
                                 .font(.pretendardSemiBold(size: 16))
-                                .foregroundStyle(Color(hexCode: "40392B"))
+                                .foregroundStyle(.haruTextPrimary)
                             
                             HStack(spacing: 12) {
                                 ForEach(availableTriggerModes, id: \.self) { mode in
@@ -578,18 +578,18 @@ struct CustomReminderAlarmSheet: View {
                                         HStack(spacing: 8) {
                                             Image(systemName: mode.iconName)
                                                 .font(.system(size: 14))
-                                                .foregroundStyle(triggerMode == mode ? .white : Color(hexCode: "A76545"))
+                                                .foregroundStyle(triggerMode == mode ? .white : .haruPrimary)
                                             
                                             Text(mode.displayText)
                                                 .font(.pretendardRegular(size: 14))
-                                                .foregroundStyle(triggerMode == mode ? .white : Color(hexCode: "A76545"))
+                                                .foregroundStyle(triggerMode == mode ? .white : .haruPrimary)
                                         }
                                         .padding(.horizontal, 16)
                                         .padding(.vertical, 12)
                                         .frame(maxWidth: .infinity)
                                         .background(
                                             RoundedRectangle(cornerRadius: 12)
-                                                .fill(triggerMode == mode ? Color(hexCode: "A76545") : Color(hexCode: "A76545").opacity(0.1))
+                                                .fill(triggerMode == mode ? .haruPrimary : .haruPrimary.opacity(0.1))
                                         )
                                     }
                                     .buttonStyle(PlainButtonStyle())
@@ -602,7 +602,7 @@ struct CustomReminderAlarmSheet: View {
                     VStack(alignment: .leading, spacing: 16) {
                         Text(dueDateMode == .dateTime && triggerMode == .relative ? "몇 분 전에 알림받을까요?" : "언제 알림받을까요?")
                             .font(.pretendardSemiBold(size: 16))
-                            .foregroundStyle(Color(hexCode: "40392B"))
+                            .foregroundStyle(.haruTextPrimary)
                         
                         if triggerMode == .relative {
                             VStack(spacing: 12) {
@@ -615,16 +615,16 @@ struct CustomReminderAlarmSheet: View {
                                         .padding(.vertical, 12)
                                         .background(
                                             RoundedRectangle(cornerRadius: 8)
-                                                .stroke(Color(hexCode: "A76545").opacity(0.3), lineWidth: 1)
+                                                .stroke(.haruPrimary.opacity(0.3), lineWidth: 1)
                                                 .background(
                                                     RoundedRectangle(cornerRadius: 8)
-                                                        .fill(Color(hexCode: "FFFCF5"))
+                                                        .fill(.haruBackground)
                                                 )
                                         )
                                     
                                     Text("분 전")
                                         .font(.pretendardRegular(size: 16))
-                                        .foregroundStyle(Color(hexCode: "40392B"))
+                                        .foregroundStyle(.haruTextPrimary)
                                 }
                             }
                         } else {
@@ -632,7 +632,7 @@ struct CustomReminderAlarmSheet: View {
                                 DatePicker("", selection: $absoluteDate, displayedComponents: [.date, .hourAndMinute])
                                     .datePickerStyle(.compact)
                                     .environment(\.locale, Locale(identifier: "ko_KR"))
-                                    .accentColor(Color(hexCode: "A76545"))
+                                    .accentColor(.haruPrimary)
                             }
                         }
                     }
@@ -642,7 +642,7 @@ struct CustomReminderAlarmSheet: View {
                 .padding(.horizontal, 20)
                 .padding(.top, 24)
             }
-            .background(Color(hexCode: "FFFCF5"))
+            .background(.haruBackground)
         }
         .onAppear {
             // dueDateMode에 따라 적절한 triggerMode로 초기화

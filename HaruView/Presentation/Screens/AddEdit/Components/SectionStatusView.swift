@@ -31,17 +31,17 @@ struct SectionStatusView<VM: AddSheetViewModelProtocol>: View {
                     if !vm.location.isEmpty {
                         Image(systemName: "location.fill")
                             .font(.system(size: 12))
-                            .foregroundStyle(Color(hexCode: "A76545"))
+                            .foregroundStyle(.haruPrimary)
                     }
                     if !vm.url.isEmpty {
                         Image(systemName: "link")
                             .font(.system(size: 12))
-                            .foregroundStyle(Color(hexCode: "A76545"))
+                            .foregroundStyle(.haruPrimary)
                     }
                     if !vm.notes.isEmpty {
                         Image(systemName: "note.text")
                             .font(.system(size: 12))
-                            .foregroundStyle(Color(hexCode: "A76545"))
+                            .foregroundStyle(.haruPrimary)
                     }
                 }
             }
@@ -50,7 +50,7 @@ struct SectionStatusView<VM: AddSheetViewModelProtocol>: View {
                 HStack(spacing: 4) {
                     Image(systemName: "bell.fill")
                         .font(.system(size: 12))
-                        .foregroundStyle(Color(hexCode: "A76545"))
+                        .foregroundStyle(.haruPrimary)
                     Text("\(vm.alarms.count)")
                         .font(.pretendardRegular(size: 14))
                         .foregroundStyle(.secondary)
@@ -60,7 +60,7 @@ struct SectionStatusView<VM: AddSheetViewModelProtocol>: View {
             if vm.recurrenceRule != nil {
                 Image(systemName: "repeat")
                     .font(.system(size: 12))
-                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .foregroundStyle(.haruPrimary)
             }
         case .calendar:
             if let calendar = vm.selectedCalendar {
@@ -89,17 +89,17 @@ struct SectionStatusView<VM: AddSheetViewModelProtocol>: View {
                     if !vm.reminderLocation.isEmpty {
                         Image(systemName: "location.fill")
                             .font(.system(size: 12))
-                            .foregroundStyle(Color(hexCode: "A76545"))
+                            .foregroundStyle(.haruPrimary)
                     }
                     if !vm.reminderURL.isEmpty {
                         Image(systemName: "link")
                             .font(.system(size: 12))
-                            .foregroundStyle(Color(hexCode: "A76545"))
+                            .foregroundStyle(.haruPrimary)
                     }
                     if !vm.reminderNotes.isEmpty {
                         Image(systemName: "note.text")
                             .font(.system(size: 12))
-                            .foregroundStyle(Color(hexCode: "A76545"))
+                            .foregroundStyle(.haruPrimary)
                     }
                 }
             }
@@ -108,7 +108,7 @@ struct SectionStatusView<VM: AddSheetViewModelProtocol>: View {
                 HStack(spacing: 4) {
                     Image(systemName: "bell.fill")
                         .font(.system(size: 12))
-                        .foregroundStyle(Color(hexCode: "A76545"))
+                        .foregroundStyle(.haruPrimary)
                     Text("\(vm.reminderAlarms.count)")
                         .font(.pretendardRegular(size: 14))
                         .foregroundStyle(.secondary)

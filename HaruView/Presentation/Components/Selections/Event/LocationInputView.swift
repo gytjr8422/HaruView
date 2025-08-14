@@ -22,7 +22,7 @@ struct LocationInputView: View {
 //                    showLocationPicker = true
 //                }
 //                .font(.pretendardRegular(size: 14))
-//                .foregroundStyle(Color(hexCode: "A76545"))
+//                .foregroundStyle(.haruPrimary)
             }
             
             HaruTextField(text: $location, placeholder: String(localized: "위치 입력"))

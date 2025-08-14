@@ -48,7 +48,7 @@ struct SmallEventsWidget: View {
                                 Text(event.title)
                                     .font(.pretendardBold(size: 13))
                                     .lineLimit(1)
-                                    .foregroundStyle(Color(hexCode: "40392B"))
+                                    .foregroundStyle(.haruTextPrimary)
                                     .strikethrough(isPast)
                                     .opacity(isPast ? 0.5 : 1)
                                 
@@ -101,7 +101,7 @@ struct SmallRemindersWidget: View {
                         } else {
                             Button(intent: ToggleReminderIntent(reminderId: reminder.id)) {
                                 Image(systemName: reminder.isCompleted ? "checkmark.circle.fill" : "circle")
-                                    .foregroundStyle(reminder.isCompleted ? Color(hexCode: "A76545") : .gray)
+                                    .foregroundStyle(reminder.isCompleted ? .haruCompleted : .gray)
                                     .font(.system(size: 20))
                                     .contentTransition(.symbolEffect(.replace))
                             }
@@ -114,7 +114,7 @@ struct SmallRemindersWidget: View {
                             .font(.pretendardSemiBold(size: 13))
                             .lineLimit(1)
                             .strikethrough(reminder.isCompleted)
-                            .foregroundStyle(reminder.isCompleted ? .gray : Color(hexCode: "40392B"))
+                            .foregroundStyle(reminder.isCompleted ? .gray : .haruTextPrimary)
                             .invalidatableContent()
                     }
                     .offset(x: -8)
@@ -145,7 +145,7 @@ struct SmallRemindersWidget: View {
     )
     
     SmallWidgetView(entry: sampleEntry)
-        .background(Color(hexCode: "FFFCF5"))
+        .background(.haruWidgetBackground)
 }
 
 #Preview("Small Widget - Reminders") {
@@ -165,5 +165,5 @@ struct SmallRemindersWidget: View {
     )
     
     SmallWidgetView(entry: sampleEntry)
-        .background(Color(hexCode: "FFFCF5"))
+        .background(.haruWidgetBackground)
 }

@@ -59,7 +59,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                 settingsButton
             }
             .navigationBarTitleDisplayMode(.inline)
-            .background(Color(hexCode: "FFFCF5"))
+            .background(.haruBackground)
             .refreshable { vm.refresh(.userTap) }
             .task {
                 await requestPermissions()
@@ -126,7 +126,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                         .padding(10)
                         .background(
                             RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color(hexCode: "6E5C49").opacity(0.2), lineWidth: 1)
+                                .stroke(.haruSecondary.opacity(0.2), lineWidth: 1)
                         )
                         .padding(.top, 10)
                     
@@ -152,7 +152,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                 } label: {
                     Text("전체 보기")
                         .font(.jakartaRegular(size: 14))
-                        .foregroundStyle(Color(hexCode: "A76545"))
+                        .foregroundStyle(.haruPrimary)
                 }
             }
         }
@@ -211,7 +211,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                 } label: {
                     Text("전체 보기")
                         .font(.jakartaRegular(size: 14))
-                        .foregroundStyle(Color(hexCode: "A76545"))
+                        .foregroundStyle(.haruPrimary)
                 }
             }
         }
@@ -261,11 +261,11 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
         .padding(.vertical, 6)
         .background(
             RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .fill(Color(hexCode: "C2966B").opacity(0.09))
+                .fill(.haruAccent.opacity(0.09))
         )
         .overlay(
             RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color(hexCode: "C2966B").opacity(0.5),
+                    .stroke(.haruAccent.opacity(0.5),
                            lineWidth: 1)
         )
     }
@@ -276,7 +276,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
             HStack(spacing: 5) {
                 Link(" 날씨", destination: URL(string: "https://weatherkit.apple.com/legal-attribution.html")!)
                     .font(.pretendardSemiBold (size: 11))
-                    .foregroundStyle(Color(hexCode: "A76545"))
+                    .foregroundStyle(.haruPrimary)
             }
             .padding([.bottom, .trailing], 8)
         }
@@ -304,7 +304,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
             } label: {
                 Image(systemName: "gearshape")
                     .font(.system(size: 18, weight: .medium))
-                    .foregroundStyle(Color(hexCode: "A76545").opacity(0.8))
+                    .foregroundStyle(.haruPrimary.opacity(0.8))
             }
             .padding(.trailing, 10)
         }
@@ -322,11 +322,11 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
         }
         .background(
             RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .fill(Color(hexCode: "FFFCF5"))
+                .fill(.haruBackground)
         )
         .overlay(
             RoundedRectangle(cornerRadius: 12)
-                .stroke(Color(hexCode: "6E5C49").opacity(0.2), lineWidth: 1)
+                .stroke(.haruSecondary.opacity(0.2), lineWidth: 1)
         )
     }
     
