@@ -28,7 +28,37 @@ struct HaruViewApp: App {
                     guard !didBootstrap else { return }
                     didBootstrap = true
                     await DIContainer.shared.bootstrapPermissions()
+                    
+                    // ATT 권한 요청
+                    await requestTrackingPermission()
                 }
+        }
+    }
+    
+    private func requestTrackingPermission() async {
+        // 메인 스레드에서 2초 후 실행
+        await MainActor.run {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                let currentStatus = ATTrackingManager.trackingAuthorizationStatus
+                
+                if currentStatus != .notDetermined {
+                    self.initializeAds()
+                    return
+                }
+                
+                ATTrackingManager.requestTrackingAuthorization { status in
+                    DispatchQueue.main.async {
+                        self.initializeAds()
+                    }
+                }
+            }
+        }
+    }
+    
+    
+    private func initializeAds() {
+        MobileAds.shared.start { _ in
+            _ = AdManager.shared
         }
     }
 }
@@ -39,16 +69,6 @@ import AppTrackingTransparency
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        // ATT 권한 요청
-        DispatchQueue.main.async {
-            ATTrackingManager.requestTrackingAuthorization { status in
-                // ATT 완료 후 광고 SDK 초기화
-                MobileAds.shared.start { _ in
-                    _ = AdManager.shared
-                }
-            }
-        }
         return true
     }
-     
 }
