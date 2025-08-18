@@ -1717,6 +1717,9 @@
         }
       }
     },
+    "월요일부터 시작" : {
+
+    },
     "위젯에서 할 일의 완료 상태를 토글합니다." : {
       "localizations" : {
         "en" : {
@@ -1817,12 +1820,12 @@
         }
       }
     },
-    "이벤트 시간" : {
+    "이메일" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Event time"
+            "value" : "email"
           }
         }
       }
@@ -1857,22 +1860,22 @@
         }
       }
     },
-    "이메일" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "email"
-          }
-        }
-      }
-    },
     "이미 위치 정보를 요청 중입니다." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Location request already in progress."
+          }
+        }
+      }
+    },
+    "이벤트 시간" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Event time"
           }
         }
       }
@@ -1916,6 +1919,9 @@
           }
         }
       }
+    },
+    "일요일부터 시작" : {
+
     },
     "일정" : {
       "extractionState" : "manual",
@@ -2097,6 +2103,9 @@
           }
         }
       }
+    },
+    "주 시작일" : {
+
     },
     "직접 알림 시간을 설정" : {
       "localizations" : {

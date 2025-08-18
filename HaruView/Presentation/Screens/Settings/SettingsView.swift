@@ -104,6 +104,13 @@ struct SettingsView: View {
             .padding(.bottom, 12)
             
             VStack(spacing: 0) {
+                // 주 시작일 설정
+                weekStartToggleCard
+                
+                Divider()
+                    .padding(.horizontal, 16)
+                    .background(.haruSecondary.opacity(0.1))
+                
                 // 공휴일 표시 토글
                 holidayToggleCard
                 
@@ -125,6 +132,40 @@ struct SettingsView: View {
                     .stroke(.haruSecondary.opacity(0.2), lineWidth: 1)
             )
         }
+    }
+    
+    // MARK: - 주 시작일 설정 카드
+    private var weekStartToggleCard: some View {
+        NavigationLink {
+            WeekStartSelectionView()
+        } label: {
+            HStack(spacing: 16) {
+                Image(systemName: "calendar.day.timeline.leading")
+                    .font(.system(size: 20, weight: .medium))
+                    .foregroundStyle(.haruPrimary)
+                    .frame(width: 24, height: 24)
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("주 시작일")
+                        .font(.pretendardRegular(size: 16))
+                        .foregroundStyle(.haruTextPrimary)
+                    
+                    Text(settings.weekStartsOnMonday ? "월요일부터 시작" : "일요일부터 시작")
+                        .font(.pretendardRegular(size: 12))
+                        .foregroundStyle(.haruSecondary)
+                }
+                
+                Spacer()
+                
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundStyle(.haruSecondary.opacity(0.6))
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(PlainButtonStyle())
     }
     
     // MARK: - 공휴일 표시 토글 카드

@@ -94,10 +94,21 @@ class AppSettings: ObservableObject {
         }
     }
     
+    // 주 시작일 설정 (false: 일요일, true: 월요일)
+    @Published var weekStartsOnMonday: Bool {
+        didSet {
+            UserDefaults.standard.set(weekStartsOnMonday, forKey: "weekStartsOnMonday")
+            clearDisplayItemsCache()
+            // 달력 새로고침 알림
+            NotificationCenter.default.post(name: .calendarNeedsRefresh, object: nil)
+        }
+    }
+    
     private init() {
         self.holidayRegion = Self.loadHolidayRegion()
         self.showHolidays = UserDefaults.standard.object(forKey: "showHolidays") as? Bool ?? true
         self.selectedHolidayCalendarIds = Set(UserDefaults.standard.stringArray(forKey: "selectedHolidayCalendarIds") ?? [])
+        self.weekStartsOnMonday = UserDefaults.standard.object(forKey: "weekStartsOnMonday") as? Bool ?? false
     }
     
     // Main actor 격리 없이 접근 가능한 현재 설정 조회 메서드
@@ -107,6 +118,10 @@ class AppSettings: ObservableObject {
     
     nonisolated func getShowHolidays() -> Bool {
         return UserDefaults.standard.object(forKey: "showHolidays") as? Bool ?? true
+    }
+    
+    nonisolated func getWeekStartsOnMonday() -> Bool {
+        return UserDefaults.standard.object(forKey: "weekStartsOnMonday") as? Bool ?? false
     }
     
     nonisolated private static func loadHolidayRegion() -> HolidayRegion {
