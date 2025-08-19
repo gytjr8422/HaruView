@@ -215,13 +215,13 @@ struct CalendarDay: Identifiable, Hashable {
             return nil
         }
         
-        let weekday = calendar.component(.weekday, from: targetDate)
-        let weekPosition = weekday - 1 // 일요일=0, 월요일=1, ..., 토요일=6으로 변환
+        let userCalendar = Calendar.withUserWeekStartPreference()
+        let weekPosition = userCalendar.startingWeekdayIndex(for: targetDate)
         
         let isStart = targetDay == eventStartDay
         let isEnd = targetDay == eventEndDay
         
-        // 제목 표시 여부 결정: 시작일이거나 주의 시작일(일요일)
+        // 제목 표시 여부 결정: 시작일이거나 주의 시작일
         let showTitle = isStart || weekPosition == 0
         
         return ContinuousEventInfo(
@@ -341,11 +341,11 @@ struct CalendarMonth: Identifiable, Hashable {
     
     /// 달력 그리드용 날짜들 (이전/다음 달 포함 6주)
     var calendarDates: [Date] {
-        let calendar = Calendar.current
-        let firstWeekday = calendar.component(.weekday, from: firstDay)
+        let calendar = Calendar.withUserWeekStartPreference()
+        let startingIndex = calendar.startingWeekdayIndex(for: firstDay)
         
-        // 첫 주의 시작일 (일요일 기준)
-        let startDate = calendar.date(byAdding: .day, value: -(firstWeekday - 1), to: firstDay)!
+        // 첫 주의 시작일 (사용자 설정에 따라)
+        let startDate = calendar.date(byAdding: .day, value: -startingIndex, to: firstDay)!
         
         // 6주 * 7일 = 42일
         return (0..<42).compactMap { offset in

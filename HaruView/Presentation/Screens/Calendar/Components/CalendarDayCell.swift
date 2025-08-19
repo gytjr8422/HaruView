@@ -17,7 +17,7 @@ struct CalendarDayCell: View {
     let onLongPress: () -> Void
     
     private var dayNumber: String {
-        String(Calendar.current.component(.day, from: date))
+        String(Calendar.withUserWeekStartPreference().component(.day, from: date))
     }
     
     // 요일별 색상 (공휴일 고려)
@@ -31,20 +31,24 @@ struct CalendarDayCell: View {
         } else if calendarDay?.isHoliday == true {
             return .haruHoliday // 공휴일은 보라색
         } else {
-            let weekday = Calendar.current.component(.weekday, from: date)
-            switch weekday {
-            case 1: // 일요일
-                return .haruPriorityHigh // 일요일 헤더와 동일한 빨간색
-            case 7: // 토요일
-                return .haruSaturday // 토요일 헤더와 동일한 파란색
-            default: // 평일 (월~금)
-                return .haruTextPrimary
-            }
+            return weekdayColor
         }
     }
     
     private var displayItems: [CalendarDisplayItem] {
         calendarDay?.displayItems ?? []
+    }
+    
+    private var weekdayColor: Color {
+        let calendar = Calendar.current
+        let weekday = calendar.component(.weekday, from: date)
+        
+        // 주 시작일 설정과 관계없이 요일 자체는 동일 (1=일요일, 7=토요일)
+        switch weekday {
+        case 1: return .haruPriorityHigh  // 일요일 빨간색
+        case 7: return .haruSaturday      // 토요일 파란색
+        default: return .haruTextPrimary  // 평일
+        }
     }
     
     // 표시할 아이템 개수 로직 변경

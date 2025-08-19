@@ -25,16 +25,17 @@ extension Date {
 
 extension Calendar {
     /// 사용자 설정에 따른 주 시작일이 적용된 Calendar 반환
-    @MainActor static func withUserWeekStartPreference() -> Calendar {
+    static func withUserWeekStartPreference() -> Calendar {
         var calendar = Calendar.current
-        let weekStartsOnMonday = AppSettings.shared.getWeekStartsOnMonday()
+        let weekStartsOnMonday = UserDefaults.standard.object(forKey: "weekStartsOnMonday") as? Bool ?? false
         calendar.firstWeekday = weekStartsOnMonday ? 2 : 1  // 1=일요일, 2=월요일
         return calendar
     }
     
     /// 요일 이름 배열을 사용자 설정에 따라 반환 (한국어)
-    static func weekdaySymbolsKorean(startingOnMonday: Bool = false) -> [String] {
-        if startingOnMonday {
+    static func weekdaySymbolsKorean() -> [String] {
+        let weekStartsOnMonday = UserDefaults.standard.object(forKey: "weekStartsOnMonday") as? Bool ?? false
+        if weekStartsOnMonday {
             return ["월", "화", "수", "목", "금", "토", "일"]
         } else {
             return ["일", "월", "화", "수", "목", "금", "토"]
@@ -42,8 +43,9 @@ extension Calendar {
     }
     
     /// 요일 이름 배열을 사용자 설정에 따라 반환 (영어)
-    static func weekdaySymbolsEnglish(startingOnMonday: Bool = false) -> [String] {
-        if startingOnMonday {
+    static func weekdaySymbolsEnglish() -> [String] {
+        let weekStartsOnMonday = UserDefaults.standard.object(forKey: "weekStartsOnMonday") as? Bool ?? false
+        if weekStartsOnMonday {
             return ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
         } else {
             return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]

@@ -25,7 +25,7 @@ struct MonthGridView: View {
                         date: date,
                         calendarDay: monthData.day(for: date),
                         isSelected: isDateSelected(date),
-                        isToday: Calendar.current.isDateInToday(date),
+                        isToday: Calendar.withUserWeekStartPreference().isDateInToday(date),
                         isCurrentMonth: isDateInCurrentMonth(date),
                         onTap: {
                             onDateTap(date)
@@ -48,11 +48,11 @@ struct MonthGridView: View {
     
     private func isDateSelected(_ date: Date) -> Bool {
         guard let selectedDate = selectedDate else { return false }
-        return Calendar.current.isDate(date, inSameDayAs: selectedDate)
+        return Calendar.withUserWeekStartPreference().isDate(date, inSameDayAs: selectedDate)
     }
     
     private func isDateInCurrentMonth(_ date: Date) -> Bool {
-        let calendar = Calendar.current
+        let calendar = Calendar.withUserWeekStartPreference()
         let dateComponents = calendar.dateComponents([.year, .month], from: date)
         return dateComponents.year == monthData.year && dateComponents.month == monthData.month
     }
