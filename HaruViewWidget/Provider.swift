@@ -9,6 +9,16 @@ import WidgetKit
 import EventKit
 import Foundation
 
+extension Calendar {
+    /// 위젯용 사용자 설정에 따른 주 시작일이 적용된 Calendar 반환
+    static func withUserWeekStartPreference() -> Calendar {
+        var calendar = Calendar.current
+        let weekStartsOnMonday = UserDefaults.standard.object(forKey: "weekStartsOnMonday") as? Bool ?? false
+        calendar.firstWeekday = weekStartsOnMonday ? 2 : 1  // 1=일요일, 2=월요일
+        return calendar
+    }
+}
+
 struct Provider: AppIntentTimelineProvider {
     private let eventStore = EKEventStore()
     
@@ -27,7 +37,7 @@ struct Provider: AppIntentTimelineProvider {
         
         let entry = SimpleEntry(date: currentDate, configuration: configuration, events: events, reminders: reminders)
         
-        let nextUpdateDate = Calendar.current.date(byAdding: .minute, value: 5, to: currentDate)!
+        let nextUpdateDate = Calendar.withUserWeekStartPreference().date(byAdding: Calendar.Component.minute, value: 5, to: currentDate)!
         
         return Timeline(entries: [entry], policy: .after(nextUpdateDate))
     }
@@ -54,8 +64,8 @@ struct Provider: AppIntentTimelineProvider {
     }
     
     func fetchTodayEvents(for family: WidgetFamily) async -> [CalendarEvent] {
-        let startOfDay = Calendar.current.startOfDay(for: Date())
-        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
+        let startOfDay = Calendar.withUserWeekStartPreference().startOfDay(for: Date())
+        let endOfDay = Calendar.withUserWeekStartPreference().date(byAdding: Calendar.Component.day, value: 1, to: startOfDay)!
         
         let predicate = eventStore.predicateForEvents(withStart: startOfDay, end: endOfDay, calendars: nil)
         let ekEvents = eventStore.events(matching: predicate)
@@ -78,9 +88,9 @@ struct Provider: AppIntentTimelineProvider {
             .filter { !isHolidayCalendar($0.calendar) }
             .map { event in
                 // 하루 종일 이벤트 감지 로직 (앱과 동일)
-                let compsStart = Calendar.current.dateComponents([.hour, .minute], from: event.startDate)
-                let compsEnd = Calendar.current.dateComponents([.hour, .minute], from: event.endDate)
-                let isAllDayDetected = Calendar.current.isDate(event.startDate, inSameDayAs: event.endDate) &&
+                let compsStart = Calendar.withUserWeekStartPreference().dateComponents([Calendar.Component.hour, Calendar.Component.minute], from: event.startDate)
+                let compsEnd = Calendar.withUserWeekStartPreference().dateComponents([Calendar.Component.hour, Calendar.Component.minute], from: event.endDate)
+                let isAllDayDetected = Calendar.withUserWeekStartPreference().isDate(event.startDate, inSameDayAs: event.endDate) &&
                                      compsStart.hour == 0 && compsStart.minute == 0 &&
                                      compsEnd.hour == 23 && compsEnd.minute == 59
                 
@@ -132,8 +142,8 @@ struct Provider: AppIntentTimelineProvider {
                         bucket.append(contentsOf: comp ?? [])
                         
                         // 오늘과 겹치는지 필터링 (앱과 동일한 로직)
-                        let todayStart = Calendar.current.startOfDay(for: Date())
-                        let todayEnd = Calendar.current.date(byAdding: .day, value: 1, to: todayStart)!
+                        let todayStart = Calendar.withUserWeekStartPreference().startOfDay(for: Date())
+                        let todayEnd = Calendar.withUserWeekStartPreference().date(byAdding: Calendar.Component.day, value: 1, to: todayStart)!
                         
                         let filtered = bucket.filter { rem in
                             guard let due = rem.dueDateComponents?.date else { return true }
@@ -150,7 +160,7 @@ struct Provider: AppIntentTimelineProvider {
                                 } else {
                                     // 날짜만 있는 경우 해당 날짜의 시작 시간으로 설정 (앱과 동일)
                                     if let originalDate = reminder.dueDateComponents?.date {
-                                        due = Calendar.current.startOfDay(for: originalDate)
+                                        due = Calendar.withUserWeekStartPreference().startOfDay(for: originalDate)
                                     } else {
                                         due = nil
                                     }
@@ -221,7 +231,7 @@ struct Provider: AppIntentTimelineProvider {
         }
         
         // 4. 마감일 긴급도 기준
-        let today = Calendar.current.startOfDay(for: Date())
+        let today = Calendar.withUserWeekStartPreference().startOfDay(for: Date())
         let aDue = a.dueDate ?? .distantFuture
         let bDue = b.dueDate ?? .distantFuture
         
@@ -236,12 +246,12 @@ struct Provider: AppIntentTimelineProvider {
         
         // 오늘부터 마감일까지의 차이 계산 (음수면 지난 일정)
         // 날짜만 비교 - 시간 정보는 무시
-        let calendar = Calendar.current
+        let calendar = Calendar.withUserWeekStartPreference()
         let aDueDay = calendar.startOfDay(for: aDue)
         let bDueDay = calendar.startOfDay(for: bDue)
         
-        let aDaysFromToday = calendar.dateComponents([.day], from: today, to: aDueDay).day ?? Int.max
-        let bDaysFromToday = calendar.dateComponents([.day], from: today, to: bDueDay).day ?? Int.max
+        let aDaysFromToday = calendar.dateComponents([Calendar.Component.day], from: today, to: aDueDay).day ?? Int.max
+        let bDaysFromToday = calendar.dateComponents([Calendar.Component.day], from: today, to: bDueDay).day ?? Int.max
         
         if aDaysFromToday != bDaysFromToday {
             return aDaysFromToday < bDaysFromToday // 오늘에 가까운 것부터
