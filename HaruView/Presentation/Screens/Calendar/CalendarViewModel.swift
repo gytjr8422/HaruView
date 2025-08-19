@@ -131,6 +131,9 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
         
         // 선택적 데이터 업데이트 알림 수신
         setupSelectiveUpdateObserver()
+        
+        // 달력 설정 변경 시 새로고침
+        setupCalendarRefreshObserver()
     }
     
     deinit {
@@ -811,6 +814,16 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
                       let updatedMonths = notification.userInfo?["updatedMonths"] as? [CalendarMonth] else { return }
                 
                 self.handleSelectiveDataUpdate(updatedMonths: updatedMonths)
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func setupCalendarRefreshObserver() {
+        NotificationCenter.default
+            .publisher(for: .calendarNeedsRefresh)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.forceRefresh()
             }
             .store(in: &cancellables)
     }

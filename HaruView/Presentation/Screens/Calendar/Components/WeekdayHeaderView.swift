@@ -12,9 +12,9 @@ struct WeekdayHeaderView: View {
     
     private var weekdays: [String] {
         if Locale.current.language.languageCode?.identifier == "ko" {
-            return Calendar.weekdaySymbolsKorean()
+            return Calendar.weekdaySymbolsKorean(startingOnMonday: settings.weekStartsOnMonday)
         } else {
-            return Calendar.weekdaySymbolsEnglish()
+            return Calendar.weekdaySymbolsEnglish(startingOnMonday: settings.weekStartsOnMonday)
         }
     }
     

@@ -33,9 +33,8 @@ extension Calendar {
     }
     
     /// 요일 이름 배열을 사용자 설정에 따라 반환 (한국어)
-    static func weekdaySymbolsKorean() -> [String] {
-        let weekStartsOnMonday = UserDefaults.standard.object(forKey: "weekStartsOnMonday") as? Bool ?? false
-        if weekStartsOnMonday {
+    static func weekdaySymbolsKorean(startingOnMonday: Bool) -> [String] {
+        if startingOnMonday {
             return ["월", "화", "수", "목", "금", "토", "일"]
         } else {
             return ["일", "월", "화", "수", "목", "금", "토"]
@@ -43,9 +42,8 @@ extension Calendar {
     }
     
     /// 요일 이름 배열을 사용자 설정에 따라 반환 (영어)
-    static func weekdaySymbolsEnglish() -> [String] {
-        let weekStartsOnMonday = UserDefaults.standard.object(forKey: "weekStartsOnMonday") as? Bool ?? false
-        if weekStartsOnMonday {
+    static func weekdaySymbolsEnglish(startingOnMonday: Bool) -> [String] {
+        if startingOnMonday {
             return ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
         } else {
             return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
