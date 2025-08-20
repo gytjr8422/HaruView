@@ -11,11 +11,7 @@ struct WeekdayHeaderView: View {
     @StateObject private var settings = AppSettings.shared
     
     private var weekdays: [String] {
-        if Locale.current.language.languageCode?.identifier == "ko" {
-            return Calendar.weekdaySymbolsKorean(startingOnMonday: settings.weekStartsOnMonday)
-        } else {
-            return Calendar.weekdaySymbolsEnglish(startingOnMonday: settings.weekStartsOnMonday)
-        }
+        return Calendar.weekdaySymbols(startingOnMonday: settings.weekStartsOnMonday)
     }
     
     var body: some View {

@@ -32,22 +32,28 @@ extension Calendar {
         return calendar
     }
     
-    /// 요일 이름 배열을 사용자 설정에 따라 반환 (한국어)
-    static func weekdaySymbolsKorean(startingOnMonday: Bool) -> [String] {
+    /// 요일 이름 배열을 사용자 설정에 따라 반환 (현재 로케일 기반)
+    static func weekdaySymbols(startingOnMonday: Bool) -> [String] {
+        let calendar = Calendar.current
+        let symbols = calendar.veryShortWeekdaySymbols // ["일", "월", "화", ...] 또는 ["Sun", "Mon", "Tue", ...]
+        
         if startingOnMonday {
-            return ["월", "화", "수", "목", "금", "토", "일"]
+            // 월요일부터 시작: [월, 화, 수, 목, 금, 토, 일]
+            return Array(symbols[1...]) + [symbols[0]]
         } else {
-            return ["일", "월", "화", "수", "목", "금", "토"]
+            // 일요일부터 시작: [일, 월, 화, 수, 목, 금, 토]
+            return symbols
         }
     }
     
-    /// 요일 이름 배열을 사용자 설정에 따라 반환 (영어)
+    /// 요일 이름 배열을 사용자 설정에 따라 반환 (한국어 - 호환성 유지)
+    static func weekdaySymbolsKorean(startingOnMonday: Bool) -> [String] {
+        return weekdaySymbols(startingOnMonday: startingOnMonday)
+    }
+    
+    /// 요일 이름 배열을 사용자 설정에 따라 반환 (영어 - 호환성 유지)
     static func weekdaySymbolsEnglish(startingOnMonday: Bool) -> [String] {
-        if startingOnMonday {
-            return ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-        } else {
-            return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-        }
+        return weekdaySymbols(startingOnMonday: startingOnMonday)
     }
     
     /// 월 첫째 날이 그리드에서 시작할 위치 인덱스 계산

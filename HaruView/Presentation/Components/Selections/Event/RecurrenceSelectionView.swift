@@ -181,7 +181,7 @@ struct CustomRecurrenceSheet: View {
                                 Spacer()
                             }
                             
-                            let weekdays = Calendar.weekdaySymbolsKorean(startingOnMonday: settings.weekStartsOnMonday)
+                            let weekdays = Calendar.weekdaySymbols(startingOnMonday: settings.weekStartsOnMonday)
                             HStack(spacing: 8) {
                                 ForEach(Array(weekdays.enumerated()), id: \.offset) { index, day in
                                     Button(action: {

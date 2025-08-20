@@ -146,11 +146,11 @@ struct SettingsView: View {
                     .frame(width: 24, height: 24)
                 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("주 시작일")
+                    Text(String(localized: "주 시작일"))
                         .font(.pretendardRegular(size: 16))
                         .foregroundStyle(.haruTextPrimary)
                     
-                    Text(settings.weekStartsOnMonday ? "월요일부터 시작" : "일요일부터 시작")
+                    Text(settings.weekStartsOnMonday ? String(localized: "월요일부터 시작") : String(localized: "일요일부터 시작"))
                         .font(.pretendardRegular(size: 12))
                         .foregroundStyle(.haruSecondary)
                 }

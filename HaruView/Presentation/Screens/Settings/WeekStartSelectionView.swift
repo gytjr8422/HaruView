@@ -11,10 +11,22 @@ struct WeekStartSelectionView: View {
     @StateObject private var settings = AppSettings.shared
     @Environment(\.dismiss) private var dismiss
     
-    private let weekStartOptions = [
-        WeekStartOption(id: false, title: "일요일부터 시작", subtitle: "일 월 화 수 목 금 토", emoji: "☀️"),
-        WeekStartOption(id: true, title: "월요일부터 시작", subtitle: "월 화 수 목 금 토 일", emoji: "💼")
-    ]
+    private var weekStartOptions: [WeekStartOption] {
+        return [
+            WeekStartOption(
+                id: false, 
+                title: String(localized: "일요일부터 시작"), 
+                subtitle: Calendar.weekdaySymbols(startingOnMonday: false).joined(separator: " "), 
+                emoji: "☀️"
+            ),
+            WeekStartOption(
+                id: true, 
+                title: String(localized: "월요일부터 시작"), 
+                subtitle: Calendar.weekdaySymbols(startingOnMonday: true).joined(separator: " "), 
+                emoji: "💼"
+            )
+        ]
+    }
     
     var body: some View {
         ZStack {
@@ -35,7 +47,7 @@ struct WeekStartSelectionView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
-                Text("주 시작일")
+                Text(String(localized: "주 시작일"))
                     .font(.pretendardSemiBold(size: 18))
                     .foregroundStyle(.haruTextPrimary)
             }
@@ -50,7 +62,7 @@ struct WeekStartSelectionView: View {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 16, weight: .semibold))
                         
-                        Text("뒤로")
+                        Text(String(localized: "뒤로"))
                             .font(.pretendardRegular(size: 16))
                     }
                     .foregroundStyle(.haruPrimary)

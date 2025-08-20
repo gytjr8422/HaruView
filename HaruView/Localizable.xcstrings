@@ -2,7 +2,14 @@
   "sourceLanguage" : "ko",
   "strings" : {
     "" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " "
+          }
+        }
+      }
     },
     "'%@'은(는) 반복 일정입니다. 어떻게 삭제하시겠습니까?" : {
       "localizations" : {
@@ -383,7 +390,14 @@
       }
     },
     "D-Day" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "D-Day"
+          }
+        }
+      }
     },
     "Exchange" : {
       "localizations" : {
@@ -1279,7 +1293,7 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "No available calendars"
           }
         }
@@ -1718,7 +1732,14 @@
       }
     },
     "월요일부터 시작" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start with Monday"
+          }
+        }
+      }
     },
     "위젯에서 할 일의 완료 상태를 토글합니다." : {
       "localizations" : {
@@ -1820,26 +1841,6 @@
         }
       }
     },
-    "이메일" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "email"
-          }
-        }
-      }
-    },
-    "일" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "day(s)"
-          }
-        }
-      }
-    },
     "이동" : {
       "localizations" : {
         "en" : {
@@ -1860,12 +1861,32 @@
         }
       }
     },
+    "이메일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "email"
+          }
+        }
+      }
+    },
     "이미 위치 정보를 요청 중입니다." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Location request already in progress."
+          }
+        }
+      }
+    },
+    "일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "day(s)"
           }
         }
       }
@@ -1921,7 +1942,14 @@
       }
     },
     "일요일부터 시작" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start with Sunday"
+          }
+        }
+      }
     },
     "일정" : {
       "extractionState" : "manual",
@@ -2105,7 +2133,14 @@
       }
     },
     "주 시작일" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Week Start"
+          }
+        }
+      }
     },
     "직접 알림 시간을 설정" : {
       "localizations" : {
