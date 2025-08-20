@@ -1,3921 +1,3924 @@
 {
-  "sourceLanguage": "ko",
-  "strings": {
-    "": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": " "
+  "sourceLanguage" : "ko",
+  "strings" : {
+    "" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " "
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": " "
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " "
           }
         }
       }
     },
-    "'%@'은(는) 반복 일정입니다. 어떻게 삭제하시겠습니까?": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@' is a recurring event. How would you like to delete it?"
+    "'%@'은(는) 반복 일정입니다. 어떻게 삭제하시겠습니까?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@' is a recurring event. How would you like to delete it?"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "'%@'は繰り返しイベントです。どのように削除しますか？"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "'%@'は繰り返しイベントです。どのように削除しますか？"
           }
         }
       }
     },
-    "(%lld)": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "(%lld)"
+    "(%lld)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(%lld)"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "(%lld)"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(%lld)"
           }
         }
       }
     },
-    "%.0f°": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%.0f°"
+    "%.0f°" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%.0f°"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%.0f°"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%.0f°"
           }
         }
       }
     },
-    "%@ 추가": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add %@"
+    "%@ 추가" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add %@"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@を追加"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@を追加"
           }
         }
       }
     },
-    "%@ 편집": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Edit %@"
+    "%@ 편집" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit %@"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@を編集"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@を編集"
           }
         }
       }
     },
-    "%@까지": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "until %@"
+    "%@까지" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "until %@"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@まで"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@まで"
           }
         }
       }
     },
-    "%d%@ 마다": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "every %1$d %2$@"
+    "%d%@ 마다" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "every %1$d %2$@"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "new",
-            "value": "%1$d%2$@ 마다"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d%@ごと"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%d%@ごと"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$d%2$@ 마다"
           }
         }
       }
     },
-    "%d분 전": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%dm before"
+    "%d분 전" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%dm before"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%d分前"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d分前"
           }
         }
       }
     },
-    "%d분 후": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%dm after"
+    "%d분 후" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%dm after"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%d分後"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d分後"
           }
         }
       }
     },
-    "%d시간 전": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%dh before"
+    "%d시간 전" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%dh before"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%d時間前"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d時間前"
           }
         }
       }
     },
-    "%d시간 후": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%dh after"
+    "%d시간 후" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%dh after"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%d時間後"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d時間後"
           }
         }
       }
     },
-    "%d일 전": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%dd before"
+    "%d일 전" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%dd before"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%d日前"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d日前"
           }
         }
       }
     },
-    "%d일 후": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%dd after"
+    "%d일 후" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%dd after"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%d日後"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d日後"
           }
         }
       }
     },
-    "%d회": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%d times"
+    "%d회" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d times"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%d回"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d回"
           }
         }
       }
     },
-    "%lld": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld"
+    "%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
           }
         }
       }
     },
-    "%lld개": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld items"
+    "%lld개" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld items"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld個"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld個"
           }
         }
       }
     },
-    "%lld개 선택됨": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld selected"
+    "%lld개 선택됨" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld selected"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld個選択済み"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld個選択済み"
           }
         }
       }
     },
-    "%lld개월마다": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Every %lld months"
+    "%lld개월마다" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every %lld months"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lldヶ月ごと"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lldヶ月ごと"
           }
         }
       }
     },
-    "%lld년마다": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Every %lld years"
+    "%lld년마다" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every %lld years"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld年ごと"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld年ごと"
           }
         }
       }
     },
-    "%lld분 전": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lldm before"
+    "%lld분 전" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lldm before"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld分前"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld分前"
           }
         }
       }
     },
-    "%lld분 후": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lldm after"
+    "%lld분 후" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lldm after"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld分後"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld分後"
           }
         }
       }
     },
-    "%lld시간 전": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lldh before"
+    "%lld시간 전" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lldh before"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld時間前"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld時間前"
           }
         }
       }
     },
-    "%lld시간 후": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lldh after"
+    "%lld시간 후" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lldh after"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld時間後"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld時間後"
           }
         }
       }
     },
-    "%lld일 전": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lldd before"
+    "%lld일 전" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lldd before"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld日前"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld日前"
           }
         }
       }
     },
-    "%lld일 후": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lldd after"
+    "%lld일 후" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lldd after"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld日後"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld日後"
           }
         }
       }
     },
-    "%lld일마다": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Every %lld days"
+    "%lld일마다" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every %lld days"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld日ごと"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld日ごと"
           }
         }
       }
     },
-    "%lld주마다": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Every %lld weeks"
+    "%lld주마다" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every %lld weeks"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld週ごと"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld週ごと"
           }
         }
       }
     },
-    "+%lld": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "+%lld"
+    "+%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%lld"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "+%lld"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%lld"
           }
         }
       }
     },
-    "⚠️ 오류: %@": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "⚠️ Error: %@"
+    "⚠️ 오류: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ Error: %@"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "⚠️ エラー: %@"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ エラー: %@"
           }
         }
       }
     },
-    "1개 선택됨": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "1 selected"
+    "1개 선택됨" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 selected"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "1件選択済み"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1件選択済み"
           }
         }
       }
     },
-    "1시간": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "1h"
+    "1시간" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1h"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "1時間"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1時間"
           }
         }
       }
     },
-    "1시간 30분": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "1h 30m"
+    "1시간 30분" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1h 30m"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "1時間30分"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1時間30分"
           }
         }
       }
     },
-    "2시간": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "2h"
+    "2시간" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2h"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "2時間"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2時間"
           }
         }
       }
     },
-    "15분": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "15m"
+    "15분" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15m"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "15分"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15分"
           }
         }
       }
     },
-    "30분": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "30m"
+    "30분" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30m"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "30分"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30分"
           }
         }
       }
     },
-    "CalDAV": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "CalDAV"
+    "CalDAV" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CalDAV"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "CalDAV"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CalDAV"
           }
         }
       }
     },
-    "D-%lld": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "D-%lld"
+    "D-%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "D-%lld"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "D-%lld"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "D-%lld"
           }
         }
       }
     },
-    "D-Day": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "D-Day"
+    "D-Day" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "D-Day"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dデー"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dデー"
           }
         }
       }
     },
-    "Exchange": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Exchange"
+    "Exchange" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exchange"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Exchange"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exchange"
           }
         }
       }
     },
-    "HaruView": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "HaruView"
+    "HaruView" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HaruView"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "HaruView"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HaruView"
           }
         }
       }
     },
-    "iOS 캘린더 앱에서 구독한 공휴일만 표시됩니다": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Only holidays subscribed from iOS Calendar app are displayed"
+    "iOS 캘린더 앱에서 구독한 공휴일만 표시됩니다" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only holidays subscribed from iOS Calendar app are displayed"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "iOSカレンダーアプリで登録した祝日のみ表示されます"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iOSカレンダーアプリで登録した祝日のみ表示されます"
           }
         }
       }
     },
-    "iOS 캘린더 앱에서 원하는 국가의\n공휴일 캘린더를 구독해보세요": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Subscribe to holiday calendars for your desired countries\nfrom the iOS Calendar app"
+    "iOS 캘린더 앱에서 원하는 국가의\n공휴일 캘린더를 구독해보세요" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subscribe to holiday calendars for your desired countries\nfrom the iOS Calendar app"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "iOS カレンダーアプリで希望する国の\n祝日カレンダーを購読してみてください"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iOS カレンダーアプリで希望する国の\n祝日カレンダーを購読してみてください"
           }
         }
       }
     },
-    "iOS 캘린더 앱에서 원하는 국가의\n공휴일 캘린더를 먼저 구독해주세요": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Please first subscribe to holiday calendars for your desired countries\nfrom the iOS Calendar app"
+    "iOS 캘린더 앱에서 원하는 국가의\n공휴일 캘린더를 먼저 구독해주세요" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please first subscribe to holiday calendars for your desired countries\nfrom the iOS Calendar app"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "iOS カレンダーアプリで希望する国の\n祝日カレンダーを先に購読してください"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iOS カレンダーアプリで希望する国の\n祝日カレンダーを先に購読してください"
           }
         }
       }
     },
-    "iOS 캘린더 앱을 열어서 공휴일을 구독하세요": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Open iOS Calendar app to subscribe to holidays"
+    "iOS 캘린더 앱을 열어서 공휴일을 구독하세요" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open iOS Calendar app to subscribe to holidays"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "iOS カレンダーアプリを開いて祝日を購読してください"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iOS カレンダーアプリを開いて祝日を購読してください"
           }
         }
       }
     },
-    "Key": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Key"
+    "Key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Key"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "キー"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "キー"
           }
         }
       }
     },
-    "Reminder ID": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reminder ID"
+    "Reminder ID" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reminder ID"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "リマインダーID"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "リマインダーID"
           }
         }
       }
     },
-    "URL": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "URL"
+    "URL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "URL"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL"
           }
         }
       }
     },
-    "간격": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Interval"
+    "간격" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Interval"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "間隔"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "間隔"
           }
         }
       }
     },
-    "개월": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "month(s)"
+    "개월" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "month(s)"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ヶ月"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ヶ月"
           }
         }
       }
     },
-    "검색 결과": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Search Results"
+    "검색 결과" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search Results"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "検索結果"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "検索結果"
           }
         }
       }
     },
-    "계속 작성": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Continue"
+    "계속 작성" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "続けて作成"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "続けて作成"
           }
         }
       }
     },
-    "계속 편집": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Continue Editing"
+    "계속 편집" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue Editing"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "続けて編集"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "続けて編集"
           }
         }
       }
     },
-    "공휴일 캘린더 선택": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Select Holiday Calendar"
+    "공휴일 캘린더 선택" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select Holiday Calendar"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "祝日カレンダー選択"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "祝日カレンダー選択"
           }
         }
       }
     },
-    "공휴일 캘린더 설정": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Holiday Calendar Settings"
+    "공휴일 캘린더 설정" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Holiday Calendar Settings"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "祝日カレンダー設定"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "祝日カレンダー設定"
           }
         }
       }
     },
-    "공휴일 캘린더 추가 방법": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "How to Add Holiday Calendar"
+    "공휴일 캘린더 추가 방법" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How to Add Holiday Calendar"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "祝日カレンダー追加方法"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "祝日カレンダー追加方法"
           }
         }
       }
     },
-    "공휴일 캘린더 추가하기": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add Holiday Calendar"
+    "공휴일 캘린더 추가하기" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Holiday Calendar"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "祝日カレンダーを追加"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "祝日カレンダーを追加"
           }
         }
       }
     },
-    "공휴일 표시": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Show Holidays"
+    "공휴일 표시" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Holidays"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "祝日表示"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "祝日表示"
           }
         }
       }
     },
-    "구독": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Subscription"
+    "구독" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subscription"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "登録"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登録"
           }
         }
       }
     },
-    "구독된 공휴일 캘린더": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Subscribed Holiday Calendars"
+    "구독된 공휴일 캘린더" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subscribed Holiday Calendars"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "登録済み祝日カレンダー"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登録済み祝日カレンダー"
           }
         }
       }
     },
-    "구독된 공휴일 캘린더가 없습니다": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No subscribed holiday calendars"
+    "구독된 공휴일 캘린더가 없습니다" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No subscribed holiday calendars"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "登録済み祝日カレンダーがありません"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登録済み祝日カレンダーがありません"
           }
         }
       }
     },
-    "구독된 캘린더 없음": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No subscribed calendars"
+    "구독된 캘린더 없음" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No subscribed calendars"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "登録されたカレンダーなし"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登録されたカレンダーなし"
           }
         }
       }
     },
-    "금요일": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fri"
+    "금요일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fri"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "金曜日"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "金曜日"
           }
         }
       }
     },
-    "끝나지 않음": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Never ends"
+    "끝나지 않음" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Never ends"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "終了しない"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "終了しない"
           }
         }
       }
     },
-    "날씨 정보를 가져오는데 실패했습니다: %@": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Failed to fetch weather data: %@"
+    "날씨 정보를 가져오는데 실패했습니다: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Failed to fetch weather data: %@"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "天気情報の取得に失敗しました: %@"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "天気情報の取得に失敗しました: %@"
           }
         }
       }
     },
-    "날씨 정보를 가져오는데 실패했습니다.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Failed to fetch weather data."
+    "날씨 정보를 가져오는데 실패했습니다." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Failed to fetch weather data."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "天気情報の取得に失敗しました。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "天気情報の取得に失敗しました。"
           }
         }
       }
     },
-    "날짜+시간": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Date & Time"
+    "날짜+시간" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date & Time"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "日付+時間"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日付+時間"
           }
         }
       }
     },
-    "날짜만": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Date only"
+    "날짜만" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date only"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "日付のみ"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日付のみ"
           }
         }
       }
     },
-    "낮음": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Low"
+    "낮음" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Low"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "低"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "低"
           }
         }
       }
     },
-    "년": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "year(s)"
+    "년" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "year(s)"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "年"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "年"
           }
         }
       }
     },
-    "년/월 선택": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Select Year/Month"
+    "년/월 선택" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select Year/Month"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "年/月選択"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "年/月選択"
           }
         }
       }
     },
-    "높음": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "High"
+    "높음" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "High"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "高"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "高"
           }
         }
       }
     },
-    "다시 시도": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Try Again"
+    "다시 시도" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try Again"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "再試行"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再試行"
           }
         }
       }
     },
-    "단계별 가이드": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Step-by-Step Guide"
+    "단계별 가이드" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Step-by-Step Guide"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ステップバイステップガイド"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ステップバイステップガイド"
           }
         }
       }
     },
-    "단계별 가이드를 확인하세요": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Check the step-by-step guide"
+    "단계별 가이드를 확인하세요" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check the step-by-step guide"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ステップバイステップガイドを確認してください"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ステップバイステップガイドを確認してください"
           }
         }
       }
     },
-    "닫기": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Close"
+    "닫기" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "閉じる"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "閉じる"
           }
         }
       }
     },
-    "달력": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Calendar"
+    "달력" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calendar"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "カレンダー"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カレンダー"
           }
         }
       }
     },
-    "달력 데이터가 없습니다": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No calendar data available"
+    "달력 데이터가 없습니다" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No calendar data available"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "カレンダーデータがありません"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カレンダーデータがありません"
           }
         }
       }
     },
-    "달력 설정": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Calendar Settings"
+    "달력 설정" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calendar Settings"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "カレンダー設定"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カレンダー設定"
           }
         }
       }
     },
-    "달력 준비 중...": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Preparing calendar..."
+    "달력 준비 중..." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preparing calendar..."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "カレンダー準備中..."
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カレンダー準備中..."
           }
         }
       }
     },
-    "달력에 공휴일을 표시합니다": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Display holidays on calendar"
+    "달력에 공휴일을 표시합니다" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Display holidays on calendar"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "カレンダーに祝日を表示します"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カレンダーに祝日を表示します"
           }
         }
       }
     },
-    "달력을 불러오는 중...": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Loading calendar..."
+    "달력을 불러오는 중..." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading calendar..."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "カレンダーを読み込み中..."
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カレンダーを読み込み中..."
           }
         }
       }
     },
-    "달력을 불러올 수 없습니다": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cannot load calendar"
+    "달력을 불러올 수 없습니다" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cannot load calendar"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "カレンダーを読み込めません"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カレンダーを読み込めません"
           }
         }
       }
     },
-    "당일 아침 8시": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Same day 8 AM"
+    "당일 아침 8시" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Same day 8 AM"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "当日朝8時"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当日朝8時"
           }
         }
       }
     },
-    "당일 아침 9시": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Same day 9 AM"
+    "당일 아침 9시" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Same day 9 AM"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "当日朝9時"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当日朝9時"
           }
         }
       }
     },
-    "당일 오전 8시": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Same day 8 AM"
+    "당일 오전 8시" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Same day 8 AM"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "当日午前8時"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当日午前8時"
           }
         }
       }
     },
-    "당일 오전 9시": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Same day 9 AM"
+    "당일 오전 9시" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Same day 9 AM"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "当日午前9時"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当日午前9時"
           }
         }
       }
     },
-    "데이터를 불러올 수 없습니다": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cannot load data"
+    "데이터를 불러올 수 없습니다" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cannot load data"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "データを読み込めません"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "データを読み込めません"
           }
         }
       }
     },
-    "뒤로": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Back"
+    "뒤로" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "戻る"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "戻る"
           }
         }
       }
     },
-    "로딩 중...": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Loading..."
+    "로딩 중..." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading..."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "読み込み中..."
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "読み込み中..."
           }
         }
       }
     },
-    "로컬": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "local"
+    "로컬" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "local"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ローカル"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ローカル"
           }
         }
       }
     },
-    "마감": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": " "
+    "마감" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " "
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "期限"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "期限"
           }
         }
       }
     },
-    "마감일": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Due date"
+    "마감일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Due date"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "期限"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "期限"
           }
         }
       }
     },
-    "마감일까지": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Until due date"
+    "마감일까지" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Until due date"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "期限まで"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "期限まで"
           }
         }
       }
     },
-    "마감일까지 매일 표시됩니다": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Displayed daily until due date"
+    "마감일까지 매일 표시됩니다" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Displayed daily until due date"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "期限まで毎日表示されます"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "期限まで毎日表示されます"
           }
         }
       }
     },
-    "매": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Every"
+    "매" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "毎"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "毎"
           }
         }
       }
     },
-    "매년": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Every year"
+    "매년" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every year"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "毎年"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "毎年"
           }
         }
       }
     },
-    "매월": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Every month"
+    "매월" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every month"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "毎月"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "毎月"
           }
         }
       }
     },
-    "매월 %d번째 %@": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Every %1$dth %2$@ of the month"
+    "매월 %d번째 %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every %1$dth %2$@ of the month"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "new",
-            "value": "매월 %1$d번째 %2$@"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "毎月%d番目の%@"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "毎月%d番目の%@"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "매월 %1$d번째 %2$@"
           }
         }
       }
     },
-    "매월 마지막 %@": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Last %@ of every month"
+    "매월 마지막 %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %@ of every month"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "毎月最後の%@"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "毎月最後の%@"
           }
         }
       }
     },
-    "매일": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Everyday"
+    "매일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Everyday"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "毎日"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "毎日"
           }
         }
       }
     },
-    "매일 아침 9시": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Daily 9 AM"
+    "매일 아침 9시" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daily 9 AM"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "毎日朝9時"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "毎日朝9時"
           }
         }
       }
     },
-    "매일 오전 9시": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Daily 9 AM"
+    "매일 오전 9시" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daily 9 AM"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "毎日午前9時"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "毎日午前9時"
           }
         }
       }
     },
-    "매일 오후 6시": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Daily 6 PM"
+    "매일 오후 6시" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daily 6 PM"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "毎日午後6時"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "毎日午後6時"
           }
         }
       }
     },
-    "매일 저녁 6시": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Daily 6 PM"
+    "매일 저녁 6시" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daily 6 PM"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "毎日夜6時"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "毎日夜6時"
           }
         }
       }
     },
-    "매주": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Every week"
+    "매주" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every week"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "毎週"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "毎週"
           }
         }
       }
     },
-    "메모": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "memo"
+    "메모" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "memo"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "メモ"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "メモ"
           }
         }
       }
     },
-    "메모를 입력하세요": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Enter a memo"
+    "메모를 입력하세요" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter a memo"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "メモを入力してください"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "メモを入力してください"
           }
         }
       }
     },
-    "몇 분 전에 알림받을까요?": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "How many minutes before do you want to be notified?"
+    "몇 분 전에 알림받을까요?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How many minutes before do you want to be notified?"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "何分前に通知を受けますか？"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "何分前に通知を受けますか？"
           }
         }
       }
     },
-    "목록": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "List"
+    "목록" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "List"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "リスト"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "リスト"
           }
         }
       }
     },
-    "목요일": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Thu"
+    "목요일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thu"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "木曜日"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "木曜日"
           }
         }
       }
     },
-    "미리알림 앱에서 알림이 울려요.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "You’ll get a notification from the Reminders app."
+    "미리알림 앱에서 알림이 울려요." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You’ll get a notification from the Reminders app."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "リマインダーアプリから通知が鳴ります。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "リマインダーアプリから通知が鳴ります。"
           }
         }
       }
     },
-    "미완료로 표시": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mark as Incomplete"
+    "미완료로 표시" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mark as Incomplete"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "未完了としてマーク"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未完了としてマーク"
           }
         }
       }
     },
-    "바람: %.0fm/s": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Wind: %.0fm/s"
+    "바람: %.0fm/s" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wind: %.0fm/s"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "風: %.0fm/s"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "風: %.0fm/s"
           }
         }
       }
     },
-    "반복": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Repeat"
+    "반복" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repeat"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "繰り返し"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "繰り返し"
           }
         }
       }
     },
-    "반복 설정": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Repeat Settings"
+    "반복 설정" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repeat Settings"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "繰り返し設定"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "繰り返し設定"
           }
         }
       }
     },
-    "반복 일정 삭제": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delete Recurring Event"
+    "반복 일정 삭제" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Recurring Event"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "繰り返し予定削除"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "繰り返し予定削除"
           }
         }
       }
     },
-    "반복 일정 편집": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Edit Recurring Event"
+    "반복 일정 편집" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit Recurring Event"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "繰り返し予定編集"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "繰り返し予定編集"
           }
         }
       }
     },
-    "반복 일정입니다. 어떻게 삭제하시겠습니까?": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This is a recurring event. How would you like to delete it?"
+    "반복 일정입니다. 어떻게 삭제하시겠습니까?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is a recurring event. How would you like to delete it?"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "繰り返し予定です。どのように削除しますか？"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "繰り返し予定です。どのように削除しますか？"
           }
         }
       }
     },
-    "반복 일정입니다. 어떻게 편집하시겠습니까?": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This is a recurring event. How would you like to edit it?"
+    "반복 일정입니다. 어떻게 편집하시겠습니까?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is a recurring event. How would you like to edit it?"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "繰り返し予定です。どのように編集しますか？"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "繰り返し予定です。どのように編集しますか？"
           }
         }
       }
     },
-    "반복하지 않음": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Does not repeat"
+    "반복하지 않음" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Does not repeat"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "繰り返しなし"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "繰り返しなし"
           }
         }
       }
     },
-    "버전 %@": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Version %@"
+    "버전 %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version %@"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "バージョン %@"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "バージョン %@"
           }
         }
       }
     },
-    "보통": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Medium"
+    "보통" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Medium"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "中"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "中"
           }
         }
       }
     },
-    "분 전": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "minutes before"
+    "분 전" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "minutes before"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "分前"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分前"
           }
         }
       }
     },
-    "빈도": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Frequency"
+    "빈도" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Frequency"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "頻度"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "頻度"
           }
         }
       }
     },
-    "빠른 설정": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Quick Settings"
+    "빠른 설정" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quick Settings"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "クイック設定"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "クイック設定"
           }
         }
       }
     },
-    "사용 가능한 목록이 없습니다": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No available list"
+    "사용 가능한 목록이 없습니다" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No available list"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "利用可能なリストがありません"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "利用可能なリストがありません"
           }
         }
       }
     },
-    "사용 가능한 캘린더가 없습니다": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No available calendars"
+    "사용 가능한 캘린더가 없습니다" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No available calendars"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "利用可能なカレンダーがありません"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "利用可能なカレンダーがありません"
           }
         }
       }
     },
-    "사용자 설정": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Custom Settings"
+    "사용자 설정" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom Settings"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "カスタム設定"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カスタム設定"
           }
         }
       }
     },
-    "사용자 알림": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Custom Notifications"
+    "사용자 알림" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom Notifications"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "カスタム通知"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カスタム通知"
           }
         }
       }
     },
-    "삭제": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delete"
+    "삭제" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "削除"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "削除"
           }
         }
       }
     },
-    "삭제 오류": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Failed to Delete"
+    "삭제 오류" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Failed to Delete"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "削除エラー"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "削除エラー"
           }
         }
       }
     },
-    "삭제 중...": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Deleting…"
+    "삭제 중..." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleting…"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "削除中..."
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "削除中..."
           }
         }
       }
     },
-    "삭제가 완료되었습니다.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Item deleted successfully."
+    "삭제가 완료되었습니다." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Item deleted successfully."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "削除が完了しました。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "削除が完了しました。"
           }
         }
       }
     },
-    "삭제된 항목은 복구할 수 없습니다.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Deleted items cannot be restored."
+    "삭제된 항목은 복구할 수 없습니다." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleted items cannot be restored."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "削除された項目は復元できません。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "削除された項目は復元できません。"
           }
         }
       }
     },
-    "상단의 + 버튼을 누르거나 달력에서 날짜를 길게 눌러서\n일정이나 할 일을 추가할 수 있어요!": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "\"Tap the + button above or long press a date on the calendar\\nto add events or tasks!\""
+    "상단의 + 버튼을 누르거나 달력에서 날짜를 길게 눌러서\n일정이나 할 일을 추가할 수 있어요!" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\"Tap the + button above or long press a date on the calendar\\nto add events or tasks!\""
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "上部の+ボタンを押すか、カレンダーで日付を長押しして\n予定やタスクを追加できます！"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上部の+ボタンを押すか、カレンダーで日付を長押しして\n予定やタスクを追加できます！"
           }
         }
       }
     },
-    "상세 정보": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Details"
+    "상세 정보" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Details"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "詳細情報"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "詳細情報"
           }
         }
       }
     },
-    "새로고침": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Refresh"
+    "새로고침" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refresh"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "更新"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更新"
           }
         }
       }
     },
-    "새로운 할 일을 추가해보세요!": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Try adding a new task!"
+    "새로운 할 일을 추가해보세요!" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try adding a new task!"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "新しいタスクを追加してみてください！"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新しいタスクを追加してみてください！"
           }
         }
       }
     },
-    "생일": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Birthday"
+    "생일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Birthday"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "誕生日"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "誕生日"
           }
         }
       }
     },
-    "선택된 캘린더 없음": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No calendars selected "
+    "선택된 캘린더 없음" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No calendars selected "
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "選択されたカレンダーなし"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選択されたカレンダーなし"
           }
         }
       }
     },
-    "설정": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Settings"
+    "설정" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "設定"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定"
           }
         }
       }
     },
-    "설정에서 권한 허용하기": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Allow permissions in Settings"
+    "설정에서 권한 허용하기" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow permissions in Settings"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "設定で権限を許可"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定で権限を許可"
           }
         }
       }
     },
-    "소리": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "sound"
+    "소리" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sound"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "サウンド"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "サウンド"
           }
         }
       }
     },
-    "수요일": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Wed"
+    "수요일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wed"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "水曜日"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "水曜日"
           }
         }
       }
     },
-    "습도: %.0f%%": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Humidity: %.0f%%"
+    "습도: %.0f%%" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Humidity: %.0f%%"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "湿度: %.0f%%"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "湿度: %.0f%%"
           }
         }
       }
     },
-    "시작": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Start"
+    "시작" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "開始"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開始"
           }
         }
       }
     },
-    "알 수 없음": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Unknown"
+    "알 수 없음" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "不明"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不明"
           }
         }
       }
     },
-    "알림": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notification"
+    "알림" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notification"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "通知"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通知"
           }
         }
       }
     },
-    "알림 방식": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notification Method"
+    "알림 방식" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notification Method"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "通知方法"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通知方法"
           }
         }
       }
     },
-    "알림 없음": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No Notifications"
+    "알림 없음" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Notifications"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "通知なし"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通知なし"
           }
         }
       }
     },
-    "알림 추가": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add Alert"
+    "알림 추가" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Alert"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "通知追加"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通知追加"
           }
         }
       }
     },
-    "알림이 설정되지 않았습니다": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No alert set"
+    "알림이 설정되지 않았습니다" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No alert set"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "通知が設定されていません"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通知が設定されていません"
           }
         }
       }
     },
-    "앱 정보": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "App Info"
+    "앱 정보" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App Info"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "アプリ情報"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アプリ情報"
           }
         }
       }
     },
-    "언제 알림받을까요?": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "When would you like to be notified?"
+    "언제 알림받을까요?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When would you like to be notified?"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "いつ通知を受けますか？"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "いつ通知を受けますか？"
           }
         }
       }
     },
-    "업데이트 중...": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Updating..."
+    "업데이트 중..." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Updating..."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "更新中..."
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更新中..."
           }
         }
       }
     },
-    "없음": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "None"
+    "없음" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "None"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "なし"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "なし"
           }
         }
       }
     },
-    "오늘": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Today"
+    "오늘" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "今日"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日"
           }
         }
       }
     },
-    "오늘 일정이 없습니다.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No events today."
+    "오늘 일정이 없습니다." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No events today."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "今日の予定はありません。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日の予定はありません。"
           }
         }
       }
     },
-    "오늘 할 일이 없습니다.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No tasks today."
+    "오늘 할 일이 없습니다." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No tasks today."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "今日のタスクはありません。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日のタスクはありません。"
           }
         }
       }
     },
-    "오늘의 일정": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Today's Events"
+    "오늘의 일정" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today's Events"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "今日の予定"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日の予定"
           }
         }
       }
     },
-    "오늘의 일정과 할 일을 보려면": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "To see today's schedule and tasks"
+    "오늘의 일정과 할 일을 보려면" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To see today's schedule and tasks"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "今日の予定とタスクを表示するには"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日の予定とタスクを表示するには"
           }
         }
       }
     },
-    "오류가 발생했습니다.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "An error has occurred."
+    "오류가 발생했습니다." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "An error has occurred."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "エラーが発生しました。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "エラーが発生しました。"
           }
         }
       }
     },
-    "완료": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Done"
+    "완료" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "完了"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完了"
           }
         }
       }
     },
-    "완료로 표시": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mark as Complete"
+    "완료로 표시" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mark as Complete"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "完了としてマーク"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完了としてマーク"
           }
         }
       }
     },
-    "요일": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Weekdays"
+    "요일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weekdays"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "曜日"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "曜日"
           }
         }
       }
     },
-    "우선순위": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Priority"
+    "우선순위" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Priority"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "優先度"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "優先度"
           }
         }
       }
     },
-    "우선순위가 설정되지 않았습니다": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No priority set"
+    "우선순위가 설정되지 않았습니다" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No priority set"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "優先度が設定されていません"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "優先度が設定されていません"
           }
         }
       }
     },
-    "원하는 공휴일 캘린더를 선택하세요": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Select the holiday calendar you want"
+    "원하는 공휴일 캘린더를 선택하세요" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select the holiday calendar you want"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "希望する祝日カレンダーを選択してください"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "希望する祝日カレンダーを選択してください"
           }
         }
       }
     },
-    "월": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Month"
+    "월" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Month"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "月"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "月"
           }
         }
       }
     },
-    "월요일": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mon"
+    "월요일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mon"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "月曜日"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "月曜日"
           }
         }
       }
     },
-    "월요일부터 시작": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Start with Monday"
+    "월요일부터 시작" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start with Monday"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "月曜日から開始"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "月曜日から開始"
           }
         }
       }
     },
-    "위젯에서 할 일의 완료 상태를 토글합니다.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Toggle the completion status of a to-do item from the widget."
+    "위젯에서 할 일의 완료 상태를 토글합니다." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toggle the completion status of a to-do item from the widget."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ウィジェットからタスクの完了状態をトグルします。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ウィジェットからタスクの完了状態をトグルします。"
           }
         }
       }
     },
-    "위치": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Location"
+    "위치" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Location"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "場所"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "場所"
           }
         }
       }
     },
-    "위치 선택": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Select location"
+    "위치 선택" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select location"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "場所選択"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "場所選択"
           }
         }
       }
     },
-    "위치 입력": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Enter Location"
+    "위치 입력" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter Location"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "場所入力"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "場所入力"
           }
         }
       }
     },
-    "위치 정보 없음": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No location info"
+    "위치 정보 없음" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No location info"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "位置情報なし"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "位置情報なし"
           }
         }
       }
     },
-    "위치 정보 접근이 거부되었습니다. 날씨 정보를 가져오기 위해 설정에서 위치 권한을 허용해주세요.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Location access was denied. Please allow location permission in Settings to fetch weather."
+    "위치 정보 접근이 거부되었습니다. 날씨 정보를 가져오기 위해 설정에서 위치 권한을 허용해주세요." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Location access was denied. Please allow location permission in Settings to fetch weather."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "位置情報へのアクセスが拒否されました。天気情報を取得するために設定で位置権限を許可してください。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "位置情報へのアクセスが拒否されました。天気情報を取得するために設定で位置権限を許可してください。"
           }
         }
       }
     },
-    "이 날짜에는 일정이나 할 일이 없습니다": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No events or tasks on this date"
+    "이 날짜에는 일정이나 할 일이 없습니다" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No events or tasks on this date"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "この日付には予定やタスクがありません"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この日付には予定やタスクがありません"
           }
         }
       }
     },
-    "이 이벤트만": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This Event Only"
+    "이 이벤트만" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This Event Only"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "このイベントのみ"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このイベントのみ"
           }
         }
       }
     },
-    "이 이벤트만 삭제": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delete This Event Only"
+    "이 이벤트만 삭제" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete This Event Only"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "このイベントのみ削除"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このイベントのみ削除"
           }
         }
       }
     },
-    "이 이벤트만 편집": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Edit This Event Only"
+    "이 이벤트만 편집" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit This Event Only"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "このイベントのみ編集"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このイベントのみ編集"
           }
         }
       }
     },
-    "이동": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Go"
+    "이동" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "移動"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "移動"
           }
         }
       }
     },
-    "이동할 월을 선택하세요": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Select the month to navigate to"
+    "이동할 월을 선택하세요" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select the month to navigate to"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "移動する月を選択してください"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "移動する月を選択してください"
           }
         }
       }
     },
-    "이메일": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "email"
+    "이메일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "email"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "メール"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "メール"
           }
         }
       }
     },
-    "이미 위치 정보를 요청 중입니다.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Location request already in progress."
+    "이후 모든 이벤트 삭제" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete All Future Events"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "すでに位置情報を要求中です。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "以降のすべてのイベントを削除"
           }
         }
       }
     },
-    "일": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "day(s)"
+    "일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "day(s)"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "日"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日"
           }
         }
       }
     },
-    "이벤트 시간": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Event time"
+    "이미 위치 정보를 요청 중입니다." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Location request already in progress."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "イベント時間"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すでに位置情報を要求中です。"
           }
         }
       }
     },
-    "이후 모든 이벤트": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "All Future Events"
+    "이벤트 시간" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Event time"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "以降のすべてのイベント"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "イベント時間"
           }
         }
       }
     },
-    "이후 모든 이벤트 삭제": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delete All Future Events"
+    "이후 모든 이벤트" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All Future Events"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "以降のすべてのイベントを削除"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "以降のすべてのイベント"
           }
         }
       }
     },
-    "이후 모든 이벤트 편집": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Edit All Following Events"
+    "이후 모든 이벤트 편집" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit All Following Events"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "以降のすべてのイベントを編集"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "以降のすべてのイベントを編集"
           }
         }
       }
     },
-    "일요일": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sun"
+    "일요일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sun"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "日曜日"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日曜日"
           }
         }
       }
     },
-    "일요일부터 시작": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Start with Sunday"
+    "일요일부터 시작" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start with Sunday"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "日曜日から開始"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日曜日から開始"
           }
         }
       }
     },
-    "일정": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Events"
+    "일정" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Events"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "予定"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "予定"
           }
         }
       }
     },
-    "일정 삭제": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delete Event"
+    "일정 삭제" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Event"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "予定削除"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "予定削除"
           }
         }
       }
     },
-    "일정을 삭제하시겠습니까?": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Are you sure you want to delete this event?"
+    "일정을 삭제하시겠습니까?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to delete this event?"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "この予定を削除しますか？"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この予定を削除しますか？"
           }
         }
       }
     },
-    "자주 사용하는 위치": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Frequently used locations"
+    "자주 사용하는 위치" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Frequently used locations"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "よく使う場所"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "よく使う場所"
           }
         }
       }
     },
-    "작성 내용이 저장되지 않습니다.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Your changes will not be saved."
+    "작성 내용이 저장되지 않습니다." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your changes will not be saved."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "作成内容が保存されません。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "作成内容が保存されません。"
           }
         }
       }
     },
-    "저장": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Save"
+    "저장" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "保存"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存"
           }
         }
       }
     },
-    "저장 안 하고 닫기": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Close without saving"
+    "저장 안 하고 닫기" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close without saving"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "保存せずに閉じる"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存せずに閉じる"
           }
         }
       }
     },
-    "저장이 완료되었습니다.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Saved."
+    "저장이 완료되었습니다." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saved."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "保存が完了しました。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存が完了しました。"
           }
         }
       }
     },
-    "전날 오후 9시": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Previous day 9 PM"
+    "전날 오후 9시" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Previous day 9 PM"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "前日午後9時"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "前日午後9時"
           }
         }
       }
     },
-    "전날 저녁 9시": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Previous day 9 PM"
+    "전날 저녁 9시" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Previous day 9 PM"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "前日夜9時"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "前日夜9時"
           }
         }
       }
     },
-    "전체 보기": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "View all"
+    "전체 보기" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View all"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "すべて表示"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべて表示"
           }
         }
       }
     },
-    "전체 일정": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "All events"
+    "전체 일정" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All events"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "すべての予定"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべての予定"
           }
         }
       }
     },
-    "전체 할 일": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "All Tasks"
+    "전체 할 일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All Tasks"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "すべてのタスク"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべてのタスク"
           }
         }
       }
     },
-    "제목 입력": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Enter title"
+    "제목 입력" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter title"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "タイトル入力"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タイトル入力"
           }
         }
       }
     },
-    "종료": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "End"
+    "종료" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "End"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "終了"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "終了"
           }
         }
       }
     },
-    "종료 날짜": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "End date"
+    "종료 날짜" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "End date"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "終了日"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "終了日"
           }
         }
       }
     },
-    "종료 조건": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "End condition"
+    "종료 조건" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "End condition"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "終了条件"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "終了条件"
           }
         }
       }
     },
-    "주": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Week"
+    "주" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Week"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "週"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "週"
           }
         }
       }
     },
-    "주 시작일": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Week Start"
+    "주 시작일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Week Start"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "週の開始"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "週の開始"
           }
         }
       }
     },
-    "직접 알림 시간을 설정": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Set custom notification time"
+    "직접 알림 시간을 설정" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set custom notification time"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "カスタム通知時間を設定"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カスタム通知時間を設定"
           }
         }
       }
     },
-    "총": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Total"
+    "총" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "合計"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "合計"
           }
         }
       }
     },
-    "최고: %.0f°  최저: %.0f°": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "High: %1$.0f°  Low: %2$.0f°"
+    "최고: %.0f°  최저: %.0f°" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "High: %1$.0f°  Low: %2$.0f°"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "new",
-            "value": "최고: %1$.0f°  최저: %2$.0f°"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最高: %.0f°  最低: %.0f°"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "最高: %.0f°  最低: %.0f°"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "최고: %1$.0f°  최저: %2$.0f°"
           }
         }
       }
     },
-    "추가": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add"
+    "추가" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "追加"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "追加"
           }
         }
       }
     },
-    "추가 방법 보기": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "View How to Add"
+    "추가 방법 보기" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View How to Add"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "追加方法を表示"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "追加方法を表示"
           }
         }
       }
     },
-    "취소": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cancel"
+    "취소" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "取消"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消"
           }
         }
       }
     },
-    "캘린더": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Calendar"
+    "캘린더" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calendar"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "カレンダー"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カレンダー"
           }
         }
       }
     },
-    "캘린더 앱에서 알림이 울려요.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "You’ll get an alert from the Calendar app."
+    "캘린더 앱에서 알림이 울려요." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You’ll get an alert from the Calendar app."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "カレンダーアプリから通知が鳴ります。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カレンダーアプリから通知が鳴ります。"
           }
         }
       }
     },
-    "캘린더 앱에서 추가": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add from Calendar App"
+    "캘린더 앱에서 추가" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add from Calendar App"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "カレンダーアプリから追加"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カレンダーアプリから追加"
           }
         }
       }
     },
-    "캘린더와 미리알림 모두 접근 권한이 필요해요.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Both calendar and reminder permissions are required."
+    "캘린더와 미리알림 모두 접근 권한이 필요해요." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Both calendar and reminder permissions are required."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "カレンダーとリマインダーの両方へのアクセス権限が必要です。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カレンダーとリマインダーの両方へのアクセス権限が必要です。"
           }
         }
       }
     },
-    "토요일": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sat"
+    "토요일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sat"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "土曜日"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "土曜日"
           }
         }
       }
     },
-    "특정 날짜": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Specific date"
+    "특정 날짜" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Specific date"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "特定の日付"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "特定の日付"
           }
         }
       }
     },
-    "특정 날짜에": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "On specific date"
+    "특정 날짜에" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On specific date"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "特定の日付に"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "特定の日付に"
           }
         }
       }
     },
-    "편집": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Edit"
+    "편집" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "編集"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "編集"
           }
         }
       }
     },
-    "편집 내용이 저장되지 않습니다.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Changes won’t be saved."
+    "편집 내용이 저장되지 않습니다." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changes won’t be saved."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "編集内容が保存されません。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "編集内容が保存されません。"
           }
         }
       }
     },
-    "편집 취소하기": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Discard Changes"
+    "편집 취소하기" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discard Changes"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "編集をキャンセル"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "編集をキャンセル"
           }
         }
       }
     },
-    "평일만": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Weekdays"
+    "평일만" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weekdays"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "平日のみ"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "平日のみ"
           }
         }
       }
     },
-    "하루 종일": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "All day"
+    "하루 종일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All day"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "終日"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "終日"
           }
         }
       }
     },
-    "할 일": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "To-Do"
+    "할 일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To-Do"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "タスク"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タスク"
           }
         }
       }
     },
-    "할 일 토글": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Toggle To-Do"
+    "할 일 토글" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toggle To-Do"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "タスクトグル"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タスクトグル"
           }
         }
       }
     },
-    "할 일이 없습니다": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No tasks"
+    "할 일이 없습니다" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No tasks"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "タスクがありません"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タスクがありません"
           }
         }
       }
     },
-    "할일 삭제": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delete To-Do"
+    "할일 삭제" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete To-Do"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "タスク削除"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タスク削除"
           }
         }
       }
     },
-    "할일을 삭제하시겠습니까?": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Are you sure you want to delete this To-Do?"
+    "할일을 삭제하시겠습니까?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to delete this To-Do?"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "このタスクを削除しますか？"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このタスクを削除しますか？"
           }
         }
       }
     },
-    "항목을 **길게 눌러** 수정/삭제할 수 있어요!": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Long-press an item to edit/delete it!"
+    "항목을 **길게 눌러** 수정/삭제할 수 있어요!" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Long-press an item to edit/delete it!"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "項目を**長押し**で編集/削除できます！"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "項目を**長押し**で編集/削除できます！"
           }
         }
       }
     },
-    "해당 날짜에만 표시됩니다": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Only displayed on that date"
+    "해당 날짜에만 표시됩니다" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only displayed on that date"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "その日付のみに表示されます"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "その日付のみに表示されます"
           }
         }
       }
     },
-    "화요일": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tue"
+    "화요일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tue"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "火曜日"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "火曜日"
           }
         }
       }
     },
-    "확인": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "OK"
+    "확인" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "確認"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "確認"
           }
         }
       }
     },
-    "회": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "times"
+    "회" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "times"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "回"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "回"
           }
         }
       }
     },
-    "횟수": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Number of times"
+    "횟수" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Number of times"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "回数"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "回数"
           }
         }
       }
     },
-    "횟수 제한": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Limit number of times"
+    "횟수 제한" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limit number of times"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "回数制限"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "回数制限"
           }
         }
       }
     },
-    " 날씨": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": " Weather"
+    "月" : {
+
+    },
+    " 날씨" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " Weather"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": " 天気"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " 天気"
           }
         }
       }
     }
   },
-  "version": "1.0"
+  "version" : "1.0"
 }

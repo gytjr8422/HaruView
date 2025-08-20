@@ -32,10 +32,40 @@ struct MonthYearPickerSheet: View {
     
     private let months = Array(1...12)
     
+    private var languageCode: String {
+        Locale.current.language.languageCode?.identifier ?? "ko"
+    }
+    
+    private func monthDisplayText(for month: Int) -> String {
+        switch languageCode {
+        case "en":
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "en_US")
+            formatter.dateFormat = "MMMM"
+            let date = Calendar.current.date(from: DateComponents(month: month))!
+            return formatter.string(from: date)
+        case "ja":
+            return "\(month)" + String(localized: "月")
+        default: // Korean
+            return "\(month)" + String(localized: "월")
+        }
+    }
+    
+    private func yearDisplayText(for year: Int) -> String {
+        switch languageCode {
+        case "en":
+            return String(year)
+        case "ja":
+            return "\(year)" + String(localized: "년")
+        default: // Korean
+            return "\(year)" + String(localized: "년")
+        }
+    }
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 20) {
-                Text("이동할 월을 선택하세요")
+                Text(String(localized: "이동할 월을 선택하세요"))
                     .font(.pretendardSemiBold(size: 18))
                     .foregroundStyle(.haruTextPrimary)
                     .padding(.top, 20)
@@ -43,9 +73,9 @@ struct MonthYearPickerSheet: View {
                 HStack(spacing: 20) {
                     // 년도 선택
                     VStack(spacing: 8) {
-                        Picker("년", selection: $selectedYear) {
+                        Picker(String(localized: "년"), selection: $selectedYear) {
                             ForEach(years, id: \.self) { year in
-                                Text(String(year) + "년").tag(year)
+                                Text(yearDisplayText(for: year)).tag(year)
                             }
                         }
                         .pickerStyle(.wheel)
@@ -54,9 +84,9 @@ struct MonthYearPickerSheet: View {
                     
                     // 월 선택
                     VStack(spacing: 8) {
-                        Picker("월", selection: $selectedMonth) {
+                        Picker(String(localized: "월"), selection: $selectedMonth) {
                             ForEach(months, id: \.self) { month in
-                                Text(String(month) + "월").tag(month)
+                                Text(monthDisplayText(for: month)).tag(month)
                             }
                         }
                         .pickerStyle(.wheel)
@@ -71,7 +101,7 @@ struct MonthYearPickerSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("취소") {
+                    Button(String(localized: "취소")) {
                         dismiss()
                     }
                     .font(.pretendardRegular(size: 16))
@@ -79,7 +109,7 @@ struct MonthYearPickerSheet: View {
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("이동") {
+                    Button(String(localized: "이동")) {
                         onDateSelected(selectedYear, selectedMonth)
                         dismiss()
                     }
@@ -88,7 +118,7 @@ struct MonthYearPickerSheet: View {
                 }
                 
                 ToolbarItem(placement: .principal) {
-                    Text("년/월 선택")
+                    Text(String(localized: "년/월 선택"))
                         .font(.pretendardSemiBold(size: 17))
                         .foregroundStyle(.haruTextPrimary)
                 }

@@ -62,8 +62,8 @@ struct DayDetailSheet: View {
                 }
                 
                 ToolbarItem(placement: .principal) {
-                    Text(dateFormatter.string(from: initialDate))
-                        .font(Locale.current.language.languageCode?.identifier == "ko" ? .museumMedium(size: 19) : .robotoSerifBold(size: 19))
+                    Text(formattedDate)
+                        .font(dateFont)
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
@@ -575,11 +575,34 @@ struct DayDetailSheet: View {
     }
     
     // MARK: - Helper Functions
-    private var dateFormatter: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.locale = Locale.current
-        formatter.dateStyle = .full
-        return formatter
+    
+    private var formattedDate: String {
+        let languageCode = Locale.current.language.languageCode?.identifier
+        let formatter: DateFormatter
+        
+        switch languageCode {
+        case "ko":
+            formatter = DateFormatterFactory.koreanDateWithDayFormatter()
+        case "ja":
+            formatter = DateFormatterFactory.japaneseDateWithDayFormatter()
+        default:
+            formatter = DateFormatterFactory.englishDateWithDayFormatter()
+        }
+        
+        return formatter.string(from: initialDate)
+    }
+    
+    private var dateFont: Font {
+        let languageCode = Locale.current.language.languageCode?.identifier
+        
+        switch languageCode {
+        case "ko":
+            return .museumMedium(size: 19)
+        case "ja":
+            return .notoSansMedium(size: 19)
+        default:
+            return .robotoSerifBold(size: 19)
+        }
     }
     
     /// CalendarEvent ID로 원본 Event 찾기 (EventKit에서 실제 데이터 조회)
