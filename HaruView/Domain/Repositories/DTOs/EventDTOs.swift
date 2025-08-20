@@ -198,11 +198,27 @@ struct RecurrenceRuleInput {
         }
         
         if let daysOfWeek = daysOfWeek, !daysOfWeek.isEmpty {
+            // 사용자 설정에 따른 요일 이름 매핑
             let dayNames = ["", "일", "월", "화", "수", "목", "금", "토"]
             let selectedDays = daysOfWeek.compactMap {
                 dayNames.indices.contains($0.dayOfWeek) ? dayNames[$0.dayOfWeek] : nil
             }
-            result += " (\(selectedDays.joined(separator: ",")))"
+            
+            // 사용자의 주 시작일 설정에 따라 정렬
+            let weekStartsOnMonday = UserDefaults.standard.object(forKey: "weekStartsOnMonday") as? Bool ?? false
+            let sortedDays = selectedDays.sorted { day1, day2 in
+                guard let index1 = dayNames.firstIndex(of: day1),
+                      let index2 = dayNames.firstIndex(of: day2) else {
+                    return false
+                }
+                
+                let adjustedIndex1 = weekStartsOnMonday ? (index1 == 1 ? 7 : index1 - 1) : index1 - 1
+                let adjustedIndex2 = weekStartsOnMonday ? (index2 == 1 ? 7 : index2 - 1) : index2 - 1
+                
+                return adjustedIndex1 < adjustedIndex2
+            }
+            
+            result += " (\(sortedDays.joined(separator: ",")))"
         }
         
         switch endCondition {

@@ -98,6 +98,7 @@ struct RecurrenceSelectionView: View {
 struct CustomRecurrenceSheet: View {
     @Binding var recurrenceRule: RecurrenceRuleInput?
     @Environment(\.dismiss) private var dismiss
+    @StateObject private var settings = AppSettings.shared
     
     @State private var frequency: RecurrenceRuleInput.RecurrenceFrequency = .weekly
     @State private var interval: Int = 1
@@ -180,11 +181,11 @@ struct CustomRecurrenceSheet: View {
                                 Spacer()
                             }
                             
-                            let weekdays = ["일", "월", "화", "수", "목", "금", "토"]
+                            let weekdays = Calendar.weekdaySymbolsKorean(startingOnMonday: settings.weekStartsOnMonday)
                             HStack(spacing: 8) {
                                 ForEach(Array(weekdays.enumerated()), id: \.offset) { index, day in
                                     Button(action: {
-                                        let dayNumber = index + 1
+                                        let dayNumber = weekdayIndexToCalendarWeekday(index: index)
                                         if selectedWeekdays.contains(dayNumber) {
                                             selectedWeekdays.remove(dayNumber)
                                         } else {
@@ -193,11 +194,11 @@ struct CustomRecurrenceSheet: View {
                                     }) {
                                         Text(day)
                                             .font(.pretendardMedium(size: 14))
-                                            .foregroundStyle(selectedWeekdays.contains(index + 1) ? .white : .haruPrimary)
+                                            .foregroundStyle(selectedWeekdays.contains(weekdayIndexToCalendarWeekday(index: index)) ? .white : .haruPrimary)
                                             .frame(width: 36, height: 36)
                                             .background(
                                                 Circle()
-                                                    .fill(selectedWeekdays.contains(index + 1) ? .haruPrimary : .haruPrimary.opacity(0.1))
+                                                    .fill(selectedWeekdays.contains(weekdayIndexToCalendarWeekday(index: index)) ? .haruPrimary : .haruPrimary.opacity(0.1))
                                             )
                                     }
                                     .buttonStyle(PlainButtonStyle())
@@ -309,7 +310,7 @@ struct CustomRecurrenceSheet: View {
         .onChange(of: frequency) { _, newFrequency in
             if newFrequency == .weekly && selectedWeekdays.isEmpty {
                 // 매주로 변경했는데 선택된 요일이 없으면 현재 요일로 설정
-                let currentWeekday = Calendar.current.component(.weekday, from: Date())
+                let currentWeekday = Calendar.withUserWeekStartPreference().component(.weekday, from: Date())
                 selectedWeekdays = [currentWeekday]
             }
         }
@@ -339,6 +340,28 @@ struct CustomRecurrenceSheet: View {
         )
     }
     
+    /// UI의 요일 인덱스를 Calendar의 weekday 번호로 변환
+    private func weekdayIndexToCalendarWeekday(index: Int) -> Int {
+        if settings.weekStartsOnMonday {
+            // 월요일 시작: [월, 화, 수, 목, 금, 토, 일] -> [2, 3, 4, 5, 6, 7, 1]
+            return index == 6 ? 1 : index + 2
+        } else {
+            // 일요일 시작: [일, 월, 화, 수, 목, 금, 토] -> [1, 2, 3, 4, 5, 6, 7]
+            return index + 1
+        }
+    }
+    
+    /// Calendar의 weekday 번호를 UI의 요일 인덱스로 변환
+    private func calendarWeekdayToIndex(weekday: Int) -> Int {
+        if settings.weekStartsOnMonday {
+            // [2, 3, 4, 5, 6, 7, 1] -> [0, 1, 2, 3, 4, 5, 6]
+            return weekday == 1 ? 6 : weekday - 2
+        } else {
+            // [1, 2, 3, 4, 5, 6, 7] -> [0, 1, 2, 3, 4, 5, 6]
+            return weekday - 1
+        }
+    }
+    
     private func initializeFromExistingRule() {
         if let existing = recurrenceRule {
             frequency = existing.frequency
@@ -349,13 +372,13 @@ struct CustomRecurrenceSheet: View {
                 selectedWeekdays = Set(daysOfWeek.map { $0.dayOfWeek })
             } else if existing.frequency == .weekly {
                 // 매주 반복이지만 특정 요일이 없으면, 현재 요일로 기본 설정
-                let currentWeekday = Calendar.current.component(.weekday, from: Date())
+                let currentWeekday = Calendar.withUserWeekStartPreference().component(.weekday, from: Date())
                 selectedWeekdays = [currentWeekday]
             }
         } else {
             // 새로 생성할 때는 현재 요일로 기본 설정
             if frequency == .weekly {
-                let currentWeekday = Calendar.current.component(.weekday, from: Date())
+                let currentWeekday = Calendar.withUserWeekStartPreference().component(.weekday, from: Date())
                 selectedWeekdays = [currentWeekday]
             }
         }
