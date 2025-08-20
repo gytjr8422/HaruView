@@ -285,15 +285,28 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
 
     
     private var dateView: some ToolbarContent {
-        let formatter = Locale.current.language.languageCode?.identifier == "ko"
-        ? DateFormatterFactory.koreanDateWithDayFormatter()
-        : DateFormatterFactory.englishDateWithDayFormatter()
+        let languageCode = Locale.current.language.languageCode?.identifier
+        let formatter: DateFormatter
+        let font: Font
+        
+        switch languageCode {
+        case "ko":
+            formatter = DateFormatterFactory.koreanDateWithDayFormatter()
+            font = .museumMedium(size: 19)
+        case "ja":
+            formatter = DateFormatterFactory.japaneseDateWithDayFormatter()
+            font = .notoSansMedium(size: 19)
+        default:
+            formatter = DateFormatterFactory.englishDateWithDayFormatter()
+            font = .robotoSerifBold(size: 19)
+        }
+        
         let dateStr = formatter.string(from: vm.today)
         
         return ToolbarItem(placement: .navigationBarLeading) {
             Text(dateStr)
-                .font(Locale.current.language.languageCode?.identifier == "ko" ? .museumMedium(size: 19) : .robotoSerifBold(size: 19))
-                .padding(.leading, 20)
+                .font(font)
+                .padding(.leading, 15)
         }
     }
     

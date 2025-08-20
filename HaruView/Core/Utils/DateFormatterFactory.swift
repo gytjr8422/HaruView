@@ -24,6 +24,14 @@ enum DateFormatterFactory {
         return formatter
     }
     
+    static func japaneseDateWithDayFormatter() -> DateFormatter {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ja_JP")
+        formatter.calendar = Calendar(identifier: .gregorian)
+        formatter.dateFormat = "M月d日, EEEE"
+        return formatter
+    }
+    
     // 커스텀 포맷
     static func customFormatter(format: String, locale: Locale = .current) -> DateFormatter {
         let formatter = DateFormatter()

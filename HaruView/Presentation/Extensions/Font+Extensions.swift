@@ -47,4 +47,16 @@ extension Font {
     static func bookkMyungjoBold(size: CGFloat) -> Font {
         .custom("BookkMyungjo-Bd", size: size)
     }
+    
+    static func notoSansBold(size: CGFloat) -> Font {
+        .custom("NotoSansJP-Bold", size: size)
+    }
+    
+    static func notoSansSemiBold(size: CGFloat) -> Font {
+        .custom("NotoSansJP-SemiBold", size: size)
+    }
+    
+    static func notoSansMedium(size: CGFloat) -> Font {
+        .custom("NotoSansJP-Medium", size: size)
+    }
 }

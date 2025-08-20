@@ -223,6 +223,9 @@
 		<string>PlusJakartaSans-Bold.ttf</string>
 		<string>BookkMyungjo_Bold.ttf</string>
 		<string>Pretendard-Medium.otf</string>
+		<string>NotoSansJP-Medium.ttf</string>
+		<string>NotoSansJP-Bold.ttf</string>
+		<string>NotoSansJP-SemiBold.ttf</string>
 	</array>
 </dict>
 </plist>
