@@ -164,7 +164,7 @@ final class CalendarCacheManager: ObservableObject {
     
     /// 연속 이벤트 정보 생성
     private func createContinuousEventInfo(for event: CalendarEvent, on targetDate: Date) -> ContinuousEventInfo? {
-        let calendar = Calendar.current
+        let calendar = Calendar.withUserWeekStartPreference()
         let targetDay = calendar.startOfDay(for: targetDate)
         let eventStartDay = calendar.startOfDay(for: event.originalStart)
         let eventEndDay = calendar.startOfDay(for: event.originalEnd)
@@ -180,12 +180,12 @@ final class CalendarCacheManager: ObservableObject {
         }
         
         let weekday = calendar.component(.weekday, from: targetDate)
-        let weekPosition = weekday - 1 // 일요일=0, 월요일=1, ..., 토요일=6으로 변환
+        let weekPosition = (weekday - calendar.firstWeekday + 7) % 7 // 사용자 설정에 따른 주 내 위치
         
         let isStart = targetDay == eventStartDay
         let isEnd = targetDay == eventEndDay
         
-        // 제목 표시 여부 결정: 시작일이거나 주의 시작일(일요일)
+        // 제목 표시 여부 결정: 시작일이거나 주의 시작일
         let showTitle = isStart || weekPosition == 0
         
         return ContinuousEventInfo(
