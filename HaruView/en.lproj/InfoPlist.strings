@@ -1,5 +1,0 @@
-"NSCalendarsFullAccessUsageDescription" = "We need access to your calendar to show your daily schedule and add new events.";
-"NSRemindersFullAccessUsageDescription" = "We need access to reminders to manage today's tasks and add new ones.";
-CFBundleDisplayName = "Haru";
-NSUserTrackingUsageDescription = "We track your activity to deliver personalized ads and measure advertising performance.";
-NSLocationWhenInUseUsageDescription = "Your location is needed to provide accurate weather information.";

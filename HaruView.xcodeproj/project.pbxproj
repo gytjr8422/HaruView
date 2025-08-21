@@ -11,6 +11,7 @@
 		CE6007AB2E01808B006B986C /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE6007AA2E01808B006B986C /* WidgetKit.framework */; };
 		CE6007AD2E01808B006B986C /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE6007AC2E01808B006B986C /* SwiftUI.framework */; };
 		CE6007BC2E01808D006B986C /* HaruViewWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = CE6007A82E01808A006B986C /* HaruViewWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		CEB590922E538A4600FF3532 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CEB590242E538A4600FF3532 /* InfoPlist.strings */; };
 		CEB590C52E56000300FF3532 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CEB590C32E56000300FF3532 /* InfoPlist.strings */; };
 /* End PBXBuildFile section */
 
@@ -45,6 +46,7 @@
 		CE6007AC2E01808B006B986C /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		CE6B85012DC12F8800F2D1BC /* HaruView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HaruView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEB590C42E56000300FF3532 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = InfoPlist.strings; sourceTree = "<group>"; };
+		CEB590CA2E56E8CB00FF3532 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = "InfoPlist 2.strings"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -132,6 +134,7 @@
 		CE6B84F82DC12F8800F2D1BC = {
 			isa = PBXGroup;
 			children = (
+				CEB590C62E563C2200FF3532 /* en.lproj */,
 				CE40A7B22E09ABC60067FCD2 /* HaruViewWidgetExtension.entitlements */,
 				CE6B85032DC12F8800F2D1BC /* HaruView */,
 				CEB590C22E55FFCA00FF3532 /* ja.lproj */,
@@ -156,6 +159,14 @@
 				CEB590C32E56000300FF3532 /* InfoPlist.strings */,
 			);
 			path = ja.lproj;
+			sourceTree = "<group>";
+		};
+		CEB590C62E563C2200FF3532 /* en.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				CEB590242E538A4600FF3532 /* InfoPlist.strings */,
+			);
+			path = en.lproj;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -264,6 +275,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEB590C52E56000300FF3532 /* InfoPlist.strings in Resources */,
+				CEB590922E538A4600FF3532 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -295,6 +307,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		CEB590242E538A4600FF3532 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CEB590CA2E56E8CB00FF3532 /* ko */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		CEB590C32E56000300FF3532 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (

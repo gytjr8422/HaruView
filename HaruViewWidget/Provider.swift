@@ -141,13 +141,38 @@ struct Provider: AppIntentTimelineProvider {
                     self.eventStore.fetchReminders(matching: cmpPred) { comp in
                         bucket.append(contentsOf: comp ?? [])
                         
-                        // 오늘과 겹치는지 필터링 (앱과 동일한 로직)
+                        // 홈뷰와 동일한 로직: 마감일까지 할 일은 매일 표시, 특정 날짜 할 일은 해당 날짜만
                         let todayStart = Calendar.withUserWeekStartPreference().startOfDay(for: Date())
                         let todayEnd = Calendar.withUserWeekStartPreference().date(byAdding: Calendar.Component.day, value: 1, to: todayStart)!
                         
                         let filtered = bucket.filter { rem in
-                            guard let due = rem.dueDateComponents?.date else { return true }
-                            return due >= todayStart && due < todayEnd
+                            guard let due = rem.dueDateComponents?.date else { 
+                                // 마감일이 없는 할 일은 항상 표시
+                                return true 
+                            }
+                            
+                            // ReminderType 추출
+                            let reminderType: WidgetReminderType
+                            if let url = rem.url {
+                                let urlString = url.absoluteString
+                                if urlString.contains("haruview-reminder-type://UNTIL") || urlString.contains("haruview_type=UNTIL") {
+                                    reminderType = .untilDate
+                                } else {
+                                    reminderType = .onDate
+                                }
+                            } else {
+                                reminderType = .onDate
+                            }
+                            
+                            switch reminderType {
+                            case .onDate:
+                                // 특정 날짜 할 일: 정확히 오늘인 경우만
+                                return due >= todayStart && due < todayEnd
+                            case .untilDate:
+                                // 마감일까지 할 일: 마감일이 오늘 이후인 경우 (오늘 포함)
+                                let dueDay = Calendar.withUserWeekStartPreference().startOfDay(for: due)
+                                return dueDay >= todayStart
+                            }
                         }
                         
                         let reminderItems = filtered

@@ -7,17 +7,17 @@
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.widgetkit-extension</string>
 	</dict>
-    <key>UIAppFonts</key>
-    <array>
-        <string>RobotoSerif_28pt-Bold.ttf</string>
-        <string>Pretendard-Bold.otf</string>
-        <string>Pretendard-Regular.otf</string>
-        <string>Pretendard-SemiBold.otf</string>
-        <string>Museum-Medium.otf</string>
-        <string>Museum-Bold.otf</string>
-        <string>PlusJakartaSans-Regular.ttf</string>
-        <string>PlusJakartaSans-Bold.ttf</string>
-        <string>BookkMyungjo_Bold.ttf</string>
-    </array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>RobotoSerif_28pt-Bold.ttf</string>
+		<string>Pretendard-Bold.otf</string>
+		<string>Pretendard-Regular.otf</string>
+		<string>Pretendard-SemiBold.otf</string>
+		<string>Museum-Medium.otf</string>
+		<string>Museum-Bold.otf</string>
+		<string>PlusJakartaSans-Regular.ttf</string>
+		<string>PlusJakartaSans-Bold.ttf</string>
+		<string>BookkMyungjo_Bold.ttf</string>
+	</array>
 </dict>
 </plist>

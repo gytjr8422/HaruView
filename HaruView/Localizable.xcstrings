@@ -128,12 +128,6 @@
             "state" : "translated",
             "value" : "%d%@ごと"
           }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$d%2$@ 마다"
-          }
         }
       }
     },
@@ -1593,12 +1587,6 @@
             "state" : "translated",
             "value" : "毎月%d番目の%@"
           }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "매월 %1$d번째 %2$@"
-          }
         }
       }
     },
@@ -2933,6 +2921,22 @@
         }
       }
     },
+    "일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "day(s)"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日"
+          }
+        }
+      }
+    },
     "이동" : {
       "localizations" : {
         "en" : {
@@ -2981,38 +2985,6 @@
         }
       }
     },
-    "이후 모든 이벤트 삭제" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete All Future Events"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "以降のすべてのイベントを削除"
-          }
-        }
-      }
-    },
-    "일" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "day(s)"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "日"
-          }
-        }
-      }
-    },
     "이미 위치 정보를 요청 중입니다." : {
       "localizations" : {
         "en" : {
@@ -3057,6 +3029,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "以降のすべてのイベント"
+          }
+        }
+      }
+    },
+    "이후 모든 이벤트 삭제" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete All Future Events"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "以降のすべてのイベントを削除"
           }
         }
       }
@@ -3458,12 +3446,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "最高: %.0f°  最低: %.0f°"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "최고: %1$.0f°  최저: %2$.0f°"
           }
         }
       }
