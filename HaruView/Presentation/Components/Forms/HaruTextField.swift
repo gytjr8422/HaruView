@@ -12,7 +12,7 @@ struct HaruTextField: View {
     @FocusState private var isFocused: Bool
     @State private var showClearButton: Bool = false
     
-    var placeholder: String = "입력해주세요."
+    var placeholder: String = "입력해주세요.".localized()
     
     var body: some View {
         HStack {

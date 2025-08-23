@@ -165,18 +165,18 @@ struct RecurrenceRuleInput {
         if interval > 1 {
             switch frequency {
             case .daily:
-                result = String(localized: "\(interval)일마다")
+                result = "\(interval)일마다".localized(with: interval)
             case .weekly:
-                result = String(localized: "\(interval)주마다")
+                result = "\(interval)주마다".localized(with: interval)
             case .monthly:
-                result = String(localized: "\(interval)개월마다")
+                result = "\(interval)개월마다".localized(with: interval)
             case .yearly:
-                result = String(localized: "\(interval)년마다")
+                result = "\(interval)년마다".localized(with: interval)
             }
         } else {
             switch frequency {
             case .daily:
-                result = String(localized: "매일")
+                result = "매일".localized()
             case .weekly:
                 // 평일(월-금)인지 확인
                 if let daysOfWeek,
@@ -186,14 +186,14 @@ struct RecurrenceRuleInput {
                    daysOfWeek.contains(where: { $0.dayOfWeek == 4 }) && // 수요일
                    daysOfWeek.contains(where: { $0.dayOfWeek == 5 }) && // 목요일
                    daysOfWeek.contains(where: { $0.dayOfWeek == 6 }) {  // 금요일
-                    result = String(localized: "평일만")
+                    result = "평일만".localized()
                 } else {
-                    result = String(localized: "매주")
+                    result = "매주".localized()
                 }
             case .monthly:
-                result = String(localized: "매월")
+                result = "매월".localized()
             case .yearly:
-                result = String(localized: "매년")
+                result = "매년".localized()
             }
         }
         

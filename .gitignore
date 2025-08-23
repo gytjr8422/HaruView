@@ -87,4 +87,6 @@ fastlane/test_output
 
 iOSInjectionProject/
 
+.claude/
+
 # End of https://www.toptal.com/developers/gitignore/api/swift

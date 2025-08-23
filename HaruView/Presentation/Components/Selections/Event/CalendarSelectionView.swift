@@ -15,7 +15,7 @@ struct CalendarSelectionView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             if availableCalendars.isEmpty {
-                Text("사용 가능한 캘린더가 없습니다")
+                LocalizedText(key: "사용 가능한 캘린더가 없습니다")
                     .font(.pretendardRegular(size: 14))
                     .foregroundStyle(.secondary)
             } else {

@@ -16,9 +16,9 @@ enum ReminderType: String, CaseIterable, Codable {
     var displayText: String {
         switch self {
         case .onDate:
-            return String(localized: "특정 날짜에")
+            return "특정 날짜에".localized()
         case .untilDate:
-            return String(localized: "마감일까지")
+            return "마감일까지".localized()
         }
     }
     
@@ -26,9 +26,9 @@ enum ReminderType: String, CaseIterable, Codable {
     var description: String {
         switch self {
         case .onDate:
-            return String(localized: "해당 날짜에만 표시됩니다")
+            return "해당 날짜에만 표시됩니다".localized()
         case .untilDate:
-            return String(localized: "마감일까지 매일 표시됩니다")
+            return "마감일까지 매일 표시됩니다".localized()
         }
     }
     
@@ -165,19 +165,19 @@ enum ReminderAlarmPreset: String, CaseIterable, Codable {
     var displayText: String {
         switch self {
         case .dailyMorning9AM:
-            return String(localized: "매일 오전 9시")
+            return "매일 오전 9시".localized()
         case .dailyEvening6PM:
-            return String(localized: "매일 오후 6시")
+            return "매일 오후 6시".localized()
         case .sameDayMorning9AM:
-            return String(localized: "당일 오전 9시")
+            return "당일 오전 9시".localized()
         case .sameDayMorning8AM:
-            return String(localized: "당일 오전 8시")
+            return "당일 오전 8시".localized()
         case .dayBeforeEvening9PM:
-            return String(localized: "전날 오후 9시")
+            return "전날 오후 9시".localized()
         case .custom:
-            return String(localized: "사용자 설정")
+            return "사용자 설정".localized()
         case .none:
-            return String(localized: "알림 없음")
+            return "알림 없음".localized()
         }
     }
     
@@ -185,19 +185,19 @@ enum ReminderAlarmPreset: String, CaseIterable, Codable {
     var description: String {
         switch self {
         case .dailyMorning9AM:
-            return String(localized: "매일 아침 9시")
+            return "매일 아침 9시".localized()
         case .dailyEvening6PM:
-            return String(localized: "매일 저녁 6시")
+            return "매일 저녁 6시".localized()
         case .sameDayMorning9AM:
-            return String(localized: "당일 아침 9시")
+            return "당일 아침 9시".localized()
         case .sameDayMorning8AM:
-            return String(localized: "당일 아침 8시")
+            return "당일 아침 8시".localized()
         case .dayBeforeEvening9PM:
-            return String(localized: "전날 저녁 9시")
+            return "전날 저녁 9시".localized()
         case .custom:
-            return String(localized: "직접 알림 시간을 설정")
+            return "직접 알림 시간을 설정".localized()
         case .none:
-            return String(localized: "알림 없음")
+            return "알림 없음".localized()
         }
     }
     
@@ -304,9 +304,9 @@ enum DueDateMode: CaseIterable {
     
     var title: String {
         switch self {
-        case .none: return String(localized: "없음")
-        case .dateOnly: return String(localized: "날짜만")
-        case .dateTime: return String(localized: "날짜+시간")
+        case .none: return "없음".localized()
+        case .dateOnly: return "날짜만".localized()
+        case .dateTime: return "날짜+시간".localized()
         }
     }
 }

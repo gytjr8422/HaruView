@@ -11,13 +11,14 @@ import SwiftUI
 struct AlarmSelectionView: View {
     @Binding var alarms: [AlarmInput]
     @State private var showCustomAlarm = false
+    @EnvironmentObject private var languageManager: LanguageManager
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             VStack(alignment: .leading, spacing: 16) {
                 // 빠른 설정 섹션 - 날짜+시간 모드처럼 기존 AlarmInput.presets 사용
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("빠른 설정")
+                    LocalizedText(key: "빠른 설정")
                         .font(.pretendardSemiBold(size: 16))
                         .foregroundStyle(.haruTextPrimary)
                     
@@ -28,7 +29,7 @@ struct AlarmSelectionView: View {
                                     alarms.append(preset)
                                 }
                             } label: {
-                                Text(preset.description)
+                                Text(getLocalizedDescription(for: preset))
                                     .font(.pretendardRegular(size: 14))
                                     .foregroundStyle(.haruPrimary)
                                     .padding(.horizontal, 12)
@@ -48,7 +49,7 @@ struct AlarmSelectionView: View {
                 if !alarms.isEmpty {
                     VStack(alignment: .leading, spacing: 12) {
                         HStack {
-                            Text("사용자 알림")
+                            LocalizedText(key: "사용자 알림")
                                 .font(.pretendardSemiBold(size: 16))
                                 .foregroundStyle(.haruTextPrimary)
                             
@@ -65,7 +66,7 @@ struct AlarmSelectionView: View {
                         
                         VStack(spacing: 8) {
                             HStack {
-                                Text("캘린더 앱에서 알림이 울려요.")
+                                LocalizedText(key: "캘린더 앱에서 알림이 울려요.")
                                     .font(.pretendardRegular(size: 12))
                                     .foregroundStyle(.secondary)
                                 Spacer()
@@ -74,7 +75,7 @@ struct AlarmSelectionView: View {
                             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2), spacing: 8) {
                                 ForEach(Array(alarms.enumerated()), id: \.offset) { index, alarm in
                                     HStack {
-                                        Text(alarm.description)
+                                        Text(getLocalizedDescription(for: alarm))
                                             .font(.pretendardRegular(size: 14))
                                         
                                         Spacer()
@@ -102,7 +103,7 @@ struct AlarmSelectionView: View {
                     // 알림이 없을 때는 사용자 설정 추가 버튼만 표시
                     VStack(alignment: .leading, spacing: 12) {
                         HStack {
-                            Text("사용자 설정")
+                            LocalizedText(key: "사용자 설정")
                                 .font(.pretendardSemiBold(size: 16))
                                 .foregroundStyle(.haruTextPrimary)
                             
@@ -117,7 +118,7 @@ struct AlarmSelectionView: View {
                             }
                         }
                         
-                        Text("알림이 설정되지 않았습니다")
+                        LocalizedText(key: "알림이 설정되지 않았습니다")
                             .font(.pretendardRegular(size: 14))
                             .foregroundStyle(.secondary)
                             .padding(.vertical, 8)
@@ -128,6 +129,51 @@ struct AlarmSelectionView: View {
         .sheet(isPresented: $showCustomAlarm) {
             CustomReminderAlarmSheet(alarms: $alarms, dueDateMode: .dateTime)
                 .presentationDetents([.fraction(0.5)])
+        }
+    }
+    
+    // MARK: - Helper Methods
+    
+    /// 알람 프리셋의 현지화된 설명 텍스트 반환 (언어 변경에 즉시 반응)
+    private func getLocalizedDescription(for preset: AlarmInput) -> String {
+        // languageManager의 refreshTrigger 의존성 생성
+        let _ = languageManager.refreshTrigger
+        
+        switch preset.trigger {
+        case .relative(let interval):
+            if interval == 0 {
+                return "이벤트 시간".localized()
+            } else if interval < 0 {
+                let minutes = Int(abs(interval) / 60)
+                let hours = minutes / 60
+                let days = hours / 24
+                
+                if days > 0 {
+                    return "%d일 전".localized(with: days)
+                } else if hours > 0 {
+                    return "%d시간 전".localized(with: hours)
+                } else {
+                    return "%d분 전".localized(with: minutes)
+                }
+            } else {
+                let minutes = Int(interval / 60)
+                let hours = minutes / 60
+                let days = hours / 24
+                
+                if days > 0 {
+                    return "%d일 후".localized(with: days)
+                } else if hours > 0 {
+                    return "%d시간 후".localized(with: hours)
+                } else {
+                    return "%d분 후".localized(with: minutes)
+                }
+            }
+        case .absolute(let date):
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: languageManager.currentLanguage.appleLanguageCode)
+            formatter.dateStyle = .short
+            formatter.timeStyle = .short
+            return formatter.string(from: date)
         }
     }
 }

@@ -55,9 +55,9 @@ struct EventAlarm: Identifiable, Equatable {
         
         var localizedDescription: String {
             switch self {
-            case .display: return String(localized: "알림")
-            case .email: return String(localized: "이메일")
-            case .sound: return String(localized: "소리")
+            case .display: return "알림".localized()
+            case .email: return "이메일".localized()
+            case .sound: return "소리".localized()
             }
         }
     }
@@ -72,22 +72,22 @@ struct EventAlarm: Identifiable, Equatable {
         let days = hours / 24
         
         if relativeOffset == 0 {
-            return String(localized: "이벤트 시간")
+            return "이벤트 시간".localized()
         } else if relativeOffset < 0 {
             if days > 0 {
-                return String(format: NSLocalizedString("%d일 전", comment: ""), days)
+                return String(format: "%d일 전".localized(), days)
             } else if hours > 0 {
-                return String(format: NSLocalizedString("%d시간 전", comment: ""), hours)
+                return String(format: "%d시간 전".localized(), hours)
             } else {
-                return String(format: NSLocalizedString("%d분 전", comment: ""), minutes)
+                return String(format: "%d분 전".localized(), minutes)
             }
         } else {
             if days > 0 {
-                return String(format: NSLocalizedString("%d일 후", comment: ""), days)
+                return String(format: "%d일 후".localized(), days)
             } else if hours > 0 {
-                return String(format: NSLocalizedString("%d시간 후", comment: ""), hours)
+                return String(format: "%d시간 후".localized(), hours)
             } else {
-                return String(format: NSLocalizedString("%d분 후", comment: ""), minutes)
+                return String(format: "%d분 후".localized(), minutes)
             }
         }
     }
@@ -113,10 +113,10 @@ struct EventRecurrenceRule: Equatable {
         
         var localizedDescription: String {
             switch self {
-            case .daily: return String(localized: "매일")
-            case .weekly: return String(localized: "매주")
-            case .monthly: return String(localized: "매월")
-            case .yearly: return String(localized: "매년")
+            case .daily: return "매일".localized()
+            case .weekly: return "매주".localized()
+            case .monthly: return "매월".localized()
+            case .yearly: return "매년".localized()
             }
         }
     }
@@ -127,13 +127,13 @@ struct EventRecurrenceRule: Equatable {
         
         var localizedDescription: String {
             let dayNames = [
-                String(localized: "일요일"),
-                String(localized: "월요일"),
-                String(localized: "화요일"),
-                String(localized: "수요일"),
-                String(localized: "목요일"),
-                String(localized: "금요일"),
-                String(localized: "토요일")
+                "일요일".localized(),
+                "월요일".localized(),
+                "화요일".localized(),
+                "수요일".localized(),
+                "목요일".localized(),
+                "금요일".localized(),
+                "토요일".localized()
             ]
             
             guard dayOfWeek >= 1 && dayOfWeek <= 7 else { return "" }
@@ -141,9 +141,9 @@ struct EventRecurrenceRule: Equatable {
             
             if let weekNumber = weekNumber {
                 if weekNumber > 0 {
-                    return String(format: NSLocalizedString("매월 %d번째 %@", comment: ""), weekNumber, dayName)
+                    return String(format: "매월 %d번째 %@".localized(), weekNumber, dayName)
                 } else {
-                    return String(format: NSLocalizedString("매월 마지막 %@", comment: ""), dayName)
+                    return String(format: "매월 마지막 %@".localized(), dayName)
                 }
             } else {
                 return dayName
@@ -155,7 +155,7 @@ struct EventRecurrenceRule: Equatable {
         var components: [String] = []
         
         if interval > 1 {
-            components.append(String(format: NSLocalizedString("%d%@ 마다", comment: ""), interval, frequency.localizedDescription))
+            components.append(String(format: "%d%@ 마다".localized(), interval, frequency.localizedDescription))
         } else {
             components.append(frequency.localizedDescription)
         }
@@ -168,9 +168,9 @@ struct EventRecurrenceRule: Equatable {
         if let endDate = endDate {
             let formatter = DateFormatter()
             formatter.dateStyle = .medium
-            components.append(String(format: NSLocalizedString("%@까지", comment: ""), formatter.string(from: endDate)))
+            components.append(String(format: "%@까지".localized(), formatter.string(from: endDate)))
         } else if let count = occurrenceCount {
-            components.append(String(format: NSLocalizedString("%d회", comment: ""), count))
+            components.append(String(format: "%d회".localized(), count))
         }
         
         return components.joined(separator: " ")
@@ -196,11 +196,11 @@ struct EventCalendar: Identifiable, Equatable {
         
         var localizedDescription: String {
             switch self {
-            case .local: return String(localized: "로컬")
-            case .calDAV: return String(localized: "CalDAV")
-            case .exchange: return String(localized: "Exchange")
-            case .subscription: return String(localized: "구독")
-            case .birthday: return String(localized: "생일")
+            case .local: return "로컬".localized()
+            case .calDAV: return "CalDAV".localized()
+            case .exchange: return "Exchange".localized()
+            case .subscription: return "구독".localized()
+            case .birthday: return "생일".localized()
             }
         }
     }
@@ -245,7 +245,7 @@ struct EventStructuredLocation: Equatable {
         } else if let geo = geoLocation {
             return geo.coordinate
         } else {
-            return String(localized: "위치 정보 없음")
+            return "위치 정보 없음".localized()
         }
     }
 }
@@ -258,9 +258,9 @@ enum EventDeletionSpan {
     var localizedDescription: String {
         switch self {
         case .thisEventOnly:
-            return String(localized: "이 이벤트만")
+            return "이 이벤트만".localized()
         case .futureEvents:
-            return String(localized: "이후 모든 이벤트")
+            return "이후 모든 이벤트".localized()
         }
     }
     

@@ -16,43 +16,43 @@ struct EditRecurrenceViewModifier<VM: AddSheetViewModelProtocol>: ViewModifier {
         if let editVM = vm as? EditSheetViewModel {
             content
                 .alert(
-                    "반복 일정 편집",
+                    "반복 일정 편집".localized(),
                     isPresented: $internalShowEditDialog,
                     actions: {
-                        Button("이 이벤트만 편집") {
+                        Button("이 이벤트만 편집".localized()) {
                             editVM.editEventWithSpan(.thisEventOnly)
                         }
                         
-                        Button("이후 모든 이벤트 편집") {
+                        Button("이후 모든 이벤트 편집".localized()) {
                             editVM.editEventWithSpan(.futureEvents)
                         }
                         
-                        Button("취소", role: .cancel) {
+                        Button("취소".localized(), role: .cancel) {
                             editVM.cancelEventEdit()
                         }
                     },
                     message: {
-                        Text("반복 일정입니다. 어떻게 편집하시겠습니까?")
+                        LocalizedText(key: "반복 일정입니다. 어떻게 편집하시겠습니까?")
                     }
                 )
                 .alert(
-                    "반복 일정 삭제",
+                    "반복 일정 삭제".localized(),
                     isPresented: $internalShowDeleteDialog,
                     actions: {
-                        Button("이 이벤트만 삭제") {
+                        Button("이 이벤트만 삭제".localized()) {
                             editVM.deleteEventWithSpan(.thisEventOnly)
                         }
                         
-                        Button("이후 모든 이벤트 삭제", role: .destructive) {
+                        Button("이후 모든 이벤트 삭제".localized(), role: .destructive) {
                             editVM.deleteEventWithSpan(.futureEvents)
                         }
                         
-                        Button("취소", role: .cancel) {
+                        Button("취소".localized(), role: .cancel) {
                             editVM.cancelEventDelete()
                         }
                     },
                     message: {
-                        Text("반복 일정입니다. 어떻게 삭제하시겠습니까?")
+                        LocalizedText(key: "반복 일정입니다. 어떻게 삭제하시겠습니까?")
                     }
                 )
                 .onChange(of: editVM.showRecurringEditOptions) { _, newValue in

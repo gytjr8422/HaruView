@@ -43,7 +43,7 @@ struct EventDateTimePicker: View {
                         
                         if isAllDay {
                             HStack {
-                                Text("하루 종일")
+                                LocalizedText(key: "하루 종일")
                                     .font(.system(size: 25, weight: .light))
                                     .foregroundStyle(selectedField == .start ? .haruPrimary : .primary)
                                 Spacer()
@@ -53,7 +53,7 @@ struct EventDateTimePicker: View {
                                 Text(formatTime(startDate))
                                     .font(.system(size: 25, weight: .light))
                                     .foregroundStyle(selectedField == .start ? .haruPrimary : .primary)
-                                Text("시작")
+                                LocalizedText(key: "시작")
                                     .font(.system(size: 12, weight: .light))
                                     .padding(.bottom, 2)
                             }
@@ -88,7 +88,7 @@ struct EventDateTimePicker: View {
                                 Text(formatTime(endDate))
                                     .font(.system(size: 25, weight: .light))
                                     .foregroundStyle(selectedField == .end ? .haruPrimary : .primary)
-                                Text("종료")
+                                LocalizedText(key: "종료")
                                     .font(.system(size: 12, weight: .light))
                                     .padding(.bottom, 2)
                             }
@@ -102,7 +102,7 @@ struct EventDateTimePicker: View {
             // 빠른 설정 버튼 (하루 종일이 아닐 때만)
             if !isAllDay {
                 HStack(spacing: 5) {
-                    Button("15분") {
+                    Button("15분".localized()) {
                         isTextFieldFocused.wrappedValue = false
                         endDate = Calendar.current.date(byAdding: .minute, value: 15, to: startDate) ?? startDate
                     }
@@ -115,7 +115,7 @@ struct EventDateTimePicker: View {
                             .fill(.haruPrimary.opacity(0.1))
                     )
                     
-                    Button("30분") {
+                    Button("30분".localized()) {
                         isTextFieldFocused.wrappedValue = false
                         endDate = Calendar.current.date(byAdding: .minute, value: 30, to: startDate) ?? startDate
                     }
@@ -128,7 +128,7 @@ struct EventDateTimePicker: View {
                             .fill(.haruPrimary.opacity(0.1))
                     )
                     
-                    Button("1시간") {
+                    Button("1시간".localized()) {
                         isTextFieldFocused.wrappedValue = false
                         endDate = Calendar.current.date(byAdding: .hour, value: 1, to: startDate) ?? startDate
                     }
@@ -141,7 +141,7 @@ struct EventDateTimePicker: View {
                             .fill(.haruPrimary.opacity(0.1))
                     )
                     
-                    Button("1시간 30분") {
+                    Button("1시간 30분".localized()) {
                         isTextFieldFocused.wrappedValue = false
                         endDate = Calendar.current.date(byAdding: .minute, value: 90, to: startDate) ?? startDate
                     }
@@ -154,7 +154,7 @@ struct EventDateTimePicker: View {
                             .fill(.haruPrimary.opacity(0.1))
                     )
                     
-                    Button("2시간") {
+                    Button("2시간".localized()) {
                         isTextFieldFocused.wrappedValue = false
                         endDate = Calendar.current.date(byAdding: .hour, value: 2, to: startDate) ?? startDate
                     }

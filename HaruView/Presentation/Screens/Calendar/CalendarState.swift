@@ -69,7 +69,7 @@ enum CalendarViewMode: String, CaseIterable {
     case week = "주간"  // 추후 구현
     
     var localizedDescription: String {
-        return NSLocalizedString(rawValue, comment: "")
+        return rawValue.localized()
     }
 }
 
@@ -126,10 +126,11 @@ extension CalendarState {
     
     // 월 표시 텍스트
     var monthDisplayText: String {
+        let languageManager = LanguageManager.shared
         let formatter = DateFormatter()
-        formatter.locale = Locale.current
+        formatter.locale = Locale(identifier: languageManager.currentLanguage.appleLanguageCode)
         
-        if Locale.current.language.languageCode?.identifier == "ko" {
+        if languageManager.currentLanguage == .korean {
             return "\(currentYear)년 \(currentMonth)월"
         } else {
             formatter.dateFormat = "MMMM yyyy"

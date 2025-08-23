@@ -15,13 +15,13 @@ struct WeekStartSelectionView: View {
         return [
             WeekStartOption(
                 id: false, 
-                title: String(localized: "일요일부터 시작"), 
+                title: "일요일부터 시작".localized(), 
                 subtitle: Calendar.weekdaySymbols(startingOnMonday: false).joined(separator: " "), 
                 emoji: "☀️"
             ),
             WeekStartOption(
                 id: true, 
-                title: String(localized: "월요일부터 시작"), 
+                title: "월요일부터 시작".localized(), 
                 subtitle: Calendar.weekdaySymbols(startingOnMonday: true).joined(separator: " "), 
                 emoji: "💼"
             )
@@ -47,7 +47,7 @@ struct WeekStartSelectionView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
-                Text(String(localized: "주 시작일"))
+                LocalizedText(key: "주 시작일")
                     .font(.pretendardSemiBold(size: 18))
                     .foregroundStyle(.haruTextPrimary)
             }
@@ -62,7 +62,7 @@ struct WeekStartSelectionView: View {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 16, weight: .semibold))
                         
-                        Text(String(localized: "뒤로"))
+                        LocalizedText(key: "뒤로")
                             .font(.pretendardRegular(size: 16))
                     }
                     .foregroundStyle(.haruPrimary)

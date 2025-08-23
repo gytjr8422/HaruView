@@ -11,7 +11,7 @@ enum AddSheetMode: String, CaseIterable, Identifiable {
     case event = "일정"
     case reminder = "할 일"
     var id: String { rawValue }
-    var localized: String { NSLocalizedString(rawValue, comment: "") }
+    var localized: String { rawValue.localized() }
 }
 
 // MARK: - ViewModel Protocol

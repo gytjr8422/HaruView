@@ -41,7 +41,7 @@ struct HolidayRegionSettingView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
-                Text("공휴일 캘린더 설정")
+                LocalizedText(key: "공휴일 캘린더 설정")
                     .font(.pretendardSemiBold(size: 18))
                     .foregroundStyle(.haruTextPrimary)
             }
@@ -56,7 +56,7 @@ struct HolidayRegionSettingView: View {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 16, weight: .semibold))
                         
-                        Text("뒤로")
+                        LocalizedText(key: "뒤로")
                             .font(.pretendardRegular(size: 16))
                     }
                     .foregroundStyle(.haruPrimary)
@@ -88,7 +88,7 @@ struct HolidayRegionSettingView: View {
     private var guideSection: some View {
         VStack(spacing: 0) {
             HStack {
-                Text("공휴일 캘린더 선택")
+                LocalizedText(key: "공휴일 캘린더 선택")
                     .font(.pretendardBold(size: 17))
                     .foregroundStyle(.secondary)
                 Spacer()
@@ -102,11 +102,11 @@ struct HolidayRegionSettingView: View {
                     .frame(width: 24, height: 24)
                 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("iOS 캘린더 앱에서 구독한 공휴일만 표시됩니다")
+                    LocalizedText(key: "iOS 캘린더 앱에서 구독한 공휴일만 표시됩니다")
                         .font(.pretendardRegular(size: 16))
                         .foregroundStyle(.haruTextPrimary)
                     
-                    Text("원하는 공휴일 캘린더를 선택하세요")
+                    LocalizedText(key: "원하는 공휴일 캘린더를 선택하세요")
                         .font(.pretendardRegular(size: 12))
                         .foregroundStyle(.haruSecondary)
                 }
@@ -130,7 +130,7 @@ struct HolidayRegionSettingView: View {
     private var subscribedCalendarsSection: some View {
         VStack(spacing: 0) {
             HStack {
-                Text("구독된 공휴일 캘린더")
+                LocalizedText(key: "구독된 공휴일 캘린더")
                     .font(.pretendardBold(size: 17))
                     .foregroundStyle(.secondary)
                 Spacer()
@@ -207,7 +207,7 @@ struct HolidayRegionSettingView: View {
     private var emptyStateSection: some View {
         VStack(spacing: 0) {
             HStack {
-                Text("구독된 공휴일 캘린더")
+                LocalizedText(key: "구독된 공휴일 캘린더")
                     .font(.pretendardBold(size: 17))
                     .foregroundStyle(.secondary)
                 Spacer()
@@ -220,11 +220,11 @@ struct HolidayRegionSettingView: View {
                     .foregroundStyle(.haruSecondary.opacity(0.6))
                 
                 VStack(spacing: 8) {
-                    Text("구독된 공휴일 캘린더가 없습니다")
+                    LocalizedText(key: "구독된 공휴일 캘린더가 없습니다")
                         .font(.pretendardSemiBold(size: 16))
                         .foregroundStyle(.haruTextPrimary)
                     
-                    Text("iOS 캘린더 앱에서 원하는 국가의\n공휴일 캘린더를 먼저 구독해주세요")
+                    LocalizedText(key: "iOS 캘린더 앱에서 원하는 국가의\n공휴일 캘린더를 먼저 구독해주세요")
                         .font(.pretendardRegular(size: 14))
                         .foregroundStyle(.haruSecondary)
                         .multilineTextAlignment(.center)
@@ -247,7 +247,7 @@ struct HolidayRegionSettingView: View {
     private var addCalendarGuideSection: some View {
         VStack(spacing: 0) {
             HStack {
-                Text("공휴일 캘린더 추가하기")
+                LocalizedText(key: "공휴일 캘린더 추가하기")
                     .font(.pretendardBold(size: 17))
                     .foregroundStyle(.secondary)
                 Spacer()
@@ -266,11 +266,11 @@ struct HolidayRegionSettingView: View {
                             .frame(width: 24, height: 24)
                         
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("캘린더 앱에서 추가")
+                            LocalizedText(key: "캘린더 앱에서 추가")
                                 .font(.pretendardRegular(size: 16))
                                 .foregroundStyle(.haruTextPrimary)
                             
-                            Text("iOS 캘린더 앱을 열어서 공휴일을 구독하세요")
+                            LocalizedText(key: "iOS 캘린더 앱을 열어서 공휴일을 구독하세요")
                                 .font(.pretendardRegular(size: 12))
                                 .foregroundStyle(.haruSecondary)
                         }
@@ -302,11 +302,11 @@ struct HolidayRegionSettingView: View {
                             .frame(width: 24, height: 24)
                         
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("추가 방법 보기")
+                            LocalizedText(key: "추가 방법 보기")
                                 .font(.pretendardRegular(size: 16))
                                 .foregroundStyle(.haruTextPrimary)
                             
-                            Text("단계별 가이드를 확인하세요")
+                            LocalizedText(key: "단계별 가이드를 확인하세요")
                                 .font(.pretendardRegular(size: 12))
                                 .foregroundStyle(.haruSecondary)
                         }

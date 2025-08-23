@@ -69,13 +69,13 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
             .background(.haruBackground)
             .toolbar { leadingToolbar; toolbarTitle; saveToolbar }
             .navigationBarTitleDisplayMode(.inline)
-            .confirmationDialog(vm.isEdit ? "편집 내용이 저장되지 않습니다." : "작성 내용이 저장되지 않습니다.",
+            .confirmationDialog((vm.isEdit ? "편집 내용이 저장되지 않습니다." : "작성 내용이 저장되지 않습니다.").localized(),
                                 isPresented: $showDiscardAlert) {
-                Button(vm.isEdit ? "편집 취소하기" : "저장 안 하고 닫기", role: .destructive) { dismiss() }
-                Button(vm.isEdit ? "계속 편집" : "계속 작성", role: .cancel) {}
+                Button((vm.isEdit ? "편집 취소하기" : "저장 안 하고 닫기").localized(), role: .destructive) { dismiss() }
+                Button((vm.isEdit ? "계속 편집" : "계속 작성").localized(), role: .cancel) {}
             }
             .confirmationDialog(
-                vm.mode == .event ? "일정을 삭제하시겠습니까?" : "할일을 삭제하시겠습니까?",
+                (vm.mode == .event ? "일정을 삭제하시겠습니까?" : "할일을 삭제하시겠습니까?").localized(),
                 isPresented: Binding<Bool>(
                     get: { 
                         if let editVM = vm as? EditSheetViewModel {
@@ -90,20 +90,20 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                     }
                 )
             ) {
-                Button("삭제", role: .destructive) {
+                Button("삭제".localized(), role: .destructive) {
                     if let editVM = vm as? EditSheetViewModel {
                         Task {
                             await editVM.confirmDelete()
                         }
                     }
                 }
-                Button("취소", role: .cancel) {
+                Button("취소".localized(), role: .cancel) {
                     if let editVM = vm as? EditSheetViewModel {
                         editVM.cancelDelete()
                     }
                 }
             } message: {
-                Text("삭제된 항목은 복구할 수 없습니다.")
+                LocalizedText(key: "삭제된 항목은 복구할 수 없습니다.")
             }
         }
         .interactiveDismissDisabled(isDirty || vm.isSaving)
@@ -195,7 +195,7 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     private var footerError: some View {
         Group {
             if let e = vm.error {
-                Text(String(format: NSLocalizedString("⚠️ 오류: %@", comment: ""), e.localizedDescription))
+                Text(String(format: "⚠️ 오류: %@".localized(), e.localizedDescription))
                     .font(.jakartaRegular(size: 14))
                     .foregroundStyle(.red)
             }
@@ -221,7 +221,7 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                                 .padding(.trailing, 8)
                         }
                         
-                        Text(vm.mode == .event ? "일정 삭제" : "할일 삭제")
+                        LocalizedText(key: vm.mode == .event ? "일정 삭제" : "할일 삭제")
                             .font(.pretendardSemiBold(size: 16))
                     }
                     .foregroundStyle(.red)
@@ -241,7 +241,7 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     private var leadingToolbar: some ToolbarContent {
         ToolbarItem(placement: .cancellationAction) {
             Button { isDirty ? (showDiscardAlert = true) : dismiss() } label: {
-                Text("취소").font(.pretendardSemiBold(size: 16)).foregroundStyle(.red.opacity(0.8))
+                LocalizedText(key: "취소").font(.pretendardSemiBold(size: 16)).foregroundStyle(.red.opacity(0.8))
             }
         }
     }
@@ -258,7 +258,7 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                         // 저장 후 즉시 시트를 닫지 않음 - saveCompleted onChange에서 처리
                     }
                 } label: {
-                    Text("저장").font(.pretendardSemiBold(size: 16))
+                    LocalizedText(key: "저장").font(.pretendardSemiBold(size: 16))
                         .foregroundStyle(vm.currentTitle.isEmpty ? .secondary : Color.blue.opacity(0.8))
                 }
                 .disabled(vm.currentTitle.isEmpty)
@@ -269,7 +269,8 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     private var toolbarTitle: some ToolbarContent {
         ToolbarItem(placement: .principal) {
             let key = vm.isEdit ? "%@ 편집" : "%@ 추가"
-            Text(String(format: NSLocalizedString(key, comment: ""), vm.mode.localized))
+            let modeText = vm.mode == .event ? "일정" : "할 일"
+            Text(String(format: key.localized(), modeText.localized()))
                 .font(.pretendardSemiBold(size: 18))
         }
     }

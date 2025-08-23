@@ -108,7 +108,7 @@ struct PrioritySelectionView: View {
                     )
                 }
             } else {
-                Text("우선순위가 설정되지 않았습니다")
+                LocalizedText(key: "우선순위가 설정되지 않았습니다")
                     .font(.pretendardRegular(size: 14))
                     .foregroundStyle(.secondary)
                     .padding(.vertical, 8)
@@ -150,7 +150,7 @@ struct ReminderCalendarSelectionView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             if availableCalendars.isEmpty {
-                Text("사용 가능한 목록이 없습니다")
+                LocalizedText(key: "사용 가능한 목록이 없습니다")
                     .font(.pretendardRegular(size: 14))
                     .foregroundStyle(.secondary)
             } else {
@@ -213,7 +213,7 @@ struct ReminderDetailInputViews {
 //                    .foregroundStyle(.haruPrimary)
                 }
                 
-                HaruTextField(text: $location, placeholder: String(localized: "위치 입력"))
+                HaruTextField(text: $location, placeholder: "위치 입력".localized())
             }
             .sheet(isPresented: $showLocationPicker) {
                 LocationPickerSheet(selectedLocation: $location)
@@ -281,6 +281,7 @@ struct ReminderAlarmSelectionView: View {
     let dueDate: Date?
     let includeTime: Bool
     @State private var showCustomAlarm = false
+    @EnvironmentObject private var languageManager: LanguageManager
     
     private var dueDateMode: DueDateMode {
         if dueDate == nil {
@@ -313,7 +314,7 @@ struct ReminderAlarmSelectionView: View {
                                 }
                                 alarmPreset = .custom  // 기존 방식 사용 시 사용자 설정으로 설정
                             } label: {
-                                Text(preset.description)
+                                Text(getLocalizedDescription(for: preset))
                                     .font(.pretendardRegular(size: 14))
                                     .foregroundStyle(.haruPrimary)
                                     .padding(.horizontal, 12)
@@ -431,7 +432,7 @@ struct ReminderAlarmSelectionView: View {
                             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2), spacing: 8) {
                                 ForEach(Array(alarms.enumerated()), id: \.offset) { index, alarm in
                                     HStack {
-                                        Text(alarm.description)
+                                        Text(getLocalizedDescription(for: alarm))
                                             .font(.pretendardRegular(size: 14))
                                         
                                         Spacer()
@@ -476,6 +477,51 @@ struct ReminderAlarmSelectionView: View {
             }
         }
     }
+    
+    // MARK: - Helper Methods
+    
+    /// 알람 프리셋의 현지화된 설명 텍스트 반환 (언어 변경에 즉시 반응)
+    private func getLocalizedDescription(for preset: AlarmInput) -> String {
+        // languageManager의 refreshTrigger 의존성 생성
+        let _ = languageManager.refreshTrigger
+        
+        switch preset.trigger {
+        case .relative(let interval):
+            if interval == 0 {
+                return "이벤트 시간".localized()
+            } else if interval < 0 {
+                let minutes = Int(abs(interval) / 60)
+                let hours = minutes / 60
+                let days = hours / 24
+                
+                if days > 0 {
+                    return "%d일 전".localized(with: days)
+                } else if hours > 0 {
+                    return "%d시간 전".localized(with: hours)
+                } else {
+                    return "%d분 전".localized(with: minutes)
+                }
+            } else {
+                let minutes = Int(interval / 60)
+                let hours = minutes / 60
+                let days = hours / 24
+                
+                if days > 0 {
+                    return "%d일 후".localized(with: days)
+                } else if hours > 0 {
+                    return "%d시간 후".localized(with: hours)
+                } else {
+                    return "%d분 후".localized(with: minutes)
+                }
+            }
+        case .absolute(let date):
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: languageManager.currentLanguage.appleLanguageCode)
+            formatter.dateStyle = .short
+            formatter.timeStyle = .short
+            return formatter.string(from: date)
+        }
+    }
 }
 
 // MARK: - 사용자 리마인더 알람 설정 시트
@@ -483,6 +529,7 @@ struct CustomReminderAlarmSheet: View {
     @Binding var alarms: [AlarmInput]
     let dueDateMode: DueDateMode
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var languageManager: LanguageManager
     
     @State private var triggerMode: TriggerMode = .relative
     
@@ -498,15 +545,15 @@ struct CustomReminderAlarmSheet: View {
     @State private var absoluteDate: Date = Date()
     
     enum TriggerMode: String, CaseIterable {
-        case relative = "상대적"
-        case absolute = "절대적"
+        case relative = "relative"
+        case absolute = "absolute"
         
         var displayText: String {
             switch self {
             case .relative:
-                return "미리 알림"
+                return "미리 알림".localized()
             case .absolute:
-                return "특정 시간"
+                return "특정 시간".localized()
             }
         }
         
@@ -525,7 +572,7 @@ struct CustomReminderAlarmSheet: View {
             VStack(spacing: 0) {
                 // 헤더
                 HStack {
-                    Button("취소") {
+                    Button("취소".localized()) {
                         dismiss()
                     }
                     .font(.pretendardRegular(size: 16))
@@ -533,13 +580,13 @@ struct CustomReminderAlarmSheet: View {
                     
                     Spacer()
                     
-                    Text("알림 추가")
+                    LocalizedText(key: "알림 추가")
                         .font(.pretendardSemiBold(size: 18))
                         .foregroundStyle(.haruTextPrimary)
                     
                     Spacer()
                     
-                    Button("추가") {
+                    Button("추가".localized()) {
                         let trigger: AlarmInput.AlarmTrigger
                         if triggerMode == .relative {
                             trigger = .relative(-TimeInterval(relativeMinutes * 60))
@@ -566,7 +613,7 @@ struct CustomReminderAlarmSheet: View {
                     // 알림 방식 선택 (dateTime 모드에서만 표시)
                     if dueDateMode == .dateTime {
                         VStack(alignment: .leading, spacing: 16) {
-                            Text("알림 방식")
+                            LocalizedText(key: "알림 방식")
                                 .font(.pretendardSemiBold(size: 16))
                                 .foregroundStyle(.haruTextPrimary)
                             
@@ -600,7 +647,7 @@ struct CustomReminderAlarmSheet: View {
                     
                     // 시간 설정
                     VStack(alignment: .leading, spacing: 16) {
-                        Text(dueDateMode == .dateTime && triggerMode == .relative ? "몇 분 전에 알림받을까요?" : "언제 알림받을까요?")
+                        LocalizedText(key: dueDateMode == .dateTime && triggerMode == .relative ? "몇 분 전에 알림 받을까요?" : "언제 알림 받을까요?")
                             .font(.pretendardSemiBold(size: 16))
                             .foregroundStyle(.haruTextPrimary)
                         
@@ -622,7 +669,7 @@ struct CustomReminderAlarmSheet: View {
                                                 )
                                         )
                                     
-                                    Text("분 전")
+                                    LocalizedText(key: "분 전")
                                         .font(.pretendardRegular(size: 16))
                                         .foregroundStyle(.haruTextPrimary)
                                 }
@@ -647,6 +694,51 @@ struct CustomReminderAlarmSheet: View {
         .onAppear {
             // dueDateMode에 따라 적절한 triggerMode로 초기화
             triggerMode = availableTriggerModes.first ?? .relative
+        }
+    }
+    
+    // MARK: - Helper Methods
+    
+    /// 알람 프리셋의 현지화된 설명 텍스트 반환 (언어 변경에 즉시 반응)
+    private func getLocalizedDescription(for preset: AlarmInput) -> String {
+        // languageManager의 refreshTrigger 의존성 생성
+        let _ = languageManager.refreshTrigger
+        
+        switch preset.trigger {
+        case .relative(let interval):
+            if interval == 0 {
+                return "이벤트 시간".localized()
+            } else if interval < 0 {
+                let minutes = Int(abs(interval) / 60)
+                let hours = minutes / 60
+                let days = hours / 24
+                
+                if days > 0 {
+                    return "%d일 전".localized(with: days)
+                } else if hours > 0 {
+                    return "%d시간 전".localized(with: hours)
+                } else {
+                    return "%d분 전".localized(with: minutes)
+                }
+            } else {
+                let minutes = Int(interval / 60)
+                let hours = minutes / 60
+                let days = hours / 24
+                
+                if days > 0 {
+                    return "%d일 후".localized(with: days)
+                } else if hours > 0 {
+                    return "%d시간 후".localized(with: hours)
+                } else {
+                    return "%d분 후".localized(with: minutes)
+                }
+            }
+        case .absolute(let date):
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: languageManager.currentLanguage.appleLanguageCode)
+            formatter.dateStyle = .short
+            formatter.timeStyle = .short
+            return formatter.string(from: date)
         }
     }
 }

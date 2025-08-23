@@ -10,6 +10,7 @@ import SwiftUI
 struct CalendarView: View {
     @Environment(\.di) private var di
     @Environment(\.scenePhase) private var phase
+    @EnvironmentObject private var languageManager: LanguageManager
     @StateObject private var vm: CalendarViewModel
     @State private var showDayDetail = false
     @State private var selectedDayForDetail: CalendarDay?
@@ -66,7 +67,7 @@ struct CalendarView: View {
                         showMonthYearPicker = true
                     }) {
                         HStack(spacing: 4) {
-                            Text(vm.monthDisplayText)
+                            Text(monthDisplayText)
                                 .font(.pretendardSemiBold(size: 18))
                                 .foregroundStyle(.haruTextPrimary)
                             
@@ -78,10 +79,12 @@ struct CalendarView: View {
                     }
                     .buttonStyle(PlainButtonStyle())
                     
-                    Button("오늘") {
+                    Button(action: {
                         withAnimation(.easeInOut(duration: 0.3)) {
                             vm.moveToToday()
                         }
+                    }) {
+                        LocalizedText(key: "오늘")
                     }
                     .font(.pretendardRegular(size: 12))
                     .foregroundStyle(.haruPrimary)
@@ -192,15 +195,20 @@ struct CalendarView: View {
                     }
                 )
             } else {
-                ProgressView("달력 준비 중...")
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+VStack {
+                    ProgressView()
+                    LocalizedText(key: "달력 준비 중...")
+                        .font(.pretendardRegular(size: 14))
+                        .foregroundStyle(.secondary)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             
             if vm.isLoading && !vm.monthWindow.isEmpty {
                 HStack {
                     ProgressView()
                         .scaleEffect(0.8)
-                    Text("업데이트 중...")
+                    LocalizedText(key: "업데이트 중...")
                         .font(.pretendardRegular(size: 14))
                         .foregroundStyle(.secondary)
                 }
@@ -215,7 +223,7 @@ struct CalendarView: View {
             ProgressView()
                 .scaleEffect(1.2)
             
-            Text("달력을 불러오는 중...")
+            LocalizedText(key: "달력을 불러오는 중...")
                 .font(.pretendardRegular(size: 16))
                 .foregroundStyle(.haruSecondary)
         }
@@ -228,7 +236,7 @@ struct CalendarView: View {
                 .font(.system(size: 50))
                 .foregroundStyle(.orange)
             
-            Text("달력을 불러올 수 없습니다")
+            LocalizedText(key: "달력을 불러올 수 없습니다")
                 .font(.pretendardSemiBold(size: 18))
                 .foregroundStyle(.haruTextPrimary)
             
@@ -237,8 +245,10 @@ struct CalendarView: View {
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
             
-            Button("다시 시도") {
+            Button(action: {
                 vm.refresh()
+            }) {
+                LocalizedText(key: "다시 시도")
             }
             .font(.pretendardSemiBold(size: 16))
             .foregroundStyle(.white)
@@ -257,12 +267,14 @@ struct CalendarView: View {
                 .font(.system(size: 50))
                 .foregroundStyle(.haruPrimary)
             
-            Text("달력 데이터가 없습니다")
+            LocalizedText(key: "달력 데이터가 없습니다")
                 .font(.pretendardSemiBold(size: 18))
                 .foregroundStyle(.haruTextPrimary)
             
-            Button("새로고침") {
+            Button(action: {
                 vm.loadCurrentMonth()
+            }) {
+                LocalizedText(key: "새로고침")
             }
             .font(.pretendardRegular(size: 16))
             .foregroundStyle(.haruPrimary)
@@ -304,6 +316,25 @@ struct CalendarView: View {
         }
         
         return nil
+    }
+    
+    // MARK: - Computed Properties
+    
+    /// 월 표시 텍스트 (언어 변경에 즉시 반응)
+    private var monthDisplayText: String {
+        // languageManager 의존성 생성
+        let _ = languageManager.refreshTrigger
+        
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: languageManager.currentLanguage.appleLanguageCode)
+        
+        if languageManager.currentLanguage == .korean {
+            return "\(vm.state.currentYear)년 \(vm.state.currentMonth)월"
+        } else {
+            formatter.dateFormat = "MMMM yyyy"
+            let currentMonthFirstDay = Calendar.current.date(from: DateComponents(year: vm.state.currentYear, month: vm.state.currentMonth, day: 1)) ?? Date()
+            return formatter.string(from: currentMonthFirstDay)
+        }
     }
     
     /// Pull-to-refresh 액션

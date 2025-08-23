@@ -82,7 +82,7 @@ struct ReminderDueDatePicker: View {
                             
                             if selectedMode == .dateOnly {
                                 HStack {
-                                    Text("마감일")
+                                    LocalizedText(key: "마감일")
                                         .font(.system(size: 25, weight: .light))
                                         .foregroundStyle(selectedField == .dueDate ? .haruPrimary : .primary)
                                     Spacer()
@@ -92,7 +92,7 @@ struct ReminderDueDatePicker: View {
                                     Text(formatTime(internalDate))
                                         .font(.system(size: 25, weight: .light))
                                         .foregroundStyle(selectedField == .dueDate ? .haruPrimary : .primary)
-                                    Text("마감")
+                                    LocalizedText(key: "마감")
                                         .font(.system(size: 12, weight: .light))
                                         .padding(.bottom, 2)
                                 }

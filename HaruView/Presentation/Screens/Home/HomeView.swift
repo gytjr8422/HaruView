@@ -13,6 +13,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
     @Environment(\.di) private var di
     @AppStorage("didShowDeleteHint") private var didShowHint = false
     @State private var showHint = false
+    @EnvironmentObject private var languageManager: LanguageManager
     
     @StateObject private var vm: VM
     @StateObject private var permission = CalendarPermissionStore()
@@ -141,7 +142,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
     private var eventListView: some View {
         
         HStack {
-            Text("오늘의 일정")
+            LocalizedText(key: "오늘의 일정")
                 .font(.pretendardBold(size: 17))
                 .foregroundStyle(.secondary)
             Spacer()
@@ -150,7 +151,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                 Button {
                     showEventSheet.toggle()
                 } label: {
-                    Text("전체 보기")
+                    LocalizedText(key: "전체 보기")
                         .font(.jakartaRegular(size: 14))
                         .foregroundStyle(.haruPrimary)
                 }
@@ -176,7 +177,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                                  }
                              } label: {
                                  Label {
-                                     Text("편집").font(Font.pretendardRegular(size: 14))
+                                     LocalizedText(key: "편집").font(Font.pretendardRegular(size: 14))
                                  } icon: {
                                      Image(systemName: "pencil")
                                  }
@@ -185,7 +186,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                                  vm.requestEventDeletion(event) // 새로운 스마트 삭제 메서드 사용
                              } label: {
                                  Label {
-                                     Text("삭제").font(Font.pretendardRegular(size: 14))
+                                     LocalizedText(key: "삭제").font(Font.pretendardRegular(size: 14))
                                  } icon: {
                                      Image(systemName: "trash")
                                  }
@@ -200,7 +201,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
     @ViewBuilder
     private var reminderListView: some View {
         HStack {
-            Text("할 일")
+            LocalizedText(key: "할 일")
                 .font(.pretendardBold(size: 17))
                 .foregroundStyle(.secondary)
             Spacer()
@@ -209,7 +210,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                 Button {
                     showReminderSheet.toggle()
                 } label: {
-                    Text("전체 보기")
+                    LocalizedText(key: "전체 보기")
                         .font(.jakartaRegular(size: 14))
                         .foregroundStyle(.haruPrimary)
                 }
@@ -229,7 +230,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                             editingReminder = rem
                         } label: {
                             Label {
-                                Text("편집")
+                                LocalizedText(key: "편집")
                                     .font(Font.pretendardRegular(size: 14))
                             } icon: {
                                 Image(systemName: "pencil")
@@ -241,7 +242,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                             }
                         } label: {
                             Label {
-                                Text("삭제")
+                                LocalizedText(key: "삭제")
                                     .font(Font.pretendardRegular(size: 14))
                             } icon: {
                                 Image(systemName: "trash")
@@ -285,7 +286,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
 
     
     private var dateView: some ToolbarContent {
-        let languageCode = Locale.current.language.languageCode?.identifier
+        let languageCode = languageManager.currentLanguage.rawValue
         let formatter: DateFormatter
         let font: Font
         
@@ -328,7 +329,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
     private var emptyEventView: some View {
         HStack {
             Spacer()
-            Text("오늘 일정이 없습니다.")
+            LocalizedText(key: "오늘 일정이 없습니다.")
                 .font(.pretendardSemiBold(size: 17))
                 .padding(.vertical, 16)
             Spacer()
@@ -346,7 +347,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
     private var emptyReminderView: some View {
         HStack {
             Spacer()
-            Text("오늘 할 일이 없습니다.")
+            LocalizedText(key: "오늘 할 일이 없습니다.")
                 .font(.pretendardSemiBold(size: 17))
             Spacer()
         }
@@ -361,18 +362,20 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                     .font(.system(size: 40))
                     .foregroundStyle(.orange)
                 
-                Text("오늘의 일정과 할 일을 보려면")
+                LocalizedText(key: "오늘의 일정과 할 일을 보려면")
                     .multilineTextAlignment(.center)
                     .font(.pretendardRegular(size: 16))
                 
-                Text("캘린더와 미리알림 모두 접근 권한이 필요해요.")
+                LocalizedText(key: "캘린더와 미리알림 모두 접근 권한이 필요해요.")
                     .multilineTextAlignment(.center)
                     .font(.pretendardRegular(size: 16))
                 
-                Button("설정에서 권한 허용하기") {
+                Button {
                     if let url = URL(string: UIApplication.openSettingsURLString) {
                         UIApplication.shared.open(url)
                     }
+                } label: {
+                    LocalizedText(key: "설정에서 권한 허용하기")
                 }
                 .buttonStyle(.borderedProminent)
             }
@@ -393,12 +396,14 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                         Image(systemName: "hand.tap")
                             .font(.system(size: 48))
                             .foregroundStyle(.white)
-                        Text("항목을 **길게 눌러** 수정/삭제할 수 있어요!")
+                        LocalizedText(key: "항목을 **길게 눌러** 수정/삭제할 수 있어요!")
                             .multilineTextAlignment(.center)
                             .font(.pretendardBold(size: 18))
                             .foregroundStyle(.white)
-                        Button("확인") {
+                        Button {
                             withAnimation { showHint = false; didShowHint = true }
+                        } label: {
+                            LocalizedText(key: "확인")
                         }
                         .padding(.horizontal,32).padding(.vertical,10)
                         .background(.white.opacity(0.9))

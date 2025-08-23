@@ -16,7 +16,7 @@ struct BasicReminderInfoSection<VM: AddSheetViewModelProtocol>: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             // 제목 입력
-            HaruTextField(text: $vm.currentTitle, placeholder: String(localized: "제목 입력"))
+            HaruTextField(text: $vm.currentTitle, placeholder: "제목 입력".localized())
                 .focused(isTextFieldFocused)
             
             // 마감일 선택기 (할일 타입 및 알림 프리셋 선택 포함)

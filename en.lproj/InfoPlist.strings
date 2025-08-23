@@ -5,3 +5,12 @@
   Created by 김효석 on 8/21/25.
   
 */
+"NSCalendarsFullAccessUsageDescription" = "Access to calendar to display daily events and add new events.";
+
+"NSRemindersFullAccessUsageDescription" = "Access to reminders to manage today's tasks and add new tasks.";
+
+"CFBundleDisplayName" = "Haru";
+
+"NSUserTrackingUsageDescription" = "Track your activity to show personalized ads and measure ad effectiveness.";
+
+"NSLocationWhenInUseUsageDescription" = "Use location information to provide accurate weather information.";

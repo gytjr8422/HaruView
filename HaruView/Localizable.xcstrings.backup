@@ -100,6 +100,7 @@
       }
     },
     "%@까지" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -116,6 +117,7 @@
       }
     },
     "%d%@ 마다" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -132,6 +134,7 @@
       }
     },
     "%d분 전" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -148,6 +151,7 @@
       }
     },
     "%d분 후" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -164,6 +168,7 @@
       }
     },
     "%d시간 전" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -180,6 +185,7 @@
       }
     },
     "%d시간 후" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -196,6 +202,7 @@
       }
     },
     "%d일 전" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -212,6 +219,7 @@
       }
     },
     "%d일 후" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -228,6 +236,7 @@
       }
     },
     "%d회" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -468,6 +477,7 @@
       }
     },
     "⚠️ 오류: %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1029,6 +1039,7 @@
       }
     },
     "날씨 정보를 가져오는데 실패했습니다: %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1575,6 +1586,7 @@
       }
     },
     "매월 %d번째 %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1591,6 +1603,7 @@
       }
     },
     "매월 마지막 %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1734,7 +1747,7 @@
         }
       }
     },
-    "몇 분 전에 알림받을까요?" : {
+    "몇 분 전에 알림 받을까요?" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1816,6 +1829,7 @@
       }
     },
     "바람: %.0fm/s" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2328,6 +2342,7 @@
       }
     },
     "습도: %.0f%%" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2472,7 +2487,7 @@
         }
       }
     },
-    "언제 알림받을까요?" : {
+    "언제 알림 받을까요?" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2921,22 +2936,6 @@
         }
       }
     },
-    "일" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "day(s)"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "日"
-          }
-        }
-      }
-    },
     "이동" : {
       "localizations" : {
         "en" : {
@@ -2949,6 +2948,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "移動"
+          }
+        }
+      }
+    },
+    "이후 모든 이벤트 삭제" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete All Future Events"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "以降のすべてのイベントを削除"
+          }
+        }
+      }
+    },
+    "일" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "day(s)"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日"
           }
         }
       }
@@ -3029,22 +3060,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "以降のすべてのイベント"
-          }
-        }
-      }
-    },
-    "이후 모든 이벤트 삭제" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete All Future Events"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "以降のすべてのイベントを削除"
           }
         }
       }
@@ -3435,6 +3450,7 @@
       }
     },
     "최고: %.0f°  최저: %.0f°" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3902,5 +3918,53 @@
       }
     }
   },
-  "version" : "1.0"
+  "언어 설정" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Language Settings"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "言語設定"
+          }
+        }
+      }
+    },
+    "언어 바꾸기" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change Language"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "言語を変更"
+          }
+        }
+      }
+    },
+    "설정된 언어" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Current Language"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定された言語"
+          }
+        }
+      }
+    },
+    "version" : "1.0"
 }

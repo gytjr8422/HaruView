@@ -70,9 +70,9 @@ struct ReminderAlarm: Identifiable, Equatable {
         
         var localizedDescription: String {
             switch self {
-            case .display: return String(localized: "알림")
-            case .email: return String(localized: "이메일")
-            case .sound: return String(localized: "소리")
+            case .display: return "알림".localized()
+            case .email: return "이메일".localized()
+            case .sound: return "소리".localized()
             }
         }
     }
@@ -87,22 +87,22 @@ struct ReminderAlarm: Identifiable, Equatable {
         let days = hours / 24
         
         if relativeOffset == 0 {
-            return String(localized: "이벤트 시간")
+            return "이벤트 시간".localized()
         } else if relativeOffset < 0 {
             if days > 0 {
-                return String(format: NSLocalizedString("%d일 전", comment: ""), days)
+                return String(format: "%d일 전".localized(), days)
             } else if hours > 0 {
-                return String(format: NSLocalizedString("%d시간 전", comment: ""), hours)
+                return String(format: "%d시간 전".localized(), hours)
             } else {
-                return String(format: NSLocalizedString("%d분 전", comment: ""), minutes)
+                return String(format: "%d분 전".localized(), minutes)
             }
         } else {
             if days > 0 {
-                return String(format: NSLocalizedString("%d일 후", comment: ""), days)
+                return String(format: "%d일 후".localized(), days)
             } else if hours > 0 {
-                return String(format: NSLocalizedString("%d시간 후", comment: ""), hours)
+                return String(format: "%d시간 후".localized(), hours)
             } else {
-                return String(format: NSLocalizedString("%d분 후", comment: ""), minutes)
+                return String(format: "%d분 후".localized(), minutes)
             }
         }
     }
@@ -127,11 +127,11 @@ struct ReminderCalendar: Identifiable, Equatable {
         
         var localizedDescription: String {
             switch self {
-            case .local: return String(localized: "로컬")
-            case .calDAV: return String(localized: "CalDAV")
-            case .exchange: return String(localized: "Exchange")
-            case .subscription: return String(localized: "구독")
-            case .birthday: return String(localized: "생일")
+            case .local: return "로컬".localized()
+            case .calDAV: return "CalDAV".localized()
+            case .exchange: return "Exchange".localized()
+            case .subscription: return "구독".localized()
+            case .birthday: return "생일".localized()
             }
         }
     }

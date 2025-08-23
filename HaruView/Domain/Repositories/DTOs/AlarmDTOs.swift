@@ -40,18 +40,18 @@ struct AlarmInput {
         switch trigger {
         case .relative(let interval):
             if interval == 0 {
-                return String(localized: "이벤트 시간")
+                return "이벤트 시간".localized()
             } else if interval < 0 {
                 let minutes = Int(abs(interval) / 60)
                 let hours = minutes / 60
                 let days = hours / 24
                 
                 if days > 0 {
-                    return String(localized: "\(days)일 전")
+                    return "\(days)일 전".localized(with: days)
                 } else if hours > 0 {
-                    return String(localized: "\(hours)시간 전")
+                    return "\(hours)시간 전".localized(with: hours)
                 } else {
-                    return String(localized: "\(minutes)분 전")
+                    return "\(minutes)분 전".localized(with: minutes)
                 }
             } else {
                 let minutes = Int(interval / 60)
@@ -59,15 +59,16 @@ struct AlarmInput {
                 let days = hours / 24
                 
                 if days > 0 {
-                    return String(localized: "\(days)일 후")
+                    return "\(days)일 후".localized(with: days)
                 } else if hours > 0 {
-                    return String(localized: "\(hours)시간 후")
+                    return "\(hours)시간 후".localized(with: hours)
                 } else {
-                    return String(localized: "\(minutes)분 후")
+                    return "\(minutes)분 후".localized(with: minutes)
                 }
             }
         case .absolute(let date):
             let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: LanguageManager.shared.currentLanguage.appleLanguageCode)
             formatter.dateStyle = .short
             formatter.timeStyle = .short
             return "\(formatter.string(from: date))"

@@ -24,6 +24,7 @@ struct HaruViewApp: App {
         WindowGroup {
             MainTabView()
                 .environment(\.di, .shared)
+                .environmentObject(LanguageManager.shared)
                 .task {
                     guard !didBootstrap else { return }
                     didBootstrap = true

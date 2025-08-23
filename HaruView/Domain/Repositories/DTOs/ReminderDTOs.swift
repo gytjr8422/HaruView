@@ -107,10 +107,10 @@ extension ReminderInput {
         
         var localizedDescription: String {
             switch self {
-            case .none: return String(localized: "없음")
-            case .high: return String(localized: "높음")
-            case .medium: return String(localized: "보통")
-            case .low: return String(localized: "낮음")
+            case .none: return "없음".localized()
+            case .high: return "높음".localized()
+            case .medium: return "보통".localized()
+            case .low: return "낮음".localized()
             }
         }
         

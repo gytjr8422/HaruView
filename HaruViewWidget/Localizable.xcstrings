@@ -8,6 +8,12 @@
             "state" : "translated",
             "value" : "Reminder ID"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "リマインダーID"
+          }
         }
       }
     },
@@ -16,7 +22,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Displays today’s reminders"
+            "value" : "Displays today's reminders"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日のリマインダーを表示します"
           }
         }
       }
@@ -26,7 +38,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This widget shows today’s events and reminders."
+            "value" : "This widget shows today's events and reminders."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日の予定とリマインダーを表示するウィジェットです。"
           }
         }
       }
@@ -36,7 +54,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Check today’s calendar events and reminders at a glance."
+            "value" : "Check today's calendar events and reminders at a glance."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日のカレンダー予定とリマインダーを一目で確認できます"
           }
         }
       }
@@ -46,7 +70,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Displays today’s calendar events"
+            "value" : "Displays today's calendar events"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日のカレンダー予定を表示します"
           }
         }
       }
@@ -58,6 +88,12 @@
             "state" : "translated",
             "value" : "Widget Type"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ウィジェットタイプ"
+          }
         }
       }
     },
@@ -68,35 +104,62 @@
             "state" : "translated",
             "value" : "Mark tasks as complete from the widget."
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ウィジェットからタスクの完了状態を切り替えます。"
+          }
         }
       }
     },
     "일정" : {
+      "comment" : "Events section title",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Events"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "予定"
+          }
         }
       }
     },
     "일정이 없습니다" : {
+      "comment" : "No events message",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No events"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "予定がありません"
+          }
         }
       }
     },
     "하루 종일" : {
+      "comment" : "All day event",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "All day"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "終日"
           }
         }
       }
@@ -104,6 +167,12 @@
     "하루뷰 Widget" : {
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haru Widget"
+          }
+        },
+        "ja" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Haru Widget"
@@ -118,15 +187,28 @@
             "state" : "translated",
             "value" : "Haru Settings"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haru設定"
+          }
         }
       }
     },
     "할 일" : {
+      "comment" : "Reminders section title",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "To-Dos"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タスク"
           }
         }
       }
@@ -138,15 +220,28 @@
             "state" : "translated",
             "value" : "Toggle Task"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タスク切替"
+          }
         }
       }
     },
     "할 일이 없습니다" : {
+      "comment" : "No reminders message",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No tasks"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タスクがありません"
           }
         }
       }

@@ -16,14 +16,14 @@ struct BasicEventInfoSection<VM: AddSheetViewModelProtocol>: View {
     var body: some View {
         VStack(spacing: 20) {
             // 제목 입력
-            HaruTextField(text: $vm.currentTitle, placeholder: String(localized: "제목 입력"))
+            HaruTextField(text: $vm.currentTitle, placeholder: "제목 입력".localized())
                 .focused(isTextFieldFocused)
             
             // 안내 메시지 및 하루 종일 토글
             HStack {
                 Spacer()
                 
-                Text("하루 종일")
+                LocalizedText(key: "하루 종일")
                     .font(.pretendardSemiBold(size: 16))
                 Toggle("", isOn: $vm.isAllDay)
                     .toggleStyle(HaruToggleStyle())

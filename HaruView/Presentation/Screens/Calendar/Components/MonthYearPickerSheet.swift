@@ -32,40 +32,40 @@ struct MonthYearPickerSheet: View {
     
     private let months = Array(1...12)
     
-    private var languageCode: String {
-        Locale.current.language.languageCode?.identifier ?? "ko"
+    private var languageManager: LanguageManager {
+        LanguageManager.shared
     }
     
     private func monthDisplayText(for month: Int) -> String {
-        switch languageCode {
-        case "en":
+        switch languageManager.currentLanguage {
+        case .english:
             let formatter = DateFormatter()
-            formatter.locale = Locale(identifier: "en_US")
+            formatter.locale = Locale(identifier: languageManager.currentLanguage.appleLanguageCode)
             formatter.dateFormat = "MMMM"
             let date = Calendar.current.date(from: DateComponents(month: month))!
             return formatter.string(from: date)
-        case "ja":
-            return "\(month)" + String(localized: "月")
-        default: // Korean
-            return "\(month)" + String(localized: "월")
+        case .japanese:
+            return "\(month)" + "月".localized()
+        case .korean:
+            return "\(month)" + "월".localized()
         }
     }
     
     private func yearDisplayText(for year: Int) -> String {
-        switch languageCode {
-        case "en":
+        switch languageManager.currentLanguage {
+        case .english:
             return String(year)
-        case "ja":
-            return "\(year)" + String(localized: "년")
-        default: // Korean
-            return "\(year)" + String(localized: "년")
+        case .japanese:
+            return "\(year)" + "년".localized()
+        case .korean:
+            return "\(year)" + "년".localized()
         }
     }
     
     var body: some View {
         NavigationStack {
             VStack(spacing: 20) {
-                Text(String(localized: "이동할 월을 선택하세요"))
+                LocalizedText(key: "이동할 월을 선택하세요")
                     .font(.pretendardSemiBold(size: 18))
                     .foregroundStyle(.haruTextPrimary)
                     .padding(.top, 20)
@@ -73,7 +73,7 @@ struct MonthYearPickerSheet: View {
                 HStack(spacing: 20) {
                     // 년도 선택
                     VStack(spacing: 8) {
-                        Picker(String(localized: "년"), selection: $selectedYear) {
+                        Picker("년".localized(), selection: $selectedYear) {
                             ForEach(years, id: \.self) { year in
                                 Text(yearDisplayText(for: year)).tag(year)
                             }
@@ -84,7 +84,7 @@ struct MonthYearPickerSheet: View {
                     
                     // 월 선택
                     VStack(spacing: 8) {
-                        Picker(String(localized: "월"), selection: $selectedMonth) {
+                        Picker("월".localized(), selection: $selectedMonth) {
                             ForEach(months, id: \.self) { month in
                                 Text(monthDisplayText(for: month)).tag(month)
                             }
@@ -101,7 +101,7 @@ struct MonthYearPickerSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button(String(localized: "취소")) {
+                    Button("취소".localized()) {
                         dismiss()
                     }
                     .font(.pretendardRegular(size: 16))
@@ -109,7 +109,7 @@ struct MonthYearPickerSheet: View {
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(String(localized: "이동")) {
+                    Button("이동".localized()) {
                         onDateSelected(selectedYear, selectedMonth)
                         dismiss()
                     }
@@ -118,7 +118,7 @@ struct MonthYearPickerSheet: View {
                 }
                 
                 ToolbarItem(placement: .principal) {
-                    Text(String(localized: "년/월 선택"))
+                    LocalizedText(key: "년/월 선택")
                         .font(.pretendardSemiBold(size: 17))
                         .foregroundStyle(.haruTextPrimary)
                 }

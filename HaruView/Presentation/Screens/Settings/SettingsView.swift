@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @StateObject private var settings = AppSettings.shared
+    @EnvironmentObject private var languageManager: LanguageManager
     @Environment(\.dismiss) private var dismiss
     @State private var subscribedCalendars: [HolidayCalendarInfo] = []
     
@@ -34,7 +35,7 @@ struct SettingsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
-                Text("설정")
+                LocalizedText(key: "설정")
                     .font(.pretendardSemiBold(size: 18))
                     .foregroundStyle(.haruTextPrimary)
             }
@@ -49,7 +50,7 @@ struct SettingsView: View {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 16, weight: .semibold))
                         
-                        Text("뒤로")
+                        LocalizedText(key: "뒤로")
                             .font(.pretendardRegular(size: 16))
                     }
                     .foregroundStyle(.haruPrimary)
@@ -76,13 +77,13 @@ struct SettingsView: View {
         let totalCount = subscribedCalendars.count
         
         if totalCount == 0 {
-            return String(localized: "구독된 캘린더 없음")
+            return "구독된 캘린더 없음".localized()
         } else if selectedCount == 0 {
-            return String(localized: "선택된 캘린더 없음")
+            return "선택된 캘린더 없음".localized()
         } else if selectedCount == 1 {
-            return selectedCalendars.first?.countryName ?? String(localized: "1개 선택됨")
+            return selectedCalendars.first?.countryName ?? "1개 선택됨".localized()
         } else {
-            return String(localized: "\(selectedCount)개 선택됨")
+            return "\(selectedCount)개 선택됨".localized(with: selectedCount)
         }
     }
     
@@ -96,7 +97,7 @@ struct SettingsView: View {
         VStack(spacing: 0) {
             // 섹션 헤더
             HStack {
-                Text("달력 설정")
+                LocalizedText(key: "달력 설정")
                     .font(.pretendardBold(size: 17))
                     .foregroundStyle(.secondary)
                 Spacer()
@@ -104,6 +105,13 @@ struct SettingsView: View {
             .padding(.bottom, 12)
             
             VStack(spacing: 0) {
+                // 언어 설정
+                languageSettingCard
+                
+                Divider()
+                    .padding(.horizontal, 16)
+                    .background(.haruSecondary.opacity(0.1))
+                
                 // 주 시작일 설정
                 weekStartToggleCard
                 
@@ -146,11 +154,11 @@ struct SettingsView: View {
                     .frame(width: 24, height: 24)
                 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(String(localized: "주 시작일"))
+                    LocalizedText(key: "주 시작일")
                         .font(.pretendardRegular(size: 16))
                         .foregroundStyle(.haruTextPrimary)
                     
-                    Text(settings.weekStartsOnMonday ? String(localized: "월요일부터 시작") : String(localized: "일요일부터 시작"))
+                    LocalizedText(key: settings.weekStartsOnMonday ? "월요일부터 시작" : "일요일부터 시작")
                         .font(.pretendardRegular(size: 12))
                         .foregroundStyle(.haruSecondary)
                 }
@@ -177,11 +185,11 @@ struct SettingsView: View {
                 .frame(width: 24, height: 24)
             
             VStack(alignment: .leading, spacing: 4) {
-                Text("공휴일 표시")
+                LocalizedText(key: "공휴일 표시")
                     .font(.pretendardRegular(size: 16))
                     .foregroundStyle(.haruTextPrimary)
                 
-                Text("달력에 공휴일을 표시합니다")
+                LocalizedText(key: "달력에 공휴일을 표시합니다")
                     .font(.pretendardRegular(size: 12))
                     .foregroundStyle(.haruSecondary)
             }
@@ -212,7 +220,7 @@ struct SettingsView: View {
                     .frame(width: 24, height: 24)
                 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("공휴일 캘린더 설정")
+                    LocalizedText(key: "공휴일 캘린더 설정")
                         .font(.pretendardRegular(size: 16))
                         .foregroundStyle(.haruTextPrimary)
                     
@@ -235,12 +243,46 @@ struct SettingsView: View {
         .transition(.opacity.combined(with: .move(edge: .top)))
     }
     
+    // MARK: - 언어 설정 카드
+    private var languageSettingCard: some View {
+        NavigationLink {
+            LanguageSelectionView()
+        } label: {
+            HStack(spacing: 16) {
+                Image(systemName: "globe")
+                    .font(.system(size: 20, weight: .medium))
+                    .foregroundStyle(.haruPrimary)
+                    .frame(width: 24, height: 24)
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    LocalizedText(key: "언어 설정")
+                        .font(.pretendardRegular(size: 16))
+                        .foregroundStyle(.haruTextPrimary)
+                    
+                    Text(languageManager.currentLanguage.displayName)
+                        .font(.pretendardRegular(size: 12))
+                        .foregroundStyle(.haruSecondary)
+                }
+                
+                Spacer()
+                
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundStyle(.haruSecondary.opacity(0.6))
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+    
     // MARK: - 앱 정보 섹션
     private var appInfoSection: some View {
         VStack(spacing: 0) {
             // 섹션 헤더
             HStack {
-                Text("앱 정보")
+                LocalizedText(key: "앱 정보")
                     .font(.pretendardBold(size: 17))
                     .foregroundStyle(.secondary)
                 Spacer()
@@ -255,7 +297,7 @@ struct SettingsView: View {
                     .frame(width: 24, height: 24)
                 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("앱 정보")
+                    LocalizedText(key: "앱 정보")
                         .font(.pretendardRegular(size: 16))
                         .foregroundStyle(.haruTextPrimary)
                     
@@ -266,7 +308,7 @@ struct SettingsView: View {
                 
                 Spacer()
                 
-                Text("버전 \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")")
+                Text("버전".localized() + " \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")")
                     .font(.pretendardRegular(size: 14))
                     .foregroundStyle(.haruSecondary)
             }

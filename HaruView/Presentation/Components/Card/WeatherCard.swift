@@ -59,14 +59,14 @@ struct WeatherCard: View {
                     }
                     Spacer()
                     VStack(alignment: .trailing, spacing: 2) {
-                        Text(String(format: NSLocalizedString("%.0f°", comment: ""), snapshot.temperature))
+                        Text(String(format: "%.0f°".localized(), snapshot.temperature))
                             .font(.system(size: 36, weight: .semibold))
-                        Text(String(format: NSLocalizedString("최고: %.0f°  최저: %.0f°", comment: ""), snapshot.tempMax, snapshot.tempMin))
+                        Text(String(format: "최고: %.0f°  최저: %.0f°".localized(), snapshot.tempMax, snapshot.tempMin))
                             .font(.pretendardRegular(size: 13))
                         HStack {
-                            Text(String(format: NSLocalizedString("습도: %.0f%%", comment: ""), snapshot.humidity*100))
+                            Text(String(format: "습도: %.0f%%".localized(), snapshot.humidity*100))
                                 .font(.pretendardRegular(size: 13))
-                            Text(String(format: NSLocalizedString("바람: %.0fm/s", comment: ""), snapshot.windSpeed))
+                            Text(String(format: "바람: %.0fm/s".localized(), snapshot.windSpeed))
                                 .font(.pretendardRegular(size: 13))
                         }
                         

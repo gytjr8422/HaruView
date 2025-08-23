@@ -54,8 +54,10 @@ struct DayDetailSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("닫기") {
+                    Button(action: {
                         dismiss()
+                    }) {
+                        LocalizedText(key: "닫기")
                     }
                     .font(.pretendardRegular(size: 16))
                     .foregroundStyle(.haruPrimary)
@@ -118,30 +120,30 @@ struct DayDetailSheet: View {
         .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
         .confirmationDialog(
-            "반복 일정 삭제",
+            "반복 일정 삭제".localized(),
             isPresented: $showRecurringDeletionOptions,
             titleVisibility: .visible
         ) {
             if currentDeletingEvent != nil {
-                Button("이 이벤트만 삭제", role: .destructive) {
+                Button("이 이벤트만 삭제".localized(), role: .destructive) {
                     deleteEventWithSpan(.thisEventOnly)
                 }
                 
-                Button("이후 모든 이벤트 삭제", role: .destructive) {
+                Button("이후 모든 이벤트 삭제".localized(), role: .destructive) {
                     deleteEventWithSpan(.futureEvents)
                 }
                 
-                Button("취소", role: .cancel) {
+                Button("취소".localized(), role: .cancel) {
                     cancelEventDeletion()
                 }
             }
         } message: {
             if let event = currentDeletingEvent {
-                Text("'\(event.title)'은(는) 반복 일정입니다. 어떻게 삭제하시겠습니까?")
+                Text(String(format: "'%@'은(는) 반복 일정입니다. 어떻게 삭제하시겠습니까?".localized(), event.title))
             }
         }
-        .alert("삭제 오류", isPresented: .constant(deletionError != nil)) {
-            Button("확인") {
+        .alert("삭제 오류".localized(), isPresented: .constant(deletionError != nil)) {
+            Button("확인".localized()) {
                 deletionError = nil
             }
         } message: {
@@ -179,7 +181,10 @@ struct DayDetailSheet: View {
     
     private var loadingView: some View {
         VStack(spacing: 16) {
-            ProgressView("로딩 중...")
+VStack {
+                ProgressView()
+                LocalizedText(key: "로딩 중...")
+            }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .background(.haruBackground)
@@ -191,15 +196,17 @@ struct DayDetailSheet: View {
                 .font(.system(size: 40))
                 .foregroundStyle(.orange)
             
-            Text("데이터를 불러올 수 없습니다")
+            LocalizedText(key: "데이터를 불러올 수 없습니다")
                 .font(.pretendardSemiBold(size: 16))
             
             Text(error.description)
                 .font(.pretendardRegular(size: 14))
                 .foregroundStyle(.secondary)
             
-            Button("다시 시도") {
+            Button(action: {
                 loadCalendarDayData()
+            }) {
+                LocalizedText(key: "다시 시도")
             }
             .font(.pretendardSemiBold(size: 14))
             .foregroundStyle(.white)
@@ -219,12 +226,12 @@ struct DayDetailSheet: View {
                 .foregroundStyle(.haruPrimary.opacity(0.7))
             
             VStack(spacing: 8) {
-                Text("이 날짜에는 일정이나 할 일이 없습니다")
+                LocalizedText(key: "이 날짜에는 일정이나 할 일이 없습니다")
                     .font(.pretendardSemiBold(size: 18))
                     .foregroundStyle(.haruTextPrimary)
                     .multilineTextAlignment(.center)
                 
-                Text("상단의 + 버튼을 누르거나 달력에서 날짜를 길게 눌러서\n일정이나 할 일을 추가할 수 있어요!")
+                LocalizedText(key: "상단의 + 버튼을 누른거나 달력에서 날짜를 길게 눌러서 일정이나 할 일을 추가할 수 있어요!")
                     .font(.pretendardRegular(size: 14))
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
@@ -254,7 +261,7 @@ struct DayDetailSheet: View {
     // MARK: - Event Section
     private func eventSection(_ events: [CalendarEvent]) -> some View {
         VStack(alignment: .leading) {
-            Text("일정")
+            LocalizedText(key: "일정")
                 .font(.pretendardSemiBold(size: 17))
                 .foregroundStyle(.secondary)
                 .padding(.bottom, 6)
@@ -275,7 +282,7 @@ struct DayDetailSheet: View {
                                 editingEvent = fullEvent
                             }
                         } label: {
-                            Label("편집", systemImage: "pencil")
+                            Label("편집".localized(), systemImage: "pencil")
                         }
                         
                         Button(role: .destructive) {
@@ -283,7 +290,7 @@ struct DayDetailSheet: View {
                                 requestEventDeletion(fullEvent)
                             }
                         } label: {
-                            Label("삭제", systemImage: "trash")
+                            Label("삭제".localized(), systemImage: "trash")
                         }
                     }
             }
@@ -293,7 +300,7 @@ struct DayDetailSheet: View {
     // MARK: - Reminder Section
     private func reminderSection(_ reminders: [CalendarReminder]) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("할 일")
+            LocalizedText(key: "할 일")
                 .font(.pretendardSemiBold(size: 17))
                 .foregroundStyle(.secondary)
             
@@ -370,7 +377,7 @@ struct DayDetailSheet: View {
                                 editingReminder = fullReminder
                             }
                         } label: {
-                            Label("편집", systemImage: "pencil")
+                            Label("편집".localized(), systemImage: "pencil")
                         }
                         
                         Button {
@@ -386,7 +393,7 @@ struct DayDetailSheet: View {
                         Button(role: .destructive) {
                             deleteReminder(reminder.id)
                         } label: {
-                            Label("삭제", systemImage: "trash")
+                            Label("삭제".localized(), systemImage: "trash")
                         }
                     }
 //                    
@@ -421,7 +428,7 @@ struct DayDetailSheet: View {
                         ProgressView()
                             .scaleEffect(1.2)
                         
-                        Text("삭제 중...")
+                        LocalizedText(key: "삭제 중...")
                             .font(.pretendardSemiBold(size: 16))
                             .foregroundStyle(.white)
                     }
@@ -577,15 +584,15 @@ struct DayDetailSheet: View {
     // MARK: - Helper Functions
     
     private var formattedDate: String {
-        let languageCode = Locale.current.language.languageCode?.identifier
+        let languageManager = LanguageManager.shared
         let formatter: DateFormatter
         
-        switch languageCode {
-        case "ko":
+        switch languageManager.currentLanguage {
+        case .korean:
             formatter = DateFormatterFactory.koreanDateWithDayFormatter()
-        case "ja":
+        case .japanese:
             formatter = DateFormatterFactory.japaneseDateWithDayFormatter()
-        default:
+        case .english:
             formatter = DateFormatterFactory.englishDateWithDayFormatter()
         }
         
@@ -593,14 +600,14 @@ struct DayDetailSheet: View {
     }
     
     private var dateFont: Font {
-        let languageCode = Locale.current.language.languageCode?.identifier
+        let languageManager = LanguageManager.shared
         
-        switch languageCode {
-        case "ko":
+        switch languageManager.currentLanguage {
+        case .korean:
             return .museumMedium(size: 19)
-        case "ja":
+        case .japanese:
             return .notoSansMedium(size: 19)
-        default:
+        case .english:
             return .robotoSerifBold(size: 19)
         }
     }

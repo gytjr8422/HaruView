@@ -24,9 +24,9 @@ enum TabItem: CaseIterable, Identifiable {
     
     var title: String {
         switch self {
-        case .home: return String(localized: "오늘")
-        case .add: return String(localized: "추가")
-        case .calendar: return String(localized: "달력")
+        case .home: return "오늘"
+        case .add: return "추가"
+        case .calendar: return "달력"
         }
     }
     
@@ -139,6 +139,7 @@ struct TabBarButton: View {
     @Binding var selectedTab: TabItem
     let namespace: Namespace.ID
     let onAddTapped: () -> Void
+    @EnvironmentObject private var languageManager: LanguageManager
     
     private var isSelected: Bool {
         selectedTab == tab
@@ -190,7 +191,7 @@ struct TabBarButton: View {
                 
                 // 라벨
                 if tab != .add {
-                    Text(tab.title)
+                    LocalizedText(key: tab.title)
                         .font(.pretendardMedium(size: 11))
                         .foregroundStyle(
                             isSelected

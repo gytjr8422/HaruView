@@ -25,7 +25,7 @@ struct LocationInputView: View {
 //                .foregroundStyle(.haruPrimary)
             }
             
-            HaruTextField(text: $location, placeholder: String(localized: "위치 입력"))
+            HaruTextField(text: $location, placeholder: "위치 입력".localized())
         }
         .sheet(isPresented: $showLocationPicker) {
             LocationPickerSheet(selectedLocation: $location)

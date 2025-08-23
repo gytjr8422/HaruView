@@ -1,0 +1,349 @@
+/* English translations */
+
+// General
+"언어 설정" = "Language Settings";
+"설정된 언어" = "Selected Language";
+"언어 바꾸기" = "Change Language";
+"설정" = "Settings";
+"앱 정보" = "App Info";
+"뒤로" = "Back";
+"취소" = "Cancel";
+"저장" = "Save";
+"완료" = "Done";
+"확인" = "OK";
+"삭제" = "Delete";
+"편집" = "Edit";
+"이동" = "Go";
+
+// Tab Bar
+"오늘" = "Today";
+"추가" = "Add";
+"달력" = "Calendar";
+
+// Calendar Settings
+"달력 설정" = "Calendar Settings";
+"주 시작일" = "Week Start";
+"월요일부터 시작" = "Start from Monday";
+"일요일부터 시작" = "Start from Sunday";
+"공휴일 표시" = "Show Holidays";
+"공휴일 캘린더 설정" = "Holiday Calendar Settings";
+"구독된 캘린더 없음" = "No Subscribed Calendars";
+"선택된 캘린더 없음" = "No Selected Calendars";
+"1개 선택됨" = "1 Selected";
+"%d개 선택됨" = "%d Selected";
+
+// Date and Time
+"년" = "Year";
+"월" = "Month";
+"일" = "Day";
+"시간" = "Hour";
+"분" = "Minute";
+"초" = "Second";
+"오전" = "AM";
+"오후" = "PM";
+"하루 종일" = "All Day";
+
+// Days of Week
+"일요일" = "Sunday";
+"월요일" = "Monday";
+"화요일" = "Tuesday";
+"수요일" = "Wednesday";
+"목요일" = "Thursday";
+"금요일" = "Friday";
+"토요일" = "Saturday";
+
+// Months
+"1월" = "January";
+"2월" = "February";
+"3월" = "March";
+"4월" = "April";
+"5월" = "May";
+"6월" = "June";
+"7월" = "July";
+"8월" = "August";
+"9월" = "September";
+"10월" = "October";
+"11월" = "November";
+"12월" = "December";
+
+// Events
+"일정" = "Events";
+"일정이 없습니다" = "No Events";
+"제목 입력" = "Enter Title";
+"일정 삭제" = "Delete Event";
+"사용 가능한 캘린더가 없습니다" = "No Available Calendars";
+
+// Reminders
+"할 일" = "Reminders";
+"할 일이 없습니다" = "No Reminders";
+"할일 삭제" = "Delete Reminder";
+"미리알림 접근 권한이 필요합니다." = "Reminders access permission required.";
+"미리알림을 찾을 수 없습니다." = "Reminder not found.";
+"미리알림 저장에 실패했습니다." = "Failed to save reminder.";
+
+// Reminder Types
+"특정 날짜에" = "On Date";
+"마감일까지" = "Until Due Date";
+"해당 날짜에만 표시됩니다" = "Will only be shown on that date";
+"마감일까지 매일 표시됩니다" = "Will be shown daily until due date";
+
+// Time Expressions
+"%d일 전" = "%dd ago";
+"%d시간 전" = "%dh before";
+"%d분 전" = "%dm before";
+"%d일 후" = "%dd later";
+"%d시간 후" = "%dh later";
+"%d분 후" = "%dm later";
+"이벤트 시간" = "Event Time";
+
+// Alarms and Notifications
+"알림" = "Alert";
+"이메일" = "Email";
+"소리" = "Sound";
+"빠른 설정" = "Quick Setup";
+"사용자 알림" = "Custom Alert";
+"캘린더 앱에서 알림이 울려요." = "Alert will ring in Calendar app.";
+"사용자 설정" = "Custom Setting";
+"알림이 설정되지 않았습니다" = "No Alert Set";
+"매일 오전 9시" = "Daily at 9 AM";
+"매일 오후 6시" = "Daily at 6 PM";
+"당일 오전 9시" = "Same Day at 9 AM";
+"당일 오전 8시" = "Same Day at 8 AM";
+"전날 오후 9시" = "Day Before at 9 PM";
+"알림 없음" = "No Alert";
+"매일 아침 9시" = "Daily at 9 AM";
+"매일 저녁 6시" = "Daily at 6 PM";
+"당일 아침 9시" = "Same Day at 9 AM";
+"당일 아침 8시" = "Same Day at 8 AM";
+"전날 저녁 9시" = "Day Before at 9 PM";
+"직접 알림 시간을 설정" = "Set custom alert time";
+
+// Recurrence
+"반복" = "Repeat";
+"반복하지 않음" = "Never";
+"빈도" = "Frequency";
+"매일" = "Daily";
+"매주" = "Weekly";
+"매월" = "Monthly";
+"매년" = "Yearly";
+"평일만" = "Weekdays Only";
+"요일" = "Day of Week";
+"종료 조건" = "End Condition";
+"끝나지 않음" = "Never Ends";
+"특정 날짜" = "End Date";
+"횟수 제한" = "Occurrence Limit";
+"총" = "Total";
+"회" = "times";
+"반복 설정" = "Repeat Settings";
+"종료 날짜" = "End Date";
+"횟수" = "Count";
+"종료" = "End";
+"반복" = "Repeat";
+"간격" = "Interval";
+"%d일마다" = "Every %d days";
+"%d주마다" = "Every %d weeks";
+"%d개월마다" = "Every %d months";
+"%d년마다" = "Every %d years";
+"매월 %d번째 %@" = "%d %@ of every month";
+"매월 마지막 %@" = "Last %@ of every month";
+"%d%@ 마다" = "Every %d %@";
+"%@까지" = "Until %@";
+"%d회" = "%d times";
+
+// Priority
+"우선순위" = "Priority";
+"우선순위가 설정되지 않았습니다" = "No Priority Set";
+"없음" = "None";
+"높음" = "High";
+"보통" = "Medium";
+"낮음" = "Low";
+
+// Calendar Types
+"로컬" = "Local";
+"CalDAV" = "CalDAV";
+"Exchange" = "Exchange";
+"구독" = "Subscription";
+"생일" = "Birthday";
+
+// Sections
+"상세 정보" = "Details";
+"목록" = "List";
+"사용 가능한 목록이 없습니다" = "No Available Lists";
+
+// Location
+"위치" = "Location";
+"위치 입력" = "Enter Location";
+"위치 선택" = "Select Location";
+"위치 검색" = "Search Location";
+"자주 사용하는 위치" = "Frequently Used Locations";
+"검색 결과" = "Search Results";
+"위치 정보 없음" = "No Location Information";
+"위치 정보 접근이 거부되었습니다. 날씨 정보를 가져오기 위해 설정에서 위치 권한을 허용해주세요." = "Location access denied. Please allow location permission in Settings to get weather information.";
+"이미 위치 정보를 요청 중입니다." = "Location request already in progress.";
+
+// Common Locations
+"집" = "Home";
+"회사" = "Office";
+"카페" = "Cafe";
+"헬스장" = "Gym";
+"도서관" = "Library";
+"병원" = "Hospital";
+"마트" = "Market";
+"학교" = "School";
+
+// Notes and Details
+"메모" = "Notes";
+"메모를 입력하세요" = "Enter notes";
+"URL" = "URL";
+"제목 없음" = "No Title";
+
+// Due Date Types
+"날짜만" = "Date Only";
+"날짜+시간" = "Date & Time";
+
+// Weather
+"날씨 정보를 가져오는데 실패했습니다." = "Failed to fetch weather information.";
+"날씨 정보를 가져오는데 실패했습니다: %@" = "Failed to fetch weather information: %@";
+"%.0f°" = "%.0f°";
+"최고: %.0f°  최저: %.0f°" = "High: %.0f°  Low: %.0f°";
+"습도: %.0f%%" = "Humidity: %.0f%%";
+"바람: %.0fm/s" = "Wind: %.0fm/s";
+
+// Toast Messages
+"저장이 완료되었습니다." = "Save completed.";
+"삭제가 완료되었습니다." = "Delete completed.";
+"오류가 발생했습니다." = "An error occurred.";
+"⚠️ 오류: %@" = "⚠️ Error: %@";
+"삭제된 항목은 복구할 수 없습니다." = "Deleted items cannot be recovered.";
+
+// Event Editing Options
+"이 이벤트만" = "This Event Only";
+"이후 모든 이벤트" = "All Future Events";
+
+// Calendar Picker
+"이동할 월을 선택하세요" = "Select month to navigate";
+"년/월 선택" = "Select Year/Month";
+
+// Widget
+"하루뷰 Widget" = "HaruView Widget";
+"오늘의 캘린더 일정과 미리알림을 한눈에 확인하세요" = "Check today's calendar events and reminders at a glance";
+"할 일 토글" = "Toggle Reminder";
+"위젯에서 할 일의 완료 상태를 토글합니다." = "Toggle reminder completion status from widget.";
+"하루뷰 설정" = "HaruView Settings";
+"오늘의 일정과 미리알림을 표시하는 위젯입니다." = "Widget that displays today's events and reminders.";
+"위젯 타입" = "Widget Type";
+"오늘의 캘린더 일정을 표시합니다" = "Shows today's calendar events";
+"오늘의 미리알림을 표시합니다" = "Shows today's reminders";
+
+// Languages
+"한국어" = "Korean";
+
+// D-Day
+"D-Day" = "D-Day";
+"D-%d" = "D-%d";
+
+// Home View Missing Translations
+"오늘의 일정" = "Today's Events";
+"전체 보기" = "View All";
+"오늘 일정이 없습니다." = "No events today.";
+"오늘 할 일이 없습니다." = "No reminders today.";
+"오늘의 일정과 할 일을 보려면" = "To see today's events and reminders";
+"캘린더와 미리알림 모두 접근 권한이 필요해요." = "Both Calendar and Reminders access permissions are required.";
+"항목을 **길게 눌러** 수정/삭제할 수 있어요!" = "**Long press** items to edit/delete!";
+"설정에서 권한 허용하기" = "Allow permissions in Settings";
+
+// Calendar View
+"닫기" = "Close";
+"업데이트 중..." = "Updating...";
+"달력 준비 중..." = "Preparing calendar...";
+"달력을 불러오는 중..." = "Loading calendar...";
+"달력을 불러올 수 없습니다" = "Cannot load calendar";
+"다시 시도" = "Try Again";
+"달력 데이터가 없습니다" = "No calendar data";
+"새로고침" = "Refresh";
+
+// Day Detail Sheet
+"반복 일정 삭제" = "Delete Recurring Event";
+"이 이벤트만 삭제" = "Delete This Event Only";
+"이후 모든 이벤트 삭제" = "Delete All Future Events";
+"삭제 오류" = "Delete Error";
+"로딩 중..." = "Loading...";
+"데이터를 불러올 수 없습니다" = "Cannot load data";
+"이 날짜에는 일정이나 할 일이 없습니다" = "No events or reminders for this date";
+"상단의 + 버튼을 누른거나 달력에서 날짜를 길게 눌러서 일정이나 할 일을 추가할 수 있어요!" = "Tap the + button above or long press a date on the calendar\nto add events or reminders!";
+"'%@'은(는) 반복 일정입니다. 어떻게 삭제하시겠습니까?" = "'%@' is a recurring event. How would you like to delete it?";
+
+// Form Elements
+"입력해주세요." = "Please enter text.";
+
+// Date Display
+"삭제 중..." = "Deleting...";
+
+// Add/Edit Sheet
+"편집 내용이 저장되지 않습니다." = "Edit changes will not be saved.";
+"작성 내용이 저장되지 않습니다." = "Content will not be saved.";
+"편집 취소하기" = "Cancel Edit";
+"저장 안 하고 닫기" = "Close Without Saving";
+"계속 편집" = "Continue Editing";
+"계속 작성" = "Continue Writing";
+"일정을 삭제하시겠습니까?" = "Do you want to delete this event?";
+"할일을 삭제하시겠습니까?" = "Do you want to delete this reminder?";
+"삭제된 항목은 복구할 수 없습니다." = "Deleted items cannot be restored.";
+
+// Recurring Events
+"반복 일정 편집" = "Edit Recurring Event";
+"이 이벤트만 편집" = "Edit This Event Only";
+"이후 모든 이벤트 편집" = "Edit All Future Events";
+"반복 일정입니다. 어떻게 편집하시겠습니까?" = "This is a recurring event. How would you like to edit it?";
+"반복 일정입니다. 어떻게 삭제하시겠습니까?" = "This is a recurring event. How would you like to delete it?";
+
+// AddSheet Toolbar
+"%@ 편집" = "Edit %@";
+"%@ 추가" = "Add %@";
+
+// Alarm Settings
+"빠른 설정" = "Quick Settings";
+"사용자 알림" = "User Alerts";
+"사용자 설정" = "User Settings";
+"캘린더 앱에서 알림이 울려요." = "Notifications will ring in the Calendar app.";
+"알림이 설정되지 않았습니다" = "No alerts are set";
+
+// Due Date
+"마감일" = "Due Date";
+"마감" = "Due";
+
+// Calendar Selection
+"캘린더" = "Calendar";
+
+// Time Expressions (specific translations for AlarmInput)
+"이벤트 시간" = "Event Time";
+"%d일 전" = "%dd before";
+"%d분 후" = "%dm after";
+"%d시간 후" = "%dh after";
+"%d일 후" = "%dd after";
+
+// Custom Alarm Sheet
+"미리 알림" = "Advance Alert";
+"특정 시간" = "Specific Time";
+"알림 추가" = "Add Alert";
+"알림 방식" = "Alert Type";
+"분 전" = "minutes before";
+"추가" = "Add";
+"몇 분 전에 알림 받을까요?" = "How many minutes before would you like to be notified?";
+"언제 알림 받을까요?" = "When would you like to be notified?";
+
+// Other sections
+"위치" = "Location";
+"멤모" = "Notes";
+"멤모를 입력하세요" = "Enter notes";
+"미리알림 앱에서 알림이 울려요." = "Notifications will ring in the Reminders app.";
+
+// Time Interval Buttons
+"15분" = "15 min";
+"30분" = "30 min";
+"1시간" = "1 hour";
+"1시간 30분" = "1h 30m";
+"2시간" = "2 hours";
+"하루 종일" = "All Day";
+"시작" = "Start";
+"종료" = "End";
