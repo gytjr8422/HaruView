@@ -44,11 +44,12 @@ struct EventDateTimePicker: View {
                         
                         if isAllDay {
                             HStack {
-                                LocalizedText(key: "all_day")
+                                LocalizedText(key: "하루 종일")
                                     .font(.system(size: 25, weight: .light))
                                     .foregroundStyle(selectedField == .start ? .haruPrimary : .primary)
                                 Spacer()
                             }
+                            .padding(.leading, 16)
                         } else {
                             HStack(alignment: .bottom, spacing: 3) {
                                 Text(formatTime(startDate))
@@ -248,30 +249,17 @@ struct EventDateTimePicker: View {
     
     /// 기간 텍스트를 현지화하여 반환
     private func getLocalizedDurationText(_ key: String) -> String {
-        let _ = languageManager.refreshTrigger
         return key.localized()
     }
     
     /// 날짜와 요일을 현지화된 포맷으로 반환
     private func formatDateWithDay(_ date: Date) -> String {
-        let _ = languageManager.refreshTrigger
-        
-        switch languageManager.currentLanguage {
-        case .korean:
-            let formatter = DateFormatterFactory.formatter(for: .custom("M월 d일 (E)"))
-            return formatter.string(from: date)
-        case .japanese:
-            let formatter = DateFormatterFactory.formatter(for: .custom("M月d日 (E)"))
-            return formatter.string(from: date)
-        case .english:
-            let formatter = DateFormatterFactory.formatter(for: .custom("MMM d (E)"))
-            return formatter.string(from: date)
-        }
+        let formatter = DateFormatterFactory.formatter(for: .dateWithDay)
+        return formatter.string(from: date)
     }
     
     /// 시간을 현지화된 포맷으로 반환
     private func formatTime(_ date: Date) -> String {
-        let _ = languageManager.refreshTrigger
         let formatter = DateFormatterFactory.formatter(for: .shortTime)
         return formatter.string(from: date)
     }

@@ -27,7 +27,7 @@ struct LargeWidgetView: View {
                     }
                     
                     if entry.events.isEmpty {
-                        Text(NSLocalizedString("일정이 없습니다", comment: "No events message"))
+                        Text(NSLocalizedString("no_events_today", comment: "No events message"))
                             .font(.pretendardRegular(size: 11))
                             .foregroundStyle(.gray)
                             .padding(.vertical, 4)
@@ -86,7 +86,7 @@ struct LargeWidgetView: View {
                     }
                     
                     if entry.reminders.isEmpty {
-                        Text(NSLocalizedString("할 일이 없습니다", comment: "No reminders message"))
+                        Text(NSLocalizedString("no_reminders_today", comment: "No reminders message"))
                             .font(.pretendardRegular(size: 11))
                             .foregroundStyle(.gray)
                             .padding(.vertical, 4)

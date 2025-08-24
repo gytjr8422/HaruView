@@ -205,7 +205,6 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     
     /// 오류 메시지 포맷을 현지화하여 반환
     private func getErrorFormat() -> String {
-        let _ = languageManager.refreshTrigger
         return "⚠️ 오류: %@".localized()
     }
     
@@ -284,37 +283,31 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     
     /// 작성 취소 메시지를 현지화하여 반환
     private func getDiscardMessage() -> String {
-        let _ = languageManager.refreshTrigger
         return (vm.isEdit ? "편집 내용이 저장되지 않습니다." : "작성 내용이 저장되지 않습니다.").localized()
     }
     
     /// 취소 버튼 텍스트를 현지화하여 반환
     private func getDiscardButtonText() -> String {
-        let _ = languageManager.refreshTrigger
         return (vm.isEdit ? "편집 취소하기" : "저장 안 하고 닫기").localized()
     }
     
     /// 계속 버튼 텍스트를 현지화하여 반환
     private func getContinueButtonText() -> String {
-        let _ = languageManager.refreshTrigger
         return (vm.isEdit ? "계속 편집" : "계속 작성").localized()
     }
     
     /// 삭제 확인 메시지를 현지화하여 반환
     private func getDeleteConfirmationMessage() -> String {
-        let _ = languageManager.refreshTrigger
         return (vm.mode == .event ? "일정을 삭제하시겠습니까?" : "할일을 삭제하시겠습니까?").localized()
     }
     
     /// 일반 텍스트를 현지화하여 반환
     private func getLocalizedText(_ key: String) -> String {
-        let _ = languageManager.refreshTrigger
         return key.localized()
     }
     
     /// 툴바 제목을 현지화하여 반환
     private func getToolbarTitle() -> String {
-        let _ = languageManager.refreshTrigger
         let key = vm.isEdit ? "%@ 편집" : "%@ 추가"
         let modeText = vm.mode == .event ? "일정" : "할 일"
         return String(format: key.localized(), modeText.localized())

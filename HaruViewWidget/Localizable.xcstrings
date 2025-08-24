@@ -1,6 +1,12 @@
 {
   "sourceLanguage" : "ko",
   "strings" : {
+    "no_events_today" : {
+      "comment" : "No events message"
+    },
+    "no_reminders_today" : {
+      "comment" : "No reminders message"
+    },
     "Reminder ID" : {
       "localizations" : {
         "en" : {
@@ -132,6 +138,7 @@
     },
     "일정이 없습니다" : {
       "comment" : "No events message",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -231,6 +238,7 @@
     },
     "할 일이 없습니다" : {
       "comment" : "No reminders message",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
