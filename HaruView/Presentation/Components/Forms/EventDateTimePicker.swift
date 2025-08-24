@@ -44,7 +44,7 @@ struct EventDateTimePicker: View {
                         
                         if isAllDay {
                             HStack {
-                                LocalizedText(key: "하루 종일")
+                                LocalizedText(key: "all_day")
                                     .font(.system(size: 25, weight: .light))
                                     .foregroundStyle(selectedField == .start ? .haruPrimary : .primary)
                                 Spacer()
@@ -54,7 +54,7 @@ struct EventDateTimePicker: View {
                                 Text(formatTime(startDate))
                                     .font(.system(size: 25, weight: .light))
                                     .foregroundStyle(selectedField == .start ? .haruPrimary : .primary)
-                                LocalizedText(key: "시작")
+                                LocalizedText(key: "start")
                                     .font(.system(size: 12, weight: .light))
                                     .padding(.bottom, 2)
                             }
@@ -89,7 +89,7 @@ struct EventDateTimePicker: View {
                                 Text(formatTime(endDate))
                                     .font(.system(size: 25, weight: .light))
                                     .foregroundStyle(selectedField == .end ? .haruPrimary : .primary)
-                                LocalizedText(key: "종료")
+                                LocalizedText(key: "end")
                                     .font(.system(size: 12, weight: .light))
                                     .padding(.bottom, 2)
                             }
@@ -103,7 +103,7 @@ struct EventDateTimePicker: View {
             // 빠른 설정 버튼 (하루 종일이 아닐 때만)
             if !isAllDay {
                 HStack(spacing: 5) {
-                    Button(getLocalizedDurationText("15분")) {
+                    Button(getLocalizedDurationText("15m")) {
                         isTextFieldFocused.wrappedValue = false
                         endDate = Calendar.current.date(byAdding: .minute, value: 15, to: startDate) ?? startDate
                     }
@@ -116,7 +116,7 @@ struct EventDateTimePicker: View {
                             .fill(.haruPrimary.opacity(0.1))
                     )
                     
-                    Button(getLocalizedDurationText("30분")) {
+                    Button(getLocalizedDurationText("30m")) {
                         isTextFieldFocused.wrappedValue = false
                         endDate = Calendar.current.date(byAdding: .minute, value: 30, to: startDate) ?? startDate
                     }
@@ -129,7 +129,7 @@ struct EventDateTimePicker: View {
                             .fill(.haruPrimary.opacity(0.1))
                     )
                     
-                    Button(getLocalizedDurationText("1시간")) {
+                    Button(getLocalizedDurationText("1h")) {
                         isTextFieldFocused.wrappedValue = false
                         endDate = Calendar.current.date(byAdding: .hour, value: 1, to: startDate) ?? startDate
                     }
@@ -142,7 +142,7 @@ struct EventDateTimePicker: View {
                             .fill(.haruPrimary.opacity(0.1))
                     )
                     
-                    Button(getLocalizedDurationText("1시간 30분")) {
+                    Button(getLocalizedDurationText("1h 30m")) {
                         isTextFieldFocused.wrappedValue = false
                         endDate = Calendar.current.date(byAdding: .minute, value: 90, to: startDate) ?? startDate
                     }
@@ -155,7 +155,7 @@ struct EventDateTimePicker: View {
                             .fill(.haruPrimary.opacity(0.1))
                     )
                     
-                    Button(getLocalizedDurationText("2시간")) {
+                    Button(getLocalizedDurationText("2h")) {
                         isTextFieldFocused.wrappedValue = false
                         endDate = Calendar.current.date(byAdding: .hour, value: 2, to: startDate) ?? startDate
                     }
@@ -190,6 +190,8 @@ struct EventDateTimePicker: View {
                                     maxDate: maxDate,
                                     isAllDay: isAllDay
                                 )
+                                .environmentObject(languageManager)
+                                .id(languageManager.refreshTrigger) // 언어 변경 시 재생성
                             case .end:
                                 CustomDateTimePicker(
                                     date: $endDate,
@@ -197,6 +199,8 @@ struct EventDateTimePicker: View {
                                     maxDate: maxDate,
                                     isAllDay: false
                                 )
+                                .environmentObject(languageManager)
+                                .id(languageManager.refreshTrigger) // 언어 변경 시 재생성
                             }
                         }
                         .frame(height: 200)
@@ -257,7 +261,7 @@ struct EventDateTimePicker: View {
             let formatter = DateFormatterFactory.formatter(for: .custom("M월 d일 (E)"))
             return formatter.string(from: date)
         case .japanese:
-            let formatter = DateFormatterFactory.formatter(for: .custom("M月d일 (E)"))
+            let formatter = DateFormatterFactory.formatter(for: .custom("M月d日 (E)"))
             return formatter.string(from: date)
         case .english:
             let formatter = DateFormatterFactory.formatter(for: .custom("MMM d (E)"))
@@ -279,11 +283,15 @@ struct CustomDateTimePicker: UIViewRepresentable {
     var minDate: Date?
     var maxDate: Date?
     var isAllDay: Bool
+    @EnvironmentObject private var languageManager: LanguageManager
     
     func makeUIView(context: Context) -> UIDatePicker {
         let picker = UIDatePicker()
         picker.datePickerMode = isAllDay ? .date : .dateAndTime
         picker.preferredDatePickerStyle = .wheels
+        
+        // 언어 설정에 따른 로케일 설정
+        picker.locale = getPickerLocale()
         
         if !isAllDay {
             picker.minuteInterval = 5
@@ -321,6 +329,23 @@ struct CustomDateTimePicker: UIViewRepresentable {
         uiView.date = date
         uiView.minimumDate = minDate
         uiView.maximumDate = maxDate
+        
+        // 언어 변경 시 로케일 업데이트
+        let newLocale = getPickerLocale()
+        if uiView.locale != newLocale {
+            uiView.locale = newLocale
+        }
+    }
+    
+    private func getPickerLocale() -> Locale {
+        switch languageManager.currentLanguage {
+        case .korean:
+            return Locale(identifier: "ko_KR")
+        case .japanese:
+            return Locale(identifier: "ja_JP")
+        case .english:
+            return Locale(identifier: "en_US")
+        }
     }
     
     func makeCoordinator() -> Coordinator {
@@ -360,7 +385,7 @@ struct CustomDateTimePicker: UIViewRepresentable {
                 .first?.windows
                 .first else { return }
             
-            let message = isPrecise ? "1분 단위 선택" : "5분 단위 선택"
+            let message = isPrecise ? "1_minute_intervals".localized() : "5_minute_intervals".localized()
             let symbolName = isPrecise ? "clock.fill" : "clock.badge.checkmark.fill"
             
             let toastView = createToastView(message: message, symbolName: symbolName)

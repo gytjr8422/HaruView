@@ -287,18 +287,15 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
     
     private var dateView: some ToolbarContent {
         let languageCode = languageManager.currentLanguage.rawValue
-        let formatter: DateFormatter
+        let formatter = DateFormatterFactory.formatter(for: .dateWithDay)
         let font: Font
         
         switch languageCode {
         case "ko":
-            formatter = DateFormatterFactory.koreanDateWithDayFormatter()
             font = .museumMedium(size: 19)
         case "ja":
-            formatter = DateFormatterFactory.japaneseDateWithDayFormatter()
             font = .notoSansMedium(size: 19)
         default:
-            formatter = DateFormatterFactory.englishDateWithDayFormatter()
             font = .robotoSerifBold(size: 19)
         }
         

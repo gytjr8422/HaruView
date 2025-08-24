@@ -584,18 +584,7 @@ VStack {
     // MARK: - Helper Functions
     
     private var formattedDate: String {
-        let languageManager = LanguageManager.shared
-        let formatter: DateFormatter
-        
-        switch languageManager.currentLanguage {
-        case .korean:
-            formatter = DateFormatterFactory.koreanDateWithDayFormatter()
-        case .japanese:
-            formatter = DateFormatterFactory.japaneseDateWithDayFormatter()
-        case .english:
-            formatter = DateFormatterFactory.englishDateWithDayFormatter()
-        }
-        
+        let formatter = DateFormatterFactory.formatter(for: .dateWithDay)
         return formatter.string(from: initialDate)
     }
     
