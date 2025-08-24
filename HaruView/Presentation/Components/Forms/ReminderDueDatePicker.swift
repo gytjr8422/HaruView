@@ -16,6 +16,7 @@ struct ReminderDueDatePicker: View {
     @State private var selectedMode: DueDateMode = .none
     @State private var selectedField: DateTimeField? = nil
     @State private var internalDate: Date = Date()
+    @EnvironmentObject private var languageManager: LanguageManager
     
     var isTextFieldFocused: FocusState<Bool>.Binding
     
@@ -38,7 +39,7 @@ struct ReminderDueDatePicker: View {
                         selectedField = nil
                         isTextFieldFocused.wrappedValue = false
                     }) {
-                        Text(mode.title)
+                        Text(getLocalizedModeTitle(mode))
                             .font(.system(size: 14, weight: .medium))
                             .foregroundStyle(selectedMode == mode ? .white : .haruPrimary)
                             .padding(.horizontal, 16)
@@ -198,12 +199,18 @@ struct ReminderDueDatePicker: View {
     }
     
     private func formatDateWithDay(_ date: Date) -> String {
+        let _ = languageManager.refreshTrigger
         let formatter = DateFormatter()
-        formatter.locale = Locale.current
         
-        if Locale.current.language.languageCode?.identifier == "ko" {
+        switch languageManager.currentLanguage {
+        case .korean:
+            formatter.locale = Locale(identifier: "ko_KR")
             formatter.dateFormat = "M월 d일 (E)"
-        } else {
+        case .japanese:
+            formatter.locale = Locale(identifier: "ja_JP")
+            formatter.dateFormat = "M月d日 (E)"
+        case .english:
+            formatter.locale = Locale(identifier: "en_US")
             formatter.dateFormat = "MMM d (E)"
         }
         
@@ -211,10 +218,23 @@ struct ReminderDueDatePicker: View {
     }
     
     private func formatTime(_ date: Date) -> String {
+        let _ = languageManager.refreshTrigger
         let formatter = DateFormatter()
-        formatter.locale = Locale.current
+        formatter.locale = Locale(identifier: languageManager.currentLanguage.appleLanguageCode)
         formatter.timeStyle = .short
         return formatter.string(from: date)
+    }
+    
+    // MARK: - Helper Methods
+    
+    /// 마감일 모드 제목을 현지화하여 반환
+    private func getLocalizedModeTitle(_ mode: DueDateMode) -> String {
+        let _ = languageManager.refreshTrigger
+        switch mode {
+        case .none: return "없음".localized()
+        case .dateOnly: return "날짜만".localized()
+        case .dateTime: return "날짜+시간".localized()
+        }
     }
 }
 

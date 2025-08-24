@@ -35,7 +35,7 @@ enum Language: String, CaseIterable {
 }
 
 // Bundle 교체를 위한 클래스
-class BundleEx: Bundle {
+class BundleEx: Bundle, @unchecked Sendable {
     override func localizedString(forKey key: String, value: String?, table tableName: String?) -> String {
         return (LanguageManager.shared.currentBundle ?? Bundle.main).localizedString(forKey: key, value: value, table: tableName)
     }
@@ -50,9 +50,39 @@ final class LanguageManager: ObservableObject {
     var currentBundle: Bundle?
     
     private init() {
-        let savedLanguage = UserDefaults.standard.string(forKey: "AppLanguage") ?? Language.korean.title
+        let savedLanguage = UserDefaults.standard.string(forKey: "AppLanguage") ?? detectSystemLanguage()
         self.selectedLanguage = savedLanguage
         setCurrentLanguage(savedLanguage)
+    }
+    
+    /// 시스템 언어를 감지하여 앱에서 지원하는 언어로 매핑
+    private func detectSystemLanguage() -> String {
+        let systemLanguages = Locale.preferredLanguages
+        
+        // 첫 번째 언어(주 언어)만 확인
+        guard let primaryLanguage = systemLanguages.first else {
+            print("🌍 No system language found, defaulting to English")
+            return Language.english.title
+        }
+        
+        // 언어 코드만 추출 (예: "ko-KR" -> "ko", "ja-JP" -> "ja")
+        let languageCode = String(primaryLanguage.prefix(2))
+        
+        switch languageCode {
+        case "ko":
+            print("🌍 Primary system language detected: Korean")
+            return Language.korean.title
+        case "ja":
+            print("🌍 Primary system language detected: Japanese") 
+            return Language.japanese.title
+        case "en":
+            print("🌍 Primary system language detected: English")
+            return Language.english.title
+        default:
+            // 첫 번째 언어가 지원되지 않으면 영어로 기본 설정
+            print("🌍 Primary system language (\(languageCode)) not supported, defaulting to English")
+            return Language.english.title
+        }
     }
     
     func updateLanguage(_ language: String) {

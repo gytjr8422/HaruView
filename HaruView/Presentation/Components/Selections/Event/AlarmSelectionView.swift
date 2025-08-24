@@ -23,7 +23,7 @@ struct AlarmSelectionView: View {
                         .foregroundStyle(.haruTextPrimary)
                     
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 8) {
-                        ForEach(AlarmInput.presets.prefix(6), id: \.description) { preset in
+                        ForEach(Array(AlarmInput.presets.prefix(6)), id: \.id) { preset in
                             Button {
                                 if !alarms.contains(where: { $0.description == preset.description }) {
                                     alarms.append(preset)

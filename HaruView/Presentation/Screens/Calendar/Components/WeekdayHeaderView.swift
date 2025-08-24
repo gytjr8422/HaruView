@@ -9,9 +9,12 @@ import SwiftUI
 
 struct WeekdayHeaderView: View {
     @StateObject private var settings = AppSettings.shared
+    @EnvironmentObject private var languageManager: LanguageManager
     
     private var weekdays: [String] {
-        return Calendar.weekdaySymbols(startingOnMonday: settings.weekStartsOnMonday)
+        // languageManager의 refreshTrigger 의존성 생성
+        let _ = languageManager.refreshTrigger
+        return getLocalizedWeekdaySymbols(startingOnMonday: settings.weekStartsOnMonday)
     }
     
     var body: some View {
@@ -47,6 +50,30 @@ struct WeekdayHeaderView: View {
             case 6: return .haruSaturday      // 토요일 파란색
             default: return .haruSecondary.opacity(0.7) // 평일 회색
             }
+        }
+    }
+    
+    // MARK: - Helper Methods
+    
+    /// 언어별로 현지화된 요일 기호를 반환
+    private func getLocalizedWeekdaySymbols(startingOnMonday: Bool) -> [String] {
+        let symbols: [String]
+        
+        switch languageManager.currentLanguage {
+        case .korean:
+            symbols = ["일", "월", "화", "수", "목", "금", "토"]
+        case .english:
+            symbols = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+        case .japanese:
+            symbols = ["日", "月", "火", "水", "木", "金", "土"]
+        }
+        
+        if startingOnMonday {
+            // 월요일부터 시작: [월, 화, 수, 목, 금, 토, 일]
+            return Array(symbols[1...]) + [symbols[0]]
+        } else {
+            // 일요일부터 시작: [일, 월, 화, 수, 목, 금, 토]
+            return symbols
         }
     }
 }

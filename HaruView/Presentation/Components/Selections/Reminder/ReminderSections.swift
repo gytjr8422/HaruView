@@ -199,11 +199,12 @@ struct ReminderDetailInputViews {
     struct LocationInputView: View {
         @Binding var location: String
         @State private var showLocationPicker = false
+        @EnvironmentObject private var languageManager: LanguageManager
         
         var body: some View {
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
-                    Text("위치")
+                    LocalizedText(key: "위치")
                         .font(.pretendardSemiBold(size: 16))
 //                    Spacer()
 //                    Button("빠른 선택") {
@@ -213,17 +214,23 @@ struct ReminderDetailInputViews {
 //                    .foregroundStyle(.haruPrimary)
                 }
                 
-                HaruTextField(text: $location, placeholder: "위치 입력".localized())
+                HaruTextField(text: $location, placeholder: getLocalizedLocationPlaceholder())
             }
             .sheet(isPresented: $showLocationPicker) {
                 LocationPickerSheet(selectedLocation: $location)
             }
+        }
+        
+        private func getLocalizedLocationPlaceholder() -> String {
+            let _ = languageManager.refreshTrigger
+            return "위치 입력".localized()
         }
     }
     
     // URL 입력
     struct URLInputView: View {
         @Binding var url: String
+        @EnvironmentObject private var languageManager: LanguageManager
         
         var body: some View {
             VStack(alignment: .leading, spacing: 12) {
@@ -241,10 +248,11 @@ struct ReminderDetailInputViews {
     struct NotesInputView: View {
         @Binding var notes: String
         @FocusState private var isFocused: Bool
+        @EnvironmentObject private var languageManager: LanguageManager
         
         var body: some View {
             VStack(alignment: .leading, spacing: 12) {
-                Text("메모")
+                LocalizedText(key: "메모")
                     .font(.pretendardSemiBold(size: 16))
                 
                 ZStack(alignment: .topLeading) {
@@ -261,7 +269,7 @@ struct ReminderDetailInputViews {
                         .font(.pretendardRegular(size: 16))
                     
                     if notes.isEmpty && !isFocused {
-                        Text("메모를 입력하세요")
+                        Text(getLocalizedNotesPlaceholder())
                             .foregroundStyle(.secondary)
                             .font(.pretendardRegular(size: 16))
                             .padding(.horizontal, 12)
@@ -270,6 +278,11 @@ struct ReminderDetailInputViews {
                     }
                 }
             }
+        }
+        
+        private func getLocalizedNotesPlaceholder() -> String {
+            let _ = languageManager.refreshTrigger
+            return "메모를 입력하세요".localized()
         }
     }
 }
@@ -302,12 +315,12 @@ struct ReminderAlarmSelectionView: View {
             // 빠른 설정 섹션 - 날짜+시간 모드에서는 기존 AlarmInput.presets 사용
             if dueDateMode == .dateTime {
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("빠른 설정")
+                    Text(getLocalizedQuickSetting())
                         .font(.pretendardSemiBold(size: 16))
                         .foregroundStyle(.haruTextPrimary)
                     
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 8) {
-                        ForEach(AlarmInput.presets.prefix(5), id: \.description) { preset in
+                        ForEach(Array(AlarmInput.presets.prefix(5)), id: \.id) { preset in
                             Button {
                                 if !alarms.contains(where: { $0.description == preset.description }) {
                                     alarms.append(preset)
@@ -338,7 +351,7 @@ struct ReminderAlarmSelectionView: View {
                                     .font(.system(size: 12))
                                     .foregroundStyle(.haruPrimary)
                                 
-                                Text("사용자 설정")
+                                Text(getLocalizedCustomSetting())
                                     .font(.pretendardRegular(size: 14))
                                     .foregroundStyle(.haruPrimary)
                                     .lineLimit(1)
@@ -357,7 +370,7 @@ struct ReminderAlarmSelectionView: View {
             } else {
                 // 프리셋 선택 섹션 (없음, 날짜만 모드용)
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("빠른 설정")
+                    Text(getLocalizedQuickSetting())
                         .font(.pretendardSemiBold(size: 16))
                         .foregroundStyle(.haruTextPrimary)
                     
@@ -400,7 +413,7 @@ struct ReminderAlarmSelectionView: View {
             if alarmPreset == .custom || !alarms.isEmpty {
                 VStack(alignment: .leading, spacing: 12) {
                     HStack {
-                        Text("사용자 알림")
+                        Text(getLocalizedUserAlarms())
                             .font(.pretendardSemiBold(size: 16))
                             .foregroundStyle(.haruTextPrimary)
                         
@@ -416,14 +429,14 @@ struct ReminderAlarmSelectionView: View {
                     }
                     
                     if alarms.isEmpty {
-                        Text("알림이 설정되지 않았습니다")
+                        Text(getLocalizedNoAlarms())
                             .font(.pretendardRegular(size: 14))
                             .foregroundStyle(.secondary)
                             .padding(.vertical, 8)
                     } else {
                         VStack(spacing: 8) {
                             HStack {
-                                Text("미리알림 앱에서 알림이 울려요.")
+                                Text(getLocalizedReminderAppNote())
                                     .font(.pretendardRegular(size: 12))
                                     .foregroundStyle(.secondary)
                                 Spacer()
@@ -521,6 +534,38 @@ struct ReminderAlarmSelectionView: View {
             formatter.timeStyle = .short
             return formatter.string(from: date)
         }
+    }
+    
+    // MARK: - Helper Methods
+    
+    /// "빠른 설정" 텍스트를 현지화하여 반환
+    private func getLocalizedQuickSetting() -> String {
+        let _ = languageManager.refreshTrigger
+        return "빠른 설정".localized()
+    }
+    
+    /// "사용자 설정" 텍스트를 현지화하여 반환
+    private func getLocalizedCustomSetting() -> String {
+        let _ = languageManager.refreshTrigger
+        return "사용자 설정".localized()
+    }
+    
+    /// "사용자 알림" 텍스트를 현지화하여 반환
+    private func getLocalizedUserAlarms() -> String {
+        let _ = languageManager.refreshTrigger
+        return "사용자 알림".localized()
+    }
+    
+    /// "알림이 설정되지 않았습니다" 텍스트를 현지화하여 반환
+    private func getLocalizedNoAlarms() -> String {
+        let _ = languageManager.refreshTrigger
+        return "알림이 설정되지 않았습니다".localized()
+    }
+    
+    /// "미리알림 앱에서 알림이 울려요." 텍스트를 현지화하여 반환
+    private func getLocalizedReminderAppNote() -> String {
+        let _ = languageManager.refreshTrigger
+        return "미리알림 앱에서 알림이 울려요.".localized()
     }
 }
 
@@ -678,8 +723,9 @@ struct CustomReminderAlarmSheet: View {
                             VStack(spacing: 12) {
                                 DatePicker("", selection: $absoluteDate, displayedComponents: [.date, .hourAndMinute])
                                     .datePickerStyle(.compact)
-                                    .environment(\.locale, Locale(identifier: "ko_KR"))
+                                    .environment(\.locale, Locale(identifier: getLocalizedLocaleIdentifier()))
                                     .accentColor(.haruPrimary)
+                                    .id(languageManager.currentLanguage)
                             }
                         }
                     }
@@ -698,6 +744,12 @@ struct CustomReminderAlarmSheet: View {
     }
     
     // MARK: - Helper Methods
+    
+    /// 현재 언어에 맞는 로케일 식별자 반환
+    private func getLocalizedLocaleIdentifier() -> String {
+        let _ = languageManager.refreshTrigger
+        return languageManager.currentLanguage.appleLanguageCode
+    }
     
     /// 알람 프리셋의 현지화된 설명 텍스트 반환 (언어 변경에 즉시 반응)
     private func getLocalizedDescription(for preset: AlarmInput) -> String {
@@ -742,7 +794,6 @@ struct CustomReminderAlarmSheet: View {
         }
     }
 }
-
 
 #Preview {
     VStack(spacing: 20) {

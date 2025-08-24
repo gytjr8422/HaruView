@@ -189,7 +189,7 @@ struct SettingsView: View {
                     .font(.pretendardRegular(size: 16))
                     .foregroundStyle(.haruTextPrimary)
                 
-                LocalizedText(key: "달력에 공휴일을 표시합니다")
+                LocalizedText(key: "달력에 공휴일을 표시합니다.")
                     .font(.pretendardRegular(size: 12))
                     .foregroundStyle(.haruSecondary)
             }
@@ -301,7 +301,7 @@ struct SettingsView: View {
                         .font(.pretendardRegular(size: 16))
                         .foregroundStyle(.haruTextPrimary)
                     
-                    Text("HaruView")
+                    Text(languageManager.currentLanguage == .korean ? "하루뷰" : "Haru")
                         .font(.pretendardRegular(size: 12))
                         .foregroundStyle(.haruSecondary)
                 }

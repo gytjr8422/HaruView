@@ -11,8 +11,6 @@
 		CE6007AB2E01808B006B986C /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE6007AA2E01808B006B986C /* WidgetKit.framework */; };
 		CE6007AD2E01808B006B986C /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE6007AC2E01808B006B986C /* SwiftUI.framework */; };
 		CE6007BC2E01808D006B986C /* HaruViewWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = CE6007A82E01808A006B986C /* HaruViewWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		CEB590922E538A4600FF3532 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CEB590242E538A4600FF3532 /* InfoPlist.strings */; };
-		CEB590C52E56000300FF3532 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CEB590C32E56000300FF3532 /* InfoPlist.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,8 +43,6 @@
 		CE6007AA2E01808B006B986C /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		CE6007AC2E01808B006B986C /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		CE6B85012DC12F8800F2D1BC /* HaruView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HaruView.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		CEB590C42E56000300FF3532 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = InfoPlist.strings; sourceTree = "<group>"; };
-		CEB590CA2E56E8CB00FF3532 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = "InfoPlist 2.strings"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -134,10 +130,8 @@
 		CE6B84F82DC12F8800F2D1BC = {
 			isa = PBXGroup;
 			children = (
-				CEB590C62E563C2200FF3532 /* en.lproj */,
 				CE40A7B22E09ABC60067FCD2 /* HaruViewWidgetExtension.entitlements */,
 				CE6B85032DC12F8800F2D1BC /* HaruView */,
-				CEB590C22E55FFCA00FF3532 /* ja.lproj */,
 				CE6007AE2E01808B006B986C /* HaruViewWidget */,
 				CE6007A92E01808B006B986C /* Frameworks */,
 				CE6B85022DC12F8800F2D1BC /* Products */,
@@ -151,22 +145,6 @@
 				CE6007A82E01808A006B986C /* HaruViewWidgetExtension.appex */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		CEB590C22E55FFCA00FF3532 /* ja.lproj */ = {
-			isa = PBXGroup;
-			children = (
-				CEB590C32E56000300FF3532 /* InfoPlist.strings */,
-			);
-			path = ja.lproj;
-			sourceTree = "<group>";
-		};
-		CEB590C62E563C2200FF3532 /* en.lproj */ = {
-			isa = PBXGroup;
-			children = (
-				CEB590242E538A4600FF3532 /* InfoPlist.strings */,
-			);
-			path = en.lproj;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -274,8 +252,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CEB590C52E56000300FF3532 /* InfoPlist.strings in Resources */,
-				CEB590922E538A4600FF3532 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -305,25 +281,6 @@
 			targetProxy = CE6007BA2E01808D006B986C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		CEB590242E538A4600FF3532 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				CEB590CA2E56E8CB00FF3532 /* ko */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		CEB590C32E56000300FF3532 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				CEB590C42E56000300FF3532 /* ja */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		CE6007BE2E01808D006B986C /* Debug */ = {
@@ -532,7 +489,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HaruView/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "하루뷰";
+				INFOPLIST_KEY_CFBundleDisplayName = Haru;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSCalendarsUsageDescription = "앱에서 캘린더에 접근하기 위해 권한이 필요합니다.";
@@ -580,7 +537,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HaruView/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "하루뷰";
+				INFOPLIST_KEY_CFBundleDisplayName = Haru;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSCalendarsUsageDescription = "앱에서 캘린더에 접근하기 위해 권한이 필요합니다.";

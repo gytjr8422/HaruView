@@ -33,6 +33,9 @@
 "%d개 선택됨" = "%d Selected";
 
 // Date and Time
+"매" = "Every";
+"주" = "Week";
+"개월" = "Month";
 "년" = "Year";
 "월" = "Month";
 "일" = "Day";
@@ -131,7 +134,7 @@
 "종료 조건" = "End Condition";
 "끝나지 않음" = "Never Ends";
 "특정 날짜" = "End Date";
-"횟수 제한" = "Occurrence Limit";
+"횟수 제한" = "Count";
 "총" = "Total";
 "회" = "times";
 "반복 설정" = "Repeat Settings";
@@ -202,6 +205,7 @@
 "날짜+시간" = "Date & Time";
 
 // Weather
+"날씨" = "Weather";
 "날씨 정보를 가져오는데 실패했습니다." = "Failed to fetch weather information.";
 "날씨 정보를 가져오는데 실패했습니다: %@" = "Failed to fetch weather information: %@";
 "%.0f°" = "%.0f°";
@@ -238,6 +242,10 @@
 // Languages
 "한국어" = "Korean";
 
+// Settings View
+"달력에 공휴일을 표시합니다." = "Display holidays on calendar.";
+"버전" = "Version";
+
 // D-Day
 "D-Day" = "D-Day";
 "D-%d" = "D-%d";
@@ -249,7 +257,7 @@
 "오늘 할 일이 없습니다." = "No reminders today.";
 "오늘의 일정과 할 일을 보려면" = "To see today's events and reminders";
 "캘린더와 미리알림 모두 접근 권한이 필요해요." = "Both Calendar and Reminders access permissions are required.";
-"항목을 **길게 눌러** 수정/삭제할 수 있어요!" = "**Long press** items to edit/delete!";
+"항목을 길게 눌러 수정/삭제할 수 있어요!" = "Long press items to edit/delete!";
 "설정에서 권한 허용하기" = "Allow permissions in Settings";
 
 // Calendar View
@@ -334,8 +342,8 @@
 
 // Other sections
 "위치" = "Location";
-"멤모" = "Notes";
-"멤모를 입력하세요" = "Enter notes";
+"메모" = "Notes";
+"메모를 입력하세요" = "Enter notes";
 "미리알림 앱에서 알림이 울려요." = "Notifications will ring in the Reminders app.";
 
 // Time Interval Buttons

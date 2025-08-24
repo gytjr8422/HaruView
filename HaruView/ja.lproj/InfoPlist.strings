@@ -1,0 +1,5 @@
+CFBundleDisplayName = "Haru";
+NSCalendarsFullAccessUsageDescription = "アプリとウィジェットで日々のスケジュールを一目で表示し、新しいイベントをカレンダーに追加するために、カレンダーアクセス権限が必要です。";
+NSRemindersFullAccessUsageDescription = "アプリとウィジェットで今日のタスクを整理し、新しいリマインダーを追加するために、リマインダーアクセス権限が必要です。";
+NSLocationWhenInUseUsageDescription = "天気情報を取得するため、位置情報が必要です。";
+NSUserTrackingUsageDescription = "カスタマイズされた広告の提供と広告パフォーマンスの測定のため、ユーザー活動を追跡します。";

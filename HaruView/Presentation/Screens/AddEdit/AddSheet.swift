@@ -11,6 +11,7 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     @Environment(\.dismiss) private var dismiss
     @Namespace private var indicatorNS
     @FocusState private var isTextFieldFocused: Bool
+    @EnvironmentObject private var languageManager: LanguageManager
 
     @StateObject private var vm: VM
     var onSave: (Bool) -> Void // Bool: 삭제 여부 (true: 삭제, false: 저장)
@@ -69,13 +70,13 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
             .background(.haruBackground)
             .toolbar { leadingToolbar; toolbarTitle; saveToolbar }
             .navigationBarTitleDisplayMode(.inline)
-            .confirmationDialog((vm.isEdit ? "편집 내용이 저장되지 않습니다." : "작성 내용이 저장되지 않습니다.").localized(),
+            .confirmationDialog(getDiscardMessage(),
                                 isPresented: $showDiscardAlert) {
-                Button((vm.isEdit ? "편집 취소하기" : "저장 안 하고 닫기").localized(), role: .destructive) { dismiss() }
-                Button((vm.isEdit ? "계속 편집" : "계속 작성").localized(), role: .cancel) {}
+                Button(getDiscardButtonText(), role: .destructive) { dismiss() }
+                Button(getContinueButtonText(), role: .cancel) {}
             }
             .confirmationDialog(
-                (vm.mode == .event ? "일정을 삭제하시겠습니까?" : "할일을 삭제하시겠습니까?").localized(),
+                getDeleteConfirmationMessage(),
                 isPresented: Binding<Bool>(
                     get: { 
                         if let editVM = vm as? EditSheetViewModel {
@@ -90,14 +91,14 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                     }
                 )
             ) {
-                Button("삭제".localized(), role: .destructive) {
+                Button(getLocalizedText("삭제"), role: .destructive) {
                     if let editVM = vm as? EditSheetViewModel {
                         Task {
                             await editVM.confirmDelete()
                         }
                     }
                 }
-                Button("취소".localized(), role: .cancel) {
+                Button(getLocalizedText("취소"), role: .cancel) {
                     if let editVM = vm as? EditSheetViewModel {
                         editVM.cancelDelete()
                     }
@@ -195,11 +196,17 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     private var footerError: some View {
         Group {
             if let e = vm.error {
-                Text(String(format: "⚠️ 오류: %@".localized(), e.localizedDescription))
+                Text(String(format: getErrorFormat(), e.localizedDescription))
                     .font(.jakartaRegular(size: 14))
                     .foregroundStyle(.red)
             }
         }
+    }
+    
+    /// 오류 메시지 포맷을 현지화하여 반환
+    private func getErrorFormat() -> String {
+        let _ = languageManager.refreshTrigger
+        return "⚠️ 오류: %@".localized()
     }
     
     @ViewBuilder
@@ -268,11 +275,49 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     
     private var toolbarTitle: some ToolbarContent {
         ToolbarItem(placement: .principal) {
-            let key = vm.isEdit ? "%@ 편집" : "%@ 추가"
-            let modeText = vm.mode == .event ? "일정" : "할 일"
-            Text(String(format: key.localized(), modeText.localized()))
+            Text(getToolbarTitle())
                 .font(.pretendardSemiBold(size: 18))
         }
+    }
+    
+    // MARK: - Helper Methods
+    
+    /// 작성 취소 메시지를 현지화하여 반환
+    private func getDiscardMessage() -> String {
+        let _ = languageManager.refreshTrigger
+        return (vm.isEdit ? "편집 내용이 저장되지 않습니다." : "작성 내용이 저장되지 않습니다.").localized()
+    }
+    
+    /// 취소 버튼 텍스트를 현지화하여 반환
+    private func getDiscardButtonText() -> String {
+        let _ = languageManager.refreshTrigger
+        return (vm.isEdit ? "편집 취소하기" : "저장 안 하고 닫기").localized()
+    }
+    
+    /// 계속 버튼 텍스트를 현지화하여 반환
+    private func getContinueButtonText() -> String {
+        let _ = languageManager.refreshTrigger
+        return (vm.isEdit ? "계속 편집" : "계속 작성").localized()
+    }
+    
+    /// 삭제 확인 메시지를 현지화하여 반환
+    private func getDeleteConfirmationMessage() -> String {
+        let _ = languageManager.refreshTrigger
+        return (vm.mode == .event ? "일정을 삭제하시겠습니까?" : "할일을 삭제하시겠습니까?").localized()
+    }
+    
+    /// 일반 텍스트를 현지화하여 반환
+    private func getLocalizedText(_ key: String) -> String {
+        let _ = languageManager.refreshTrigger
+        return key.localized()
+    }
+    
+    /// 툴바 제목을 현지화하여 반환
+    private func getToolbarTitle() -> String {
+        let _ = languageManager.refreshTrigger
+        let key = vm.isEdit ? "%@ 편집" : "%@ 추가"
+        let modeText = vm.mode == .event ? "일정" : "할 일"
+        return String(format: key.localized(), modeText.localized())
     }
 }
 

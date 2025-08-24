@@ -11,11 +11,12 @@ import SwiftUI
 struct LocationInputView: View {
     @Binding var location: String
     @State private var showLocationPicker = false
+    @EnvironmentObject private var languageManager: LanguageManager
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("위치")
+                LocalizedText(key: "위치")
                     .font(.pretendardSemiBold(size: 16))
 //                Spacer()
 //                Button("빠른 선택") {
@@ -25,11 +26,19 @@ struct LocationInputView: View {
 //                .foregroundStyle(.haruPrimary)
             }
             
-            HaruTextField(text: $location, placeholder: "위치 입력".localized())
+            HaruTextField(text: $location, placeholder: getLocalizedPlaceholder())
         }
         .sheet(isPresented: $showLocationPicker) {
             LocationPickerSheet(selectedLocation: $location)
         }
+    }
+    
+    // MARK: - Helper Methods
+    
+    /// 위치 입력 플레이스홀더를 현지화하여 반환
+    private func getLocalizedPlaceholder() -> String {
+        let _ = languageManager.refreshTrigger
+        return "위치 입력".localized()
     }
 }
 

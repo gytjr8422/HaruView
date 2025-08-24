@@ -11,6 +11,7 @@ import SwiftUI
 struct RecurrenceSelectionView: View {
     @Binding var recurrenceRule: RecurrenceRuleInput?
     @State private var showCustomRecurrence = false
+    @EnvironmentObject private var languageManager: LanguageManager
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -25,7 +26,7 @@ struct RecurrenceSelectionView: View {
             
             if let rule = recurrenceRule {
                 HStack {
-                    Text(rule.description)
+                    Text(getLocalizedRuleDescription(rule))
                         .font(.pretendardRegular(size: 14))
                     
                     Spacer()
@@ -46,7 +47,7 @@ struct RecurrenceSelectionView: View {
                         .fill(.haruPrimary)
                 )
             } else {
-                Text("반복하지 않음")
+                Text(getLocalizedNoRecurrenceText())
                     .font(.pretendardRegular(size: 14))
                     .foregroundStyle(.secondary)
                     .padding(.vertical, 8)
@@ -58,7 +59,7 @@ struct RecurrenceSelectionView: View {
                     Button {
                         recurrenceRule = preset
                     } label: {
-                        Text(preset.description)
+                        Text(getLocalizedRuleDescription(preset))
                             .font(.pretendardRegular(size: 14))
                             .foregroundStyle(.haruPrimary)
                             .padding(.horizontal, 20)
@@ -75,7 +76,7 @@ struct RecurrenceSelectionView: View {
                 Button {
                     showCustomRecurrence = true
                 } label: {
-                    Text("사용자 설정")
+                    Text(getLocalizedCustomText())
                         .font(.pretendardRegular(size: 14))
                         .foregroundStyle(.haruPrimary)
                         .padding(.horizontal, 20)
@@ -92,6 +93,112 @@ struct RecurrenceSelectionView: View {
             CustomRecurrenceSheet(recurrenceRule: $recurrenceRule)
         }
     }
+    
+    // MARK: - Helper Methods
+    
+    /// 반복 규칙 설명을 현지화하여 반환
+    private func getLocalizedRuleDescription(_ rule: RecurrenceRuleInput) -> String {
+        let _ = languageManager.refreshTrigger
+        
+        // 직접 현지화된 설명 생성
+        var result = ""
+        
+        if rule.interval > 1 {
+            switch rule.frequency {
+            case .daily:
+                result = "%d일마다".localized(with: rule.interval)
+            case .weekly:
+                result = "%d주마다".localized(with: rule.interval)
+            case .monthly:
+                result = "%d개월마다".localized(with: rule.interval)
+            case .yearly:
+                result = "%d년마다".localized(with: rule.interval)
+            }
+        } else {
+            switch rule.frequency {
+            case .daily:
+                result = "매일".localized()
+            case .weekly:
+                // 평일(월-금)인지 확인
+                if let daysOfWeek = rule.daysOfWeek,
+                   daysOfWeek.count == 5,
+                   daysOfWeek.contains(where: { $0.dayOfWeek == 2 }) && // 월요일
+                   daysOfWeek.contains(where: { $0.dayOfWeek == 3 }) && // 화요일
+                   daysOfWeek.contains(where: { $0.dayOfWeek == 4 }) && // 수요일
+                   daysOfWeek.contains(where: { $0.dayOfWeek == 5 }) && // 목요일
+                   daysOfWeek.contains(where: { $0.dayOfWeek == 6 }) {  // 금요일
+                    result = "평일만".localized()
+                } else {
+                    result = "매주".localized()
+                }
+            case .monthly:
+                result = "매월".localized()
+            case .yearly:
+                result = "매년".localized()
+            }
+        }
+        
+        if let daysOfWeek = rule.daysOfWeek, !daysOfWeek.isEmpty {
+            // 평일만인 경우 한국어에서만 괄호 표시
+            let isWeekdays = daysOfWeek.count == 5 &&
+                           daysOfWeek.contains(where: { $0.dayOfWeek == 2 }) && // 월요일
+                           daysOfWeek.contains(where: { $0.dayOfWeek == 3 }) && // 화요일
+                           daysOfWeek.contains(where: { $0.dayOfWeek == 4 }) && // 수요일
+                           daysOfWeek.contains(where: { $0.dayOfWeek == 5 }) && // 목요일
+                           daysOfWeek.contains(where: { $0.dayOfWeek == 6 })    // 금요일
+            
+            // 한국어가 아니고 평일만인 경우 괄호 생략
+            if !isWeekdays || languageManager.currentLanguage == .korean {
+                // 현지화된 요일 이름 매핑
+                let dayNames = ["", "일".localized(), "월".localized(), "화".localized(), "수".localized(), "목".localized(), "금".localized(), "토".localized()]
+                let selectedDays = daysOfWeek.compactMap {
+                    dayNames.indices.contains($0.dayOfWeek) ? dayNames[$0.dayOfWeek] : nil
+                }
+                
+                // 사용자의 주 시작일 설정에 따라 정렬
+                let weekStartsOnMonday = UserDefaults.standard.object(forKey: "weekStartsOnMonday") as? Bool ?? false
+                let sortedDays = selectedDays.sorted { day1, day2 in
+                    guard let index1 = dayNames.firstIndex(of: day1),
+                          let index2 = dayNames.firstIndex(of: day2) else {
+                        return false
+                    }
+                    
+                    let adjustedIndex1 = weekStartsOnMonday ? (index1 == 1 ? 7 : index1 - 1) : index1 - 1
+                    let adjustedIndex2 = weekStartsOnMonday ? (index2 == 1 ? 7 : index2 - 1) : index2 - 1
+                    
+                    return adjustedIndex1 < adjustedIndex2
+                }
+                
+                result += " (\(sortedDays.joined(separator: ",")))"
+            }
+        }
+        
+        switch rule.endCondition {
+        case .never:
+            break
+        case .endDate(let date):
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: languageManager.currentLanguage.appleLanguageCode)
+            formatter.dateStyle = .medium
+            result += " - \(formatter.string(from: date))" + "까지".localized()
+        case .occurrenceCount(let count):
+            result += " - \(count)" + "회".localized()
+        }
+        
+        return result
+    }
+    
+    /// "반복하지 않음" 텍스트를 현지화하여 반환
+    private func getLocalizedNoRecurrenceText() -> String {
+        let _ = languageManager.refreshTrigger
+        return "반복하지 않음".localized()
+    }
+    
+    /// "사용자 설정" 텍스트를 현지화하여 반환
+    private func getLocalizedCustomText() -> String {
+        let _ = languageManager.refreshTrigger
+        return "사용자 설정".localized()
+    }
 }
 
 // MARK: - 커스텀 반복 설정 시트
@@ -99,6 +206,7 @@ struct CustomRecurrenceSheet: View {
     @Binding var recurrenceRule: RecurrenceRuleInput?
     @Environment(\.dismiss) private var dismiss
     @StateObject private var settings = AppSettings.shared
+    @EnvironmentObject private var languageManager: LanguageManager
     
     @State private var frequency: RecurrenceRuleInput.RecurrenceFrequency = .weekly
     @State private var interval: Int = 1
@@ -114,7 +222,7 @@ struct CustomRecurrenceSheet: View {
                     // 빈도 섹션
                     VStack(alignment: .leading, spacing: 12) {
                         HStack {
-                            Text("빈도")
+                            LocalizedText(key: "빈도")
                                 .font(.pretendardBold(size: 16))
                                 .foregroundStyle(.haruSecondary)
                             Spacer()
@@ -123,20 +231,21 @@ struct CustomRecurrenceSheet: View {
                         VStack(spacing: 12) {
                             // 반복 종류 선택
                             Picker("반복", selection: $frequency) {
-                                Text("매일").tag(RecurrenceRuleInput.RecurrenceFrequency.daily)
-                                Text("매주").tag(RecurrenceRuleInput.RecurrenceFrequency.weekly)
-                                Text("매월").tag(RecurrenceRuleInput.RecurrenceFrequency.monthly)
-                                Text("매년").tag(RecurrenceRuleInput.RecurrenceFrequency.yearly)
+                                Text(getLocalizedFrequency(.daily)).tag(RecurrenceRuleInput.RecurrenceFrequency.daily)
+                                Text(getLocalizedFrequency(.weekly)).tag(RecurrenceRuleInput.RecurrenceFrequency.weekly)
+                                Text(getLocalizedFrequency(.monthly)).tag(RecurrenceRuleInput.RecurrenceFrequency.monthly)
+                                Text(getLocalizedFrequency(.yearly)).tag(RecurrenceRuleInput.RecurrenceFrequency.yearly)
                             }
                             .pickerStyle(.segmented)
+                            .id(languageManager.currentLanguage)
                             
                             // 간격 설정
                             HStack {
-                                Text("매")
+                                Text(getLocalizedEvery())
                                     .font(.pretendardRegular(size: 14))
                                     .foregroundStyle(.haruSecondary)
                                 
-                                TextField("간격", value: $interval, format: .number)
+                                TextField(getLocalizedInterval(), value: $interval, format: .number)
                                     .keyboardType(.numberPad)
                                     .font(.pretendardRegular(size: 14))
                                     .padding(.horizontal, 12)
@@ -151,14 +260,13 @@ struct CustomRecurrenceSheet: View {
                                     )
                                     .frame(width: 60)
                                 
-                                Text(frequency == .daily ? "일" :
-                                     frequency == .weekly ? "주" :
-                                     frequency == .monthly ? "개월" : "년")
+                                Text(getLocalizedUnit(for: frequency))
                                     .font(.pretendardRegular(size: 14))
                                     .foregroundStyle(.haruSecondary)
                                 
                                 Spacer()
                             }
+                            .id("\(languageManager.currentLanguage.rawValue)-\(frequency)")
                         }
                         .padding(16)
                         .background(
@@ -175,13 +283,13 @@ struct CustomRecurrenceSheet: View {
                     if frequency == .weekly {
                         VStack(alignment: .leading, spacing: 12) {
                             HStack {
-                                Text("요일")
+                                LocalizedText(key: "요일")
                                     .font(.pretendardBold(size: 16))
                                     .foregroundStyle(.haruSecondary)
                                 Spacer()
                             }
                             
-                            let weekdays = Calendar.weekdaySymbols(startingOnMonday: settings.weekStartsOnMonday)
+                            let weekdays = getLocalizedWeekdaySymbols()
                             HStack(spacing: 8) {
                                 ForEach(Array(weekdays.enumerated()), id: \.offset) { index, day in
                                     Button(action: {
@@ -219,7 +327,7 @@ struct CustomRecurrenceSheet: View {
                     // 종료 조건 섹션
                     VStack(alignment: .leading, spacing: 12) {
                         HStack {
-                            Text("종료 조건")
+                            LocalizedText(key: "종료 조건")
                                 .font(.pretendardBold(size: 16))
                                 .foregroundStyle(.haruSecondary)
                             Spacer()
@@ -227,24 +335,25 @@ struct CustomRecurrenceSheet: View {
                         
                         VStack(spacing: 12) {
                             Picker("종료", selection: $endCondition) {
-                                Text("끝나지 않음").tag(RecurrenceRuleInput.EndCondition.never)
-                                Text("특정 날짜").tag(RecurrenceRuleInput.EndCondition.endDate(endDate))
-                                Text("횟수 제한").tag(RecurrenceRuleInput.EndCondition.occurrenceCount(occurrenceCount))
+                                Text(getLocalizedEndCondition(.never)).tag(RecurrenceRuleInput.EndCondition.never)
+                                Text(getLocalizedEndCondition(.endDate(endDate))).tag(RecurrenceRuleInput.EndCondition.endDate(endDate))
+                                Text(getLocalizedEndCondition(.occurrenceCount(occurrenceCount))).tag(RecurrenceRuleInput.EndCondition.occurrenceCount(occurrenceCount))
                             }
                             .pickerStyle(.segmented)
+                            .id(languageManager.currentLanguage)
                             
                             switch endCondition {
                             case .endDate:
-                                DatePicker("종료 날짜", selection: $endDate, displayedComponents: .date)
+                                DatePicker(getLocalizedEndDate(), selection: $endDate, displayedComponents: .date)
                                     .font(.pretendardRegular(size: 14))
                                     .foregroundStyle(.haruSecondary)
                             case .occurrenceCount:
                                 HStack {
-                                    Text("총")
+                                    Text(getLocalizedTotal())
                                         .font(.pretendardRegular(size: 14))
                                         .foregroundStyle(.haruSecondary)
                                     
-                                    TextField("횟수", value: $occurrenceCount, format: .number)
+                                    TextField(getLocalizedCount(), value: $occurrenceCount, format: .number)
                                         .keyboardType(.numberPad)
                                         .font(.pretendardRegular(size: 14))
                                         .padding(.horizontal, 12)
@@ -259,7 +368,7 @@ struct CustomRecurrenceSheet: View {
                                         )
                                         .frame(width: 60)
                                     
-                                    Text("회")
+                                    Text(getLocalizedTimes())
                                         .font(.pretendardRegular(size: 14))
                                         .foregroundStyle(.haruSecondary)
                                     
@@ -284,18 +393,18 @@ struct CustomRecurrenceSheet: View {
                 .padding(.top, 20)
             }
             .background(.haruBackground)
-            .navigationTitle("반복 설정")
+            .navigationTitle(getLocalizedTitle())
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("취소") { 
+                    Button(getLocalizedCancel()) { 
                         dismiss() 
                     }
                     .font(.pretendardRegular(size: 16))
                     .foregroundStyle(.haruSecondary)
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("완료") {
+                    Button(getLocalizedDone()) {
                         createRecurrenceRule()
                         dismiss()
                     }
@@ -313,6 +422,117 @@ struct CustomRecurrenceSheet: View {
                 let currentWeekday = Calendar.withUserWeekStartPreference().component(.weekday, from: Date())
                 selectedWeekdays = [currentWeekday]
             }
+        }
+    }
+    
+    // MARK: - Helper Methods for Localization
+    
+    /// 빈도 텍스트를 현지화하여 반환
+    private func getLocalizedFrequency(_ frequency: RecurrenceRuleInput.RecurrenceFrequency) -> String {
+        let _ = languageManager.refreshTrigger
+        switch frequency {
+        case .daily: return "매일".localized()
+        case .weekly: return "매주".localized()
+        case .monthly: return "매월".localized()
+        case .yearly: return "매년".localized()
+        }
+    }
+    
+    /// "매" 텍스트를 현지화하여 반환
+    private func getLocalizedEvery() -> String {
+        let _ = languageManager.refreshTrigger
+        return "매".localized()
+    }
+    
+    /// "간격" 텍스트를 현지화하여 반환
+    private func getLocalizedInterval() -> String {
+        let _ = languageManager.refreshTrigger
+        return "간격".localized()
+    }
+    
+    /// 빈도별 단위를 현지화하여 반환
+    private func getLocalizedUnit(for frequency: RecurrenceRuleInput.RecurrenceFrequency) -> String {
+        let _ = languageManager.refreshTrigger
+        switch frequency {
+        case .daily: return "일".localized()
+        case .weekly: return "주".localized()
+        case .monthly: return "개월".localized()
+        case .yearly: return "년".localized()
+        }
+    }
+    
+    /// 종료 조건 텍스트를 현지화하여 반환
+    private func getLocalizedEndCondition(_ condition: RecurrenceRuleInput.EndCondition) -> String {
+        let _ = languageManager.refreshTrigger
+        switch condition {
+        case .never: return "끝나지 않음".localized()
+        case .endDate: return "특정 날짜".localized()
+        case .occurrenceCount: return "횟수 제한".localized()
+        }
+    }
+    
+    /// "종료 날짜" 텍스트를 현지화하여 반환
+    private func getLocalizedEndDate() -> String {
+        let _ = languageManager.refreshTrigger
+        return "종료 날짜".localized()
+    }
+    
+    /// "총" 텍스트를 현지화하여 반환
+    private func getLocalizedTotal() -> String {
+        let _ = languageManager.refreshTrigger
+        return "총".localized()
+    }
+    
+    /// "횟수" 텍스트를 현지화하여 반환
+    private func getLocalizedCount() -> String {
+        let _ = languageManager.refreshTrigger
+        return "횟수".localized()
+    }
+    
+    /// "회" 텍스트를 현지화하여 반환
+    private func getLocalizedTimes() -> String {
+        let _ = languageManager.refreshTrigger
+        return "회".localized()
+    }
+    
+    /// 네비게이션 제목을 현지화하여 반환
+    private func getLocalizedTitle() -> String {
+        let _ = languageManager.refreshTrigger
+        return "반복 설정".localized()
+    }
+    
+    /// "취소" 버튼 텍스트를 현지화하여 반환
+    private func getLocalizedCancel() -> String {
+        let _ = languageManager.refreshTrigger
+        return "취소".localized()
+    }
+    
+    /// "완료" 버튼 텍스트를 현지화하여 반환
+    private func getLocalizedDone() -> String {
+        let _ = languageManager.refreshTrigger
+        return "완료".localized()
+    }
+    
+    /// 현지화된 요일 기호를 반환
+    private func getLocalizedWeekdaySymbols() -> [String] {
+        let _ = languageManager.refreshTrigger
+        
+        let symbols: [String]
+        switch languageManager.currentLanguage {
+        case .korean:
+            symbols = ["일", "월", "화", "수", "목", "금", "토"]
+        case .english:
+            symbols = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+        case .japanese:
+            symbols = ["日", "月", "火", "水", "木", "金", "土"]
+        }
+        
+        if settings.weekStartsOnMonday {
+            // 월요일부터 시작: [월, 화, 수, 목, 금, 토, 일]
+            return Array(symbols[1...]) + [symbols[0]]
+        } else {
+            // 일요일부터 시작: [일, 월, 화, 수, 목, 금, 토]
+            return symbols
         }
     }
     

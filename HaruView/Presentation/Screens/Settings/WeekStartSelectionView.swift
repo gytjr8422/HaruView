@@ -10,19 +10,23 @@ import SwiftUI
 struct WeekStartSelectionView: View {
     @StateObject private var settings = AppSettings.shared
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var languageManager: LanguageManager
     
     private var weekStartOptions: [WeekStartOption] {
+        // languageManager의 refreshTrigger 의존성 생성
+        let _ = languageManager.refreshTrigger
+        
         return [
             WeekStartOption(
                 id: false, 
                 title: "일요일부터 시작".localized(), 
-                subtitle: Calendar.weekdaySymbols(startingOnMonday: false).joined(separator: " "), 
+                subtitle: getLocalizedWeekdaySymbols(startingOnMonday: false).joined(separator: " "), 
                 emoji: "☀️"
             ),
             WeekStartOption(
                 id: true, 
                 title: "월요일부터 시작".localized(), 
-                subtitle: Calendar.weekdaySymbols(startingOnMonday: true).joined(separator: " "), 
+                subtitle: getLocalizedWeekdaySymbols(startingOnMonday: true).joined(separator: " "), 
                 emoji: "💼"
             )
         ]
@@ -71,6 +75,30 @@ struct WeekStartSelectionView: View {
         }
         .improvedSwipeBack {
             dismiss()
+        }
+    }
+    
+    // MARK: - Helper Methods
+    
+    /// 언어별로 현지화된 요일 기호를 반환
+    private func getLocalizedWeekdaySymbols(startingOnMonday: Bool) -> [String] {
+        let symbols: [String]
+        
+        switch languageManager.currentLanguage {
+        case .korean:
+            symbols = ["일", "월", "화", "수", "목", "금", "토"]
+        case .english:
+            symbols = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+        case .japanese:
+            symbols = ["日", "月", "火", "水", "木", "金", "土"]
+        }
+        
+        if startingOnMonday {
+            // 월요일부터 시작: [월, 화, 수, 목, 금, 토, 일]
+            return Array(symbols[1...]) + [symbols[0]]
+        } else {
+            // 일요일부터 시작: [일, 월, 화, 수, 목, 금, 토]
+            return symbols
         }
     }
     

@@ -396,7 +396,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                         Image(systemName: "hand.tap")
                             .font(.system(size: 48))
                             .foregroundStyle(.white)
-                        LocalizedText(key: "항목을 **길게 눌러** 수정/삭제할 수 있어요!")
+                        LocalizedText(key: "항목을 길게 눌러 수정/삭제할 수 있어요!")
                             .multilineTextAlignment(.center)
                             .font(.pretendardBold(size: 18))
                             .foregroundStyle(.white)

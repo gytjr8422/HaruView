@@ -1,0 +1,5 @@
+CFBundleDisplayName = "하루뷰";
+NSCalendarsFullAccessUsageDescription = "하루 일정을 앱과 위젯에서 한눈에 보여주고, 새로운 이벤트를 캘린더에 추가할 수 있도록 캘린더 접근 권한이 필요합니다.";
+NSRemindersFullAccessUsageDescription = "오늘의 할 일을 앱과 위젯에서 정리하고, 새로운 미리알림을 추가할 수 있도록 미리알림 접근 권한이 필요합니다.";
+NSLocationWhenInUseUsageDescription = "날씨 정보를 가져오기 위해 위치 정보가 필요합니다.";
+NSUserTrackingUsageDescription = "맞춤형 광고 제공 및 광고 성과 측정을 위해 사용자 활동을 추적합니다.";

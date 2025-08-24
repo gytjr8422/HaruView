@@ -10,6 +10,7 @@ import SwiftUI
 struct WeatherCard: View {
     let snapshot: WeatherSnapshot
     let place: String
+    @EnvironmentObject private var languageManager: LanguageManager
     
     private var foreground: Color {
         isDarkBackground ? .white : .black
@@ -51,7 +52,7 @@ struct WeatherCard: View {
                                     .foregroundStyle(snapshot.condition.symbolTheme(for: Date()).styles[0],
                                                      snapshot.condition.symbolTheme(for: Date()).styles[safe: 1],
                                                      snapshot.condition.symbolTheme(for: Date()).styles[safe: 2])
-                                Text(snapshot.condition.localizedDescription)
+                                Text(getLocalizedCondition())
                                     .font(.pretendardBold(size: 18))
                             }
                             Spacer()
@@ -59,14 +60,14 @@ struct WeatherCard: View {
                     }
                     Spacer()
                     VStack(alignment: .trailing, spacing: 2) {
-                        Text(String(format: "%.0f°".localized(), snapshot.temperature))
+                        Text(String(format: getLocalizedTemperatureFormat(), snapshot.temperature))
                             .font(.system(size: 36, weight: .semibold))
-                        Text(String(format: "최고: %.0f°  최저: %.0f°".localized(), snapshot.tempMax, snapshot.tempMin))
+                        Text(String(format: getLocalizedMinMaxFormat(), snapshot.tempMax, snapshot.tempMin))
                             .font(.pretendardRegular(size: 13))
                         HStack {
-                            Text(String(format: "습도: %.0f%%".localized(), snapshot.humidity*100))
+                            Text(String(format: getLocalizedHumidityFormat(), snapshot.humidity*100))
                                 .font(.pretendardRegular(size: 13))
-                            Text(String(format: "바람: %.0fm/s".localized(), snapshot.windSpeed))
+                            Text(String(format: getLocalizedWindFormat(), snapshot.windSpeed))
                                 .font(.pretendardRegular(size: 13))
                         }
                         
@@ -100,13 +101,52 @@ struct WeatherCard: View {
         .frame(maxWidth: .infinity, minHeight: 160)
     }
 
-    // MARK: - Formatter
+    // MARK: - Helper Methods
+    
+    /// 날씨 상태를 현지화된 텍스트로 반환 (언어 변경에 즉시 반응)
+    private func getLocalizedCondition() -> String {
+        // languageManager의 refreshTrigger 의존성 생성
+        let _ = languageManager.refreshTrigger
+        return snapshot.condition.localizedDescription
+    }
+    
+    /// 온도 포맷을 현지화하여 반환
+    private func getLocalizedTemperatureFormat() -> String {
+        let _ = languageManager.refreshTrigger
+        return "%.0f°".localized()
+    }
+    
+    /// 최고/최저 온도 포맷을 현지화하여 반환
+    private func getLocalizedMinMaxFormat() -> String {
+        let _ = languageManager.refreshTrigger
+        return "최고: %.0f°  최저: %.0f°".localized()
+    }
+    
+    /// 습도 포맷을 현지화하여 반환
+    private func getLocalizedHumidityFormat() -> String {
+        let _ = languageManager.refreshTrigger
+        return "습도: %.0f%%".localized()
+    }
+    
+    /// 바람 속도 포맷을 현지화하여 반환
+    private func getLocalizedWindFormat() -> String {
+        let _ = languageManager.refreshTrigger
+        return "바람: %.0fm/s".localized()
+    }
+    
+    /// 시간 라벨을 현지화하여 반환
     private func hourLabel(_ date: Date) -> String {
+        let _ = languageManager.refreshTrigger
         let fmt = DateFormatter()
-        if Locale.current.language.languageCode?.identifier == "ko" {
+        
+        switch languageManager.currentLanguage {
+        case .korean:
             fmt.locale = Locale(identifier: "ko_KR")
             fmt.dateFormat = "a h시"
-        } else {
+        case .japanese:
+            fmt.locale = Locale(identifier: "ja_JP")
+            fmt.dateFormat = "ah時"
+        case .english:
             fmt.locale = Locale(identifier: "en_US")
             fmt.dateFormat = "ha"
         }

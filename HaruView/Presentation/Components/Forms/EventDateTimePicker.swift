@@ -12,6 +12,7 @@ struct EventDateTimePicker: View {
     @Binding var endDate: Date
     @Binding var isAllDay: Bool
     var isTextFieldFocused: FocusState<Bool>.Binding
+    @EnvironmentObject private var languageManager: LanguageManager
     
     @State private var selectedField: DateTimeField? = nil
     
@@ -102,7 +103,7 @@ struct EventDateTimePicker: View {
             // 빠른 설정 버튼 (하루 종일이 아닐 때만)
             if !isAllDay {
                 HStack(spacing: 5) {
-                    Button("15분".localized()) {
+                    Button(getLocalizedDurationText("15분")) {
                         isTextFieldFocused.wrappedValue = false
                         endDate = Calendar.current.date(byAdding: .minute, value: 15, to: startDate) ?? startDate
                     }
@@ -115,7 +116,7 @@ struct EventDateTimePicker: View {
                             .fill(.haruPrimary.opacity(0.1))
                     )
                     
-                    Button("30분".localized()) {
+                    Button(getLocalizedDurationText("30분")) {
                         isTextFieldFocused.wrappedValue = false
                         endDate = Calendar.current.date(byAdding: .minute, value: 30, to: startDate) ?? startDate
                     }
@@ -128,7 +129,7 @@ struct EventDateTimePicker: View {
                             .fill(.haruPrimary.opacity(0.1))
                     )
                     
-                    Button("1시간".localized()) {
+                    Button(getLocalizedDurationText("1시간")) {
                         isTextFieldFocused.wrappedValue = false
                         endDate = Calendar.current.date(byAdding: .hour, value: 1, to: startDate) ?? startDate
                     }
@@ -141,7 +142,7 @@ struct EventDateTimePicker: View {
                             .fill(.haruPrimary.opacity(0.1))
                     )
                     
-                    Button("1시간 30분".localized()) {
+                    Button(getLocalizedDurationText("1시간 30분")) {
                         isTextFieldFocused.wrappedValue = false
                         endDate = Calendar.current.date(byAdding: .minute, value: 90, to: startDate) ?? startDate
                     }
@@ -154,7 +155,7 @@ struct EventDateTimePicker: View {
                             .fill(.haruPrimary.opacity(0.1))
                     )
                     
-                    Button("2시간".localized()) {
+                    Button(getLocalizedDurationText("2시간")) {
                         isTextFieldFocused.wrappedValue = false
                         endDate = Calendar.current.date(byAdding: .hour, value: 2, to: startDate) ?? startDate
                     }
@@ -239,22 +240,39 @@ struct EventDateTimePicker: View {
         }
     }
     
+    // MARK: - Helper Methods
+    
+    /// 기간 텍스트를 현지화하여 반환
+    private func getLocalizedDurationText(_ key: String) -> String {
+        let _ = languageManager.refreshTrigger
+        return key.localized()
+    }
+    
+    /// 날짜와 요일을 현지화된 포맷으로 반환
     private func formatDateWithDay(_ date: Date) -> String {
+        let _ = languageManager.refreshTrigger
         let formatter = DateFormatter()
-        formatter.locale = Locale.current
         
-        if Locale.current.language.languageCode?.identifier == "ko" {
+        switch languageManager.currentLanguage {
+        case .korean:
+            formatter.locale = Locale(identifier: "ko_KR")
             formatter.dateFormat = "M월 d일 (E)"
-        } else {
+        case .japanese:
+            formatter.locale = Locale(identifier: "ja_JP")
+            formatter.dateFormat = "M月d日 (E)"
+        case .english:
+            formatter.locale = Locale(identifier: "en_US")
             formatter.dateFormat = "MMM d (E)"
         }
         
         return formatter.string(from: date)
     }
     
+    /// 시간을 현지화된 포맷으로 반환
     private func formatTime(_ date: Date) -> String {
+        let _ = languageManager.refreshTrigger
         let formatter = DateFormatter()
-        formatter.locale = Locale.current
+        formatter.locale = Locale(identifier: languageManager.currentLanguage.appleLanguageCode)
         formatter.timeStyle = .short
         return formatter.string(from: date)
     }

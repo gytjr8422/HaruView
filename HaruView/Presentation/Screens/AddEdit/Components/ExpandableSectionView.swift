@@ -10,8 +10,11 @@ import SwiftUI
 enum ExpandableSection: CaseIterable {
     case details, alarms, recurrence, calendar, priority
     
-    // 모드에 따라 다른 제목 반환하는 메서드 추가
-    func title(for mode: AddSheetMode) -> String {
+    // 모드에 따라 다른 제목 반환하는 메서드 추가 (LanguageManager 의존성 필요)
+    func title(for mode: AddSheetMode, languageManager: LanguageManager) -> String {
+        // languageManager의 refreshTrigger 의존성 생성
+        let _ = languageManager.refreshTrigger
+        
         switch self {
         case .details: return "상세 정보".localized()
         case .alarms: return "알림".localized()
@@ -58,7 +61,7 @@ struct ExpandableSectionView<VM: AddSheetViewModelProtocol>: View {
         VStack(spacing: 0) {
             // 헤더
             HStack {
-                Text(section.title(for: mode))
+                Text(section.title(for: mode, languageManager: languageManager))
                     .font(.pretendardSemiBold(size: 17))
                 
                 Spacer()
@@ -128,7 +131,7 @@ struct ExpandableSectionView<VM: AddSheetViewModelProtocol>: View {
         VStack(spacing: 0) {
             // 헤더
             HStack {
-                Text(section.title(for: .reminder))
+                Text(section.title(for: .reminder, languageManager: languageManager))
                     .font(.pretendardSemiBold(size: 17))
                 
                 Spacer()

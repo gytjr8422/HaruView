@@ -1,0 +1,5 @@
+CFBundleDisplayName = "Haru";
+NSCalendarsFullAccessUsageDescription = "Calendar access is required to display your daily schedule in the app and widget at a glance, and to add new events to your calendar.";
+NSRemindersFullAccessUsageDescription = "Reminders access is required to organize today's tasks in the app and widget, and to add new reminders.";
+NSLocationWhenInUseUsageDescription = "Location access is required to get weather information.";
+NSUserTrackingUsageDescription = "This app tracks user activity to provide personalized ads and measure ad performance.";

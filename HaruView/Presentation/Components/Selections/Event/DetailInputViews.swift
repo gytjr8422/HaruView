@@ -10,6 +10,7 @@ import SwiftUI
 // MARK: - URL 입력 컴포넌트
 struct URLInputView: View {
     @Binding var url: String
+    @EnvironmentObject private var languageManager: LanguageManager
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -27,10 +28,11 @@ struct URLInputView: View {
 struct NotesInputView: View {
     @Binding var notes: String
     @FocusState private var isFocused: Bool
+    @EnvironmentObject private var languageManager: LanguageManager
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("메모")
+            LocalizedText(key: "메모")
                 .font(.pretendardSemiBold(size: 16))
             
             ZStack(alignment: .topLeading) {
@@ -47,7 +49,7 @@ struct NotesInputView: View {
                     .font(.pretendardRegular(size: 16))
                 
                 if notes.isEmpty && !isFocused {
-                    Text("메모를 입력하세요")
+                    Text(getLocalizedPlaceholder())
                         .foregroundStyle(.secondary)
                         .font(.pretendardRegular(size: 16))
                         .padding(.horizontal, 12)
@@ -56,5 +58,13 @@ struct NotesInputView: View {
                 }
             }
         }
+    }
+    
+    // MARK: - Helper Methods
+    
+    /// 메모 플레이스홀더를 현지화하여 반환
+    private func getLocalizedPlaceholder() -> String {
+        let _ = languageManager.refreshTrigger
+        return "메모를 입력하세요".localized()
     }
 }
