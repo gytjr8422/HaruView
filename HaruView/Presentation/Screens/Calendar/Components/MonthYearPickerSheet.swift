@@ -39,9 +39,7 @@ struct MonthYearPickerSheet: View {
     private func monthDisplayText(for month: Int) -> String {
         switch languageManager.currentLanguage {
         case .english:
-            let formatter = DateFormatter()
-            formatter.locale = languageManager.currentLanguage.locale
-            formatter.dateFormat = "MMMM"
+            let formatter = DateFormatterFactory.formatter(for: .custom("MMMM"))
             let date = Calendar.current.date(from: DateComponents(month: month))!
             return formatter.string(from: date)
         case .japanese:

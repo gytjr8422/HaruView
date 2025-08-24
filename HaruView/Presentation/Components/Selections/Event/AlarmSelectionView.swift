@@ -167,10 +167,7 @@ struct AlarmSelectionView: View {
                 }
             }
         case .absolute(let date):
-            let formatter = DateFormatter()
-            formatter.locale = languageManager.currentLanguage.locale
-            formatter.dateStyle = .short
-            formatter.timeStyle = .short
+            let formatter = DateFormatterFactory.formatter(for: .dateTime)
             return formatter.string(from: date)
         }
     }

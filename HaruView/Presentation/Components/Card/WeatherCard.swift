@@ -130,18 +130,18 @@ struct WeatherCard: View {
     
     /// 시간 라벨을 현지화하여 반환
     private func hourLabel(_ date: Date) -> String {
-        let fmt = DateFormatter()
-        fmt.locale = languageManager.currentLanguage.locale
+        let formatter: DateFormatter
         
         switch languageManager.currentLanguage {
         case .korean:
-            fmt.dateFormat = "a h시"
+            formatter = DateFormatterFactory.formatter(for: .custom("a h시"), language: .korean)
         case .japanese:
-            fmt.dateFormat = "ah時"
+            formatter = DateFormatterFactory.formatter(for: .custom("ah時"), language: .japanese)
         case .english:
-            fmt.dateFormat = "ha"
+            formatter = DateFormatterFactory.formatter(for: .custom("ha"), language: .english)
         }
-        return fmt.string(from: date)
+        
+        return formatter.string(from: date)
     }
 }
 

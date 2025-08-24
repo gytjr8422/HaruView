@@ -54,9 +54,7 @@ struct CalendarEvent: Identifiable, Hashable {
     var timeDisplayText: String? {
         guard let startTime = startTime else { return nil }
         
-        let formatter = DateFormatter()
-        formatter.timeStyle = .short
-        formatter.locale = Locale.current
+        let formatter = DateFormatterFactory.formatter(for: .shortTime)
         
         if let endTime = endTime {
             // 시작시간과 끝시간이 같은 경우에도 한 번만 표시
@@ -123,9 +121,7 @@ struct CalendarReminder: Identifiable, Hashable {
     var timeDisplayText: String? {
         guard let dueTime = dueTime, reminderType == .onDate, includeTime else { return nil }
         
-        let formatter = DateFormatter()
-        formatter.timeStyle = .short
-        formatter.locale = Locale.current
+        let formatter = DateFormatterFactory.formatter(for: .shortTime)
         
         return formatter.string(from: dueTime)
     }
@@ -134,9 +130,7 @@ struct CalendarReminder: Identifiable, Hashable {
     var detailTimeDisplayText: String? {
         guard let dueTime = dueTime, includeTime else { return nil }
         
-        let formatter = DateFormatter()
-        formatter.timeStyle = .short
-        formatter.locale = Locale.current
+        let formatter = DateFormatterFactory.formatter(for: .shortTime)
         
         return formatter.string(from: dueTime)
     }

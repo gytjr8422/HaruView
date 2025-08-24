@@ -176,9 +176,7 @@ struct RecurrenceSelectionView: View {
         case .never:
             break
         case .endDate(let date):
-            let formatter = DateFormatter()
-            formatter.locale = languageManager.currentLanguage.locale
-            formatter.dateStyle = .medium
+            let formatter = DateFormatterFactory.formatter(for: .mediumDate)
             result += " - \(formatter.string(from: date))" + "까지".localized()
         case .occurrenceCount(let count):
             result += " - \(count)" + "회".localized()

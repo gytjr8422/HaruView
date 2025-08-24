@@ -127,13 +127,11 @@ extension CalendarState {
     // 월 표시 텍스트
     var monthDisplayText: String {
         let languageManager = LanguageManager.shared
-        let formatter = DateFormatter()
-        formatter.locale = languageManager.currentLanguage.locale
         
         if languageManager.currentLanguage == .korean {
             return "\(currentYear)년 \(currentMonth)월"
         } else {
-            formatter.dateFormat = "MMMM yyyy"
+            let formatter = DateFormatterFactory.formatter(for: .custom("MMMM yyyy"))
             return formatter.string(from: currentMonthFirstDay)
         }
     }

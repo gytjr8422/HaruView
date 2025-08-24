@@ -166,8 +166,7 @@ struct EventRecurrenceRule: Equatable {
         }
         
         if let endDate = endDate {
-            let formatter = DateFormatter()
-            formatter.dateStyle = .medium
+            let formatter = DateFormatterFactory.formatter(for: .mediumDate)
             components.append(String(format: "%@까지".localized(), formatter.string(from: endDate)))
         } else if let count = occurrenceCount {
             components.append(String(format: "%d회".localized(), count))

@@ -62,8 +62,7 @@ final class CalendarCacheManager: ObservableObject {
     
     /// 날짜별 displayItems 캐시 키 생성
     func displayItemsCacheKey(for date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
+        let formatter = DateFormatterFactory.formatter(for: .custom("yyyy-MM-dd"))
         return "display_\(formatter.string(from: date))"
     }
     

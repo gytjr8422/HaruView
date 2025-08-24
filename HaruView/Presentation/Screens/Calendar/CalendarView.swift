@@ -322,16 +322,10 @@ VStack {
     
     /// 월 표시 텍스트 (언어 변경에 즉시 반응)
     private var monthDisplayText: String {
-        // languageManager 의존성 생성
-        let _ = languageManager.refreshTrigger
-        
-        let formatter = DateFormatter()
-        formatter.locale = languageManager.currentLanguage.locale
-        
         if languageManager.currentLanguage == .korean {
             return "\(vm.state.currentYear)년 \(vm.state.currentMonth)월"
         } else {
-            formatter.dateFormat = "MMMM yyyy"
+            let formatter = DateFormatterFactory.formatter(for: .custom("MMMM yyyy"))
             let currentMonthFirstDay = Calendar.current.date(from: DateComponents(year: vm.state.currentYear, month: vm.state.currentMonth, day: 1)) ?? Date()
             return formatter.string(from: currentMonthFirstDay)
         }

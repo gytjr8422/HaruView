@@ -251,29 +251,24 @@ struct EventDateTimePicker: View {
     /// 날짜와 요일을 현지화된 포맷으로 반환
     private func formatDateWithDay(_ date: Date) -> String {
         let _ = languageManager.refreshTrigger
-        let formatter = DateFormatter()
         
         switch languageManager.currentLanguage {
         case .korean:
-            formatter.locale = Locale(identifier: "ko_KR")
-            formatter.dateFormat = "M월 d일 (E)"
+            let formatter = DateFormatterFactory.formatter(for: .custom("M월 d일 (E)"))
+            return formatter.string(from: date)
         case .japanese:
-            formatter.locale = Locale(identifier: "ja_JP")
-            formatter.dateFormat = "M月d日 (E)"
+            let formatter = DateFormatterFactory.formatter(for: .custom("M月d일 (E)"))
+            return formatter.string(from: date)
         case .english:
-            formatter.locale = Locale(identifier: "en_US")
-            formatter.dateFormat = "MMM d (E)"
+            let formatter = DateFormatterFactory.formatter(for: .custom("MMM d (E)"))
+            return formatter.string(from: date)
         }
-        
-        return formatter.string(from: date)
     }
     
     /// 시간을 현지화된 포맷으로 반환
     private func formatTime(_ date: Date) -> String {
         let _ = languageManager.refreshTrigger
-        let formatter = DateFormatter()
-        formatter.locale = languageManager.currentLanguage.locale
-        formatter.timeStyle = .short
+        let formatter = DateFormatterFactory.formatter(for: .shortTime)
         return formatter.string(from: date)
     }
 }

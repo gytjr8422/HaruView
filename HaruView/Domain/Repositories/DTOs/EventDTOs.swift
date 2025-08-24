@@ -225,8 +225,7 @@ struct RecurrenceRuleInput {
         case .never:
             break
         case .endDate(let date):
-            let formatter = DateFormatter()
-            formatter.dateStyle = .medium
+            let formatter = DateFormatterFactory.formatter(for: .mediumDate)
             result += " - \(formatter.string(from: date))까지"
         case .occurrenceCount(let count):
             result += " - \(count)회"

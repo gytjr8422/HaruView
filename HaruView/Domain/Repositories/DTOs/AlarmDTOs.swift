@@ -78,10 +78,7 @@ struct AlarmInput: Identifiable {
                 }
             }
         case .absolute(let date):
-            let formatter = DateFormatter()
-            formatter.locale = Locale(identifier: LanguageManager.shared.currentLanguage.appleLanguageCode)
-            formatter.dateStyle = .short
-            formatter.timeStyle = .short
+            let formatter = DateFormatterFactory.formatter(for: .dateTime)
             return formatter.string(from: date)
         }
     }

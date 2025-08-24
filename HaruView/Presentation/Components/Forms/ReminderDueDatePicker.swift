@@ -199,28 +199,22 @@ struct ReminderDueDatePicker: View {
     }
     
     private func formatDateWithDay(_ date: Date) -> String {
-        let _ = languageManager.refreshTrigger
-        let formatter = DateFormatter()
-        
-        formatter.locale = languageManager.currentLanguage.locale
+        let formatter: DateFormatter
         
         switch languageManager.currentLanguage {
         case .korean:
-            formatter.dateFormat = "M월 d일 (E)"
+            formatter = DateFormatterFactory.formatter(for: .custom("M월 d일 (E)"), language: .korean)
         case .japanese:
-            formatter.dateFormat = "M月d日 (E)"
+            formatter = DateFormatterFactory.formatter(for: .custom("M月d日 (E)"), language: .japanese)
         case .english:
-            formatter.dateFormat = "MMM d (E)"
+            formatter = DateFormatterFactory.formatter(for: .custom("MMM d (E)"), language: .english)
         }
         
         return formatter.string(from: date)
     }
     
     private func formatTime(_ date: Date) -> String {
-        let _ = languageManager.refreshTrigger
-        let formatter = DateFormatter()
-        formatter.locale = languageManager.currentLanguage.locale
-        formatter.timeStyle = .short
+        let formatter = DateFormatterFactory.formatter(for: .shortTime)
         return formatter.string(from: date)
     }
     
@@ -291,10 +285,7 @@ struct ReminderDueDatePicker: View {
         }
         
         private var debugFormatter: DateFormatter {
-            let formatter = DateFormatter()
-            formatter.dateStyle = .short
-            formatter.timeStyle = .short
-            return formatter
+            return DateFormatterFactory.formatter(for: .dateTime)
         }
     }
     
