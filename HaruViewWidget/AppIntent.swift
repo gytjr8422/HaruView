@@ -14,23 +14,23 @@ enum WidgetType: String, CaseIterable, AppEnum {
     case reminders = "reminders"
     
     static var typeDisplayRepresentation: TypeDisplayRepresentation {
-        TypeDisplayRepresentation(name: "위젯 타입")
+        TypeDisplayRepresentation(name: "Widget Type")
     }
     
     static var caseDisplayRepresentations: [WidgetType: DisplayRepresentation] {
         [
-            .events: DisplayRepresentation(title: "일정", subtitle: "오늘의 캘린더 일정을 표시합니다"),
-            .reminders: DisplayRepresentation(title: "할 일", subtitle: "오늘의 미리알림을 표시합니다")
+            .events: DisplayRepresentation(title: "Events", subtitle: "Display today's calendar events"),
+            .reminders: DisplayRepresentation(title: "Reminders", subtitle: "Display today's reminders")
         ]
     }
 }
 
 struct ConfigurationAppIntent: WidgetConfigurationIntent {
-    static var title: LocalizedStringResource { "하루뷰 설정" }
-    static var description: IntentDescription { "오늘의 일정과 미리알림을 표시하는 위젯입니다." }
+    static var title: LocalizedStringResource { "Haru Settings" }
+    static var description: IntentDescription { "Widget that displays today's events and reminders." }
 
     // 위젯 타입 (Small 위젯에서만 사용)
-    @Parameter(title: "위젯 타입", default: .events)
+    @Parameter(title: "Widget Type", default: .events)
     var widgetType: WidgetType
 }
 

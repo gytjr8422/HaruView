@@ -10,8 +10,8 @@ import EventKit
 import WidgetKit
 
 struct ToggleReminderIntent: AppIntent {
-    static var title: LocalizedStringResource = "할 일 토글"
-    static var description = IntentDescription("위젯에서 할 일의 완료 상태를 토글합니다.")
+    static var title: LocalizedStringResource = "Toggle Reminder"
+    static var description = IntentDescription("Toggle the completion status of a reminder from the widget.")
     
     @Parameter(title: "Reminder ID")
     var reminderId: String
@@ -73,11 +73,11 @@ enum IntentError: Error, LocalizedError {
     var errorDescription: String? {
         switch self {
         case .permissionDenied:
-            return "미리알림 접근 권한이 필요합니다."
+            return "Reminder access permission is required."
         case .reminderNotFound:
-            return "미리알림을 찾을 수 없습니다."
+            return "Reminder not found."
         case .saveFailed:
-            return "미리알림 저장에 실패했습니다."
+            return "Failed to save reminder."
         }
     }
 }

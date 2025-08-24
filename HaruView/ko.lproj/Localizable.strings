@@ -61,6 +61,17 @@
 "confirm_delete_reminder" = "할일을 삭제하시겠습니까?";
 "error_format" = "⚠️ 오류: %@";
 
+// Duration Buttons
+"15m" = "15분";
+"30m" = "30분"; 
+"1h" = "1시간";
+"1h 30m" = "1시간 30분";
+"2h" = "2시간";
+
+// Timer Messages
+"1_minute_intervals" = "1분 단위 선택";
+"5_minute_intervals" = "5분 단위 선택";
+
 // Toast Messages
 "save_completed" = "저장이 완료되었습니다.";
 "delete_completed" = "삭제가 완료되었습니다.";

@@ -87,8 +87,8 @@ struct HaruViewWidget: Widget {
             HaruViewWidgetEntryView(entry: entry)
                 .containerBackground(Color.haruWidgetBackground, for: .widget)
         }
-        .configurationDisplayName("하루뷰 Widget")
-        .description("오늘의 캘린더 일정과 미리알림을 한눈에 확인하세요")
+        .configurationDisplayName("Haru Widget")
+        .description("Check today's calendar events and reminders at a glance")
         .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }
 }

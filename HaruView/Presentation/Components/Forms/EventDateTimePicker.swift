@@ -455,14 +455,14 @@ struct CustomDateTimePicker: UIViewRepresentable {
             NavigationView {
                 ScrollView {
                     VStack(spacing: 20) {
-                        Text("일정 설정")
+                        Text("Event Settings")
                             .font(.headline)
                             .padding(.horizontal, 20)
                         
-                        // 하루 종일 토글 (외부에서 별도로 구현)
+                        // All day toggle (implemented separately outside)
                         HStack {
                             Spacer()
-                            Text("하루 종일")
+                            Text("All Day")
                                 .font(.system(size: 16, weight: .semibold))
                             Toggle("", isOn: $isAllDay)
                                 .toggleStyle(SwitchToggleStyle(tint: Color(red: 0.65, green: 0.39, blue: 0.27)))

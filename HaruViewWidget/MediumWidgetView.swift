@@ -9,6 +9,7 @@ import SwiftUI
 import AppIntents
 import UIKit
 
+
 struct MediumWidgetView: View {
     let entry: Provider.Entry
     
@@ -19,7 +20,7 @@ struct MediumWidgetView: View {
                 VStack(alignment: .leading, spacing: 6) {
                     
                     if entry.events.isEmpty {
-                        Text(NSLocalizedString("no_events_today", comment: "No events message"))
+                        Text(NSLocalizedString("no_events_today", bundle: .widgetBundle, comment: "No events message"))
                             .font(.pretendardRegular(size: 11))
                             .foregroundStyle(.gray)
                             .padding(.vertical, 4)
@@ -70,7 +71,7 @@ struct MediumWidgetView: View {
                 VStack(alignment: .leading, spacing: 6) {
                     
                     if entry.reminders.isEmpty {
-                        Text(NSLocalizedString("no_reminders_today", comment: "No reminders message"))
+                        Text(NSLocalizedString("no_reminders_today", bundle: .widgetBundle, comment: "No reminders message"))
                             .font(.pretendardRegular(size: 11))
                             .foregroundStyle(.gray)
                             .padding(.vertical, 4)

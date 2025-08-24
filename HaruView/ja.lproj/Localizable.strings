@@ -61,6 +61,17 @@
 "confirm_delete_reminder" = "リマインダーを削除しますか？";
 "error_format" = "⚠️ エラー: %@";
 
+// Duration Buttons
+"15m" = "15分";
+"30m" = "30分"; 
+"1h" = "1時間";
+"1h 30m" = "1時間30分";
+"2h" = "2時間";
+
+// Timer Messages
+"1_minute_intervals" = "1分間隔選択";
+"5_minute_intervals" = "5分間隔選択";
+
 // Toast Messages
 "save_completed" = "保存が完了しました。";
 "delete_completed" = "削除が完了しました。";

@@ -61,6 +61,17 @@
 "confirm_delete_reminder" = "Do you want to delete this reminder?";
 "error_format" = "⚠️ Error: %@";
 
+// Duration Buttons
+"15m" = "15 min";
+"30m" = "30 min"; 
+"1h" = "1 hour";
+"1h 30m" = "1h 30m";
+"2h" = "2 hours";
+
+// Timer Messages
+"1_minute_intervals" = "1 minute intervals";
+"5_minute_intervals" = "5 minute intervals";
+
 // Toast Messages
 "save_completed" = "Save completed.";
 "delete_completed" = "Delete completed.";

@@ -1,11 +1,69 @@
 {
   "sourceLanguage" : "ko",
   "strings" : {
+    "Check today's calendar events and reminders at a glance" : {
+
+    },
+    "Display today's calendar events" : {
+
+    },
+    "Display today's reminders" : {
+
+    },
+    "Events" : {
+
+    },
+    "Haru Settings" : {
+
+    },
+    "Haru Widget" : {
+
+    },
     "no_events_today" : {
-      "comment" : "No events message"
+      "comment" : "No events message",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No events today"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated", 
+            "value" : "今日は予定がありません"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "오늘은 일정이 없습니다"
+          }
+        }
+      }
     },
     "no_reminders_today" : {
-      "comment" : "No reminders message"
+      "comment" : "No reminders message",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No reminders today"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日はリマインダーがありません"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "오늘은 할 일이 없습니다"
+          }
+        }
+      }
     },
     "Reminder ID" : {
       "localizations" : {
@@ -23,7 +81,23 @@
         }
       }
     },
+    "Reminders" : {
+
+    },
+    "Toggle Reminder" : {
+
+    },
+    "Toggle the completion status of a reminder from the widget." : {
+
+    },
+    "Widget that displays today's events and reminders." : {
+
+    },
+    "Widget Type" : {
+
+    },
     "오늘의 미리알림을 표시합니다" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -40,6 +114,7 @@
       }
     },
     "오늘의 일정과 미리알림을 표시하는 위젯입니다." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -56,6 +131,7 @@
       }
     },
     "오늘의 캘린더 일정과 미리알림을 한눈에 확인하세요" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -72,6 +148,7 @@
       }
     },
     "오늘의 캘린더 일정을 표시합니다" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -88,6 +165,7 @@
       }
     },
     "위젯 타입" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -104,6 +182,7 @@
       }
     },
     "위젯에서 할 일의 완료 상태를 토글합니다." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -172,6 +251,7 @@
       }
     },
     "하루뷰 Widget" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -188,6 +268,7 @@
       }
     },
     "하루뷰 설정" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -221,6 +302,7 @@
       }
     },
     "할 일 토글" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
