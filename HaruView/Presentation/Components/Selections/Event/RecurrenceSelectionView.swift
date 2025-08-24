@@ -177,7 +177,7 @@ struct RecurrenceSelectionView: View {
             break
         case .endDate(let date):
             let formatter = DateFormatter()
-            formatter.locale = Locale(identifier: languageManager.currentLanguage.appleLanguageCode)
+            formatter.locale = languageManager.currentLanguage.locale
             formatter.dateStyle = .medium
             result += " - \(formatter.string(from: date))" + "까지".localized()
         case .occurrenceCount(let count):
@@ -269,7 +269,7 @@ struct CustomRecurrenceSheet: View {
                     
                     // 요일 선택 섹션 (매주일 때만)
                     if frequency == .weekly {
-                        VStack(alignment: .leading, spacing: 12) {
+                        VStack(alignment: .leading) {
                             HStack {
                                 LocalizedText(key: "요일")
                                     .font(.pretendardBold(size: 16))
@@ -301,6 +301,7 @@ struct CustomRecurrenceSheet: View {
                                 }
                             }
                             .padding(16)
+                            .frame(maxWidth: .infinity)
                             .background(
                                 RoundedRectangle(cornerRadius: 12)
                                     .fill(.haruAccent.opacity(0.09))

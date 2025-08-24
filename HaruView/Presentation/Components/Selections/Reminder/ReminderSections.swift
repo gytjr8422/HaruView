@@ -524,7 +524,7 @@ struct ReminderAlarmSelectionView: View {
             }
         case .absolute(let date):
             let formatter = DateFormatter()
-            formatter.locale = Locale(identifier: languageManager.currentLanguage.appleLanguageCode)
+            formatter.locale = languageManager.currentLanguage.locale
             formatter.dateStyle = .short
             formatter.timeStyle = .short
             return formatter.string(from: date)
@@ -737,7 +737,7 @@ struct CustomReminderAlarmSheet: View {
     
     /// 현재 언어에 맞는 로케일 식별자 반환
     private func getLocalizedLocaleIdentifier() -> String {
-        return languageManager.currentLanguage.appleLanguageCode
+        return languageManager.currentLanguage.localeIdentifier
     }
     
     /// 알람 프리셋의 현지화된 설명 텍스트 반환 (언어 변경에 즉시 반응)
@@ -774,7 +774,7 @@ struct CustomReminderAlarmSheet: View {
             }
         case .absolute(let date):
             let formatter = DateFormatter()
-            formatter.locale = Locale(identifier: languageManager.currentLanguage.appleLanguageCode)
+            formatter.locale = languageManager.currentLanguage.locale
             formatter.dateStyle = .short
             formatter.timeStyle = .short
             return formatter.string(from: date)

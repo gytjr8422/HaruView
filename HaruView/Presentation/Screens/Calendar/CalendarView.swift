@@ -326,7 +326,7 @@ VStack {
         let _ = languageManager.refreshTrigger
         
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: languageManager.currentLanguage.appleLanguageCode)
+        formatter.locale = languageManager.currentLanguage.locale
         
         if languageManager.currentLanguage == .korean {
             return "\(vm.state.currentYear)년 \(vm.state.currentMonth)월"

@@ -128,7 +128,7 @@ extension CalendarState {
     var monthDisplayText: String {
         let languageManager = LanguageManager.shared
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: languageManager.currentLanguage.appleLanguageCode)
+        formatter.locale = languageManager.currentLanguage.locale
         
         if languageManager.currentLanguage == .korean {
             return "\(currentYear)년 \(currentMonth)월"

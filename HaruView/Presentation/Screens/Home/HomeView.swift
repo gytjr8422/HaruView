@@ -275,7 +275,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
         HStack {
             Spacer()
             HStack(spacing: 5) {
-                Link(" 날씨", destination: URL(string: "https://weatherkit.apple.com/legal-attribution.html")!)
+                Link(" " + "날씨".localized(), destination: URL(string: "https://weatherkit.apple.com/legal-attribution.html")!)
                     .font(.pretendardSemiBold (size: 11))
                     .foregroundStyle(.haruPrimary)
             }

@@ -202,15 +202,14 @@ struct ReminderDueDatePicker: View {
         let _ = languageManager.refreshTrigger
         let formatter = DateFormatter()
         
+        formatter.locale = languageManager.currentLanguage.locale
+        
         switch languageManager.currentLanguage {
         case .korean:
-            formatter.locale = Locale(identifier: "ko_KR")
             formatter.dateFormat = "M월 d일 (E)"
         case .japanese:
-            formatter.locale = Locale(identifier: "ja_JP")
             formatter.dateFormat = "M月d日 (E)"
         case .english:
-            formatter.locale = Locale(identifier: "en_US")
             formatter.dateFormat = "MMM d (E)"
         }
         
@@ -220,7 +219,7 @@ struct ReminderDueDatePicker: View {
     private func formatTime(_ date: Date) -> String {
         let _ = languageManager.refreshTrigger
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: languageManager.currentLanguage.appleLanguageCode)
+        formatter.locale = languageManager.currentLanguage.locale
         formatter.timeStyle = .short
         return formatter.string(from: date)
     }

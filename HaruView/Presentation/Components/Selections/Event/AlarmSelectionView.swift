@@ -136,8 +136,6 @@ struct AlarmSelectionView: View {
     
     /// 알람 프리셋의 현지화된 설명 텍스트 반환 (언어 변경에 즉시 반응)
     private func getLocalizedDescription(for preset: AlarmInput) -> String {
-        // languageManager의 refreshTrigger 의존성 생성
-        let _ = languageManager.refreshTrigger
         
         switch preset.trigger {
         case .relative(let interval):
@@ -170,7 +168,7 @@ struct AlarmSelectionView: View {
             }
         case .absolute(let date):
             let formatter = DateFormatter()
-            formatter.locale = Locale(identifier: languageManager.currentLanguage.appleLanguageCode)
+            formatter.locale = languageManager.currentLanguage.locale
             formatter.dateStyle = .short
             formatter.timeStyle = .short
             return formatter.string(from: date)

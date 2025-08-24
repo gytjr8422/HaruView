@@ -22,6 +22,7 @@ enum Language: String, CaseIterable {
         }
     }
     
+    /// Apple 언어 설정용 코드 (AppleLanguages)
     var appleLanguageCode: String {
         switch self {
         case .korean:
@@ -31,6 +32,47 @@ enum Language: String, CaseIterable {
         case .japanese:
             return "ja-JP"
         }
+    }
+    
+    /// .lproj 폴더명과 Bundle path용 코드
+    var bundleIdentifier: String {
+        return self.rawValue
+    }
+    
+    /// DateFormatter, NumberFormatter 등에서 사용할 전체 locale 식별자
+    var localeIdentifier: String {
+        switch self {
+        case .korean:
+            return "ko_KR"
+        case .english:
+            return "en_US"
+        case .japanese:
+            return "ja_JP"
+        }
+    }
+    
+    /// Locale 객체 반환
+    var locale: Locale {
+        return Locale(identifier: localeIdentifier)
+    }
+    
+    /// 시스템 언어 코드에서 Language enum으로 변환
+    static func from(systemLanguageCode: String) -> Language {
+        let languageCode = systemLanguageCode.prefix(2).lowercased()
+        switch languageCode {
+        case "ko": return .korean
+        case "ja": return .japanese
+        case "en": return .english
+        default: return .korean // 기본값
+        }
+    }
+    
+    /// Locale 객체에서 Language enum으로 변환
+    static func from(locale: Locale) -> Language {
+        guard let languageCode = locale.language.languageCode?.identifier else {
+            return .korean
+        }
+        return from(systemLanguageCode: languageCode)
     }
 }
 
@@ -62,28 +104,13 @@ final class LanguageManager: ObservableObject {
         
         // 첫 번째 언어(주 언어)만 확인
         guard let primaryLanguage = systemLanguages.first else {
-            print("🌍 No system language found, defaulting to English")
-            return Language.english.title
-        }
-        
-        // 언어 코드만 추출 (예: "ko-KR" -> "ko", "ja-JP" -> "ja")
-        let languageCode = String(primaryLanguage.prefix(2))
-        
-        switch languageCode {
-        case "ko":
-            print("🌍 Primary system language detected: Korean")
+            print("🌍 No system language found, defaulting to Korean")
             return Language.korean.title
-        case "ja":
-            print("🌍 Primary system language detected: Japanese") 
-            return Language.japanese.title
-        case "en":
-            print("🌍 Primary system language detected: English")
-            return Language.english.title
-        default:
-            // 첫 번째 언어가 지원되지 않으면 영어로 기본 설정
-            print("🌍 Primary system language (\(languageCode)) not supported, defaulting to English")
-            return Language.english.title
         }
+        
+        let detectedLanguage = Language.from(systemLanguageCode: primaryLanguage)
+        print("🌍 System language detected: \(detectedLanguage.displayName)")
+        return detectedLanguage.title
     }
     
     func updateLanguage(_ language: String) {
@@ -124,11 +151,14 @@ final class LanguageManager: ObservableObject {
         }
         
         // 새 Bundle 생성 및 캐싱
-        if let path = Bundle.main.path(forResource: language, ofType: "lproj"),
+        let languageEnum = Language(rawValue: language) ?? .korean
+        let bundleIdentifier = languageEnum.bundleIdentifier
+        
+        if let path = Bundle.main.path(forResource: bundleIdentifier, ofType: "lproj"),
            let bundle = Bundle(path: path) {
             currentBundle = bundle
             bundleCache[language] = bundle // 캐싱
-            print("✅ Bundle created and cached for: \(language)")
+            print("✅ Bundle created and cached for: \(language) -> \(bundleIdentifier)")
         } else {
             currentBundle = Bundle.main
             bundleCache[language] = Bundle.main // 폴백도 캐싱

@@ -40,7 +40,7 @@ struct MonthYearPickerSheet: View {
         switch languageManager.currentLanguage {
         case .english:
             let formatter = DateFormatter()
-            formatter.locale = Locale(identifier: languageManager.currentLanguage.appleLanguageCode)
+            formatter.locale = languageManager.currentLanguage.locale
             formatter.dateFormat = "MMMM"
             let date = Calendar.current.date(from: DateComponents(month: month))!
             return formatter.string(from: date)

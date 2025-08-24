@@ -272,7 +272,7 @@ struct EventDateTimePicker: View {
     private func formatTime(_ date: Date) -> String {
         let _ = languageManager.refreshTrigger
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: languageManager.currentLanguage.appleLanguageCode)
+        formatter.locale = languageManager.currentLanguage.locale
         formatter.timeStyle = .short
         return formatter.string(from: date)
     }
