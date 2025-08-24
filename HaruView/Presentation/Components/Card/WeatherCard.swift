@@ -105,38 +105,31 @@ struct WeatherCard: View {
     
     /// 날씨 상태를 현지화된 텍스트로 반환 (언어 변경에 즉시 반응)
     private func getLocalizedCondition() -> String {
-        // languageManager의 refreshTrigger 의존성 생성
-        let _ = languageManager.refreshTrigger
         return snapshot.condition.localizedDescription
     }
     
     /// 온도 포맷을 현지화하여 반환
     private func getLocalizedTemperatureFormat() -> String {
-        let _ = languageManager.refreshTrigger
         return "%.0f°".localized()
     }
     
     /// 최고/최저 온도 포맷을 현지화하여 반환
     private func getLocalizedMinMaxFormat() -> String {
-        let _ = languageManager.refreshTrigger
         return "최고: %.0f°  최저: %.0f°".localized()
     }
     
     /// 습도 포맷을 현지화하여 반환
     private func getLocalizedHumidityFormat() -> String {
-        let _ = languageManager.refreshTrigger
         return "습도: %.0f%%".localized()
     }
     
     /// 바람 속도 포맷을 현지화하여 반환
     private func getLocalizedWindFormat() -> String {
-        let _ = languageManager.refreshTrigger
         return "바람: %.0fm/s".localized()
     }
     
     /// 시간 라벨을 현지화하여 반환
     private func hourLabel(_ date: Date) -> String {
-        let _ = languageManager.refreshTrigger
         let fmt = DateFormatter()
         
         switch languageManager.currentLanguage {

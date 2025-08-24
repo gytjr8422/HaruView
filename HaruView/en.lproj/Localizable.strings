@@ -213,6 +213,29 @@
 "습도: %.0f%%" = "Humidity: %.0f%%";
 "바람: %.0fm/s" = "Wind: %.0fm/s";
 
+// Weather Conditions
+"맑음" = "Clear";
+"대체로 맑음" = "Mostly Clear";
+"부분적으로 흐림" = "Partly Cloudy";
+"대체로 흐림" = "Mostly Cloudy";
+"흐림" = "Cloudy";
+"비" = "Rain";
+"이슬비" = "Drizzle";
+"소나기" = "Showers";
+"눈" = "Snow";
+"눈 날림" = "Flurries";
+"뇌우" = "Thunderstorms";
+"안개" = "Fog";
+"실안개" = "Haze";
+"연기" = "Smoke";
+"강한 바람" = "Windy";
+"산들바람" = "Breezy";
+"무더위" = "Hot";
+"한파" = "Cold";
+"눈보라" = "Blizzard";
+"허리케인" = "Hurricane";
+"열대폭풍" = "Tropical Storm";
+
 // Toast Messages
 "저장이 완료되었습니다." = "Save completed.";
 "삭제가 완료되었습니다." = "Delete completed.";

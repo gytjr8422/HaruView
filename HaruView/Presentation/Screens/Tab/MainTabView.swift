@@ -24,9 +24,9 @@ enum TabItem: CaseIterable, Identifiable {
     
     var title: String {
         switch self {
-        case .home: return "오늘"
-        case .add: return "추가"
-        case .calendar: return "달력"
+        case .home: return "오늘".localized()
+        case .add: return "추가".localized()
+        case .calendar: return "달력".localized()
         }
     }
     

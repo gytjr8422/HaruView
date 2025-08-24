@@ -222,7 +222,6 @@ struct ReminderDetailInputViews {
         }
         
         private func getLocalizedLocationPlaceholder() -> String {
-            let _ = languageManager.refreshTrigger
             return "위치 입력".localized()
         }
     }
@@ -281,7 +280,6 @@ struct ReminderDetailInputViews {
         }
         
         private func getLocalizedNotesPlaceholder() -> String {
-            let _ = languageManager.refreshTrigger
             return "메모를 입력하세요".localized()
         }
     }
@@ -495,9 +493,6 @@ struct ReminderAlarmSelectionView: View {
     
     /// 알람 프리셋의 현지화된 설명 텍스트 반환 (언어 변경에 즉시 반응)
     private func getLocalizedDescription(for preset: AlarmInput) -> String {
-        // languageManager의 refreshTrigger 의존성 생성
-        let _ = languageManager.refreshTrigger
-        
         switch preset.trigger {
         case .relative(let interval):
             if interval == 0 {
@@ -540,31 +535,26 @@ struct ReminderAlarmSelectionView: View {
     
     /// "빠른 설정" 텍스트를 현지화하여 반환
     private func getLocalizedQuickSetting() -> String {
-        let _ = languageManager.refreshTrigger
         return "빠른 설정".localized()
     }
     
     /// "사용자 설정" 텍스트를 현지화하여 반환
     private func getLocalizedCustomSetting() -> String {
-        let _ = languageManager.refreshTrigger
         return "사용자 설정".localized()
     }
     
     /// "사용자 알림" 텍스트를 현지화하여 반환
     private func getLocalizedUserAlarms() -> String {
-        let _ = languageManager.refreshTrigger
         return "사용자 알림".localized()
     }
     
     /// "알림이 설정되지 않았습니다" 텍스트를 현지화하여 반환
     private func getLocalizedNoAlarms() -> String {
-        let _ = languageManager.refreshTrigger
         return "알림이 설정되지 않았습니다".localized()
     }
     
     /// "미리알림 앱에서 알림이 울려요." 텍스트를 현지화하여 반환
     private func getLocalizedReminderAppNote() -> String {
-        let _ = languageManager.refreshTrigger
         return "미리알림 앱에서 알림이 울려요.".localized()
     }
 }
@@ -747,14 +737,11 @@ struct CustomReminderAlarmSheet: View {
     
     /// 현재 언어에 맞는 로케일 식별자 반환
     private func getLocalizedLocaleIdentifier() -> String {
-        let _ = languageManager.refreshTrigger
         return languageManager.currentLanguage.appleLanguageCode
     }
     
     /// 알람 프리셋의 현지화된 설명 텍스트 반환 (언어 변경에 즉시 반응)
     private func getLocalizedDescription(for preset: AlarmInput) -> String {
-        // languageManager의 refreshTrigger 의존성 생성
-        let _ = languageManager.refreshTrigger
         
         switch preset.trigger {
         case .relative(let interval):

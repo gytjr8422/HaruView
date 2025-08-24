@@ -48,6 +48,7 @@ final class LanguageManager: ObservableObject {
     static let shared = LanguageManager()
     
     var currentBundle: Bundle?
+    private var bundleCache: [String: Bundle] = [:] // Bundle 캐싱
     
     private init() {
         let savedLanguage = UserDefaults.standard.string(forKey: "AppLanguage") ?? detectSystemLanguage()
@@ -100,15 +101,8 @@ final class LanguageManager: ObservableObject {
         // 언어 Bundle 변경
         setCurrentLanguage(language)
         
-        // UI 즉시 업데이트 트리거
-        DispatchQueue.main.async {
-            self.refreshTrigger = UUID()
-        }
-        
-        // 0.1초 후 한번 더 (확실하게)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.refreshTrigger = UUID()
-        }
+        // UI 업데이트 트리거 (단일 호출)
+        refreshTrigger = UUID()
         
         // 위젯 새로고침
         WidgetCenter.shared.reloadAllTimelines()
@@ -117,16 +111,27 @@ final class LanguageManager: ObservableObject {
     }
     
     private func setCurrentLanguage(_ language: String) {
-        // Bundle 클래스 교체
-        object_setClass(Bundle.main, BundleEx.self)
+        // Bundle 클래스 교체 (한 번만 수행)
+        if object_getClass(Bundle.main) != BundleEx.self {
+            object_setClass(Bundle.main, BundleEx.self)
+        }
         
-        // 언어별 Bundle 설정
+        // 캐시된 Bundle 확인
+        if let cachedBundle = bundleCache[language] {
+            currentBundle = cachedBundle
+            print("✅ Using cached bundle for: \(language)")
+            return
+        }
+        
+        // 새 Bundle 생성 및 캐싱
         if let path = Bundle.main.path(forResource: language, ofType: "lproj"),
            let bundle = Bundle(path: path) {
             currentBundle = bundle
-            print("✅ Bundle set to: \(path)")
+            bundleCache[language] = bundle // 캐싱
+            print("✅ Bundle created and cached for: \(language)")
         } else {
             currentBundle = Bundle.main
+            bundleCache[language] = Bundle.main // 폴백도 캐싱
             print("⚠️ Fallback to main bundle for language: \(language)")
         }
     }
@@ -136,9 +141,6 @@ final class LanguageManager: ObservableObject {
     }
     
     func localizedString(forKey key: String) -> String {
-        // refreshTrigger 의존성 생성
-        let _ = refreshTrigger
-        
         // Bundle에서 번역 가져오기
         return (currentBundle ?? Bundle.main).localizedString(forKey: key, value: key, table: nil)
     }
