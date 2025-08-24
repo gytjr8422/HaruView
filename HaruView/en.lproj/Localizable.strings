@@ -44,7 +44,27 @@
 "초" = "Second";
 "오전" = "AM";
 "오후" = "PM";
-"하루 종일" = "All Day";
+"all_day" = "All Day";
+
+// Actions
+"edit" = "Edit";
+"add" = "Add";
+"event" = "Event";
+"reminder" = "Reminder";
+"cancel_edit" = "Cancel Edit";
+"close_without_saving" = "Close Without Saving";
+"continue_editing" = "Continue Editing";
+"continue_writing" = "Continue Writing";
+"unsaved_edit_changes" = "Edit changes will not be saved.";
+"unsaved_new_changes" = "New content will not be saved.";
+"confirm_delete_event" = "Do you want to delete this event?";
+"confirm_delete_reminder" = "Do you want to delete this reminder?";
+"error_format" = "⚠️ Error: %@";
+
+// Toast Messages
+"save_completed" = "Save completed.";
+"delete_completed" = "Delete completed.";
+"error_occurred" = "An error occurred.";
 
 // Days of Week
 "일요일" = "Sunday";
@@ -375,6 +395,6 @@
 "1시간" = "1 hour";
 "1시간 30분" = "1h 30m";
 "2시간" = "2 hours";
-"하루 종일" = "All Day";
+"all_day" = "All Day";
 "시작" = "Start";
 "종료" = "End";

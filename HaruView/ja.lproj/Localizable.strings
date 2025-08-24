@@ -44,7 +44,27 @@
 "초" = "秒";
 "오전" = "午前";
 "오후" = "午後";
-"하루 종일" = "終日";
+"all_day" = "終日";
+
+// Actions
+"edit" = "編集";
+"add" = "追加";
+"event" = "予定";
+"reminder" = "リマインダー";
+"cancel_edit" = "編集をキャンセル";
+"close_without_saving" = "保存せずに閉じる";
+"continue_editing" = "編集を続ける";
+"continue_writing" = "作成を続ける";
+"unsaved_edit_changes" = "編集内容は保存されません。";
+"unsaved_new_changes" = "作成内容は保存されません。";
+"confirm_delete_event" = "予定を削除しますか？";
+"confirm_delete_reminder" = "リマインダーを削除しますか？";
+"error_format" = "⚠️ エラー: %@";
+
+// Toast Messages
+"save_completed" = "保存が完了しました。";
+"delete_completed" = "削除が完了しました。";
+"error_occurred" = "エラーが発生しました。";
 
 // Days of Week
 "일요일" = "日曜日";
@@ -375,6 +395,6 @@
 "1시간" = "1時間";
 "1시간 30분" = "1時間30分";
 "2시간" = "2時間";
-"하루 종일" = "終日";
+"all_day" = "終日";
 "시작" = "開始";
 "종료" = "終了";

@@ -16,11 +16,11 @@ enum ToastType {
     var message: String {
         switch self {
         case .success:
-            return "저장이 완료되었습니다.".localized()
+            return "save_completed".localized()
         case .delete:
-            return "삭제가 완료되었습니다.".localized()
+            return "delete_completed".localized()
         case .error:
-            return "오류가 발생했습니다.".localized()
+            return "error_occurred".localized()
         }
     }
     

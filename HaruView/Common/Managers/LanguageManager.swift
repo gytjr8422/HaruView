@@ -92,6 +92,12 @@ final class LanguageManager: ObservableObject {
     var currentBundle: Bundle?
     private var bundleCache: [String: Bundle] = [:] // Bundle 캐싱
     
+    /// 언어 변경 debouncing을 위한 타이머
+    private var languageChangeTimer: Timer?
+    
+    /// 캐시된 Locale 객체들
+    private var localeCache: [String: Locale] = [:]
+    
     private init() {
         let savedLanguage = UserDefaults.standard.string(forKey: "AppLanguage") ?? detectSystemLanguage()
         self.selectedLanguage = savedLanguage
@@ -116,6 +122,16 @@ final class LanguageManager: ObservableObject {
     func updateLanguage(_ language: String) {
         print("🔄 Changing language to: \(language)")
         
+        // 이전 타이머 취소
+        languageChangeTimer?.invalidate()
+        
+        // Debouncing: 0.3초 후에 실제 언어 변경 수행
+        languageChangeTimer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { [weak self] _ in
+            self?.performLanguageUpdate(language)
+        }
+    }
+    
+    private func performLanguageUpdate(_ language: String) {
         selectedLanguage = language
         UserDefaults.standard.set(language, forKey: "AppLanguage")
         
@@ -129,10 +145,14 @@ final class LanguageManager: ObservableObject {
         setCurrentLanguage(language)
         
         // UI 업데이트 트리거 (단일 호출)
-        refreshTrigger = UUID()
+        DispatchQueue.main.async {
+            self.refreshTrigger = UUID()
+        }
         
-        // 위젯 새로고침
-        WidgetCenter.shared.reloadAllTimelines()
+        // 위젯 새로고침 (비동기)
+        Task {
+            WidgetCenter.shared.reloadAllTimelines()
+        }
         
         print("✅ Language changed to: \(language)")
     }
@@ -173,6 +193,25 @@ final class LanguageManager: ObservableObject {
     func localizedString(forKey key: String) -> String {
         // Bundle에서 번역 가져오기
         return (currentBundle ?? Bundle.main).localizedString(forKey: key, value: key, table: nil)
+    }
+    
+    /// 캐시된 Locale 반환 (성능 최적화)
+    func getCachedLocale(for language: Language) -> Locale {
+        let key = language.localeIdentifier
+        
+        if let cachedLocale = localeCache[key] {
+            return cachedLocale
+        }
+        
+        let locale = Locale(identifier: key)
+        localeCache[key] = locale
+        return locale
+    }
+    
+    /// 메모리 정리
+    func clearCache() {
+        localeCache.removeAll()
+        bundleCache.removeAll()
     }
 }
 

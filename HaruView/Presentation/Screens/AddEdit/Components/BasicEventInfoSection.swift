@@ -23,7 +23,7 @@ struct BasicEventInfoSection<VM: AddSheetViewModelProtocol>: View {
             HStack {
                 Spacer()
                 
-                LocalizedText(key: "하루 종일")
+                LocalizedText(key: "all_day")
                     .font(.pretendardSemiBold(size: 16))
                 Toggle("", isOn: $vm.isAllDay)
                     .toggleStyle(HaruToggleStyle())

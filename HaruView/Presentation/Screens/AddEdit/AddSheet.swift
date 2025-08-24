@@ -205,7 +205,7 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     
     /// 오류 메시지 포맷을 현지화하여 반환
     private func getErrorFormat() -> String {
-        return "⚠️ 오류: %@".localized()
+        return "error_format".localized()
     }
     
     @ViewBuilder
@@ -274,8 +274,15 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     
     private var toolbarTitle: some ToolbarContent {
         ToolbarItem(placement: .principal) {
-            Text(getToolbarTitle())
-                .font(.pretendardSemiBold(size: 18))
+            HStack(spacing: 4) {
+                if vm.isEdit {
+                    LocalizedText(key: "edit")
+                } else {
+                    LocalizedText(key: "add")
+                }
+                LocalizedText(key: vm.mode == .event ? "event" : "reminder")
+            }
+            .font(.pretendardSemiBold(size: 18))
         }
     }
     
@@ -283,22 +290,22 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
     
     /// 작성 취소 메시지를 현지화하여 반환
     private func getDiscardMessage() -> String {
-        return (vm.isEdit ? "편집 내용이 저장되지 않습니다." : "작성 내용이 저장되지 않습니다.").localized()
+        return (vm.isEdit ? "unsaved_edit_changes" : "unsaved_new_changes").localized()
     }
     
     /// 취소 버튼 텍스트를 현지화하여 반환
     private func getDiscardButtonText() -> String {
-        return (vm.isEdit ? "편집 취소하기" : "저장 안 하고 닫기").localized()
+        return (vm.isEdit ? "cancel_edit" : "close_without_saving").localized()
     }
     
     /// 계속 버튼 텍스트를 현지화하여 반환
     private func getContinueButtonText() -> String {
-        return (vm.isEdit ? "계속 편집" : "계속 작성").localized()
+        return (vm.isEdit ? "continue_editing" : "continue_writing").localized()
     }
     
     /// 삭제 확인 메시지를 현지화하여 반환
     private func getDeleteConfirmationMessage() -> String {
-        return (vm.mode == .event ? "일정을 삭제하시겠습니까?" : "할일을 삭제하시겠습니까?").localized()
+        return (vm.mode == .event ? "confirm_delete_event" : "confirm_delete_reminder").localized()
     }
     
     /// 일반 텍스트를 현지화하여 반환
@@ -306,12 +313,6 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
         return key.localized()
     }
     
-    /// 툴바 제목을 현지화하여 반환
-    private func getToolbarTitle() -> String {
-        let key = vm.isEdit ? "%@ 편집" : "%@ 추가"
-        let modeText = vm.mode == .event ? "일정" : "할 일"
-        return String(format: key.localized(), modeText.localized())
-    }
 }
 
 // MARK: - Preview

@@ -44,12 +44,11 @@ struct EventDateTimePicker: View {
                         
                         if isAllDay {
                             HStack {
-                                LocalizedText(key: "하루 종일")
+                                LocalizedText(key: "all_day")
                                     .font(.system(size: 25, weight: .light))
                                     .foregroundStyle(selectedField == .start ? .haruPrimary : .primary)
                                 Spacer()
                             }
-                            .padding(.leading, 16)
                         } else {
                             HStack(alignment: .bottom, spacing: 3) {
                                 Text(formatTime(startDate))
@@ -61,6 +60,7 @@ struct EventDateTimePicker: View {
                             }
                         }
                     }
+                    .padding(.leading, 16)
                 }
                 .buttonStyle(PlainButtonStyle())
                 

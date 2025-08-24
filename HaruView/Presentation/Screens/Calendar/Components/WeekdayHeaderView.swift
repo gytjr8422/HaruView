@@ -57,16 +57,12 @@ struct WeekdayHeaderView: View {
     
     /// 언어별로 현지화된 요일 기호를 반환
     private func getLocalizedWeekdaySymbols(startingOnMonday: Bool) -> [String] {
-        let symbols: [String]
+        let formatter = DateFormatter()
+        // LanguageManager의 현재 언어에 맞는 로케일 사용
+        formatter.locale = languageManager.getCachedLocale(for: languageManager.currentLanguage)
         
-        switch languageManager.currentLanguage {
-        case .korean:
-            symbols = ["일", "월", "화", "수", "목", "금", "토"]
-        case .english:
-            symbols = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-        case .japanese:
-            symbols = ["日", "月", "火", "水", "木", "金", "土"]
-        }
+        // 시스템 제공 단축 요일명 사용
+        let symbols = formatter.shortWeekdaySymbols ?? ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
         
         if startingOnMonday {
             // 월요일부터 시작: [월, 화, 수, 목, 금, 토, 일]

@@ -44,7 +44,27 @@
 "초" = "초";
 "오전" = "오전";
 "오후" = "오후";
-"하루 종일" = "하루 종일";
+"all_day" = "하루 종일";
+
+// Actions
+"edit" = "편집";
+"add" = "추가";
+"event" = "일정";
+"reminder" = "할 일";
+"cancel_edit" = "편집 취소하기";
+"close_without_saving" = "저장 안 하고 닫기";
+"continue_editing" = "계속 편집";
+"continue_writing" = "계속 작성";
+"unsaved_edit_changes" = "편집 내용이 저장되지 않습니다.";
+"unsaved_new_changes" = "작성 내용이 저장되지 않습니다.";
+"confirm_delete_event" = "일정을 삭제하시겠습니까?";
+"confirm_delete_reminder" = "할일을 삭제하시겠습니까?";
+"error_format" = "⚠️ 오류: %@";
+
+// Toast Messages
+"save_completed" = "저장이 완료되었습니다.";
+"delete_completed" = "삭제가 완료되었습니다.";
+"error_occurred" = "오류가 발생했습니다.";
 
 // Days of Week
 "일요일" = "일요일";
@@ -376,6 +396,6 @@
 "1시간" = "1시간";
 "1시간 30분" = "1시간 30분";
 "2시간" = "2시간";
-"하루 종일" = "하루 종일";
+"all_day" = "하루 종일";
 "시작" = "시작";
 "종료" = "종료";
