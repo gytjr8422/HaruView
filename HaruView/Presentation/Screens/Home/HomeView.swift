@@ -142,7 +142,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
     private var eventListView: some View {
         
         HStack {
-            LocalizedText(key: "오늘의 일정")
+            LocalizedText(key: "today_events")
                 .font(.pretendardBold(size: 17))
                 .foregroundStyle(.secondary)
             Spacer()
@@ -326,7 +326,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
     private var emptyEventView: some View {
         HStack {
             Spacer()
-            LocalizedText(key: "오늘 일정이 없습니다.")
+            LocalizedText(key: "no_events_today")
                 .font(.pretendardSemiBold(size: 17))
                 .padding(.vertical, 16)
             Spacer()
@@ -344,7 +344,7 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
     private var emptyReminderView: some View {
         HStack {
             Spacer()
-            LocalizedText(key: "오늘 할 일이 없습니다.")
+            LocalizedText(key: "no_reminders_today")
                 .font(.pretendardSemiBold(size: 17))
             Spacer()
         }
@@ -359,11 +359,11 @@ struct HomeView<VM: HomeViewModelProtocol>: View {
                     .font(.system(size: 40))
                     .foregroundStyle(.orange)
                 
-                LocalizedText(key: "오늘의 일정과 할 일을 보려면")
+                LocalizedText(key: "to_view_todays_events_and_reminders")
                     .multilineTextAlignment(.center)
                     .font(.pretendardRegular(size: 16))
                 
-                LocalizedText(key: "캘린더와 미리알림 모두 접근 권한이 필요해요.")
+                LocalizedText(key: "both_calendar_reminder_permissions_needed")
                     .multilineTextAlignment(.center)
                     .font(.pretendardRegular(size: 16))
                 

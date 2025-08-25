@@ -9,6 +9,7 @@ import SwiftUI
 
 struct EventCard: View {
     let event: Event
+    @EnvironmentObject private var languageManager: LanguageManager
     private var isPast: Bool { event.end < Date() }
     
     var body: some View {
@@ -69,6 +70,7 @@ struct EventCard: View {
     }
     
     private func formatted(_ date: Date) -> String {
-        DateFormatter.localizedString(from: date, dateStyle: .none, timeStyle: .short)
+        let formatter = DateFormatterFactory.formatter(for: .shortTime)
+        return formatter.string(from: date)
     }
 }

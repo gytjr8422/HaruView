@@ -76,7 +76,7 @@ final class WeatherKitService {
         async let snap  = snapshot(for: loc)
         async let placeMarks = geocoder.reverseGeocodeLocation(
             loc,
-            preferredLocale: Locale(identifier: Locale.current.language.languageCode?.identifier == "ko" ? "ko_KR" : "en_US")
+            preferredLocale: LanguageManager.shared.currentLanguage.locale
         )
 
         let (weather, pms) = try await (snap, placeMarks)

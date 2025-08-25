@@ -26,19 +26,24 @@ struct LanguageSelectionView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                HStack {
-                    Button(action: {
-                        dismiss()
-                    }) {
+                Button(action: {
+                    dismiss()
+                }) {
+                    HStack(spacing: 6) {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 16, weight: .semibold))
-                            .foregroundStyle(.haruPrimary)
+                        
+                        LocalizedText(key: "back")
+                            .font(.pretendardRegular(size: 16))
                     }
-                    
-                    LocalizedText(key: "언어 설정")
-                        .font(.pretendardSemiBold(size: 18))
-                        .foregroundStyle(.haruTextPrimary)
+                    .foregroundStyle(.haruPrimary)
                 }
+            }
+            
+            ToolbarItem(placement: .principal) {
+                LocalizedText(key: "language_settings")
+                    .font(.pretendardSemiBold(size: 18))
+                    .foregroundStyle(.haruTextPrimary)
             }
         }
         .navigationBarBackButtonHidden(true)
@@ -51,7 +56,7 @@ struct LanguageSelectionView: View {
     @ViewBuilder
     private var currentLanguageView: some View {
         VStack(alignment: .leading, spacing: 10) {
-            LocalizedText(key: "설정된 언어")
+            LocalizedText(key: "current_language")
                 .font(.pretendardMedium(size: 14))
                 .foregroundStyle(.haruSecondary)
             
@@ -73,7 +78,7 @@ struct LanguageSelectionView: View {
     // MARK: - 언어 선택 영역
     private var selectionView: some View {
         VStack(alignment: .leading, spacing: 20) {
-            LocalizedText(key: "언어 바꾸기")
+            LocalizedText(key: "change_language")
                 .font(.pretendardBold(size: 16))
                 .foregroundStyle(.haruTextPrimary)
                 .padding(.horizontal, 20)

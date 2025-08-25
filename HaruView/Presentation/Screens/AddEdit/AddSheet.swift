@@ -91,14 +91,14 @@ struct AddSheet<VM: AddSheetViewModelProtocol>: View {
                     }
                 )
             ) {
-                Button(getLocalizedText("삭제"), role: .destructive) {
+                Button("delete".localized(), role: .destructive) {
                     if let editVM = vm as? EditSheetViewModel {
                         Task {
                             await editVM.confirmDelete()
                         }
                     }
                 }
-                Button(getLocalizedText("취소"), role: .cancel) {
+                Button("cancel".localized(), role: .cancel) {
                     if let editVM = vm as? EditSheetViewModel {
                         editVM.cancelDelete()
                     }

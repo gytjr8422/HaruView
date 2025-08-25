@@ -62,11 +62,11 @@
 "error_format" = "⚠️ Error: %@";
 
 // Duration Buttons
-"15m" = "15 min";
-"30m" = "30 min"; 
-"1h" = "1 hour";
-"1h 30m" = "1h 30m";
-"2h" = "2 hours";
+"15m" = "15m";
+"30m" = "30m";
+"1h" = "1h";
+"1h 30m" = "1h30m";
+"2h" = "2h";
 
 // Timer Messages
 "1_minute_intervals" = "1 minute intervals";
@@ -401,11 +401,85 @@
 "미리알림 앱에서 알림이 울려요." = "Notifications will ring in the Reminders app.";
 
 // Time Interval Buttons
-"15분" = "15 min";
-"30분" = "30 min";
-"1시간" = "1 hour";
+"15분" = "15m";
+"30분" = "30m";
+"1시간" = "1h";
 "1시간 30분" = "1h 30m";
-"2시간" = "2 hours";
+"2시간" = "2h";
 "all_day" = "All Day";
 "시작" = "Start";
 "종료" = "End";
+
+// Holiday Guide View
+"holiday_calendar_guide_title" = "How to Add Holiday Calendar";
+"back" = "Back";
+"add_holiday_calendar" = "Add Holiday Calendar";
+"holiday_calendar_description" = "Subscribe to holiday calendars for desired countries\nin the iOS Calendar app";
+"step_by_step_guide" = "Step-by-Step Guide";
+
+// Guide Steps
+"open_calendar_app" = "Open Calendar App";
+"launch_default_calendar_app" = "Launch the default Calendar app on your iPhone";
+"add_calendar" = "Add Calendar";
+"select_calendar_tab_and_add" = "Select the 'Calendars' tab at the bottom and tap 'Add Calendar'";
+"add_holiday_calendar_button" = "Add Holiday Calendar";
+"tap_add_holiday_calendar_button" = "Tap the 'Add Holiday Calendar' button";
+"search_country" = "Search Country";
+"search_desired_country" = "Search for your desired country";
+"select_holiday_calendar" = "Select Holiday Calendar";
+"select_holidays_in_country_calendar" = "Select the 'Holidays in [Country Name]' calendar from the search results";
+"return_to_app" = "Return to App";
+"return_to_haruview_and_refresh" = "Return to HaruView app and pull down the calendar or tap the 'Today' button to refresh";
+
+// Language Settings
+"language_settings" = "Language Settings";
+"current_language" = "Current Language";
+"change_language" = "Change Language";
+
+// List Views
+"all_events" = "All Events";
+"all_reminders" = "All Reminders";
+"no_reminders" = "No reminders";
+"add_new_reminder" = "Try adding a new reminder!";
+"close" = "Close";
+
+// Forms
+"reminder_due_date_setting" = "Reminder Due Date Setting";
+"current_status" = "Current Status";
+
+// Common Actions
+"today" = "Today";
+"deleting" = "Deleting...";
+"recurring_event_delete_question" = "'%@' is a recurring event. How would you like to delete it?";
+"count_format" = "%d items";
+
+// Holiday Region Setting View
+"holiday_calendar_settings" = "Holiday Calendar Settings";
+"select_holiday_calendars" = "Select Holiday Calendars";
+"only_subscribed_holidays_shown" = "Only holidays subscribed in iOS Calendar app are displayed";
+"select_desired_holiday_calendars" = "Select your desired holiday calendars";
+"subscribed_holiday_calendars" = "Subscribed Holiday Calendars";
+"no_subscribed_holiday_calendars" = "No subscribed holiday calendars";
+"please_subscribe_holiday_calendars_first" = "Please first subscribe to holiday calendars for\nyour desired countries in the iOS Calendar app";
+"add_from_calendar_app" = "Add from Calendar App";
+"open_calendar_app_to_subscribe" = "Open iOS Calendar app to subscribe to holidays";
+"view_add_instructions" = "View Add Instructions";
+"check_step_by_step_guide" = "Check the step-by-step guide";
+
+// Reminder Sections
+"today_reminders" = "Today's Reminders";
+"anytime_reminders" = "Anytime Reminders";
+"no_reminders_today" = "No reminders today";
+
+// HomeView
+"today_events" = "Today's Events";
+"no_events_today" = "No events today";
+"to_view_todays_events_and_reminders" = "To view today's events and reminders";
+"both_calendar_reminder_permissions_needed" = "Both Calendar and Reminders access permissions are needed";
+
+// Event List Sheet
+"recurring_event_delete" = "Delete Recurring Event";
+"delete_this_event_only" = "Delete This Event Only";
+"delete_all_future_events" = "Delete All Future Events";
+"deletion_error" = "Deletion Error";
+"confirm" = "OK";

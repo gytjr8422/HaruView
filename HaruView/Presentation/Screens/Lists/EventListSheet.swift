@@ -29,7 +29,7 @@ struct EventListSheet<VM: EventListViewModelProtocol>: View {
                                     editingEvent = event
                                 } label: {
                                     Label {
-                                        Text("편집").font(Font.pretendardRegular(size: 14))
+                                        LocalizedText(key: "편집").font(Font.pretendardRegular(size: 14))
                                     } icon: {
                                         Image(systemName: "pencil")
                                     }
@@ -38,7 +38,7 @@ struct EventListSheet<VM: EventListViewModelProtocol>: View {
                                     vm.requestEventDeletion(event)
                                 } label: {
                                     Label {
-                                        Text("삭제").font(Font.pretendardRegular(size: 14))
+                                        LocalizedText(key: "삭제").font(Font.pretendardRegular(size: 14))
                                     } icon: {
                                         Image(systemName: "trash")
                                     }
@@ -63,7 +63,7 @@ struct EventListSheet<VM: EventListViewModelProtocol>: View {
     
     private var navigationTitleView: some ToolbarContent {
         ToolbarItem(placement: .principal) {
-            Text("전체 일정")
+            LocalizedText(key: "all_events")
                 .font(.pretendardSemiBold(size: 18))
         }
     }
@@ -73,7 +73,7 @@ struct EventListSheet<VM: EventListViewModelProtocol>: View {
             Button {
                 dismiss()
             } label: {
-                Text("닫기")
+                LocalizedText(key: "close")
                     .font(.pretendardRegular(size: 16))
                     .foregroundStyle(.haruPrimary)
             }
@@ -114,26 +114,26 @@ private struct EventListDeletionModifier<VM: EventListViewModelProtocol>: ViewMo
     func body(content: Content) -> some View {
         content
             .confirmationDialog(
-                "반복 일정 삭제",
+                "recurring_event_delete".localized(),
                 isPresented: $vm.showRecurringDeletionOptions,
                 titleVisibility: .visible
             ) {
                 if vm.currentDeletingEvent != nil {
-                    Button("이 이벤트만 삭제", role: .destructive) {
+                    Button("delete_this_event_only".localized(), role: .destructive) {
                         vm.deleteEventWithSpan(.thisEventOnly)
                     }
                     
-                    Button("이후 모든 이벤트 삭제", role: .destructive) {
+                    Button("delete_all_future_events".localized(), role: .destructive) {
                         vm.deleteEventWithSpan(.futureEvents)
                     }
                     
-                    Button("취소", role: .cancel) {
+                    Button("취소".localized(), role: .cancel) {
                         vm.cancelEventDeletion()
                     }
                 }
             } message: {
                 if let event = vm.currentDeletingEvent {
-                    Text("'\(event.title)'은(는) 반복 일정입니다. 어떻게 삭제하시겠습니까?")
+                    Text(String(format: "recurring_event_delete_question".localized(), event.title))
                 }
             }
             .overlay {
@@ -146,7 +146,7 @@ private struct EventListDeletionModifier<VM: EventListViewModelProtocol>: ViewMo
                             ProgressView()
                                 .scaleEffect(1.2)
                             
-                            Text("삭제 중...")
+                            LocalizedText(key: "deleting")
                                 .font(.pretendardSemiBold(size: 16))
                                 .foregroundStyle(.white)
                         }
@@ -159,8 +159,8 @@ private struct EventListDeletionModifier<VM: EventListViewModelProtocol>: ViewMo
                     .transition(.opacity)
                 }
             }
-            .alert("삭제 오류", isPresented: .constant(vm.deletionError != nil)) {
-                Button("확인") {
+            .alert("deletion_error".localized(), isPresented: .constant(vm.deletionError != nil)) {
+                Button("confirm".localized()) {
                     vm.deletionError = nil
                 }
             } message: {

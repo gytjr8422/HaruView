@@ -51,7 +51,14 @@ extension EventKitRepository {
                      
                      return isNotHoliday && overlapsToday
                  }
-                 .map(Self.mapEvent)
+                 .compactMap { (event: EKEvent) -> Event? in
+                     // nil 체크를 통해 안전성 확보
+                     guard event.startDate != nil, event.endDate != nil else {
+                         print("⚠️ Warning: EKEvent with nil startDate or endDate found, skipping")
+                         return nil
+                     }
+                     return Self.mapEvent(event)
+                 }
                  .sorted(by: eventSortRule)
          }
      }
@@ -108,8 +115,11 @@ extension EventKitRepository {
 extension EventKitRepository {
     // MARK: - 확장된 Event 매핑 함수
     static func mapEvent(_ ek: EKEvent) -> Event {
-        Event(
-            id: ek.eventIdentifier,
+        // eventIdentifier가 nil일 수 있으므로 안전하게 처리
+        let eventId = ek.eventIdentifier ?? UUID().uuidString
+        
+        return Event(
+            id: eventId,
             title: ek.title ?? "(제목 없음)",
             start: ek.startDate,
             end: ek.endDate,

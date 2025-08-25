@@ -39,9 +39,17 @@ enum DateFormatterFactory {
             case .mediumDate:
                 return "MMM d, yyyy"
             case .shortTime:
-                return "HH:mm"
+                switch language {
+                case .korean: return "a h:mm"
+                case .english: return "h:mm a"
+                case .japanese: return "H:mm"
+                }
             case .mediumTime:
-                return "h:mm a"
+                switch language {
+                case .korean: return "a h:mm"
+                case .english: return "h:mm a"
+                case .japanese: return "H:mm"
+                }
             case .dateTime:
                 return "MMM d, yyyy h:mm a"
             case .custom(let format):

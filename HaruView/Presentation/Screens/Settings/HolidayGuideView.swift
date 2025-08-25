@@ -30,7 +30,7 @@ struct HolidayGuideView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
-                Text("공휴일 캘린더 추가 방법")
+                LocalizedText(key: "holiday_calendar_guide_title")
                     .font(.pretendardSemiBold(size: 18))
                     .foregroundStyle(.haruTextPrimary)
             }
@@ -45,7 +45,7 @@ struct HolidayGuideView: View {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 16, weight: .semibold))
                         
-                        Text("뒤로")
+                        LocalizedText(key: "back")
                             .font(.pretendardRegular(size: 16))
                     }
                     .foregroundStyle(.haruPrimary)
@@ -65,11 +65,11 @@ struct HolidayGuideView: View {
                 .foregroundStyle(.haruPrimary)
             
             VStack(spacing: 8) {
-                Text("공휴일 캘린더 추가하기")
+                LocalizedText(key: "add_holiday_calendar")
                     .font(.pretendardBold(size: 20))
                     .foregroundStyle(.haruTextPrimary)
                 
-                Text("iOS 캘린더 앱에서 원하는 국가의\n공휴일 캘린더를 구독해보세요")
+                LocalizedText(key: "holiday_calendar_description")
                     .font(.pretendardRegular(size: 16))
                     .foregroundStyle(.haruSecondary)
                     .multilineTextAlignment(.center)
@@ -83,7 +83,7 @@ struct HolidayGuideView: View {
     private var guideStepsSection: some View {
         VStack(spacing: 0) {
             HStack {
-                Text("단계별 가이드")
+                LocalizedText(key: "step_by_step_guide")
                     .font(.pretendardBold(size: 17))
                     .foregroundStyle(.secondary)
                 Spacer()
@@ -94,8 +94,8 @@ struct HolidayGuideView: View {
                 // 1단계
                 guideStepView(
                     step: "1",
-                    title: "캘린더 앱 열기",
-                    description: "iPhone의 기본 캘린더 앱을 실행하세요",
+                    title: "open_calendar_app",
+                    description: "launch_default_calendar_app",
                     icon: "calendar"
                 )
                 
@@ -106,8 +106,8 @@ struct HolidayGuideView: View {
                 // 2단계
                 guideStepView(
                     step: "2",
-                    title: "캘린더 추가",
-                    description: "하단의 '캘린더' 탭을 선택한 후 '캘린더 추가'를 탭하세요",
+                    title: "add_calendar",
+                    description: "select_calendar_tab_and_add",
                     icon: "plus.circle"
                 )
                 
@@ -118,8 +118,8 @@ struct HolidayGuideView: View {
                 // 3단계
                 guideStepView(
                     step: "3",
-                    title: "공휴일 캘린더 추가",
-                    description: "'공휴일 캘린더 추가' 버튼을 탭하세요",
+                    title: "add_holiday_calendar_button",
+                    description: "tap_add_holiday_calendar_button",
                     icon: "calendar.badge.plus"
                 )
                 
@@ -130,8 +130,8 @@ struct HolidayGuideView: View {
                 // 4단계
                 guideStepView(
                     step: "4",
-                    title: "국가 검색",
-                    description: "원하는 국가를 검색하세요",
+                    title: "search_country",
+                    description: "search_desired_country",
                     icon: "magnifyingglass"
                 )
                 
@@ -142,8 +142,8 @@ struct HolidayGuideView: View {
                 // 5단계
                 guideStepView(
                     step: "5",
-                    title: "공휴일 캘린더 선택",
-                    description: "검색 결과에서 'Holidays in [국가명]' 형태의 캘린더를 선택하세요",
+                    title: "select_holiday_calendar",
+                    description: "select_holidays_in_country_calendar",
                     icon: "checkmark.circle"
                 )
                 
@@ -154,8 +154,8 @@ struct HolidayGuideView: View {
                 // 6단계
                 guideStepView(
                     step: "6",
-                    title: "앱으로 돌아오기",
-                    description: "하루뷰 앱으로 돌아와서 달력을 아래로 당기거나 '오늘' 버튼을 눌러 새로고침하세요",
+                    title: "return_to_app",
+                    description: "return_to_haruview_and_refresh",
                     icon: "arrow.clockwise"
                 )
             }
@@ -192,11 +192,11 @@ struct HolidayGuideView: View {
             
             // 내용
             VStack(alignment: .leading, spacing: 4) {
-                Text(title)
+                LocalizedText(key: title)
                     .font(.pretendardSemiBold(size: 16))
                     .foregroundStyle(.haruTextPrimary)
                 
-                Text(description)
+                LocalizedText(key: description)
                     .font(.pretendardRegular(size: 14))
                     .foregroundStyle(.haruSecondary)
             }

@@ -242,7 +242,7 @@ struct ReminderDueDatePicker: View {
             NavigationView {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 20) {
-                        Text("할 일 마감일 설정")
+                        LocalizedText(key: "reminder_due_date_setting")
                             .font(.headline)
                             .padding(.horizontal, 20)
                         
@@ -258,7 +258,7 @@ struct ReminderDueDatePicker: View {
                         
                         // 디버그 정보
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("현재 상태:")
+                            LocalizedText(key: "current_status")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                             Text("includeTime: \(includeTime ? "true" : "false")")

@@ -45,8 +45,17 @@ extension EventKitRepository {
                     
                     return include
                 }
-                .map(Self.mapEvent)
-                .sorted { $0.start < $1.start }
+                .compactMap { (event: EKEvent) -> Event? in
+                    // nil 체크를 통해 안전성 확보
+                    guard event.startDate != nil, event.endDate != nil else {
+                        print("⚠️ Warning: EKEvent with nil startDate or endDate found, skipping")
+                        return nil
+                    }
+                    return Self.mapEvent(event)
+                }
+                .sorted { (a: Event, b: Event) -> Bool in
+                    a.start < b.start
+                }
             
             return filtered
         }

@@ -82,7 +82,7 @@ struct LocationPickerSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("취소") { dismiss() }
+                    Button("취소".localized()) { dismiss() }
                 }
             }
         }

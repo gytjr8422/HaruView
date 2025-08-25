@@ -410,3 +410,77 @@
 "all_day" = "하루 종일";
 "시작" = "시작";
 "종료" = "종료";
+
+// Holiday Guide View
+"holiday_calendar_guide_title" = "공휴일 캘린더 추가 방법";
+"back" = "뒤로";
+"add_holiday_calendar" = "공휴일 캘린더 추가하기";
+"holiday_calendar_description" = "iOS 캘린더 앱에서 원하는 국가의\n공휴일 캘린더를 구독해보세요";
+"step_by_step_guide" = "단계별 가이드";
+
+// Guide Steps
+"open_calendar_app" = "캘린더 앱 열기";
+"launch_default_calendar_app" = "iPhone의 기본 캘린더 앱을 실행하세요";
+"add_calendar" = "캘린더 추가";
+"select_calendar_tab_and_add" = "하단의 '캘린더' 탭을 선택한 후 '캘린더 추가'를 탭하세요";
+"add_holiday_calendar_button" = "공휴일 캘린더 추가";
+"tap_add_holiday_calendar_button" = "'공휴일 캘린더 추가' 버튼을 탭하세요";
+"search_country" = "국가 검색";
+"search_desired_country" = "원하는 국가를 검색하세요";
+"select_holiday_calendar" = "공휴일 캘린더 선택";
+"select_holidays_in_country_calendar" = "검색 결과에서 'Holidays in [국가명]' 형태의 캘린더를 선택하세요";
+"return_to_app" = "앱으로 돌아오기";
+"return_to_haruview_and_refresh" = "하루뷰 앱으로 돌아와서 달력을 아래로 당기거나 '오늘' 버튼을 눌러 새로고침하세요";
+
+// Language Settings
+"language_settings" = "언어 설정";
+"current_language" = "설정된 언어";
+"change_language" = "언어 바꾸기";
+
+// List Views
+"all_events" = "전체 일정";
+"all_reminders" = "전체 할 일";
+"no_reminders" = "할 일이 없습니다";
+"add_new_reminder" = "새로운 할 일을 추가해보세요!";
+"close" = "닫기";
+
+// Forms
+"reminder_due_date_setting" = "할 일 마감일 설정";
+"current_status" = "현재 상태";
+
+// Common Actions
+"today" = "오늘";
+"deleting" = "삭제 중...";
+"recurring_event_delete_question" = "'%@'은(는) 반복 일정입니다. 어떻게 삭제하시겠습니까?";
+"count_format" = "%d개";
+
+// Holiday Region Setting View
+"holiday_calendar_settings" = "공휴일 캘린더 설정";
+"select_holiday_calendars" = "공휴일 캘린더 선택";
+"only_subscribed_holidays_shown" = "iOS 캘린더 앱에서 구독한 공휴일만 표시됩니다";
+"select_desired_holiday_calendars" = "원하는 공휴일 캘린더를 선택하세요";
+"subscribed_holiday_calendars" = "구독된 공휴일 캘린더";
+"no_subscribed_holiday_calendars" = "구독된 공휴일 캘린더가 없습니다";
+"please_subscribe_holiday_calendars_first" = "iOS 캘린더 앱에서 원하는 국가의\n공휴일 캘린더를 먼저 구독해주세요";
+"add_from_calendar_app" = "캘린더 앱에서 추가";
+"open_calendar_app_to_subscribe" = "iOS 캘린더 앱을 열어서 공휴일을 구독하세요";
+"view_add_instructions" = "추가 방법 보기";
+"check_step_by_step_guide" = "단계별 가이드를 확인하세요";
+
+// Reminder Sections
+"today_reminders" = "오늘 할 일";
+"anytime_reminders" = "언제든 할 일";
+"no_reminders_today" = "오늘 할 일이 없습니다";
+
+// HomeView
+"today_events" = "오늘의 일정";
+"no_events_today" = "오늘 일정이 없습니다";
+"to_view_todays_events_and_reminders" = "오늘의 일정과 할 일을 보려면";
+"both_calendar_reminder_permissions_needed" = "캘린더와 미리알림 모두 접근 권한이 필요해요";
+
+// Event List Sheet
+"recurring_event_delete" = "반복 일정 삭제";
+"delete_this_event_only" = "이 이벤트만 삭제";
+"delete_all_future_events" = "이후 모든 이벤트 삭제";
+"deletion_error" = "삭제 오류";
+"confirm" = "확인";

@@ -24,7 +24,7 @@ struct ReminderListSheet<VM: ReminderListViewModelProtocol>: View {
                 LazyVStack(alignment: .leading, spacing: 0) {
                     // 오늘 표시되는 할 일 섹션
                     if !todayReminders.isEmpty {
-                        sectionHeader(title: "오늘 할 일", count: todayReminders.count)
+                        sectionHeader(title: "today_reminders", count: todayReminders.count)
                         
                         VStack(spacing: 0) {
                             ForEach(Array(todayReminders.enumerated()), id: \.element.id) { index, reminder in
@@ -43,7 +43,7 @@ struct ReminderListSheet<VM: ReminderListViewModelProtocol>: View {
                     
                     // 마감일 없는 할 일 섹션
                     if !noDeadlineReminders.isEmpty {
-                        sectionHeader(title: "언제든 할 일", count: noDeadlineReminders.count)
+                        sectionHeader(title: "anytime_reminders", count: noDeadlineReminders.count)
                         
                         VStack(spacing: 0) {
                             ForEach(Array(noDeadlineReminders.enumerated()), id: \.element.id) { index, reminder in
@@ -108,7 +108,7 @@ struct ReminderListSheet<VM: ReminderListViewModelProtocol>: View {
     @ViewBuilder
     private func sectionHeader(title: String, count: Int) -> some View {
         HStack {
-            Text(title)
+            LocalizedText(key: title)
                 .font(.pretendardSemiBold(size: 18))
                 .foregroundStyle(.haruTextPrimary)
             
@@ -134,7 +134,7 @@ struct ReminderListSheet<VM: ReminderListViewModelProtocol>: View {
                 editingReminder = reminder
             } label: {
                 Label {
-                    Text("편집").font(Font.pretendardRegular(size: 14))
+                    LocalizedText(key: "편집").font(Font.pretendardRegular(size: 14))
                 } icon: {
                     Image(systemName: "pencil")
                 }
@@ -145,7 +145,7 @@ struct ReminderListSheet<VM: ReminderListViewModelProtocol>: View {
                 }
             } label: {
                 Label {
-                    Text("삭제").font(Font.pretendardRegular(size: 14))
+                    LocalizedText(key: "삭제").font(Font.pretendardRegular(size: 14))
                 } icon: {
                     Image(systemName: "trash")
                 }
@@ -161,11 +161,11 @@ struct ReminderListSheet<VM: ReminderListViewModelProtocol>: View {
                 .foregroundStyle(.haruPrimary.opacity(0.6))
             
             VStack(spacing: 8) {
-                Text("할 일이 없습니다")
+                LocalizedText(key: "no_reminders")
                     .font(.pretendardSemiBold(size: 18))
                     .foregroundStyle(.haruTextPrimary)
                 
-                Text("새로운 할 일을 추가해보세요!")
+                LocalizedText(key: "add_new_reminder")
                     .font(.pretendardRegular(size: 14))
                     .foregroundStyle(.secondary)
             }
@@ -175,7 +175,7 @@ struct ReminderListSheet<VM: ReminderListViewModelProtocol>: View {
 
     private var navigationTitleView: some ToolbarContent {
         ToolbarItem(placement: .principal) {
-            Text("전체 할 일")
+            LocalizedText(key: "all_reminders")
                 .font(.pretendardSemiBold(size: 18))
         }
     }
@@ -185,7 +185,7 @@ struct ReminderListSheet<VM: ReminderListViewModelProtocol>: View {
             Button {
                 dismiss()
             } label: {
-                Text("닫기")
+                LocalizedText(key: "close")
                     .font(.pretendardRegular(size: 16))
                     .foregroundStyle(.haruPrimary)
             }

@@ -144,6 +144,12 @@ final class LanguageManager: ObservableObject {
         // 언어 Bundle 변경
         setCurrentLanguage(language)
         
+        // DateFormatterFactory 캐시 클리어 (새로운 언어에 맞는 포맷터 사용)
+        DateFormatterFactory.clearCache()
+        
+        // 날씨 캐시 클리어 (새로운 언어에 맞는 지역명 사용)
+        clearWeatherCache()
+        
         // UI 업데이트 트리거 (단일 호출)
         DispatchQueue.main.async {
             self.refreshTrigger = UUID()
@@ -212,6 +218,21 @@ final class LanguageManager: ObservableObject {
     func clearCache() {
         localeCache.removeAll()
         bundleCache.removeAll()
+    }
+    
+    /// 날씨 캐시 클리어 (언어 변경 시 호출)
+    private func clearWeatherCache() {
+        let defaults = UserDefaults.standard
+        let allKeys = defaults.dictionaryRepresentation().keys
+        
+        // weatherCache_ 로 시작하는 모든 키를 삭제
+        let weatherCacheKeys = allKeys.filter { $0.hasPrefix("weatherCache_") }
+        for key in weatherCacheKeys {
+            defaults.removeObject(forKey: key)
+        }
+        
+        defaults.synchronize()
+        print("🧹 Weather cache cleared for language change")
     }
 }
 

@@ -409,3 +409,77 @@
 "all_day" = "終日";
 "시작" = "開始";
 "종료" = "終了";
+
+// Holiday Guide View
+"holiday_calendar_guide_title" = "祝日カレンダーの追加方法";
+"back" = "戻る";
+"add_holiday_calendar" = "祝日カレンダーを追加";
+"holiday_calendar_description" = "iOSカレンダーアプリで希望する国の\n祝日カレンダーを購読してください";
+"step_by_step_guide" = "ステップバイステップガイド";
+
+// Guide Steps
+"open_calendar_app" = "カレンダーアプリを開く";
+"launch_default_calendar_app" = "iPhoneの標準カレンダーアプリを起動してください";
+"add_calendar" = "カレンダーを追加";
+"select_calendar_tab_and_add" = "下部の「カレンダー」タブを選択し、「カレンダーを追加」をタップしてください";
+"add_holiday_calendar_button" = "祝日カレンダーを追加";
+"tap_add_holiday_calendar_button" = "「祝日カレンダーを追加」ボタンをタップしてください";
+"search_country" = "国を検索";
+"search_desired_country" = "希望する国を検索してください";
+"select_holiday_calendar" = "祝日カレンダーを選択";
+"select_holidays_in_country_calendar" = "検索結果から「Holidays in [国名]」形式のカレンダーを選択してください";
+"return_to_app" = "アプリに戻る";
+"return_to_haruview_and_refresh" = "ハルビューアプリに戻り、カレンダーを下に引いて更新するか、「今日」ボタンをタップしてください";
+
+// Language Settings
+"language_settings" = "言語設定";
+"current_language" = "現在の言語";
+"change_language" = "言語を変更";
+
+// List Views
+"all_events" = "すべての予定";
+"all_reminders" = "すべてのリマインダー";
+"no_reminders" = "リマインダーがありません";
+"add_new_reminder" = "新しいリマインダーを追加してみてください！";
+"close" = "閉じる";
+
+// Forms
+"reminder_due_date_setting" = "リマインダー期限設定";
+"current_status" = "現在の状態";
+
+// Common Actions
+"today" = "今日";
+"deleting" = "削除中...";
+"recurring_event_delete_question" = "「%@」は繰り返し予定です。どのように削除しますか？";
+"count_format" = "%d個";
+
+// Holiday Region Setting View
+"holiday_calendar_settings" = "祝日カレンダー設定";
+"select_holiday_calendars" = "祝日カレンダーを選択";
+"only_subscribed_holidays_shown" = "iOSカレンダーアプリで購読した祝日のみ表示されます";
+"select_desired_holiday_calendars" = "お好みの祝日カレンダーを選択してください";
+"subscribed_holiday_calendars" = "購読済み祝日カレンダー";
+"no_subscribed_holiday_calendars" = "購読済み祝日カレンダーがありません";
+"please_subscribe_holiday_calendars_first" = "iOSカレンダーアプリで希望する国の\n祝日カレンダーを先に購読してください";
+"add_from_calendar_app" = "カレンダーアプリから追加";
+"open_calendar_app_to_subscribe" = "iOSカレンダーアプリを開いて祝日を購読してください";
+"view_add_instructions" = "追加方法を見る";
+"check_step_by_step_guide" = "ステップバイステップガイドをご確認ください";
+
+// Reminder Sections
+"today_reminders" = "今日のリマインダー";
+"anytime_reminders" = "いつでもリマインダー";
+"no_reminders_today" = "今日のリマインダーはありません";
+
+// HomeView
+"today_events" = "今日の予定";
+"no_events_today" = "今日の予定はありません";
+"to_view_todays_events_and_reminders" = "今日の予定とリマインダーを表示するには";
+"both_calendar_reminder_permissions_needed" = "カレンダーとリマインダーの両方のアクセス許可が必要です";
+
+// Event List Sheet
+"recurring_event_delete" = "繰り返し予定を削除";
+"delete_this_event_only" = "この予定のみ削除";
+"delete_all_future_events" = "今後のすべての予定を削除";
+"deletion_error" = "削除エラー";
+"confirm" = "確認";

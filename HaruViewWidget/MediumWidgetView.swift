@@ -55,7 +55,6 @@ struct MediumWidgetView: View {
                                             .opacity(isPast ? 0.5 : 1)
                                     }
                                 }
-                                Spacer()
                             }
                         }
                     }

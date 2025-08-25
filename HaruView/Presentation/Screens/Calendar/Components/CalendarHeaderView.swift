@@ -38,7 +38,7 @@ struct CalendarHeaderView: View {
                 
                 // 오늘로 이동 버튼 (작은 텍스트)
                 Button(action: onToday) {
-                    Text("오늘")
+                    LocalizedText(key: "today")
                         .font(.pretendardRegular(size: 12))
                         .foregroundStyle(.haruPrimary)
                         .padding(.horizontal, 8)

@@ -30,7 +30,7 @@ struct EventDetailRow: View {
                 }
                 
                 if event.isAllDay {
-                    Text("하루 종일")
+                    LocalizedText(key: "all_day")
                         .font(.pretendardRegular(size: 14))
                         .foregroundStyle(.secondary)
                 }

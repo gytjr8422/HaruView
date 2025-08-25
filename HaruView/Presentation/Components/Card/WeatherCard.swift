@@ -43,6 +43,7 @@ struct WeatherCard: View {
                     VStack(alignment: .leading, spacing: 5) {
                         Text(place)
                             .font(.pretendardBold(size: 15))
+                            .id(languageManager.refreshTrigger) // 언어 변경 시 새로고침
                         VStack {
                             Spacer()
                             HStack(alignment: .center) {

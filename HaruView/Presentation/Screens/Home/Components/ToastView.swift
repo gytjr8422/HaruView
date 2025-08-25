@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ToastView: View {
    var body: some View {
-       Text("저장이 완료되었습니다.")
+       LocalizedText(key: "save_completed")
            .font(.pretendardSemiBold(size: 14))
            .foregroundStyle(Color.white)
            .padding(10)
