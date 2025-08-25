@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "ko",
   "strings" : {
+    "-" : {
+
+    },
     "Check today's calendar events and reminders at a glance" : {
 
     },
@@ -30,7 +33,7 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "translated", 
+            "state" : "translated",
             "value" : "今日は予定がありません"
           }
         },

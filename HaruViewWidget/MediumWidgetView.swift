@@ -44,10 +44,22 @@ struct MediumWidgetView: View {
                                         .opacity(isPast ? 0.5 : 1)
                                     
                                     if !event.isAllDay {
-                                        Text(event.startDate, style: .time)
-                                            .font(.jakartaRegular(size: 11))
-                                            .foregroundStyle(.gray)
-                                            .opacity(isPast ? 0.5 : 1)
+                                        HStack(spacing: 2) {
+                                            Text(event.startDate, style: .time)
+                                                .font(.jakartaRegular(size: 11))
+                                                .foregroundStyle(.gray)
+                                                .opacity(isPast ? 0.5 : 1)
+                                            
+                                            Text("-")
+                                                .font(.jakartaRegular(size: 11))
+                                                .foregroundStyle(.gray)
+                                                .opacity(isPast ? 0.5 : 1)
+                                            
+                                            Text(event.endDate, style: .time)
+                                                .font(.jakartaRegular(size: 11))
+                                                .foregroundStyle(.gray)
+                                                .opacity(isPast ? 0.5 : 1)
+                                        }
                                     } else {
                                         Text(NSLocalizedString("하루 종일", comment: "All day event"))
                                             .font(.jakartaRegular(size: 9))
