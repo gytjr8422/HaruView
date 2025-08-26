@@ -4,7 +4,19 @@
     "-" : {
 
     },
+    "%lld" : {
+
+    },
+    "Calendar View" : {
+
+    },
     "Check today's calendar events and reminders at a glance" : {
+
+    },
+    "Display as calendar with dots" : {
+
+    },
+    "Display items as a list" : {
 
     },
     "Display today's calendar events" : {
@@ -20,6 +32,9 @@
 
     },
     "Haru Widget" : {
+
+    },
+    "List View" : {
 
     },
     "no_events_today" : {
@@ -91,6 +106,9 @@
 
     },
     "Toggle the completion status of a reminder from the widget." : {
+
+    },
+    "View Type" : {
 
     },
     "Widget that displays today's events and reminders." : {

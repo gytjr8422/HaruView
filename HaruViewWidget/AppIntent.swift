@@ -25,6 +25,22 @@ enum WidgetType: String, CaseIterable, AppEnum {
     }
 }
 
+enum WidgetViewType: String, CaseIterable, AppEnum {
+    case list = "list"
+    case calendar = "calendar"
+    
+    static var typeDisplayRepresentation: TypeDisplayRepresentation {
+        TypeDisplayRepresentation(name: "View Type")
+    }
+    
+    static var caseDisplayRepresentations: [WidgetViewType: DisplayRepresentation] {
+        [
+            .list: DisplayRepresentation(title: "List View", subtitle: "Display items as a list"),
+            .calendar: DisplayRepresentation(title: "Calendar View", subtitle: "Display as calendar with dots")
+        ]
+    }
+}
+
 struct ConfigurationAppIntent: WidgetConfigurationIntent {
     static var title: LocalizedStringResource { "Haru Settings" }
     static var description: IntentDescription { "Widget that displays today's events and reminders." }
@@ -32,6 +48,10 @@ struct ConfigurationAppIntent: WidgetConfigurationIntent {
     // 위젯 타입 (Small 위젯에서만 사용)
     @Parameter(title: "Widget Type", default: .events)
     var widgetType: WidgetType
+    
+    // 뷰 타입 (달력 vs 리스트)
+    @Parameter(title: "View Type", default: .list)
+    var viewType: WidgetViewType
 }
 
 // MARK: - Convenience Initializers

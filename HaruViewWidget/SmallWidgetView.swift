@@ -13,11 +13,16 @@ struct SmallWidgetView: View {
     let entry: Provider.Entry
     
     var body: some View {
-        // 설정에 따라 일정 또는 할일 위젯 표시
-        if entry.configuration.widgetType == .events {
-            SmallEventsWidget(entry: entry)
+        // 뷰 타입에 따라 달력 또는 리스트 뷰 표시
+        if entry.configuration.viewType == .calendar {
+            SmallCalendarWidgetView(entry: entry)
         } else {
-            SmallRemindersWidget(entry: entry)
+            // 기존 리스트 뷰 - 설정에 따라 일정 또는 할일 위젯 표시
+            if entry.configuration.widgetType == .events {
+                SmallEventsWidget(entry: entry)
+            } else {
+                SmallRemindersWidget(entry: entry)
+            }
         }
     }
 }
@@ -147,6 +152,7 @@ struct SmallRemindersWidget: View {
         configuration: {
             let config = ConfigurationAppIntent()
             config.widgetType = .events
+            config.viewType = .list
             return config
         }(),
         events: [
@@ -167,6 +173,7 @@ struct SmallRemindersWidget: View {
         configuration: {
             let config = ConfigurationAppIntent()
             config.widgetType = .reminders
+            config.viewType = .list
             return config
         }(),
         events: [],
@@ -174,6 +181,29 @@ struct SmallRemindersWidget: View {
             ReminderItem(id: "1", title: "프로젝트 마감", dueDate: Date(), priority: 1, isCompleted: false, reminderType: .onDate),
             ReminderItem(id: "2", title: "보고서 작성", dueDate: Date(), priority: 2, isCompleted: true, reminderType: .untilDate),
             ReminderItem(id: "3", title: "회의 준비", dueDate: Date(), priority: 3, isCompleted: false, reminderType: .onDate)
+        ]
+    )
+    
+    SmallWidgetView(entry: sampleEntry)
+        .background(.haruWidgetBackground)
+}
+
+#Preview("Small Widget - Calendar") {
+    let sampleEntry = SimpleEntry(
+        date: Date(),
+        configuration: {
+            let config = ConfigurationAppIntent()
+            config.viewType = .calendar
+            return config
+        }(),
+        events: [
+            CalendarEvent(title: "팀 미팅", startDate: Date(), endDate: Date().addingTimeInterval(3600), isAllDay: false, calendarColor: UIColor.systemBlue.cgColor),
+            CalendarEvent(title: "점심 약속", startDate: Calendar.current.date(byAdding: .day, value: 1, to: Date())!, endDate: Calendar.current.date(byAdding: .day, value: 1, to: Date())!.addingTimeInterval(3600), isAllDay: false, calendarColor: UIColor.systemGreen.cgColor),
+            CalendarEvent(title: "회의", startDate: Calendar.current.date(byAdding: .day, value: 3, to: Date())!, endDate: Calendar.current.date(byAdding: .day, value: 3, to: Date())!.addingTimeInterval(3600), isAllDay: false, calendarColor: UIColor.systemRed.cgColor)
+        ],
+        reminders: [
+            ReminderItem(id: "1", title: "할일 1", dueDate: Date(), priority: 1, isCompleted: false, reminderType: .onDate),
+            ReminderItem(id: "2", title: "할일 2", dueDate: Calendar.current.date(byAdding: .day, value: 2, to: Date())!, priority: 2, isCompleted: false, reminderType: .onDate)
         ]
     )
     
