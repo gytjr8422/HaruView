@@ -135,6 +135,9 @@ final class LanguageManager: ObservableObject {
         selectedLanguage = language
         UserDefaults.standard.set(language, forKey: "AppLanguage")
         
+        // SharedUserDefaults에도 언어 설정 동기화
+        SharedUserDefaults.selectedLanguage = language
+        
         // AppleLanguages도 설정 (앱 재시작 시 적용)
         if let lang = Language(rawValue: language) {
             UserDefaults.standard.set([lang.appleLanguageCode], forKey: "AppleLanguages")
@@ -155,10 +158,8 @@ final class LanguageManager: ObservableObject {
             self.refreshTrigger = UUID()
         }
         
-        // 위젯 새로고침 (비동기)
-        Task {
-            WidgetCenter.shared.reloadAllTimelines()
-        }
+        // 위젯 새로고침 및 업데이트 알림
+        SharedUserDefaults.notifyWidgetUpdate()
         
         print("✅ Language changed to: \(language)")
     }

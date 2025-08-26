@@ -97,8 +97,15 @@ class AppSettings: ObservableObject {
     // 주 시작일 설정 (false: 일요일, true: 월요일)
     @Published var weekStartsOnMonday: Bool {
         didSet {
+            // 기존 UserDefaults와 SharedUserDefaults 모두 업데이트
             UserDefaults.standard.set(weekStartsOnMonday, forKey: "weekStartsOnMonday")
+            SharedUserDefaults.weekStartDay = weekStartsOnMonday ? 1 : 0
+            
             clearDisplayItemsCache()
+            
+            // 위젯 업데이트 알림
+            SharedUserDefaults.notifyWidgetUpdate()
+            
             // 달력 새로고침 알림
             NotificationCenter.default.post(name: .calendarNeedsRefresh, object: nil)
         }
