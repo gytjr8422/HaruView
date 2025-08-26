@@ -27,12 +27,12 @@ struct Provider: AppIntentTimelineProvider {
     }
 
     func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> SimpleEntry {
-        let (events, reminders) = await fetchCalendarData(for: context.family)
+        let (events, reminders) = await fetchCalendarData(for: context.family, configuration: configuration)
         return SimpleEntry(date: Date(), configuration: configuration, events: events, reminders: reminders)
     }
     
     func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<SimpleEntry> {
-        let (events, reminders) = await fetchCalendarData(for: context.family)
+        let (events, reminders) = await fetchCalendarData(for: context.family, configuration: configuration)
         let currentDate = Date()
         
         let entry = SimpleEntry(date: currentDate, configuration: configuration, events: events, reminders: reminders)
@@ -42,7 +42,7 @@ struct Provider: AppIntentTimelineProvider {
         return Timeline(entries: [entry], policy: .after(nextUpdateDate))
     }
     
-    func fetchCalendarData(for family: WidgetFamily) async -> ([CalendarEvent], [ReminderItem]) {
+    func fetchCalendarData(for family: WidgetFamily, configuration: ConfigurationAppIntent? = nil) async -> ([CalendarEvent], [ReminderItem]) {
         // EventKit 권한 확인
         let status = EKEventStore.authorizationStatus(for: .event)
         let reminderStatus = EKEventStore.authorizationStatus(for: .reminder)
@@ -50,19 +50,66 @@ struct Provider: AppIntentTimelineProvider {
         var events: [CalendarEvent] = []
         var reminders: [ReminderItem] = []
         
+        // 위젯 타입에 따라 데이터 범위 결정
+        let isCalendarWidget = configuration?.viewType == .calendar
+        
         // 캘린더 이벤트 가져오기
         if status == .fullAccess {
-            events = await fetchTodayEvents(for: family)
+            if isCalendarWidget {
+                events = await fetchMonthEvents(for: family)
+            } else {
+                events = await fetchTodayEvents(for: family)
+            }
         }
         
         // 미리알림 가져오기
         if reminderStatus == .fullAccess {
-            reminders = await fetchTodayReminders(for: family)
+            if isCalendarWidget {
+                reminders = await fetchMonthReminders(for: family)
+            } else {
+                reminders = await fetchTodayReminders(for: family)
+            }
         }
         
         return (events, reminders)
     }
     
+    // 달력 위젯용: 전체 월 이벤트
+    func fetchMonthEvents(for family: WidgetFamily) async -> [CalendarEvent] {
+        let calendar = Calendar.withUserWeekStartPreference()
+        let now = Date()
+        let startOfMonth = calendar.dateInterval(of: .month, for: now)?.start ?? now
+        let endOfMonth = calendar.dateInterval(of: .month, for: now)?.end ?? calendar.date(byAdding: .day, value: 1, to: now)!
+        
+        let predicate = eventStore.predicateForEvents(withStart: startOfMonth, end: endOfMonth, calendars: nil)
+        let ekEvents = eventStore.events(matching: predicate)
+        
+        let maxCount = 100 // 달력 위젯은 많은 데이터 필요
+        
+        let sortedEvents = ekEvents
+            .filter { !isHolidayCalendar($0.calendar) }
+            .map { event in
+                let compsStart = calendar.dateComponents([Calendar.Component.hour, Calendar.Component.minute], from: event.startDate)
+                let compsEnd = calendar.dateComponents([Calendar.Component.hour, Calendar.Component.minute], from: event.endDate)
+                let isAllDayDetected = calendar.isDate(event.startDate, inSameDayAs: event.endDate) &&
+                                     compsStart.hour == 0 && compsStart.minute == 0 &&
+                                     compsEnd.hour == 23 && compsEnd.minute == 59
+                
+                return CalendarEvent(
+                    title: event.title ?? "제목 없음",
+                    startDate: event.startDate,
+                    endDate: event.endDate,
+                    isAllDay: event.isAllDay || isAllDayDetected,
+                    calendarColor: event.calendar.cgColor
+                )
+            }
+            .sorted(by: eventSortRule)
+            .prefix(maxCount)
+        
+        return Array(sortedEvents)
+    }
+    
+    // 리스트 위젯용: 오늘 이벤트만
     func fetchTodayEvents(for family: WidgetFamily) async -> [CalendarEvent] {
         let startOfDay = Calendar.withUserWeekStartPreference().startOfDay(for: Date())
         let endOfDay = Calendar.withUserWeekStartPreference().date(byAdding: Calendar.Component.day, value: 1, to: startOfDay)!
@@ -70,7 +117,6 @@ struct Provider: AppIntentTimelineProvider {
         let predicate = eventStore.predicateForEvents(withStart: startOfDay, end: endOfDay, calendars: nil)
         let ekEvents = eventStore.events(matching: predicate)
         
-        // 위젯 크기별 최대 개수 설정
         let maxCount: Int
         switch family {
         case .systemSmall:
@@ -117,20 +163,99 @@ struct Provider: AppIntentTimelineProvider {
         return a.startDate < b.startDate             // 둘 다 동일 상태면 시작 시간
     }
     
-    func fetchTodayReminders(for family: WidgetFamily) async -> [ReminderItem] {
-            return await withCheckedContinuation { continuation in
-                // 위젯 크기별 최대 개수 설정
-                let maxCount: Int
-                switch family {
-                case .systemSmall:
-                    maxCount = 4
-                case .systemMedium:
-                    maxCount = 4
-                case .systemLarge:
-                    maxCount = 9  // Large 위젯에서는 8개까지
-                default:
-                    maxCount = 4
+    // 달력 위젯용: 전체 월 할일
+    func fetchMonthReminders(for family: WidgetFamily) async -> [ReminderItem] {
+        return await withCheckedContinuation { continuation in
+            let maxCount = 100 // 달력 위젯은 많은 데이터 필요
+            
+            let incPred = eventStore.predicateForIncompleteReminders(withDueDateStarting: nil, ending: nil, calendars: nil)
+            let cmpPred = eventStore.predicateForCompletedReminders(withCompletionDateStarting: nil, ending: nil, calendars: nil)
+            
+            var bucket: [EKReminder] = []
+            eventStore.fetchReminders(matching: incPred) { inc in
+                bucket.append(contentsOf: inc ?? [])
+                self.eventStore.fetchReminders(matching: cmpPred) { comp in
+                    bucket.append(contentsOf: comp ?? [])
+                    
+                    // 달력 위젯용: 현재 월 전체 기간으로 확장
+                    let calendar = Calendar.withUserWeekStartPreference()
+                    let now = Date()
+                    let monthStart = calendar.dateInterval(of: .month, for: now)?.start ?? now
+                    let monthEnd = calendar.dateInterval(of: .month, for: now)?.end ?? calendar.date(byAdding: .day, value: 1, to: now)!
+                    
+                    let filtered = bucket.filter { rem in
+                        guard let due = rem.dueDateComponents?.date else { 
+                            return false // 달력 위젯에서는 마감일 없는 할일 제외
+                        }
+                        
+                        // ReminderType 추출
+                        let reminderType: WidgetReminderType
+                        if let url = rem.url {
+                            let urlString = url.absoluteString
+                            if urlString.contains("haruview-reminder-type://UNTIL") || urlString.contains("haruview_type=UNTIL") {
+                                reminderType = .untilDate
+                            } else {
+                                reminderType = .onDate
+                            }
+                        } else {
+                            reminderType = .onDate
+                        }
+                        
+                        switch reminderType {
+                        case .onDate:
+                            // 특정 날짜 할 일: 현재 월 내의 날짜만
+                            return due >= monthStart && due < monthEnd
+                        case .untilDate:
+                            // 마감일까지 할 일: 마감일이 현재 월 내에 있거나 이후인 경우
+                            return due >= monthStart
+                        }
+                    }
+                    
+                    let reminderItems = filtered
+                        .map { reminder in
+                            let reminderType: WidgetReminderType
+                            if let url = reminder.url {
+                                let urlString = url.absoluteString
+                                if urlString.contains("haruview-reminder-type://UNTIL") || urlString.contains("haruview_type=UNTIL") {
+                                    reminderType = .untilDate
+                                } else {
+                                    reminderType = .onDate
+                                }
+                            } else {
+                                reminderType = .onDate
+                            }
+                            
+                            return ReminderItem(
+                                id: reminder.calendarItemIdentifier,
+                                title: reminder.title ?? "제목 없음",
+                                dueDate: reminder.dueDateComponents?.date,
+                                priority: Int(reminder.priority),
+                                isCompleted: reminder.isCompleted,
+                                reminderType: reminderType
+                            )
+                        }
+                        .prefix(maxCount)
+                    
+                    continuation.resume(returning: Array(reminderItems))
                 }
+            }
+        }
+    }
+    
+    // 리스트 위젯용: 오늘 할일만
+    func fetchTodayReminders(for family: WidgetFamily) async -> [ReminderItem] {
+        return await withCheckedContinuation { continuation in
+            let maxCount: Int
+            switch family {
+            case .systemSmall:
+                maxCount = 4
+            case .systemMedium:
+                maxCount = 4
+            case .systemLarge:
+                maxCount = 9
+            default:
+                maxCount = 4
+            }
                 
                 let incPred = eventStore.predicateForIncompleteReminders(withDueDateStarting: nil, ending: nil, calendars: nil)
                 let cmpPred = eventStore.predicateForCompletedReminders(withCompletionDateStarting: nil, ending: nil, calendars: nil)
@@ -141,9 +266,11 @@ struct Provider: AppIntentTimelineProvider {
                     self.eventStore.fetchReminders(matching: cmpPred) { comp in
                         bucket.append(contentsOf: comp ?? [])
                         
-                        // 홈뷰와 동일한 로직: 마감일까지 할 일은 매일 표시, 특정 날짜 할 일은 해당 날짜만
-                        let todayStart = Calendar.withUserWeekStartPreference().startOfDay(for: Date())
-                        let todayEnd = Calendar.withUserWeekStartPreference().date(byAdding: Calendar.Component.day, value: 1, to: todayStart)!
+                        // 달력 위젯용: 현재 월 전체 기간으로 확장
+                        let calendar = Calendar.withUserWeekStartPreference()
+                        let now = Date()
+                        let monthStart = calendar.dateInterval(of: .month, for: now)?.start ?? now
+                        let monthEnd = calendar.dateInterval(of: .month, for: now)?.end ?? calendar.date(byAdding: .day, value: 1, to: now)!
                         
                         let filtered = bucket.filter { rem in
                             guard let due = rem.dueDateComponents?.date else { 
@@ -166,12 +293,11 @@ struct Provider: AppIntentTimelineProvider {
                             
                             switch reminderType {
                             case .onDate:
-                                // 특정 날짜 할 일: 정확히 오늘인 경우만
-                                return due >= todayStart && due < todayEnd
+                                // 특정 날짜 할 일: 현재 월 내의 날짜만
+                                return due >= monthStart && due < monthEnd
                             case .untilDate:
-                                // 마감일까지 할 일: 마감일이 오늘 이후인 경우 (오늘 포함)
-                                let dueDay = Calendar.withUserWeekStartPreference().startOfDay(for: due)
-                                return dueDay >= todayStart
+                                // 마감일까지 할 일: 마감일이 현재 월 내에 있거나 이후인 경우
+                                return due >= monthStart
                             }
                         }
                         

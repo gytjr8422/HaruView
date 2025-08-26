@@ -56,7 +56,7 @@ struct SmallCalendarWidgetView: View {
     private func monthHeader(for size: CGSize) -> some View {
         HStack {
             Text(monthText)
-                .font(.system(size: adaptiveFontSize(13, for: size), weight: .bold))
+                .font(.system(size: adaptiveFontSize(14, for: size), weight: .bold))
                 .foregroundStyle(.primary)
             Spacer()
         }
@@ -173,7 +173,7 @@ struct SmallCalendarWidgetView: View {
     
     private func backgroundColor(for dayInfo: CalendarDayInfo) -> Color {
         if dayInfo.isToday {
-            return .blue
+            return Color(hexCode: "A76545") // 하루뷰 메인 갈색 (haruPrimary)
         } else {
             return .clear
         }
@@ -217,6 +217,8 @@ struct SmallCalendarWidgetView: View {
         let indicatorWidth = adaptiveIndicatorWidth(for: size)
         
         return HStack(spacing: 1) {
+            Spacer() // 왼쪽 여백
+            
             // 일정 언더바
             if dayInfo.eventColor != nil {
                 RoundedRectangle(cornerRadius: 1)
@@ -233,7 +235,7 @@ struct SmallCalendarWidgetView: View {
                     .frame(width: dotSize, height: dotSize)
             }
             
-            Spacer()
+            Spacer() // 오른쪽 여백
         }
         .frame(height: max(3, 4 * min(size.width / 158, size.height / 158))) // 적응형 인디케이터 영역 높이
     }
@@ -327,49 +329,31 @@ struct SmallCalendarWidgetView: View {
         return days
     }
     
-    // MARK: - 일정/할일 데이터 매핑 최적화
-    private var eventsByDate: [String: [CalendarEvent]] {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        
-        return Dictionary(grouping: entry.events) { event in
-            formatter.string(from: event.startDate)
-        }
-    }
-    
-    private var remindersByDate: [String: [ReminderItem]] {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        
-        let reminderTuples: [(dateKey: String, reminder: ReminderItem)] = entry.reminders.compactMap { reminder in
-            guard let dueDate = reminder.dueDate else { return nil }
-            return (dateKey: formatter.string(from: dueDate), reminder: reminder)
-        }
-        
-        return Dictionary(grouping: reminderTuples) { (tuple: (dateKey: String, reminder: ReminderItem)) -> String in
-            tuple.dateKey
-        }.mapValues { (tuples: [(dateKey: String, reminder: ReminderItem)]) -> [ReminderItem] in
-            tuples.map { $0.reminder }
-        }
-    }
     
     // MARK: - 일정 색상 가져오기
     private func eventColor(for date: Date) -> CGColor? {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        let dateKey = formatter.string(from: date)
-        
-        // 해당 날짜의 일정 중 가장 빠른 시간의 일정 색상 반환
-        return eventsByDate[dateKey]?.first?.calendarColor
+        // 더 간단한 날짜 비교 방식으로 변경
+        for event in entry.events {
+            // 시작일 또는 종료일이 해당 날짜에 포함되는지 확인
+            if calendar.isDate(event.startDate, inSameDayAs: date) ||
+               calendar.isDate(event.endDate, inSameDayAs: date) ||
+               (event.startDate < date && event.endDate > date) { // 여러 날에 걸친 이벤트
+                return event.calendarColor
+            }
+        }
+        return nil
     }
     
     // MARK: - 할일 확인하기
     private func hasReminders(for date: Date) -> Bool {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        let dateKey = formatter.string(from: date)
-        
-        return remindersByDate[dateKey]?.isEmpty == false
+        // 더 간단한 날짜 비교 방식으로 변경
+        for reminder in entry.reminders {
+            if let dueDate = reminder.dueDate,
+               calendar.isDate(dueDate, inSameDayAs: date) {
+                return true
+            }
+        }
+        return false
     }
 }
 
