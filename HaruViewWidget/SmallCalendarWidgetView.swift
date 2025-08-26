@@ -34,12 +34,12 @@ struct SmallCalendarWidgetView: View {
     
     // MARK: - 적응형 크기 조정 함수들
     private func adaptiveFontSize(_ baseSize: CGFloat, for size: CGSize) -> CGFloat {
-        let scale = size.width / 158 // iPhone 15 Pro 기준
+        let scale = min(size.width / 158, size.height / 158) // iPhone 15 Pro 기준, width와 height 중 작은 값 사용
         return max(baseSize * 0.8, baseSize * scale)
     }
     
     private func adaptiveSpacing(for size: CGSize) -> CGFloat {
-        let scale = size.width / 158
+        let scale = min(size.width / 158, size.height / 158)
         return max(1, 2 * scale)
     }
     
@@ -48,15 +48,15 @@ struct SmallCalendarWidgetView: View {
     }
     
     private func adaptiveVerticalPadding(for size: CGSize) -> CGFloat {
-        let scale = size.width / 158
-        return max(6, 10 * scale)
+        let scale = min(size.width / 158, size.height / 158)
+        return max(4, 8 * scale) // 패딩 최소값과 비율 최적화
     }
     
     // MARK: - 월 헤더
     private func monthHeader(for size: CGSize) -> some View {
         HStack {
             Text(monthText)
-                .font(.system(size: adaptiveFontSize(12, for: size), weight: .bold))
+                .font(.system(size: adaptiveFontSize(13, for: size), weight: .bold))
                 .foregroundStyle(.primary)
             Spacer()
         }
@@ -87,7 +87,7 @@ struct SmallCalendarWidgetView: View {
         HStack(spacing: 0) {
             ForEach(weekdaySymbols, id: \.self) { day in
                 Text(day)
-                    .font(.system(size: adaptiveFontSize(10, for: size)))
+                    .font(.system(size: adaptiveFontSize(12, for: size), weight: .bold))
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity)
             }
@@ -141,13 +141,13 @@ struct SmallCalendarWidgetView: View {
             // 날짜 숫자 (빈 칸은 표시하지 않음)
             if dayInfo.day > 0 {
                 Text("\(dayInfo.day)")
-                    .font(.system(size: adaptiveFontSize(11, for: size), weight: dayInfo.isToday ? .bold : .medium))
+                    .font(.system(size: adaptiveFontSize(12, for: size), weight: .bold))
                     .foregroundStyle(textColor(for: dayInfo))
                     .frame(width: cellSize.width, height: cellSize.height)
                     .background(
-                        RoundedRectangle(cornerRadius: cellSize.width * 0.3)
+                        RoundedRectangle(cornerRadius: cellSize.width * 0.35) // 코너 반경 조금 더 크게
                             .fill(backgroundColor(for: dayInfo))
-                            .padding(-1) // 배경을 1pt씩 확장
+                            .padding(-2) // 배경을 2pt씩 확장
                     )
             } else {
                 // 빈 공간
@@ -179,58 +179,68 @@ struct SmallCalendarWidgetView: View {
         }
     }
     
-    private func adaptiveCellSize(for size: CGSize) -> (width: CGFloat, height: CGFloat) {
-        let horizontalPadding = adaptiveHorizontalPadding(for: size)
-        let verticalPadding = adaptiveVerticalPadding(for: size)
-        let spacing = adaptiveSpacing(for: size)
+    private func adaptiveCellSize(for size: CGSize) -> (width: CGFloat, height: CGFloat) {        let spacing = adaptiveSpacing(for: size)
         
         // 사용 가능한 너비에서 셀 너비 계산 (좌우 패딩 0이므로 전체 너비 사용)
         let availableWidth = size.width
         let cellWidth = (availableWidth - (6 * spacing)) / 7 // 7개 셀, 6개 간격
         
         // 헤더들의 실제 높이 계산 (더 정확하게)
-        let monthHeaderHeight = adaptiveFontSize(12, for: size) + 3 // 월 텍스트 축소 반영
-        let weekdayHeaderHeight = adaptiveFontSize(10, for: size) + 2 // 실제 패딩
+        let monthHeaderHeight = adaptiveFontSize(12, for: size) + 3
+        let weekdayHeaderHeight = adaptiveFontSize(12, for: size) + 2
         let spacingBetweenElements = spacing * 2 // VStack spacing
         
         let totalHeaderHeight = monthHeaderHeight + weekdayHeaderHeight + spacingBetweenElements
         
-        // 사용 가능한 높이에서 셀 높이 계산 (Spacer 고려)
-        let availableHeight = size.height - (verticalPadding * 2) - totalHeaderHeight
+        // 사용 가능한 높이에서 셀 높이 계산
+        let availableHeight = size.height - totalHeaderHeight
         let maxRows: CGFloat = 6
         let gridSpacing = (maxRows - 1) * spacing
         let indicatorSpace: CGFloat = 4 // 인디케이터 + spacing
         
         // 실제 셀 영역 높이
         let cellAreaHeight = availableHeight - gridSpacing
-        let cellHeight = (cellAreaHeight / maxRows) - indicatorSpace
+        let rawCellHeight = (cellAreaHeight / maxRows) - indicatorSpace
         
-        // 너비와 높이를 각각 조정
-        let finalWidth = cellWidth * 0.9
-        let finalHeight = cellHeight * 0.65 // 높이를 65%로 더 축소
+        // 동적 비율 조정: 작은 화면에서는 더 작게, 큰 화면에서는 더 크게
+        let sizeRatio = min(size.width / 158, size.height / 158)
+        let widthMultiplier = sizeRatio > 1.0 ? 0.9 : 0.85 // 큰 화면에서는 더 여유롭게
+        let heightMultiplier = sizeRatio > 1.0 ? 0.7 : 0.6  // 작은 화면에서는 더 컴팩트하게
         
-        return (width: max(12, finalWidth), height: max(10, finalHeight))
+        let finalWidth = cellWidth * widthMultiplier
+        let finalHeight = rawCellHeight * heightMultiplier
+        
+        return (width: max(10, finalWidth), height: max(8, finalHeight))
     }
     
     private func indicatorView(for dayInfo: CalendarDayInfo, size: CGSize) -> some View {
-        HStack(spacing: 1) {
+        let indicatorWidth = adaptiveIndicatorWidth(for: size)
+        
+        return HStack(spacing: 1) {
             // 일정 언더바
             if dayInfo.eventColor != nil {
                 RoundedRectangle(cornerRadius: 1)
                     .fill(Color(cgColor: dayInfo.eventColor!))
-                    .frame(width: dayInfo.hasReminders ? 6 : 10, height: 2)
+                    .frame(width: dayInfo.hasReminders ? indicatorWidth * 0.65 : indicatorWidth, 
+                           height: max(1.5, 2 * min(size.width / 158, size.height / 158))) // 적응형 높이
             }
             
             // 할일 점
             if dayInfo.hasReminders {
+                let dotSize = max(2.5, 3 * min(size.width / 158, size.height / 158)) // 적응형 점 크기
                 Circle()
                     .fill(.secondary)
-                    .frame(width: 3, height: 3)
+                    .frame(width: dotSize, height: dotSize)
             }
             
             Spacer()
         }
-        .frame(height: 3)
+        .frame(height: max(3, 4 * min(size.width / 158, size.height / 158))) // 적응형 인디케이터 영역 높이
+    }
+    
+    private func adaptiveIndicatorWidth(for size: CGSize) -> CGFloat {
+        let scale = min(size.width / 158, size.height / 158)
+        return max(8, 12 * scale)
     }
     
     // MARK: - 달력 데이터 생성
@@ -271,13 +281,21 @@ struct SmallCalendarWidgetView: View {
             ))
         }
         
-        // 현재 달 날짜들만 표시
+        // 현재 달 날짜들만 표시 (성능 최적화)
         let range = calendar.range(of: .day, in: .month, for: monthStart)!
+        let currentMonthComponent = calendar.component(.month, from: today)
+        let todayComponent = calendar.component(.day, from: today)
+        
         for day in range {
             let date = calendar.date(byAdding: .day, value: day - 1, to: monthStart)!
-            let isToday = calendar.isDate(date, inSameDayAs: today)
             let weekday = calendar.component(.weekday, from: date)
-            let isWeekend = (weekday == 1) || (weekday == 7) // 일요일(1) 또는 토요일(7)
+            
+            // 오늘 날짜 체크 최적화
+            let isToday = (calendar.component(.month, from: date) == currentMonthComponent && 
+                          day == todayComponent)
+            
+            // 주말 체크 (일요일=1, 토요일=7)
+            let isWeekend = (weekday == 1) || (weekday == 7)
             
             days.append(CalendarDayInfo(
                 date: date,
@@ -309,22 +327,49 @@ struct SmallCalendarWidgetView: View {
         return days
     }
     
-    // MARK: - 일정 색상 가져오기
-    private func eventColor(for date: Date) -> CGColor? {
-        let dayEvents = entry.events.filter { event in
-            calendar.isDate(event.startDate, inSameDayAs: date)
+    // MARK: - 일정/할일 데이터 매핑 최적화
+    private var eventsByDate: [String: [CalendarEvent]] {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        
+        return Dictionary(grouping: entry.events) { event in
+            formatter.string(from: event.startDate)
+        }
+    }
+    
+    private var remindersByDate: [String: [ReminderItem]] {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        
+        let reminderTuples: [(dateKey: String, reminder: ReminderItem)] = entry.reminders.compactMap { reminder in
+            guard let dueDate = reminder.dueDate else { return nil }
+            return (dateKey: formatter.string(from: dueDate), reminder: reminder)
         }
         
-        // 가장 빠른 시간의 일정 색상 반환
-        return dayEvents.first?.calendarColor
+        return Dictionary(grouping: reminderTuples) { (tuple: (dateKey: String, reminder: ReminderItem)) -> String in
+            tuple.dateKey
+        }.mapValues { (tuples: [(dateKey: String, reminder: ReminderItem)]) -> [ReminderItem] in
+            tuples.map { $0.reminder }
+        }
+    }
+    
+    // MARK: - 일정 색상 가져오기
+    private func eventColor(for date: Date) -> CGColor? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let dateKey = formatter.string(from: date)
+        
+        // 해당 날짜의 일정 중 가장 빠른 시간의 일정 색상 반환
+        return eventsByDate[dateKey]?.first?.calendarColor
     }
     
     // MARK: - 할일 확인하기
     private func hasReminders(for date: Date) -> Bool {
-        return entry.reminders.contains { reminder in
-            guard let dueDate = reminder.dueDate else { return false }
-            return calendar.isDate(dueDate, inSameDayAs: date)
-        }
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let dateKey = formatter.string(from: date)
+        
+        return remindersByDate[dateKey]?.isEmpty == false
     }
 }
 
