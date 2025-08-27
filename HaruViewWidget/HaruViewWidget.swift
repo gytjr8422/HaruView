@@ -137,6 +137,20 @@ struct HaruRemindersWidget: Widget {
     }
 }
 
+struct HaruCalendarListWidget: Widget {
+    let kind: String = "HaruCalendarListWidget"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: CalendarListProvider()) { entry in
+            MediumCalendarListWidgetView(entry: entry)
+                .containerBackground(Color.haruWidgetBackground, for: .widget)
+        }
+        .configurationDisplayName("Haru Calendar + List")
+        .description("Monthly calendar with today's events and reminders")
+        .supportedFamilies([.systemMedium])
+    }
+}
+
 extension ConfigurationAppIntent {
     fileprivate static var smiley: ConfigurationAppIntent {
         let intent = ConfigurationAppIntent()

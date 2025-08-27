@@ -15,5 +15,6 @@ struct HaruViewWidgetBundle: WidgetBundle {
         HaruCalendarWidget()
         HaruEventsWidget()
         HaruRemindersWidget()
+        HaruCalendarListWidget()
     }
 }

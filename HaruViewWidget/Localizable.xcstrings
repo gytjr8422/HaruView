@@ -31,6 +31,9 @@
     "Haru Calendar" : {
 
     },
+    "Haru Calendar + List" : {
+
+    },
     "Haru Events" : {
 
     },
@@ -47,6 +50,9 @@
 
     },
     "Monthly calendar view with events and reminders" : {
+
+    },
+    "Monthly calendar with today's events and reminders" : {
 
     },
     "no_events_today" : {

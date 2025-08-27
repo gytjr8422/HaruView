@@ -59,21 +59,28 @@ struct SmallEventsWidget: View {
                                     .opacity(isPast ? 0.5 : 1)
                                 
                                 if !event.isAllDay {
-                                    HStack(spacing: 2) {
-                                        Text(event.startDate, style: .time)
+                                    if WidgetTimeFormatter.isSameTime(start: event.startDate, end: event.endDate) {
+                                        Text(WidgetTimeFormatter.formatTime(event.startDate))
                                             .font(.jakartaRegular(size: 11))
                                             .foregroundStyle(.haruWidgetSecondary)
                                             .opacity(isPast ? 0.5 : 1)
-                                        
-                                        Text("-")
-                                            .font(.jakartaRegular(size: 11))
-                                            .foregroundStyle(.haruWidgetSecondary)
-                                            .opacity(isPast ? 0.5 : 1)
-                                        
-                                        Text(event.endDate, style: .time)
-                                            .font(.jakartaRegular(size: 11))
-                                            .foregroundStyle(.haruWidgetSecondary)
-                                            .opacity(isPast ? 0.5 : 1)
+                                    } else {
+                                        HStack(spacing: 2) {
+                                            Text(WidgetTimeFormatter.formatTime(event.startDate))
+                                                .font(.jakartaRegular(size: 11))
+                                                .foregroundStyle(.haruWidgetSecondary)
+                                                .opacity(isPast ? 0.5 : 1)
+                                            
+                                            Text("-")
+                                                .font(.jakartaRegular(size: 11))
+                                                .foregroundStyle(.haruWidgetSecondary)
+                                                .opacity(isPast ? 0.5 : 1)
+                                            
+                                            Text(WidgetTimeFormatter.formatTime(event.endDate))
+                                                .font(.jakartaRegular(size: 11))
+                                                .foregroundStyle(.haruWidgetSecondary)
+                                                .opacity(isPast ? 0.5 : 1)
+                                        }
                                     }
                                 } else {
                                     Text(localizedString(key: "하루 종일", comment: "All day event"))
