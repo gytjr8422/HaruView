@@ -420,4 +420,117 @@ struct Provider: AppIntentTimelineProvider {
                titleLower.contains("공휴일") ||
                calendar.calendarIdentifier.contains("holiday")
     }
+}
+
+// MARK: - Specialized Providers for Small Widgets
+
+struct CalendarProvider: TimelineProvider {
+    private let eventStore = EKEventStore()
+    
+    func placeholder(in context: Context) -> SimpleEntry {
+        let config = ConfigurationAppIntent()
+        config.viewType = .calendar
+        return SimpleEntry(date: Date(), configuration: config, events: [], reminders: [])
+    }
+
+    func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
+        Task {
+            let provider = Provider()
+            let config = ConfigurationAppIntent()
+            config.viewType = .calendar
+            let (events, reminders) = await provider.fetchCalendarData(for: .systemSmall, configuration: config)
+            let entry = SimpleEntry(date: Date(), configuration: config, events: events, reminders: reminders)
+            completion(entry)
+        }
+    }
+
+    func getTimeline(in context: Context, completion: @escaping (Timeline<SimpleEntry>) -> ()) {
+        Task {
+            let provider = Provider()
+            let config = ConfigurationAppIntent()
+            config.viewType = .calendar
+            let (events, reminders) = await provider.fetchCalendarData(for: .systemSmall, configuration: config)
+            let currentDate = Date()
+            let entry = SimpleEntry(date: currentDate, configuration: config, events: events, reminders: reminders)
+            let nextUpdateDate = Calendar.current.date(byAdding: .minute, value: 15, to: currentDate)!
+            let timeline = Timeline(entries: [entry], policy: .after(nextUpdateDate))
+            completion(timeline)
+        }
+    }
+}
+
+struct EventsProvider: TimelineProvider {
+    private let eventStore = EKEventStore()
+    
+    func placeholder(in context: Context) -> SimpleEntry {
+        let config = ConfigurationAppIntent()
+        config.widgetType = .events
+        config.viewType = .list
+        return SimpleEntry(date: Date(), configuration: config, events: [], reminders: [])
+    }
+
+    func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
+        Task {
+            let provider = Provider()
+            let config = ConfigurationAppIntent()
+            config.widgetType = .events
+            config.viewType = .list
+            let (events, reminders) = await provider.fetchCalendarData(for: .systemSmall, configuration: config)
+            let entry = SimpleEntry(date: Date(), configuration: config, events: events, reminders: reminders)
+            completion(entry)
+        }
+    }
+
+    func getTimeline(in context: Context, completion: @escaping (Timeline<SimpleEntry>) -> ()) {
+        Task {
+            let provider = Provider()
+            let config = ConfigurationAppIntent()
+            config.widgetType = .events
+            config.viewType = .list
+            let (events, reminders) = await provider.fetchCalendarData(for: .systemSmall, configuration: config)
+            let currentDate = Date()
+            let entry = SimpleEntry(date: currentDate, configuration: config, events: events, reminders: reminders)
+            let nextUpdateDate = Calendar.current.date(byAdding: .minute, value: 15, to: currentDate)!
+            let timeline = Timeline(entries: [entry], policy: .after(nextUpdateDate))
+            completion(timeline)
+        }
+    }
+}
+
+struct RemindersProvider: TimelineProvider {
+    private let eventStore = EKEventStore()
+    
+    func placeholder(in context: Context) -> SimpleEntry {
+        let config = ConfigurationAppIntent()
+        config.widgetType = .reminders
+        config.viewType = .list
+        return SimpleEntry(date: Date(), configuration: config, events: [], reminders: [])
+    }
+
+    func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
+        Task {
+            let provider = Provider()
+            let config = ConfigurationAppIntent()
+            config.widgetType = .reminders
+            config.viewType = .list
+            let (events, reminders) = await provider.fetchCalendarData(for: .systemSmall, configuration: config)
+            let entry = SimpleEntry(date: Date(), configuration: config, events: events, reminders: reminders)
+            completion(entry)
+        }
+    }
+
+    func getTimeline(in context: Context, completion: @escaping (Timeline<SimpleEntry>) -> ()) {
+        Task {
+            let provider = Provider()
+            let config = ConfigurationAppIntent()
+            config.widgetType = .reminders
+            config.viewType = .list
+            let (events, reminders) = await provider.fetchCalendarData(for: .systemSmall, configuration: config)
+            let currentDate = Date()
+            let entry = SimpleEntry(date: currentDate, configuration: config, events: events, reminders: reminders)
+            let nextUpdateDate = Calendar.current.date(byAdding: .minute, value: 15, to: currentDate)!
+            let timeline = Timeline(entries: [entry], policy: .after(nextUpdateDate))
+            completion(timeline)
+        }
+    }
 } 

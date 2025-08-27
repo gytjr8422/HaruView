@@ -89,7 +89,51 @@ struct HaruViewWidget: Widget {
         }
         .configurationDisplayName("Haru Widget")
         .description("Check today's calendar events and reminders at a glance")
-        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
+        .supportedFamilies([.systemMedium, .systemLarge])
+    }
+}
+
+// MARK: - Small Widget Configurations
+
+struct HaruCalendarWidget: Widget {
+    let kind: String = "HaruCalendarWidget"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: CalendarProvider()) { entry in
+            SmallCalendarWidgetView(entry: entry)
+                .containerBackground(Color.haruWidgetBackground, for: .widget)
+        }
+        .configurationDisplayName("Haru Calendar")
+        .description("Monthly calendar view with events and reminders")
+        .supportedFamilies([.systemSmall])
+    }
+}
+
+struct HaruEventsWidget: Widget {
+    let kind: String = "HaruEventsWidget"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: EventsProvider()) { entry in
+            SmallEventsWidget(entry: entry)
+                .containerBackground(Color.haruWidgetBackground, for: .widget)
+        }
+        .configurationDisplayName("Haru Events")
+        .description("Today's calendar events list")
+        .supportedFamilies([.systemSmall])
+    }
+}
+
+struct HaruRemindersWidget: Widget {
+    let kind: String = "HaruRemindersWidget"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: RemindersProvider()) { entry in
+            SmallRemindersWidget(entry: entry)
+                .containerBackground(Color.haruWidgetBackground, for: .widget)
+        }
+        .configurationDisplayName("Haru Reminders")
+        .description("Today's reminders list")
+        .supportedFamilies([.systemSmall])
     }
 }
 

@@ -28,6 +28,15 @@
     "Events" : {
 
     },
+    "Haru Calendar" : {
+
+    },
+    "Haru Events" : {
+
+    },
+    "Haru Reminders" : {
+
+    },
     "Haru Settings" : {
 
     },
@@ -35,6 +44,9 @@
 
     },
     "List View" : {
+
+    },
+    "Monthly calendar view with events and reminders" : {
 
     },
     "no_events_today" : {
@@ -102,6 +114,12 @@
       }
     },
     "Reminders" : {
+
+    },
+    "Today's calendar events list" : {
+
+    },
+    "Today's reminders list" : {
 
     },
     "Toggle Reminder" : {
