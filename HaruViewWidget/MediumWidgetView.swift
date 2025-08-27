@@ -20,7 +20,7 @@ struct MediumWidgetView: View {
                 VStack(alignment: .leading, spacing: 6) {
                     
                     if entry.events.isEmpty {
-                        Text(localizedString(key: "no_events_today", comment: "No events message"))
+                        Text(localizedWidgetContent(key: "no_events_today", comment: "No events message"))
                             .font(.pretendardRegular(size: 11))
                             .foregroundStyle(.haruWidgetSecondary)
                             .padding(.vertical, 4)
@@ -68,7 +68,7 @@ struct MediumWidgetView: View {
                                             }
                                         }
                                     } else {
-                                        Text(localizedString(key: "하루 종일", comment: "All day event"))
+                                        Text(localizedWidgetContent(key: "하루 종일", comment: "All day event"))
                                             .font(.jakartaRegular(size: 9))
                                             .foregroundStyle(.haruWidgetSecondary)
                                             .opacity(isPast ? 0.5 : 1)
@@ -89,7 +89,7 @@ struct MediumWidgetView: View {
                 VStack(alignment: .leading, spacing: 6) {
                     
                     if entry.reminders.isEmpty {
-                        Text(localizedString(key: "no_reminders_today", comment: "No reminders message"))
+                        Text(localizedWidgetContent(key: "no_reminders_today", comment: "No reminders message"))
                             .font(.pretendardRegular(size: 11))
                             .foregroundStyle(.haruWidgetSecondary)
                             .padding(.vertical, 4)

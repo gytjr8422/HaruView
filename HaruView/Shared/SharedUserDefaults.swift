@@ -15,7 +15,7 @@ struct SharedUserDefaults {
 
     static var selectedLanguage: String {
         get {
-            userDefaults?.string(forKey: languageKey) ?? "ko"
+            userDefaults?.string(forKey: languageKey) ?? detectSystemLanguage()
         }
         set {
             userDefaults?.set(newValue, forKey: languageKey)
@@ -23,6 +23,30 @@ struct SharedUserDefaults {
             // When the language is set, immediately reload all widgets.
             WidgetCenter.shared.reloadAllTimelines()
         }
+    }
+    
+    /// 시스템 언어를 감지하여 앱에서 지원하는 언어로 매핑
+    private static func detectSystemLanguage() -> String {
+        let systemLanguages = Locale.preferredLanguages
+        
+        // 첫 번째 언어(주 언어)만 확인
+        guard let primaryLanguage = systemLanguages.first else {
+            print("🌍 Widget - No system language found, defaulting to Korean")
+            return "ko"
+        }
+        
+        let languageCode = primaryLanguage.prefix(2).lowercased()
+        let detectedLanguage: String
+        
+        switch languageCode {
+        case "ko": detectedLanguage = "ko"
+        case "ja": detectedLanguage = "ja"
+        case "en": detectedLanguage = "en"
+        default: detectedLanguage = "ko"
+        }
+        
+        print("🌍 Widget - System language detected: \(detectedLanguage)")
+        return detectedLanguage
     }
     
     static var weekStartDay: Int {

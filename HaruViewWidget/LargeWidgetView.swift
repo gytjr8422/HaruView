@@ -22,13 +22,13 @@ struct LargeWidgetView: View {
                         Image(systemName: "calendar")
                             .foregroundStyle(.haruPrimary)
                             .font(.system(size: 10))
-                        Text(localizedString(key: "일정", comment: "Events section title"))
+                        Text(localizedWidgetContent(key: "일정", comment: "Events section title"))
                             .font(.pretendardBold(size: 11))
                             .foregroundStyle(.haruWidgetText)
                     }
                     
                     if entry.events.isEmpty {
-                        Text(localizedString(key: "no_events_today", comment: "No events message"))
+                        Text(localizedWidgetContent(key: "no_events_today", comment: "No events message"))
                             .font(.pretendardRegular(size: 11))
                             .foregroundStyle(.haruWidgetSecondary)
                             .padding(.vertical, 4)
@@ -76,7 +76,7 @@ struct LargeWidgetView: View {
                                             }
                                         }
                                     } else {
-                                        Text(localizedString(key: "하루 종일", comment: "All day event"))
+                                        Text(localizedWidgetContent(key: "하루 종일", comment: "All day event"))
                                             .font(.jakartaRegular(size: 9))
                                             .foregroundStyle(.haruWidgetSecondary)
                                             .opacity(isPast ? 0.5 : 1)
@@ -100,13 +100,13 @@ struct LargeWidgetView: View {
                         Image(systemName: "checklist")
                             .foregroundStyle(.haruAccent)
                             .font(.system(size: 10))
-                        Text(localizedString(key: "할 일", comment: "Reminders section title"))
+                        Text(localizedWidgetContent(key: "할 일", comment: "Reminders section title"))
                             .font(.pretendardSemiBold(size: 10))
                             .foregroundStyle(.haruWidgetText)
                     }
                     
                     if entry.reminders.isEmpty {
-                        Text(localizedString(key: "no_reminders_today", comment: "No reminders message"))
+                        Text(localizedWidgetContent(key: "no_reminders_today", comment: "No reminders message"))
                             .font(.pretendardRegular(size: 11))
                             .foregroundStyle(.haruWidgetSecondary)
                             .padding(.vertical, 4)

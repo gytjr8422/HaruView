@@ -10,9 +10,6 @@
     "Calendar View" : {
 
     },
-    "Check today's calendar events and reminders at a glance" : {
-
-    },
     "Display as calendar with dots" : {
 
     },
@@ -28,83 +25,287 @@
     "Events" : {
 
     },
-    "Haru Calendar" : {
-
-    },
-    "Haru Calendar + List" : {
-
-    },
-    "Haru Events" : {
-
-    },
-    "Haru Reminders" : {
-
-    },
     "Haru Settings" : {
 
     },
-    "Haru Weekly Schedule" : {
-
+    "haru_calendar" : {
+      "comment" : "Calendar widget name",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haru Calendar"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ハル カレンダー"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "하루 달력"
+          }
+        }
+      }
     },
-    "Haru Widget" : {
-
+    "haru_calendar_desc" : {
+      "comment" : "Calendar widget description",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monthly calendar view with events and reminders"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "予定とリマインダー付きの月間カレンダー"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "일정과 할 일이 표시된 월간 달력"
+          }
+        }
+      }
+    },
+    "haru_calendar_list" : {
+      "comment" : "Calendar + List widget name",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haru Calendar + List"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ハル カレンダー + リスト"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "하루 달력 + 목록"
+          }
+        }
+      }
+    },
+    "haru_calendar_list_desc" : {
+      "comment" : "Calendar + List widget description",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monthly calendar with today's events and reminders"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "月間カレンダーと今日の予定・リマインダー"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "월간 달력과 오늘의 일정 및 할 일"
+          }
+        }
+      }
+    },
+    "haru_events" : {
+      "comment" : "Events widget name",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haru Events"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ハル 予定"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "하루 일정"
+          }
+        }
+      }
+    },
+    "haru_events_desc" : {
+      "comment" : "Events widget description",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today's calendar events list"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日の予定リスト"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "오늘의 일정 목록"
+          }
+        }
+      }
+    },
+    "haru_reminders" : {
+      "comment" : "Reminders widget name",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haru Reminders"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ハル リマインダー"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "하루 할 일"
+          }
+        }
+      }
+    },
+    "haru_reminders_desc" : {
+      "comment" : "Reminders widget description",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today's reminders list"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日のリマインダーリスト"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "오늘의 할 일 목록"
+          }
+        }
+      }
+    },
+    "haru_weekly_schedule" : {
+      "comment" : "Weekly Schedule widget name",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haru Weekly Schedule"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ハル 週間スケジュール"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "하루 주간 일정"
+          }
+        }
+      }
+    },
+    "haru_weekly_schedule_desc" : {
+      "comment" : "Weekly Schedule widget description",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This week's events and reminders overview"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今週の予定とリマインダーの概要"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이번 주 일정과 할 일 개요"
+          }
+        }
+      }
+    },
+    "haru_widget" : {
+      "comment" : "Main widget name",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haru Widget"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ハル ウィジェット"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "하루 위젯"
+          }
+        }
+      }
+    },
+    "haru_widget_desc" : {
+      "comment" : "Main widget description",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check today's calendar events and reminders at a glance"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日の予定とリマインダーを一目で確認"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "오늘의 일정과 할 일을 한눈에 확인하세요"
+          }
+        }
+      }
     },
     "List View" : {
 
-    },
-    "Monthly calendar view with events and reminders" : {
-
-    },
-    "Monthly calendar with today's events and reminders" : {
-
-    },
-    "no_events_today" : {
-      "comment" : "No events message",
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No events today"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "今日は予定がありません"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "오늘은 일정이 없습니다"
-          }
-        }
-      }
-    },
-    "no_reminders_today" : {
-      "comment" : "No reminders message",
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No reminders today"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "今日はリマインダーがありません"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "오늘은 할 일이 없습니다"
-          }
-        }
-      }
     },
     "Reminder ID" : {
       "localizations" : {
@@ -125,15 +326,6 @@
     "Reminders" : {
 
     },
-    "This week's events and reminders overview" : {
-
-    },
-    "Today's calendar events list" : {
-
-    },
-    "Today's reminders list" : {
-
-    },
     "Toggle Reminder" : {
 
     },
@@ -148,249 +340,6 @@
     },
     "Widget Type" : {
 
-    },
-    "오늘의 미리알림을 표시합니다" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Displays today's reminders"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "今日のリマインダーを表示します"
-          }
-        }
-      }
-    },
-    "오늘의 일정과 미리알림을 표시하는 위젯입니다." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This widget shows today's events and reminders."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "今日の予定とリマインダーを表示するウィジェットです。"
-          }
-        }
-      }
-    },
-    "오늘의 캘린더 일정과 미리알림을 한눈에 확인하세요" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Check today's calendar events and reminders at a glance."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "今日のカレンダー予定とリマインダーを一目で確認できます"
-          }
-        }
-      }
-    },
-    "오늘의 캘린더 일정을 표시합니다" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Displays today's calendar events"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "今日のカレンダー予定を表示します"
-          }
-        }
-      }
-    },
-    "위젯 타입" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Widget Type"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ウィジェットタイプ"
-          }
-        }
-      }
-    },
-    "위젯에서 할 일의 완료 상태를 토글합니다." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mark tasks as complete from the widget."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ウィジェットからタスクの完了状態を切り替えます。"
-          }
-        }
-      }
-    },
-    "일정" : {
-      "comment" : "Events section title",
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Events"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "予定"
-          }
-        }
-      }
-    },
-    "일정이 없습니다" : {
-      "comment" : "No events message",
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No events"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "予定がありません"
-          }
-        }
-      }
-    },
-    "하루 종일" : {
-      "comment" : "All day event",
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All day"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "終日"
-          }
-        }
-      }
-    },
-    "하루뷰 Widget" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Haru Widget"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Haru Widget"
-          }
-        }
-      }
-    },
-    "하루뷰 설정" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Haru Settings"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Haru設定"
-          }
-        }
-      }
-    },
-    "할 일" : {
-      "comment" : "Reminders section title",
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "To-Dos"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "タスク"
-          }
-        }
-      }
-    },
-    "할 일 토글" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Toggle Task"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "タスク切替"
-          }
-        }
-      }
-    },
-    "할 일이 없습니다" : {
-      "comment" : "No reminders message",
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No tasks"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "タスクがありません"
-          }
-        }
-      }
     }
   },
   "version" : "1.0"

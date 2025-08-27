@@ -137,11 +137,11 @@ struct EventReminderListView: View {
             // 데이터가 모두 없는 경우
             if items.events.isEmpty && items.reminders.isEmpty {
                 VStack(spacing: 8) {
-                    Text(localizedString(key: "no_events_today", comment: "No events message"))
+                    Text(localizedWidgetContent(key: "no_events_today", comment: "No events message"))
                         .font(.pretendardRegular(size: 11))
                         .foregroundStyle(.haruWidgetSecondary)
                     
-                    Text(localizedString(key: "no_reminders_today", comment: "No reminders message"))
+                    Text(localizedWidgetContent(key: "no_reminders_today", comment: "No reminders message"))
                         .font(.pretendardRegular(size: 11))
                         .foregroundStyle(.haruWidgetSecondary)
                 }
@@ -178,7 +178,7 @@ struct EventRowView: View {
                 if !event.isAllDay {
                     TimeDisplayView(event: event, isPast: isPast)
                 } else {
-                    Text(localizedString(key: "하루 종일", comment: "All day event"))
+                    Text(localizedWidgetContent(key: "하루 종일", comment: "All day event"))
                         .font(.jakartaRegular(size: 9))
                         .foregroundStyle(.haruWidgetSecondary)
                         .opacity(isPast ? 0.5 : 1)

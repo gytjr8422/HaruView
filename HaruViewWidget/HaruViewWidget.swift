@@ -87,8 +87,8 @@ struct HaruViewWidget: Widget {
             HaruViewWidgetEntryView(entry: entry)
                 .containerBackground(Color.haruWidgetBackground, for: .widget)
         }
-        .configurationDisplayName("Haru Widget")
-        .description("Check today's calendar events and reminders at a glance")
+        .configurationDisplayName(NSLocalizedString("haru_widget", comment: "Main widget name"))
+        .description(NSLocalizedString("haru_widget_desc", comment: "Main widget description"))
         .supportedFamilies([.systemMedium, .systemLarge])
     }
 }
@@ -103,8 +103,8 @@ struct HaruCalendarWidget: Widget {
             SmallCalendarWidgetView(entry: entry)
                 .containerBackground(Color.haruWidgetBackground, for: .widget)
         }
-        .configurationDisplayName("Haru Calendar")
-        .description("Monthly calendar view with events and reminders")
+        .configurationDisplayName(NSLocalizedString("haru_calendar", comment: "Calendar widget name"))
+        .description(NSLocalizedString("haru_calendar_desc", comment: "Calendar widget description"))
         .supportedFamilies([.systemSmall])
     }
 }
@@ -117,8 +117,8 @@ struct HaruEventsWidget: Widget {
             SmallEventsWidget(entry: entry)
                 .containerBackground(Color.haruWidgetBackground, for: .widget)
         }
-        .configurationDisplayName("Haru Events")
-        .description("Today's calendar events list")
+        .configurationDisplayName(NSLocalizedString("haru_events", comment: "Events widget name"))
+        .description(NSLocalizedString("haru_events_desc", comment: "Events widget description"))
         .supportedFamilies([.systemSmall])
     }
 }
@@ -131,8 +131,8 @@ struct HaruRemindersWidget: Widget {
             SmallRemindersWidget(entry: entry)
                 .containerBackground(Color.haruWidgetBackground, for: .widget)
         }
-        .configurationDisplayName("Haru Reminders")
-        .description("Today's reminders list")
+        .configurationDisplayName(NSLocalizedString("haru_reminders", comment: "Reminders widget name"))
+        .description(NSLocalizedString("haru_reminders_desc", comment: "Reminders widget description"))
         .supportedFamilies([.systemSmall])
     }
 }
@@ -145,8 +145,8 @@ struct HaruCalendarListWidget: Widget {
             MediumCalendarListWidgetView(entry: entry)
                 .containerBackground(Color.haruWidgetBackground, for: .widget)
         }
-        .configurationDisplayName("Haru Calendar + List")
-        .description("Monthly calendar with today's events and reminders")
+        .configurationDisplayName(NSLocalizedString("haru_calendar_list", comment: "Calendar + List widget name"))
+        .description(NSLocalizedString("haru_calendar_list_desc", comment: "Calendar + List widget description"))
         .supportedFamilies([.systemMedium])
     }
 }
@@ -159,8 +159,8 @@ struct HaruWeeklyWidget: Widget {
             WeeklyScheduleWidgetView(entry: entry)
                 .containerBackground(Color.haruWidgetBackground, for: .widget)
         }
-        .configurationDisplayName("Haru Weekly Schedule")
-        .description("This week's events and reminders overview")
+        .configurationDisplayName(NSLocalizedString("haru_weekly_schedule", comment: "Weekly Schedule widget name"))
+        .description(NSLocalizedString("haru_weekly_schedule_desc", comment: "Weekly Schedule widget description"))
         .supportedFamilies([.systemMedium])
     }
 }

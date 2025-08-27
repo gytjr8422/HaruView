@@ -479,7 +479,7 @@ struct Provider: AppIntentTimelineProvider {
                 self.eventStore.fetchReminders(matching: cmpPred) { comp in
                     bucket.append(contentsOf: comp ?? [])
                     
-                    let calendar = Calendar.withUserWeekStartPreference()
+                    _ = Calendar.withUserWeekStartPreference()
                     
                     let filtered = bucket.filter { rem in
                         guard let due = rem.dueDateComponents?.date else {
