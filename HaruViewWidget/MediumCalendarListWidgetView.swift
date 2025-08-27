@@ -13,16 +13,20 @@ struct MediumCalendarListWidgetView: View {
     
     var body: some View {
         HStack(spacing: 8) {
-            // 왼쪽: 달력 뷰 (Small 위젯과 동일한 비율)
+            // 왼쪽: 달력 뷰 (크기 고정)
             SmallCalendarWidgetView(entry: entry)
+                .frame(width: 130, height: 125)
+                .layoutPriority(1) // 달력 크기 우선순위 설정
             
             // 구분선
             Rectangle()
                 .fill(.haruCardBorder)
+                .padding(.vertical, 5)
                 .frame(width: 1, height: .infinity)
             
             // 오른쪽: 일정과 할일 리스트
             EventReminderListView(entry: entry)
+                .padding(.top, 10)
                 .frame(maxWidth: .infinity)
         }
     }
