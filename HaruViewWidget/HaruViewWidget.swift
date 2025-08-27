@@ -151,6 +151,20 @@ struct HaruCalendarListWidget: Widget {
     }
 }
 
+struct HaruWeeklyWidget: Widget {
+    let kind: String = "HaruWeeklyWidget"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: WeeklyScheduleProvider()) { entry in
+            WeeklyScheduleWidgetView(entry: entry)
+                .containerBackground(Color.haruWidgetBackground, for: .widget)
+        }
+        .configurationDisplayName("Haru Weekly Schedule")
+        .description("This week's events and reminders overview")
+        .supportedFamilies([.systemMedium])
+    }
+}
+
 extension ConfigurationAppIntent {
     fileprivate static var smiley: ConfigurationAppIntent {
         let intent = ConfigurationAppIntent()

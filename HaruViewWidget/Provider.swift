@@ -420,6 +420,125 @@ struct Provider: AppIntentTimelineProvider {
                titleLower.contains("공휴일") ||
                calendar.calendarIdentifier.contains("holiday")
     }
+    
+    // 주간 위젯용: 이번 주 전체 이벤트와 할일
+    func fetchWeeklyData() async -> ([CalendarEvent], [ReminderItem]) {
+        let calendar = Calendar.withUserWeekStartPreference()
+        let today = Date()
+        let startOfWeek = calendar.dateInterval(of: .weekOfYear, for: today)?.start ?? today
+        let endOfWeek = calendar.dateInterval(of: .weekOfYear, for: today)?.end ?? calendar.date(byAdding: .day, value: 7, to: startOfWeek)!
+        
+        // EventKit 권한 확인
+        let eventStatus = EKEventStore.authorizationStatus(for: .event)
+        let reminderStatus = EKEventStore.authorizationStatus(for: .reminder)
+        
+        var events: [CalendarEvent] = []
+        var reminders: [ReminderItem] = []
+        
+        // 이벤트 가져오기
+        if eventStatus == .fullAccess {
+            let predicate = eventStore.predicateForEvents(withStart: startOfWeek, end: endOfWeek, calendars: nil)
+            let ekEvents = eventStore.events(matching: predicate)
+            
+            events = ekEvents
+                .filter { !isHolidayCalendar($0.calendar) }
+                .map { event in
+                    let compsStart = calendar.dateComponents([.hour, .minute], from: event.startDate)
+                    let compsEnd = calendar.dateComponents([.hour, .minute], from: event.endDate)
+                    let isAllDayDetected = calendar.isDate(event.startDate, inSameDayAs: event.endDate) &&
+                                         compsStart.hour == 0 && compsStart.minute == 0 &&
+                                         compsEnd.hour == 23 && compsEnd.minute == 59
+                    
+                    return CalendarEvent(
+                        title: event.title ?? "제목 없음",
+                        startDate: event.startDate,
+                        endDate: event.endDate,
+                        isAllDay: event.isAllDay || isAllDayDetected,
+                        calendarColor: event.calendar.cgColor
+                    )
+                }
+                .sorted(by: eventSortRule)
+        }
+        
+        // 할일 가져오기
+        if reminderStatus == .fullAccess {
+            reminders = await fetchWeeklyReminders(startOfWeek: startOfWeek, endOfWeek: endOfWeek)
+        }
+        
+        return (events, reminders)
+    }
+    
+    private func fetchWeeklyReminders(startOfWeek: Date, endOfWeek: Date) async -> [ReminderItem] {
+        return await withCheckedContinuation { continuation in
+            let incPred = eventStore.predicateForIncompleteReminders(withDueDateStarting: nil, ending: nil, calendars: nil)
+            let cmpPred = eventStore.predicateForCompletedReminders(withCompletionDateStarting: nil, ending: nil, calendars: nil)
+            
+            var bucket: [EKReminder] = []
+            eventStore.fetchReminders(matching: incPred) { inc in
+                bucket.append(contentsOf: inc ?? [])
+                self.eventStore.fetchReminders(matching: cmpPred) { comp in
+                    bucket.append(contentsOf: comp ?? [])
+                    
+                    let calendar = Calendar.withUserWeekStartPreference()
+                    
+                    let filtered = bucket.filter { rem in
+                        guard let due = rem.dueDateComponents?.date else {
+                            return false // 주간 위젯에서는 마감일 없는 할일 제외
+                        }
+                        
+                        // ReminderType 추출
+                        let reminderType: WidgetReminderType
+                        if let url = rem.url {
+                            let urlString = url.absoluteString
+                            if urlString.contains("haruview-reminder-type://UNTIL") || urlString.contains("haruview_type=UNTIL") {
+                                reminderType = .untilDate
+                            } else {
+                                reminderType = .onDate
+                            }
+                        } else {
+                            reminderType = .onDate
+                        }
+                        
+                        switch reminderType {
+                        case .onDate:
+                            // 특정 날짜 할 일: 이번 주 내의 날짜만
+                            return due >= startOfWeek && due < endOfWeek
+                        case .untilDate:
+                            // 마감일까지 할 일: 마감일이 이번 주 내에 있거나 이후인 경우
+                            return due >= startOfWeek
+                        }
+                    }
+                    
+                    let reminderItems = filtered
+                        .map { reminder in
+                            let reminderType: WidgetReminderType
+                            if let url = reminder.url {
+                                let urlString = url.absoluteString
+                                if urlString.contains("haruview-reminder-type://UNTIL") || urlString.contains("haruview_type=UNTIL") {
+                                    reminderType = .untilDate
+                                } else {
+                                    reminderType = .onDate
+                                }
+                            } else {
+                                reminderType = .onDate
+                            }
+                            
+                            return ReminderItem(
+                                id: reminder.calendarItemIdentifier,
+                                title: reminder.title ?? "제목 없음",
+                                dueDate: reminder.dueDateComponents?.date,
+                                priority: Int(reminder.priority),
+                                isCompleted: reminder.isCompleted,
+                                reminderType: reminderType
+                            )
+                        }
+                        .sorted(by: reminderSortRule)
+                    
+                    continuation.resume(returning: Array(reminderItems))
+                }
+            }
+        }
+    }
 }
 
 // MARK: - Specialized Providers for Small Widgets
@@ -563,6 +682,35 @@ struct CalendarListProvider: TimelineProvider {
             let (events, reminders) = await provider.fetchCalendarData(for: .systemMedium, configuration: config)
             let currentDate = Date()
             let entry = SimpleEntry(date: currentDate, configuration: config, events: events, reminders: reminders)
+            let nextUpdateDate = Calendar.current.date(byAdding: .minute, value: 15, to: currentDate)!
+            let timeline = Timeline(entries: [entry], policy: .after(nextUpdateDate))
+            completion(timeline)
+        }
+    }
+}
+
+struct WeeklyScheduleProvider: TimelineProvider {
+    private let eventStore = EKEventStore()
+    
+    func placeholder(in context: Context) -> SimpleEntry {
+        return SimpleEntry(date: Date(), configuration: ConfigurationAppIntent(), events: [], reminders: [])
+    }
+
+    func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
+        Task {
+            let provider = Provider()
+            let (events, reminders) = await provider.fetchWeeklyData()
+            let entry = SimpleEntry(date: Date(), configuration: ConfigurationAppIntent(), events: events, reminders: reminders)
+            completion(entry)
+        }
+    }
+
+    func getTimeline(in context: Context, completion: @escaping (Timeline<SimpleEntry>) -> ()) {
+        Task {
+            let provider = Provider()
+            let (events, reminders) = await provider.fetchWeeklyData()
+            let currentDate = Date()
+            let entry = SimpleEntry(date: currentDate, configuration: ConfigurationAppIntent(), events: events, reminders: reminders)
             let nextUpdateDate = Calendar.current.date(byAdding: .minute, value: 15, to: currentDate)!
             let timeline = Timeline(entries: [entry], policy: .after(nextUpdateDate))
             completion(timeline)

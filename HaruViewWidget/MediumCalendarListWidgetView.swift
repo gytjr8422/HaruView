@@ -15,7 +15,6 @@ struct MediumCalendarListWidgetView: View {
         HStack(spacing: 8) {
             // 왼쪽: 달력 뷰 (Small 위젯과 동일한 비율)
             SmallCalendarWidgetView(entry: entry)
-                .aspectRatio(1, contentMode: .fit)
             
             // 구분선
             Rectangle()
