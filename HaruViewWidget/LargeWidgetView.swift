@@ -24,13 +24,13 @@ struct LargeWidgetView: View {
                             .font(.system(size: 10))
                         Text(NSLocalizedString("일정", comment: "Events section title"))
                             .font(.pretendardBold(size: 11))
-                            .foregroundStyle(.haruTextPrimary)
+                            .foregroundStyle(.haruWidgetText)
                     }
                     
                     if entry.events.isEmpty {
                         Text(NSLocalizedString("no_events_today", bundle: .widgetBundle, comment: "No events message"))
                             .font(.pretendardRegular(size: 11))
-                            .foregroundStyle(.gray)
+                            .foregroundStyle(.haruWidgetSecondary)
                             .padding(.vertical, 4)
                     } else {
                         ForEach(Array(entry.events.prefix(9).enumerated()), id: \.offset) { index, event in
@@ -47,7 +47,7 @@ struct LargeWidgetView: View {
                                     Text(event.title)
                                         .font(.pretendardBold(size: 13))
                                         .lineLimit(1)
-                                        .foregroundStyle(.haruTextPrimary)
+                                        .foregroundStyle(.haruWidgetText)
                                         .strikethrough(isPast)
                                         .opacity(isPast ? 0.5 : 1)
                                     
@@ -55,23 +55,23 @@ struct LargeWidgetView: View {
                                         HStack(spacing: 2) {
                                             Text(event.startDate, style: .time)
                                                 .font(.jakartaRegular(size: 11))
-                                                .foregroundStyle(.gray)
+                                                .foregroundStyle(.haruWidgetSecondary)
                                                 .opacity(isPast ? 0.5 : 1)
                                             
                                             Text("-")
                                                 .font(.jakartaRegular(size: 11))
-                                                .foregroundStyle(.gray)
+                                                .foregroundStyle(.haruWidgetSecondary)
                                                 .opacity(isPast ? 0.5 : 1)
                                             
                                             Text(event.endDate, style: .time)
                                                 .font(.jakartaRegular(size: 11))
-                                                .foregroundStyle(.gray)
+                                                .foregroundStyle(.haruWidgetSecondary)
                                                 .opacity(isPast ? 0.5 : 1)
                                         }
                                     } else {
                                         Text(NSLocalizedString("하루 종일", comment: "All day event"))
                                             .font(.jakartaRegular(size: 9))
-                                            .foregroundStyle(.gray)
+                                            .foregroundStyle(.haruWidgetSecondary)
                                             .opacity(isPast ? 0.5 : 1)
                                     }
                                 }
@@ -95,13 +95,13 @@ struct LargeWidgetView: View {
                             .font(.system(size: 10))
                         Text(NSLocalizedString("할 일", comment: "Reminders section title"))
                             .font(.pretendardSemiBold(size: 10))
-                            .foregroundStyle(.haruTextPrimary)
+                            .foregroundStyle(.haruWidgetText)
                     }
                     
                     if entry.reminders.isEmpty {
                         Text(NSLocalizedString("no_reminders_today", bundle: .widgetBundle, comment: "No reminders message"))
                             .font(.pretendardRegular(size: 11))
-                            .foregroundStyle(.gray)
+                            .foregroundStyle(.haruWidgetSecondary)
                             .padding(.vertical, 4)
                     } else {
                         ForEach(Array(entry.reminders.prefix(9).enumerated()), id: \.element.id) { index, reminder in

@@ -43,11 +43,23 @@ extension ShapeStyle where Self == Color {
     /// 메인 브랜드 컬러 (#A76545)
     static var haruPrimary: Color { Color(hexCode: "A76545") }
     
+    /// 위젯 배경 (라이트/다크 모드 대응)
+    static var haruWidgetBackground: Color { 
+        Color(uiColor: .systemBackground)
+    }
+    
+    /// 위젯 텍스트 (라이트/다크 모드 대응) 
+    static var haruWidgetText: Color {
+        Color.primary
+    }
+    
+    /// 위젯 세컨더리 텍스트 (라이트/다크 모드 대응)
+    static var haruWidgetSecondary: Color {
+        Color.secondary
+    }
+    
     /// 메인 배경색 (#FFFCF5 - 크림색)
     static var haruBackground: Color { Color(hexCode: "FFFCF5") }
-    
-    /// 위젯 배경 (메인 배경과 동일)
-    static var haruWidgetBackground: Color { haruBackground }
     
     /// 세컨더리 텍스트 및 보더 (#6E5C49)
     static var haruSecondary: Color { Color(hexCode: "6E5C49") }
@@ -74,8 +86,14 @@ extension Color {
     /// 메인 배경색 (#FFFCF5 - 크림색)
     static let haruBackground = Color(hexCode: "FFFCF5")
     
-    /// 위젯 배경 (메인 배경과 동일)
-    static let haruWidgetBackground = haruBackground
+    /// 위젯 배경 (라이트/다크 모드 대응)
+    static let haruWidgetBackground = Color(uiColor: .systemBackground)
+    
+    /// 위젯 텍스트 (라이트/다크 모드 대응) 
+    static let haruWidgetText = Color.primary
+    
+    /// 위젯 세컨더리 텍스트 (라이트/다크 모드 대응)
+    static let haruWidgetSecondary = Color.secondary
     
     /// 세컨더리 텍스트 및 보더 (#6E5C49)
     static let haruSecondary = Color(hexCode: "6E5C49")
