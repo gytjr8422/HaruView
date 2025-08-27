@@ -39,6 +39,7 @@
     },
     "no_events_today" : {
       "comment" : "No events message",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -62,6 +63,7 @@
     },
     "no_reminders_today" : {
       "comment" : "No reminders message",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -221,6 +223,7 @@
     },
     "일정" : {
       "comment" : "Events section title",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -256,6 +259,7 @@
     },
     "하루 종일" : {
       "comment" : "All day event",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -307,6 +311,7 @@
     },
     "할 일" : {
       "comment" : "Reminders section title",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

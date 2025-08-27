@@ -25,10 +25,10 @@ struct SmallCalendarWidgetView: View {
                 
                 // 달력 그리드
                 calendarGrid(for: geometry.size)
+                Spacer()
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding(.horizontal, adaptiveHorizontalPadding(for: geometry.size))
-//            .padding(.vertical, adaptiveVerticalPadding(for: geometry.size))
         }
     }
     
@@ -70,12 +70,16 @@ struct SmallCalendarWidgetView: View {
         
         switch currentLanguage {
         case "ko":
+            formatter.locale = Locale(identifier: "ko_KR")
             formatter.dateFormat = "M월"
         case "en":
+            formatter.locale = Locale(identifier: "en_US")
             formatter.dateFormat = "MMM"
         case "ja":
+            formatter.locale = Locale(identifier: "ja_JP")
             formatter.dateFormat = "M月"
         default:
+            formatter.locale = Locale(identifier: "ko_KR")
             formatter.dateFormat = "M월"
         }
         
@@ -137,18 +141,20 @@ struct SmallCalendarWidgetView: View {
     private func calendarDayCell(_ dayInfo: CalendarDayInfo, size: CGSize) -> some View {
         let cellSize = adaptiveCellSize(for: size)
         
-        return VStack(spacing: 1) {
+        return VStack(spacing: dayInfo.isToday ? 1 : 0) {
             // 날짜 숫자 (빈 칸은 표시하지 않음)
             if dayInfo.day > 0 {
                 Text("\(dayInfo.day)")
-                    .font(.system(size: adaptiveFontSize(12, for: size), weight: .bold))
+                    .font(.system(size: adaptiveFontSize(12.5, for: size), weight: .bold))
                     .foregroundStyle(textColor(for: dayInfo))
                     .frame(width: cellSize.width, height: cellSize.height)
                     .background(
                         RoundedRectangle(cornerRadius: cellSize.width * 0.35) // 코너 반경 조금 더 크게
                             .fill(backgroundColor(for: dayInfo))
-                            .padding(-2) // 배경을 2pt씩 확장
+                            .padding(.horizontal, -2) // 배경을 2pt씩 확장
+                            .padding(.vertical, -1)
                     )
+                    .padding(.top, dayInfo.isToday ? 1 : 0)
             } else {
                 // 빈 공간
                 Color.clear
@@ -179,7 +185,8 @@ struct SmallCalendarWidgetView: View {
         }
     }
     
-    private func adaptiveCellSize(for size: CGSize) -> (width: CGFloat, height: CGFloat) {        let spacing = adaptiveSpacing(for: size)
+    private func adaptiveCellSize(for size: CGSize) -> (width: CGFloat, height: CGFloat) {
+        let spacing = adaptiveSpacing(for: size)
         
         // 사용 가능한 너비에서 셀 너비 계산 (좌우 패딩 0이므로 전체 너비 사용)
         let availableWidth = size.width
@@ -205,7 +212,7 @@ struct SmallCalendarWidgetView: View {
         // 동적 비율 조정: 작은 화면에서는 더 작게, 큰 화면에서는 더 크게
         let sizeRatio = min(size.width / 158, size.height / 158)
         let widthMultiplier = sizeRatio > 1.0 ? 0.9 : 0.85 // 큰 화면에서는 더 여유롭게
-        let heightMultiplier = sizeRatio > 1.0 ? 0.7 : 0.6  // 작은 화면에서는 더 컴팩트하게
+        let heightMultiplier = sizeRatio > 1.0 ? 1.1 : 1  // 작은 화면에서는 더 컴팩트하게
         
         let finalWidth = cellWidth * widthMultiplier
         let finalHeight = rawCellHeight * heightMultiplier
