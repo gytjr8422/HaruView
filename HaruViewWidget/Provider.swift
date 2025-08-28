@@ -13,7 +13,7 @@ extension Calendar {
     /// 위젯용 사용자 설정에 따른 주 시작일이 적용된 Calendar 반환
     static func withUserWeekStartPreference() -> Calendar {
         var calendar = Calendar.current
-        let weekStartsOnMonday = UserDefaults.standard.object(forKey: "weekStartsOnMonday") as? Bool ?? false
+        let weekStartsOnMonday = SharedUserDefaults.weekStartDay == 1
         calendar.firstWeekday = weekStartsOnMonday ? 2 : 1  // 1=일요일, 2=월요일
         return calendar
     }
