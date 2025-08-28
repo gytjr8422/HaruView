@@ -37,7 +37,7 @@ struct MediumWidgetView: View {
                                 
                                 VStack(alignment: .leading) {
                                     Text(event.title)
-                                        .font(.pretendardBold(size: 13))
+                                        .font(.pretendardBold(size: 12))
                                         .lineLimit(1)
                                         .foregroundStyle(.haruWidgetText)
                                         .strikethrough(isPast)
@@ -46,30 +46,30 @@ struct MediumWidgetView: View {
                                     if !event.isAllDay {
                                         if WidgetTimeFormatter.isSameTime(start: event.startDate, end: event.endDate) {
                                             Text(WidgetTimeFormatter.formatTime(event.startDate))
-                                                .font(.jakartaRegular(size: 11))
+                                                .font(.jakartaRegular(size: 10))
                                                 .foregroundStyle(.haruWidgetSecondary)
                                                 .opacity(isPast ? 0.5 : 1)
                                         } else {
                                             HStack(spacing: 2) {
                                                 Text(WidgetTimeFormatter.formatTime(event.startDate))
-                                                    .font(.jakartaRegular(size: 11))
+                                                    .font(.jakartaRegular(size: 10))
                                                     .foregroundStyle(.haruWidgetSecondary)
                                                     .opacity(isPast ? 0.5 : 1)
                                                 
                                                 Text("-")
-                                                    .font(.jakartaRegular(size: 11))
+                                                    .font(.jakartaRegular(size: 10))
                                                     .foregroundStyle(.haruWidgetSecondary)
                                                     .opacity(isPast ? 0.5 : 1)
                                                 
                                                 Text(WidgetTimeFormatter.formatTime(event.endDate))
-                                                    .font(.jakartaRegular(size: 11))
+                                                    .font(.jakartaRegular(size: 10))
                                                     .foregroundStyle(.haruWidgetSecondary)
                                                     .opacity(isPast ? 0.5 : 1)
                                             }
                                         }
                                     } else {
                                         Text(localizedWidgetContent(key: "하루 종일", comment: "All day event"))
-                                            .font(.jakartaRegular(size: 9))
+                                            .font(.jakartaRegular(size: 8))
                                             .foregroundStyle(.haruWidgetSecondary)
                                             .opacity(isPast ? 0.5 : 1)
                                     }
@@ -90,7 +90,7 @@ struct MediumWidgetView: View {
                     
                     if entry.reminders.isEmpty {
                         Text(localizedWidgetContent(key: "no_reminders_today", comment: "No reminders message"))
-                            .font(.pretendardRegular(size: 11))
+                            .font(.pretendardRegular(size: 10))
                             .foregroundStyle(.haruWidgetSecondary)
                             .padding(.vertical, 4)
                     } else {
@@ -108,7 +108,7 @@ struct MediumWidgetView: View {
                                     Button(intent: ToggleReminderIntent(reminderId: reminder.id)) {
                                         Image(systemName: reminder.isCompleted ? "checkmark.circle.fill" : "circle")
                                             .foregroundStyle(reminder.isCompleted ? .haruCompleted : .gray)
-                                            .font(.system(size: 20))
+                                            .font(.system(size: 18))
                                             .contentTransition(.symbolEffect(.replace))
                                     }
                                     .buttonStyle(.plain)
@@ -117,7 +117,7 @@ struct MediumWidgetView: View {
                                 }
                                 
                                 Text(reminder.title)
-                                    .font(.pretendardSemiBold(size: 13))
+                                    .font(.pretendardSemiBold(size: 12))
                                     .lineLimit(1)
                                     .strikethrough(reminder.isCompleted)
                                     .foregroundStyle(reminder.isCompleted ? .gray : .haruTextPrimary)

@@ -11,11 +11,14 @@ import SwiftUI
 @main
 struct HaruViewWidgetBundle: WidgetBundle {
     var body: some Widget {
-        HaruViewWidget()
+        HaruViewWidget() // 기존 사용자를 위해 유지
         HaruCalendarWidget()
         HaruEventsWidget()
         HaruRemindersWidget()
         HaruCalendarListWidget()
         HaruWeeklyWidget()
+        HaruMediumWidget()
+        HaruLargeWidget()
+        HaruMonthlyCalendarWidget()
     }
 }

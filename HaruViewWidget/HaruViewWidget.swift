@@ -59,21 +59,39 @@ struct HaruViewWidgetEntryView: View {
     @Environment(\.widgetFamily) var family
     
     var body: some View {
-        ZStack {
-            // 앱과 동일한 배경색
-            Color.haruWidgetBackground
-            
-            switch family {
-            case .systemSmall:
-                SmallWidgetView(entry: entry)
-            case .systemMedium:
-                MediumWidgetView(entry: entry)
-            case .systemLarge:
-                LargeWidgetView(entry: entry)
-            default:
-                SmallWidgetView(entry: entry)
+        VStack(spacing: 3) {
+            // 구버전 알림 배너
+            HStack {
+                Text("→ 새 위젯 권장")
+                    .font(.system(size: 9, weight: .medium))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 5)
+                    .padding(.vertical, 1)
+                    .background(Color.orange)
+                    .cornerRadius(3)
+                Spacer()
             }
+            .padding(.horizontal, 6)
+            .padding(.top, 4)
+            
+            // 기존 위젯 내용 (높이 제한)
+            Group {
+                switch family {
+                case .systemSmall:
+                    SmallWidgetView(entry: entry)
+                case .systemMedium:
+                    MediumWidgetView(entry: entry)
+                case .systemLarge:
+                    LargeWidgetView(entry: entry)
+                default:
+                    SmallWidgetView(entry: entry)
+                }
+            }
+            .clipped() // 넘치는 내용 잘라내기
+            
+            Spacer(minLength: 0)
         }
+        .background(Color.haruWidgetBackground)
     }
 }
 
@@ -87,9 +105,9 @@ struct HaruViewWidget: Widget {
             HaruViewWidgetEntryView(entry: entry)
                 .containerBackground(Color.haruWidgetBackground, for: .widget)
         }
-        .configurationDisplayName(NSLocalizedString("haru_widget", comment: "Main widget name"))
-        .description(NSLocalizedString("haru_widget_desc", comment: "Main widget description"))
-        .supportedFamilies([.systemMedium, .systemLarge])
+        .configurationDisplayName("Haru Widget (구버전)")
+        .description("새로운 개별 위젯들을 사용하시기 바랍니다")
+        .supportedFamilies([.systemMedium, .systemLarge]) // 기존 사용자를 위해 복원
     }
 }
 
@@ -162,6 +180,48 @@ struct HaruWeeklyWidget: Widget {
         .configurationDisplayName(NSLocalizedString("haru_weekly_schedule", comment: "Weekly Schedule widget name"))
         .description(NSLocalizedString("haru_weekly_schedule_desc", comment: "Weekly Schedule widget description"))
         .supportedFamilies([.systemMedium])
+    }
+}
+
+struct HaruMonthlyCalendarWidget: Widget {
+    let kind: String = "HaruMonthlyCalendarWidget"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: MonthlyCalendarProvider()) { entry in
+            LargeMonthlyCalendarWidget(entry: entry)
+                .containerBackground(Color.haruWidgetBackground, for: .widget)
+        }
+        .configurationDisplayName(NSLocalizedString("haru_monthly_calendar", comment: "Monthly Calendar widget name"))
+        .description(NSLocalizedString("haru_monthly_calendar_desc", comment: "Monthly Calendar widget description"))
+        .supportedFamilies([.systemLarge])
+    }
+}
+
+struct HaruMediumWidget: Widget {
+    let kind: String = "HaruMediumWidget"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: MediumListProvider()) { entry in
+            MediumWidgetView(entry: entry)
+                .containerBackground(Color.haruWidgetBackground, for: .widget)
+        }
+        .configurationDisplayName(NSLocalizedString("haru_medium_widget", comment: "Medium Widget name"))
+        .description(NSLocalizedString("haru_medium_widget_desc", comment: "Medium Widget description"))
+        .supportedFamilies([.systemMedium])
+    }
+}
+
+struct HaruLargeWidget: Widget {
+    let kind: String = "HaruLargeWidget"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: LargeListProvider()) { entry in
+            LargeWidgetView(entry: entry)
+                .containerBackground(Color.haruWidgetBackground, for: .widget)
+        }
+        .configurationDisplayName(NSLocalizedString("haru_large_widget", comment: "Large Widget name"))
+        .description(NSLocalizedString("haru_large_widget_desc", comment: "Large Widget description"))
+        .supportedFamilies([.systemLarge])
     }
 }
 

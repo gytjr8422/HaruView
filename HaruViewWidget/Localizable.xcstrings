@@ -7,6 +7,12 @@
     "%lld" : {
 
     },
+    "→ 새 위젯 권장" : {
+
+    },
+    "+%lld" : {
+
+    },
     "Calendar View" : {
 
     },
@@ -26,6 +32,9 @@
 
     },
     "Haru Settings" : {
+
+    },
+    "Haru Widget (구버전)" : {
 
     },
     "haru_calendar" : {
@@ -166,6 +175,144 @@
         }
       }
     },
+    "haru_large_widget" : {
+      "comment" : "Large Widget name",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haru Large"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ハル ラージ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "하루 라지"
+          }
+        }
+      }
+    },
+    "haru_large_widget_desc" : {
+      "comment" : "Large Widget description",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Detailed view of today's events and reminders"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日の予定とリマインダーの詳細表示"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "오늘의 일정과 할 일을 자세히 표시"
+          }
+        }
+      }
+    },
+    "haru_medium_widget" : {
+      "comment" : "Medium Widget name",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haru Medium"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ハル ミディアム"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "하루 미디엄"
+          }
+        }
+      }
+    },
+    "haru_medium_widget_desc" : {
+      "comment" : "Medium Widget description",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today's events and reminders in a compact view"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日の予定とリマインダーをコンパクトに表示"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "오늘의 일정과 할 일을 컴팩트하게 표시"
+          }
+        }
+      }
+    },
+    "haru_monthly_calendar" : {
+      "comment" : "Monthly Calendar widget name",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haru Monthly Calendar"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ハル 月間カレンダー"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "하루 월간 달력"
+          }
+        }
+      }
+    },
+    "haru_monthly_calendar_desc" : {
+      "comment" : "Monthly Calendar widget description",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View the full month with all your events and reminders"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全ての予定とリマインダーが含まれた月間カレンダー"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "모든 일정과 할 일이 표시된 월간 달력"
+          }
+        }
+      }
+    },
     "haru_reminders" : {
       "comment" : "Reminders widget name",
       "localizations" : {
@@ -260,6 +407,7 @@
     },
     "haru_widget" : {
       "comment" : "Main widget name",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -283,6 +431,7 @@
     },
     "haru_widget_desc" : {
       "comment" : "Main widget description",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -308,20 +457,7 @@
 
     },
     "Reminder ID" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reminder ID"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "リマインダーID"
-          }
-        }
-      }
+
     },
     "Reminders" : {
 
@@ -339,6 +475,9 @@
 
     },
     "Widget Type" : {
+
+    },
+    "새로운 개별 위젯들을 사용하시기 바랍니다" : {
 
     }
   },

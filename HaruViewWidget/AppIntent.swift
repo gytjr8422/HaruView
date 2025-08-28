@@ -54,6 +54,7 @@ struct ConfigurationAppIntent: WidgetConfigurationIntent {
     var viewType: WidgetViewType
 }
 
+
 // MARK: - Convenience Initializers
 extension Color {
     init(red: Int, green: Int, blue: Int) {

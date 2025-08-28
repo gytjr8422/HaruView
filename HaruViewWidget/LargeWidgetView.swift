@@ -14,6 +14,23 @@ struct LargeWidgetView: View {
     let entry: Provider.Entry
     
     var body: some View {
+        // 월간 달력 표시 여부 확인 (나중에 설정으로 추가 가능)
+        if shouldShowMonthlyCalendar {
+            LargeMonthlyCalendarWidget(entry: entry)
+        } else {
+            originalLargeView
+        }
+    }
+    
+    // MARK: - 월간 달력 표시 여부
+    private var shouldShowMonthlyCalendar: Bool {
+        // 기본값은 기존 Large 위젯 (false)
+        return false
+    }
+    
+    // MARK: - 기존 Large 위젯 뷰
+    @ViewBuilder
+    private var originalLargeView: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .top) {
                 // 일정 섹션
@@ -33,7 +50,7 @@ struct LargeWidgetView: View {
                             .foregroundStyle(.haruWidgetSecondary)
                             .padding(.vertical, 4)
                     } else {
-                        ForEach(Array(entry.events.prefix(9).enumerated()), id: \.offset) { index, event in
+                        ForEach(Array(entry.events.prefix(8).enumerated()), id: \.offset) { index, event in
                             let isPast = event.endDate < Date()
                             
                             HStack {
@@ -45,7 +62,7 @@ struct LargeWidgetView: View {
                                 
                                 VStack(alignment: .leading) {
                                     Text(event.title)
-                                        .font(.pretendardBold(size: 13))
+                                        .font(.pretendardBold(size: 12))
                                         .lineLimit(1)
                                         .foregroundStyle(.haruWidgetText)
                                         .strikethrough(isPast)
@@ -54,30 +71,30 @@ struct LargeWidgetView: View {
                                     if !event.isAllDay {
                                         if WidgetTimeFormatter.isSameTime(start: event.startDate, end: event.endDate) {
                                             Text(WidgetTimeFormatter.formatTime(event.startDate))
-                                                .font(.jakartaRegular(size: 11))
+                                                .font(.jakartaRegular(size: 10))
                                                 .foregroundStyle(.haruWidgetSecondary)
                                                 .opacity(isPast ? 0.5 : 1)
                                         } else {
                                             HStack(spacing: 2) {
                                                 Text(WidgetTimeFormatter.formatTime(event.startDate))
-                                                    .font(.jakartaRegular(size: 11))
+                                                    .font(.jakartaRegular(size: 10))
                                                     .foregroundStyle(.haruWidgetSecondary)
                                                     .opacity(isPast ? 0.5 : 1)
                                                 
                                                 Text("-")
-                                                    .font(.jakartaRegular(size: 11))
+                                                    .font(.jakartaRegular(size: 10))
                                                     .foregroundStyle(.haruWidgetSecondary)
                                                     .opacity(isPast ? 0.5 : 1)
                                                 
                                                 Text(WidgetTimeFormatter.formatTime(event.endDate))
-                                                    .font(.jakartaRegular(size: 11))
+                                                    .font(.jakartaRegular(size: 10))
                                                     .foregroundStyle(.haruWidgetSecondary)
                                                     .opacity(isPast ? 0.5 : 1)
                                             }
                                         }
                                     } else {
                                         Text(localizedWidgetContent(key: "하루 종일", comment: "All day event"))
-                                            .font(.jakartaRegular(size: 9))
+                                            .font(.jakartaRegular(size: 8))
                                             .foregroundStyle(.haruWidgetSecondary)
                                             .opacity(isPast ? 0.5 : 1)
                                     }
@@ -111,7 +128,7 @@ struct LargeWidgetView: View {
                             .foregroundStyle(.haruWidgetSecondary)
                             .padding(.vertical, 4)
                     } else {
-                        ForEach(Array(entry.reminders.prefix(9).enumerated()), id: \.element.id) { index, reminder in
+                        ForEach(Array(entry.reminders.prefix(8).enumerated()), id: \.element.id) { index, reminder in
                             HStack(spacing: 2) {
                                 // iOS 18에서는 Toggle, iOS 17에서는 Button 사용
                                 if #available(iOS 18, *) {
@@ -134,14 +151,14 @@ struct LargeWidgetView: View {
                                 }
                                 
                                 Text(reminder.title)
-                                    .font(.pretendardSemiBold(size: 13))
+                                    .font(.pretendardSemiBold(size: 12))
                                     .lineLimit(1)
                                     .strikethrough(reminder.isCompleted)
                                     .foregroundStyle(reminder.isCompleted ? .gray : .haruTextPrimary)
                                     .invalidatableContent()
                             }
                             
-                            if index < entry.reminders.prefix(9).count - 1 {
+                            if index < entry.reminders.prefix(8).count - 1 {
                                 Divider()
                             }
                         }
