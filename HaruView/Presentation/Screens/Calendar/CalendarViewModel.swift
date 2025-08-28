@@ -330,17 +330,22 @@ final class CalendarViewModel: ObservableObject, @preconcurrency CalendarViewMod
         }
     }
     
-    /// 강제 새로고침 (기존 호환성 유지)
+    /// 강제 새로고침 (주 시작일 변경 등 전체 구조 변경 시 사용)
     func forceRefresh() {
-        // 선택적 업데이트 사용으로 변경
-        let currentDate = state.currentMonthFirstDay
-        let calendar = Calendar.current
+        print("🔄 CalendarViewModel: forceRefresh() 호출됨")
         
-        let affectedDates = (-2...2).compactMap { offset in
-            calendar.date(byAdding: .month, value: offset, to: currentDate)
-        }
+        // 현재 상태 즉시 무효화
+        state.currentMonthData = nil
+        monthWindow.removeAll()
+        isDataReady = false
         
-        selectiveUpdateManager.scheduleDateRangeUpdate(dates: affectedDates)
+        // 전체 달력 구조가 바뀔 수 있는 변경사항(주 시작일 등)에 대해서는 완전한 리로드 실행
+        loadMonthWindow()
+        
+        // 강제로 UI 업데이트 트리거
+        objectWillChange.send()
+        
+        print("🔄 CalendarViewModel: forceRefresh() 완료")
     }
     
     /// 낙관적 이벤트 추가 업데이트

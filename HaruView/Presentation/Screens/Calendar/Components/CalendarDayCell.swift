@@ -199,47 +199,50 @@ struct EventBar: View {
             ContinuousEventBar(info: info, isCompact: isCompact)
         default:
             // 기존 이벤트, 할일, 공휴일
-            HStack(spacing: 2) {
-                // 왼쪽 색상 인디케이터
+            ZStack(alignment: .leading) {
+                // 배경 (색상바 제외)
+                HStack(spacing: 2) {
+                    // 색상바 자리 확보
+                    Spacer().frame(width: 2)
+                    
+                    // 제목 텍스트 - Canvas로 모든 언어 처리 (텍스트가 있을 때만)
+                    if !item.title.isEmpty {
+                        Canvas { context, size in
+                            let text = Text(item.title)
+                                .font(.pretendardRegular(size: isCompact ? 9 : 11))
+                                .foregroundStyle(
+                                    item.isCompleted ?
+                                    .haruSecondary.opacity(0.5) :
+                                    .haruTextPrimary
+                                )
+                            
+                            context.draw(text, at: CGPoint(x: 0, y: size.height / 2), anchor: .leading)
+                        }
+                        .clipped()
+                    }
+                    
+                    Spacer(minLength: 0)
+                }
+                .padding(.horizontal, 2)
+                .padding(.vertical, 1)
+                .background(
+                    RoundedRectangle(cornerRadius: 4, style: .continuous)
+                        .fill(Color(item.color).opacity(0.1))
+                )
+                
+                // 왼쪽 색상 인디케이터 (배경 밖에서 전체 높이)
                 switch item {
-                case .event(_:):
+                case .event(_:), .holiday(_:):
                     Rectangle()
                         .fill(Color(item.color))
-                        .frame(width: 2)
-                case .reminder(_):
+                        .frame(width: 2, height: isCompact ? 12 : 16)
+                        .offset(x: 2)
+                case .reminder(_:):
                     EmptyView()
-                case .holiday(_):
-                    Rectangle()
-                        .fill(Color(item.color))
-                        .frame(width: 2)
                 case .continuousEvent(_):
                     EmptyView() // 이미 위에서 처리됨
                 }
-                
-                // 제목 텍스트 - Canvas로 모든 언어 처리 (텍스트가 있을 때만)
-                if !item.title.isEmpty {
-                    Canvas { context, size in
-                        let text = Text(item.title)
-                            .font(.pretendardRegular(size: isCompact ? 9 : 11))
-                            .foregroundStyle(
-                                item.isCompleted ?
-                                .haruSecondary.opacity(0.5) :
-                                .haruTextPrimary
-                            )
-                        
-                        context.draw(text, at: CGPoint(x: 0, y: size.height / 2), anchor: .leading)
-                    }
-                    .clipped()
-                }
-                
-                Spacer(minLength: 0)
             }
-            .padding(.horizontal, 2)
-            .padding(.vertical, 1)
-            .background(
-                RoundedRectangle(cornerRadius: 4, style: .continuous)
-                    .fill(Color(item.color).opacity(0.1))
-            )
         }
     }
 }
@@ -271,13 +274,14 @@ struct ContinuousEventBar: View {
                     Rectangle()
                         .fill(Color(info.event.calendarColor))
                         .frame(width: 2, height: barHeight)
+                        .offset(x: 2) // 일반 일정의 padding과 맞춤
                 }
                 
                 // 텍스트 (제목 표시할 때만)
                 if info.showTitle {
                     HStack {
                         if info.isStart || info.showTitle {
-                            Spacer().frame(width: 4) // 색상 바 뒤 여백
+                            Spacer().frame(width: 4) // 색상바 오프셋(2) + spacing(2) 
                         }
                         
                         Canvas { context, size in

@@ -356,7 +356,13 @@ struct CompactDayCell: View {
                 // 연속 일정
                 let isStart = calendar.isDate(currentDate, inSameDayAs: startDate)
                 let isEnd = calendar.isDate(currentDate, inSameDayAs: endDate)
-                let showTitle = isStart // 시작일에만 제목 표시
+                
+                // 주 내 위치 계산 (사용자 설정에 따른 주 시작일 반영)
+                let weekday = calendar.component(.weekday, from: currentDate)
+                let weekPosition = (weekday - calendar.firstWeekday + 7) % 7
+                
+                // 제목 표시 여부 결정: 시작일이거나 주의 시작일
+                let showTitle = isStart || weekPosition == 0
                 
                 items.append(DisplayItem(
                     id: "continuous_\(event.title)_\(index)",
@@ -387,8 +393,22 @@ struct CompactDayCell: View {
             ))
         }
         
+        // 연속 일정을 상단으로 우선 정렬
+        let sortedItems = items.sorted { item1, item2 in
+            let isContinuous1 = item1.isContinuous
+            let isContinuous2 = item2.isContinuous
+            
+            // 연속 일정이 우선
+            if isContinuous1 != isContinuous2 {
+                return isContinuous1
+            }
+            
+            // 둘 다 연속 이벤트이거나 둘 다 일반 아이템인 경우 기존 순서 유지
+            return false
+        }
+        
         // 최대 3개로 제한 (위젯이므로 적게)
-        return Array(items.prefix(3))
+        return Array(sortedItems.prefix(3))
     }
 }
 
@@ -402,7 +422,7 @@ struct ContinuousEventBarWidget: View {
             let barHeight = geometry.size.height
             
             // 연속 배경의 시작/끝에 따라 확장
-            let extraWidth: CGFloat = 2 // 셀 경계를 넘어서는 너비 (spacing=0이므로 작게 조정)
+            let extraWidth: CGFloat = 8 // 셀 경계를 넘어서는 너비
             let xOffset: CGFloat = item.isStart ? 0 : -extraWidth
             let barWidth: CGFloat = cellWidth + (item.isStart ? 0 : extraWidth) + (item.isEnd ? 0 : extraWidth)
             
@@ -418,13 +438,14 @@ struct ContinuousEventBarWidget: View {
                     Rectangle()
                         .fill(Color(item.color))
                         .frame(width: 2, height: barHeight)
+                        .offset(x: 2) // 일반 일정의 padding과 맞춤
                 }
                 
                 // 텍스트 (제목 표시할 때만)
                 if item.showTitle && !item.title.isEmpty {
                     HStack {
                         if item.isStart || item.showTitle {
-                            Spacer().frame(width: 4) // 색상 바 뒤 여백
+                            Spacer().frame(width: 4) // 색상바 오프셋(2) + spacing(2) 
                         }
                         
                         Canvas { context, size in
@@ -442,6 +463,7 @@ struct ContinuousEventBarWidget: View {
                 }
             }
         }
+        .frame(height: 9)
         .clipped()
     }
 }

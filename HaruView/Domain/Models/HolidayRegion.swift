@@ -97,17 +97,26 @@ class AppSettings: ObservableObject {
     // 주 시작일 설정 (false: 일요일, true: 월요일)
     @Published var weekStartsOnMonday: Bool {
         didSet {
+            print("⚙️ AppSettings: weekStartsOnMonday 변경됨 -> \(weekStartsOnMonday)")
+            
             // 기존 UserDefaults와 SharedUserDefaults 모두 업데이트
             UserDefaults.standard.set(weekStartsOnMonday, forKey: "weekStartsOnMonday")
             SharedUserDefaults.weekStartDay = weekStartsOnMonday ? 1 : 0
             
-            clearDisplayItemsCache()
+            print("⚙️ AppSettings: SharedUserDefaults.weekStartDay = \(SharedUserDefaults.weekStartDay)")
+            
+            // 주 시작일 변경은 전체 달력 구조를 바꾸므로 즉시 전체 캐시 클리어
+            CalendarCacheManager.shared.clearAllCache()
+            print("⚙️ AppSettings: 캐시 클리어 완료")
             
             // 위젯 업데이트 알림
             SharedUserDefaults.notifyWidgetUpdate()
             
-            // 달력 새로고침 알림
-            NotificationCenter.default.post(name: .calendarNeedsRefresh, object: nil)
+            // 달력 새로고침 알림 (메인 스레드에서 즉시 실행)
+            DispatchQueue.main.async {
+                print("⚙️ AppSettings: calendarNeedsRefresh 알림 발송")
+                NotificationCenter.default.post(name: .calendarNeedsRefresh, object: nil)
+            }
         }
     }
     
@@ -151,4 +160,5 @@ class AppSettings: ObservableObject {
             CalendarCacheManager.shared.clearDisplayItemsCache()
         }
     }
+    
 }

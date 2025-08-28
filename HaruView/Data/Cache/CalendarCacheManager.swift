@@ -158,7 +158,19 @@ final class CalendarCacheManager: ObservableObject {
             items.append(.reminder(reminder))
         }
         
-        return items
+        // 연속 이벤트를 상단으로 우선 정렬
+        return items.sorted { item1, item2 in
+            let isContinuous1 = item1.continuousInfo != nil
+            let isContinuous2 = item2.continuousInfo != nil
+            
+            // 연속 이벤트가 우선
+            if isContinuous1 != isContinuous2 {
+                return isContinuous1
+            }
+            
+            // 둘 다 연속 이벤트이거나 둘 다 일반 아이템인 경우 기존 순서 유지
+            return false
+        }
     }
     
     /// 연속 이벤트 정보 생성
