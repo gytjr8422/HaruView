@@ -279,7 +279,7 @@ struct WeeklyItemRow: View {
                         Canvas { context, size in
                             let textColor = getTextColor()
                             let text = Text(item.title)
-                                .font(.pretendardRegular(size: 8))
+                                .font(.pretendardRegular(size: 9))
                                 .foregroundStyle(textColor)
                             
                             context.draw(text, at: CGPoint(x: 0, y: size.height / 2), anchor: .leading)
@@ -318,7 +318,7 @@ struct WeeklyItemRow: View {
             Canvas { context, size in
                 let textColor = getTextColor()
                 let text = Text(item.title)
-                    .font(.pretendardRegular(size: 8))
+                    .font(.pretendardRegular(size: 9))
                     .foregroundStyle(textColor)
                 
                 context.draw(text, at: CGPoint(x: 0, y: size.height / 2), anchor: .leading)
