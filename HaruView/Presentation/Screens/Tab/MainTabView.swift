@@ -7,20 +7,13 @@
 
 import SwiftUI
 
-enum TabItem: CaseIterable, Identifiable {
+enum TabItem: String, CaseIterable, Identifiable {
     case home
     case add
     case calendar
     
     var id: String { rawValue }
     
-    var rawValue: String {
-        switch self {
-        case .home: return "home"
-        case .add: return "add"
-        case .calendar: return "calendar"
-        }
-    }
     
     var title: String {
         switch self {
@@ -52,6 +45,7 @@ enum TabItem: CaseIterable, Identifiable {
 }
 
 struct MainTabView: View {
+    @AppStorage("defaultTab") private var defaultTab: TabItem = .home
     @State private var selectedTab: TabItem = .home
     @State private var showAddSheet = false
     @Environment(\.di) private var di
@@ -85,6 +79,9 @@ struct MainTabView: View {
         .withGlobalToast()
         .ignoresSafeArea(.keyboard) // 키보드 올라올 때 탭바 숨기지 않음
         .ignoresSafeArea(.all, edges: .bottom) // 탭바 하단 영역 무시
+        .onAppear {
+            selectedTab = defaultTab
+        }
         .sheet(isPresented: $showAddSheet) {
             AddSheet(vm: di.makeAddSheetVM()) { _ in
                 // AddSheet이 저장되거나 닫힐 때 처리

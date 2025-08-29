@@ -12,6 +12,7 @@ struct SettingsView: View {
     @EnvironmentObject private var languageManager: LanguageManager
     @Environment(\.dismiss) private var dismiss
     @State private var subscribedCalendars: [HolidayCalendarInfo] = []
+    @AppStorage("defaultTab") private var defaultTab: TabItem = .home
     
     private let eventKitService = EventKitService()
     
@@ -107,6 +108,13 @@ struct SettingsView: View {
             VStack(spacing: 0) {
                 // 언어 설정
                 languageSettingCard
+                
+                Divider()
+                    .padding(.horizontal, 16)
+                    .background(.haruSecondary.opacity(0.1))
+                
+                // 기본 탭 설정
+                defaultTabSettingCard
                 
                 Divider()
                     .padding(.horizontal, 16)
@@ -260,6 +268,40 @@ struct SettingsView: View {
                         .foregroundStyle(.haruTextPrimary)
                     
                     Text(languageManager.currentLanguage.displayName)
+                        .font(.pretendardRegular(size: 12))
+                        .foregroundStyle(.haruSecondary)
+                }
+                
+                Spacer()
+                
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundStyle(.haruSecondary.opacity(0.6))
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+    
+    // MARK: - 기본 탭 설정 카드
+    private var defaultTabSettingCard: some View {
+        NavigationLink {
+            DefaultTabSelectionView(selectedTab: $defaultTab)
+        } label: {
+            HStack(spacing: 16) {
+                Image(systemName: "square.grid.3x1.below.line.grid.1x2")
+                    .font(.system(size: 20, weight: .medium))
+                    .foregroundStyle(.haruPrimary)
+                    .frame(width: 24, height: 24)
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    LocalizedText(key: "기본 시작 탭")
+                        .font(.pretendardRegular(size: 16))
+                        .foregroundStyle(.haruTextPrimary)
+                    
+                    Text(defaultTab.title)
                         .font(.pretendardRegular(size: 12))
                         .foregroundStyle(.haruSecondary)
                 }

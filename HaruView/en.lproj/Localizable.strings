@@ -27,6 +27,9 @@
 "일요일부터 시작" = "Start from Sunday";
 "공휴일 표시" = "Show Holidays";
 "공휴일 캘린더 설정" = "Holiday Calendar Settings";
+"기본 시작 탭" = "Default Start Tab";
+"오늘의 일정과 할 일을 확인" = "View today's events and reminders";
+"월간 달력 보기" = "Monthly calendar view";
 "구독된 캘린더 없음" = "No Subscribed Calendars";
 "선택된 캘린더 없음" = "No Selected Calendars";
 "1개 선택됨" = "1 Selected";
