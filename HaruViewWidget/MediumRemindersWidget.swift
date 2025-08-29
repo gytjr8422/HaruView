@@ -12,19 +12,30 @@ struct MediumRemindersWidget: View {
     let entry: Provider.Entry
     
     var body: some View {
-        HStack(spacing: 8) {
-            // 왼쪽: 할일 섹션
-            RemindersSection(reminders: leftReminders, showTitle: false)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            
-            // 구분선
-            Rectangle()
-                .fill(.haruCardBorder)
-                .frame(width: 1, height: .infinity)
-            
-            // 오른쪽: 할일 섹션 (계속)
-            RemindersSection(reminders: rightReminders, showTitle: false)
-                .frame(maxWidth: .infinity, alignment: .leading)
+        if todayReminders.isEmpty {
+            // 전체 할일이 없는 경우
+            VStack(spacing: 8) {
+                Text(localizedWidgetContent(key: "no_reminders_today", comment: "No reminders message"))
+                    .font(.pretendardRegular(size: 11))
+                    .foregroundStyle(.haruWidgetSecondary)
+            }
+            .frame(maxHeight: .infinity, alignment: .center)
+        } else {
+            HStack(alignment: .top, spacing: 8) {
+                // 왼쪽: 할일 섹션
+                RemindersSection(reminders: leftReminders, showTitle: false)
+                .frame(maxWidth: .infinity, alignment: .topLeading)
+                
+                // 구분선
+                Rectangle()
+                    .fill(.haruCardBorder)
+                    .frame(width: 1)
+                    .padding(.vertical, 5)
+                
+                // 오른쪽: 할일 섹션 (계속)
+                RemindersSection(reminders: rightReminders, showTitle: false)
+                .frame(maxWidth: .infinity, alignment: .topLeading)
+            }
         }
     }
     
@@ -38,12 +49,12 @@ struct MediumRemindersWidget: View {
     }
     
     private var todayReminders: [ReminderItem] {
-        let calendar = Calendar.current
+        let calendar = Calendar.withUserWeekStartPreference()
         let today = Date()
         
-        // 오늘 할일 필터링
+        // 오늘 할일 + 날짜 없는 할일 필터링
         let filtered = entry.reminders.filter { reminder in
-            guard let dueDate = reminder.dueDate else { return false }
+            guard let dueDate = reminder.dueDate else { return true }
             return calendar.isDate(dueDate, inSameDayAs: today)
         }
         
@@ -86,12 +97,7 @@ struct RemindersSection: View {
             }
             
             // 할일 리스트
-            if reminders.isEmpty {
-                Text(localizedWidgetContent(key: "no_reminders_today", comment: "No reminders message"))
-                    .font(.pretendardRegular(size: 11))
-                    .foregroundStyle(.haruWidgetSecondary)
-                    .padding(.vertical, 4)
-            } else {
+            if !reminders.isEmpty {
                 ForEach(Array(reminders.enumerated()), id: \.element.id) { index, reminder in
                     HStack(spacing: 2) {
                         // iOS 18에서는 Toggle, iOS 17에서는 Button 사용
@@ -127,8 +133,6 @@ struct RemindersSection: View {
                     }
                 }
             }
-            
-            Spacer()
         }
     }
 }

@@ -36,7 +36,7 @@ struct EventReminderListView: View {
     let entry: Provider.Entry
     
     private var displayItems: (events: [CalendarEvent], reminders: [ReminderItem]) {
-        let calendar = Calendar.current
+        let calendar = Calendar.withUserWeekStartPreference()
         let today = Date()
         
         // 오늘 일정만 필터링
@@ -46,9 +46,9 @@ struct EventReminderListView: View {
             (event.startDate < today && event.endDate > today)
         }
         
-        // 오늘 할일만 필터링
+        // 오늘 할일 + 날짜 없는 할일 필터링
         let todayReminders = entry.reminders.filter { reminder in
-            guard let dueDate = reminder.dueDate else { return false }
+            guard let dueDate = reminder.dueDate else { return true }
             return calendar.isDate(dueDate, inSameDayAs: today)
         }
         

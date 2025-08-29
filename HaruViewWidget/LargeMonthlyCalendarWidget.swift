@@ -54,10 +54,12 @@ struct LargeMonthlyCalendarWidget: View {
     // MARK: - Month Header
     private var monthHeader: some View {
         Text(monthString)
-            .font(.pretendardSemiBold(size: 14))
+            .font(monthHeaderFont)
             .foregroundStyle(Color.primary)
+            .lineLimit(1)
+            .truncationMode(.tail)
             .frame(maxWidth: .infinity)
-            .frame(height: 18)
+            .frame(height: 22)
     }
     
     // MARK: - Weekday Header
@@ -111,6 +113,20 @@ struct LargeMonthlyCalendarWidget: View {
         }
         
         return formatter.string(from: today)
+    }
+    
+    /// 언어별 최적화된 헤더 폰트
+    private var monthHeaderFont: Font {
+        let currentLanguage = SharedUserDefaults.selectedLanguage
+        
+        switch currentLanguage {
+        case "ja":
+            // 일본어는 시스템 폰트 사용 (더 컴팩트함)
+            return .system(size: 13, weight: .semibold)
+        default:
+            // 다른 언어는 기존 Pretendard 폰트
+            return .pretendardSemiBold(size: 13)
+        }
     }
     
     /// 요일 심볼 배열 (앱의 주 시작일 설정 반영)

@@ -185,7 +185,7 @@ struct Provider: AppIntentTimelineProvider {
                     
                     let filtered = bucket.filter { rem in
                         guard let due = rem.dueDateComponents?.date else { 
-                            return false // 달력 위젯에서는 마감일 없는 할일 제외
+                            return true // 마감일 없는 할일도 포함
                         }
                         
                         // ReminderType 추출
@@ -250,7 +250,7 @@ struct Provider: AppIntentTimelineProvider {
             case .systemSmall:
                 maxCount = 4
             case .systemMedium:
-                maxCount = 4
+                maxCount = 8
             case .systemLarge:
                 maxCount = 9
             default:
