@@ -29,7 +29,7 @@ struct WeeklyScheduleWidgetView: View {
 
 struct WeekHeaderView: View {
     private let weekDays: [(day: String, date: Int)] = {
-        let calendar = Calendar.current
+        let calendar = Calendar.withUserWeekStartPreference()
         let today = Date()
         let startOfWeek = calendar.dateInterval(of: .weekOfYear, for: today)?.start ?? today
         let currentLanguage = SharedUserDefaults.selectedLanguage
@@ -87,7 +87,7 @@ struct WeekContentView: View {
     let entry: Provider.Entry
     
     private var weeklyData: [DayData] {
-        let calendar = Calendar.current
+        let calendar = Calendar.withUserWeekStartPreference()
         let today = Date()
         let startOfWeek = calendar.dateInterval(of: .weekOfYear, for: today)?.start ?? today
         
@@ -126,7 +126,7 @@ struct WeekContentView: View {
     private func sortAndLimitItems(events: [CalendarEvent], reminders: [ReminderItem], for date: Date) -> [WeeklyItem] {
         var items: [WeeklyItem] = []
         let now = Date()
-        let calendar = Calendar.current
+        let calendar = Calendar.withUserWeekStartPreference()
         
         // 일정 변환 (연속 일정 처리 포함)
         for event in events {
