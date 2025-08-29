@@ -53,13 +53,6 @@
 			);
 			target = CE6007A72E01808A006B986C /* HaruViewWidgetExtension */;
 		};
-		CE40A7BB2E0AC9C90067FCD2 /* Exceptions for "HaruViewWidget" folder in "HaruView" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				ToggleReminderIntent.swift,
-			);
-			target = CE6B85002DC12F8800F2D1BC /* HaruView */;
-		};
 		CE6007C02E01808D006B986C /* Exceptions for "HaruViewWidget" folder in "HaruViewWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -80,7 +73,6 @@
 		CE6007AE2E01808B006B986C /* HaruViewWidget */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				CE40A7BB2E0AC9C90067FCD2 /* Exceptions for "HaruViewWidget" folder in "HaruView" target */,
 				CE6007C02E01808D006B986C /* Exceptions for "HaruViewWidget" folder in "HaruViewWidgetExtension" target */,
 			);
 			path = HaruViewWidget;
