@@ -126,19 +126,52 @@ struct WeekContentView: View {
     private func sortAndLimitItems(events: [CalendarEvent], reminders: [ReminderItem], for date: Date) -> [WeeklyItem] {
         var items: [WeeklyItem] = []
         let now = Date()
+        let calendar = Calendar.current
         
-        // 일정 변환
+        // 일정 변환 (연속 일정 처리 포함)
         for event in events {
             let isOngoing = event.startDate <= now && event.endDate > now
             let priority = isOngoing ? 0 : (event.isAllDay ? 2 : 1)
-            items.append(WeeklyItem(
-                title: event.title,
-                type: .event,
-                priority: priority,
-                startTime: event.startDate,
-                color: event.calendarColor,
-                isCompleted: event.endDate < now
-            ))
+            
+            // 연속 일정 여부 확인
+            let startDate = calendar.startOfDay(for: event.startDate)
+            let endDate = calendar.startOfDay(for: event.endDate)
+            let currentDate = calendar.startOfDay(for: date)
+            let isContinuous = startDate < endDate && calendar.dateComponents([.day], from: startDate, to: endDate).day! > 0
+            
+            if isContinuous {
+                // 연속 일정
+                let isStart = calendar.isDate(currentDate, inSameDayAs: startDate)
+                let isEnd = calendar.isDate(currentDate, inSameDayAs: endDate)
+                
+                // 주 내 위치 계산
+                let weekday = calendar.component(.weekday, from: currentDate)
+                let weekPosition = (weekday - calendar.firstWeekday + 7) % 7
+                let showTitle = isStart || weekPosition == 0
+                
+                items.append(WeeklyItem(
+                    title: event.title,
+                    type: .continuousEvent,
+                    priority: priority,
+                    startTime: event.startDate,
+                    color: event.calendarColor,
+                    isCompleted: event.endDate < now,
+                    isContinuous: true,
+                    isStart: isStart,
+                    isEnd: isEnd,
+                    showTitle: showTitle
+                ))
+            } else {
+                // 단일 날짜 일정
+                items.append(WeeklyItem(
+                    title: event.title,
+                    type: .event,
+                    priority: priority,
+                    startTime: event.startDate,
+                    color: event.calendarColor,
+                    isCompleted: event.endDate < now
+                ))
+            }
         }
         
         // 할일 변환 (완료되지 않은 것만)
@@ -148,13 +181,18 @@ struct WeekContentView: View {
                 type: .reminder,
                 priority: 3,
                 startTime: reminder.dueDate ?? date,
-                color: nil,
+                color: CGColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), // 할일 기본 색상
                 isCompleted: false
             ))
         }
         
-        // 정렬: 우선순위 -> 시작시간 순
+        // 정렬: 연속 일정 우선, 우선순위 -> 시작시간 순
         items.sort { first, second in
+            // 연속 일정이 우선
+            if first.isContinuous != second.isContinuous {
+                return first.isContinuous
+            }
+            
             if first.priority != second.priority {
                 return first.priority < second.priority
             }
@@ -182,38 +220,139 @@ struct DayColumnView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
             ForEach(Array(dayData.items.enumerated()), id: \.offset) { index, item in
-                HStack(spacing: 2) {
-                    // 일정인 경우 색상 점 표시
-                    if item.type == .event, let color = item.color {
-                        Circle()
-                            .fill(Color(cgColor: color))
-                            .frame(width: 3, height: 3)
-                            .opacity(item.isCompleted ? 0.5 : 1)
-                    }
-                    
-                    Canvas { context, size in
-                        let text = Text(item.title)
-                            .font(.pretendardRegular(size: 8))
-                            .foregroundStyle(
-                                item.isCompleted ?
-                                (item.type == .event ? .haruWidgetText.opacity(0.5) : .haruWidgetSecondary.opacity(0.5)) :
-                                (item.type == .event ? .haruWidgetText : .haruWidgetSecondary)
-                            )
-                        
-                        context.draw(text, at: CGPoint(x: 0, y: size.height / 2), anchor: .leading)
-                    }
-                    .clipped()
-                    
-                    Spacer(minLength: 0)
-                }
-                .frame(height: 12)
+                WeeklyItemRow(item: item)
             }
             
             Spacer()
         }
         .frame(maxHeight: .infinity)
         .background(dayData.isToday ? Color.haruPrimary.opacity(0.1) : Color.clear)
-        .cornerRadius(4)
+    }
+}
+
+struct WeeklyItemRow: View {
+    let item: WeeklyItem
+    
+    var body: some View {
+        if item.type == .continuousEvent {
+            // 연속 일정 - 달력과 동일한 스타일
+            continuousEventView
+        } else {
+            // 일반 일정과 할일 - 기존 스타일
+            regularItemView
+        }
+    }
+    
+    private var continuousEventView: some View {
+        GeometryReader { geometry in
+            let cellWidth = geometry.size.width
+            let barHeight = geometry.size.height
+            
+            // 연속 배경의 시작/끝에 따라 확장
+            let extraWidth: CGFloat = 15 // 더 크게 확장하여 곡률 숨김
+            let xOffset: CGFloat = item.isStart ? 0 : -extraWidth
+            let barWidth: CGFloat = cellWidth + (item.isStart ? 0 : extraWidth) + (item.isEnd ? 0 : extraWidth)
+            
+            ZStack(alignment: .leading) {
+                // 연결된 배경 - 곡률 없이 직사각형으로 단순화
+                Rectangle()
+                    .fill(Color(cgColor: item.color!).opacity(0.1))
+                    .frame(width: barWidth, height: barHeight)
+                    .offset(x: xOffset)
+                
+                // 왼쪽 색상 인디케이터 (시작일이거나 제목을 표시하는 날)
+                if item.isStart || item.showTitle {
+                    Rectangle()
+                        .fill(Color(cgColor: item.color!))
+                        .frame(width: 2, height: barHeight)
+                        .offset(x: 2)
+                        .opacity(item.isCompleted ? 0.5 : 1)
+                }
+                
+                // 텍스트 (제목 표시할 때만)
+                if item.showTitle && !item.title.isEmpty {
+                    HStack {
+                        if item.isStart || item.showTitle {
+                            Spacer().frame(width: 4)
+                        }
+                        
+                        Canvas { context, size in
+                            let textColor = getTextColor()
+                            let text = Text(item.title)
+                                .font(.pretendardRegular(size: 8))
+                                .foregroundStyle(textColor)
+                            
+                            context.draw(text, at: CGPoint(x: 0, y: size.height / 2), anchor: .leading)
+                        }
+                        .clipped()
+                        
+                        Spacer()
+                    }
+                    .padding(.horizontal, 2)
+                }
+            }
+        }
+        .frame(height: 12)
+        .clipped()
+    }
+    
+    private var regularItemView: some View {
+        HStack(spacing: 2) {
+            // 왼쪽 색상 인디케이터/아이콘
+            if item.type == .event, let color = item.color {
+                Rectangle()
+                    .fill(Color(cgColor: color))
+                    .frame(width: 2)
+                    .opacity(item.isCompleted ? 0.5 : 1)
+            } else if item.type == .reminder {
+                // 할일은 작은 원 표시
+                Circle()
+                    .stroke(Color.secondary, lineWidth: 0.8)
+                    .frame(width: 6, height: 6)
+                    .opacity(item.isCompleted ? 0.5 : 1)
+            } else {
+                Spacer().frame(width: 2)
+            }
+            
+            // 텍스트
+            Canvas { context, size in
+                let textColor = getTextColor()
+                let text = Text(item.title)
+                    .font(.pretendardRegular(size: 8))
+                    .foregroundStyle(textColor)
+                
+                context.draw(text, at: CGPoint(x: 0, y: size.height / 2), anchor: .leading)
+            }
+            .clipped()
+            
+            Spacer(minLength: 0)
+        }
+        .padding(.horizontal, 2)
+        .padding(.vertical, 1)
+        .background(backgroundView)
+        .frame(height: 12)
+    }
+    
+    @ViewBuilder
+    private var backgroundView: some View {
+        if item.type == .event, let color = item.color {
+            RoundedRectangle(cornerRadius: 4, style: .continuous)
+                .fill(Color(cgColor: color).opacity(0.1))
+        } else {
+            Color.clear
+        }
+    }
+    
+    private func getTextColor() -> Color {
+        if item.isCompleted {
+            return item.type == .event || item.type == .continuousEvent ? 
+                .haruWidgetText.opacity(0.5) : 
+                .haruWidgetSecondary.opacity(0.5)
+        } else {
+            return item.type == .event || item.type == .continuousEvent ? 
+                .haruWidgetText : 
+                .haruWidgetSecondary
+        }
     }
 }
 
@@ -231,10 +370,29 @@ struct WeeklyItem {
     let startTime: Date
     let color: CGColor?
     let isCompleted: Bool
+    let isContinuous: Bool
+    let isStart: Bool
+    let isEnd: Bool
+    let showTitle: Bool
+    
+    init(title: String, type: WeeklyItemType, priority: Int, startTime: Date, color: CGColor?, isCompleted: Bool, 
+         isContinuous: Bool = false, isStart: Bool = false, isEnd: Bool = false, showTitle: Bool = true) {
+        self.title = title
+        self.type = type
+        self.priority = priority
+        self.startTime = startTime
+        self.color = color
+        self.isCompleted = isCompleted
+        self.isContinuous = isContinuous
+        self.isStart = isStart
+        self.isEnd = isEnd
+        self.showTitle = showTitle
+    }
 }
 
 enum WeeklyItemType {
     case event
+    case continuousEvent
     case reminder
 }
 
