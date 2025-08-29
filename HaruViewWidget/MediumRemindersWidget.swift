@@ -111,7 +111,7 @@ struct RemindersSection: View {
                         } else {
                             Button(intent: ToggleReminderIntent(reminderId: reminder.id)) {
                                 Image(systemName: reminder.isCompleted ? "checkmark.circle.fill" : "circle")
-                                    .foregroundStyle(reminder.isCompleted ? .haruCompleted : .primary)
+                                    .foregroundStyle(reminder.isCompleted ? .haruCompleted : .secondary)
                                     .font(.system(size: 18))
                                     .contentTransition(.symbolEffect(.replace))
                             }

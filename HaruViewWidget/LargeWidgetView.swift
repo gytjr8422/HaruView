@@ -141,7 +141,7 @@ struct LargeWidgetView: View {
                                 } else {
                                     Button(intent: ToggleReminderIntent(reminderId: reminder.id)) {
                                         Image(systemName: reminder.isCompleted ? "checkmark.circle.fill" : "circle")
-                                            .foregroundStyle(reminder.isCompleted ? .haruPrimary : .primary)
+                                            .foregroundStyle(reminder.isCompleted ? .haruPrimary : .secondary)
                                             .font(.system(size: 20))
                                             .contentTransition(.symbolEffect(.replace))
                                     }
