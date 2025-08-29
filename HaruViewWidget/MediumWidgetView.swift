@@ -107,7 +107,7 @@ struct MediumWidgetView: View {
                                 } else {
                                     Button(intent: ToggleReminderIntent(reminderId: reminder.id)) {
                                         Image(systemName: reminder.isCompleted ? "checkmark.circle.fill" : "circle")
-                                            .foregroundStyle(reminder.isCompleted ? .haruCompleted : .gray)
+                                            .foregroundStyle(reminder.isCompleted ? .haruCompleted : .primary)
                                             .font(.system(size: 18))
                                             .contentTransition(.symbolEffect(.replace))
                                     }
@@ -120,7 +120,7 @@ struct MediumWidgetView: View {
                                     .font(.pretendardSemiBold(size: 12))
                                     .lineLimit(1)
                                     .strikethrough(reminder.isCompleted)
-                                    .foregroundStyle(reminder.isCompleted ? .gray : .haruTextPrimary)
+                                    .foregroundStyle(reminder.isCompleted ? .secondary : .primary)
                                     .invalidatableContent()
                             }
                             
@@ -140,7 +140,7 @@ struct MediumWidgetView: View {
 struct CheckboxToggleStyle: ToggleStyle {
     func makeBody(configuration: Configuration) -> some View {
         Image(systemName: configuration.isOn ? "checkmark.circle.fill" : "circle")
-            .foregroundStyle(configuration.isOn ? .haruCompleted : .gray)
+            .foregroundStyle(configuration.isOn ? .haruCompleted : .primary)
             .font(.system(size: 20))
             .contentTransition(.symbolEffect(.replace))
     }

@@ -307,7 +307,7 @@ struct WeeklyItemRow: View {
             } else if item.type == .reminder {
                 // 할일은 작은 원 표시
                 Circle()
-                    .stroke(Color.secondary, lineWidth: 0.8)
+                    .stroke(Color.primary, lineWidth: 0.8)
                     .frame(width: 6, height: 6)
                     .opacity(item.isCompleted ? 0.5 : 1)
             } else {
@@ -347,11 +347,11 @@ struct WeeklyItemRow: View {
         if item.isCompleted {
             return item.type == .event || item.type == .continuousEvent ? 
                 .haruWidgetText.opacity(0.5) : 
-                .haruWidgetSecondary.opacity(0.5)
+                .haruWidgetText.opacity(0.5) // 할일도 동일한 밝은 색상
         } else {
             return item.type == .event || item.type == .continuousEvent ? 
                 .haruWidgetText : 
-                .haruWidgetSecondary
+                .haruWidgetText // 할일도 동일한 밝은 색상
         }
     }
 }

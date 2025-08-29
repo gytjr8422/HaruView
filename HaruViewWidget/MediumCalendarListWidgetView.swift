@@ -239,7 +239,7 @@ struct ReminderRowView: View {
             } else {
                 Button(intent: ToggleReminderIntent(reminderId: reminder.id)) {
                     Image(systemName: reminder.isCompleted ? "checkmark.circle.fill" : "circle")
-                        .foregroundStyle(reminder.isCompleted ? .haruCompleted : .gray)
+                        .foregroundStyle(reminder.isCompleted ? .haruCompleted : .primary)
                         .font(.system(size: 20))
                         .contentTransition(.symbolEffect(.replace))
                 }
@@ -252,7 +252,7 @@ struct ReminderRowView: View {
                 .font(.pretendardSemiBold(size: 13))
                 .lineLimit(1)
                 .strikethrough(reminder.isCompleted)
-                .foregroundStyle(reminder.isCompleted ? .gray : .haruTextPrimary)
+                .foregroundStyle(reminder.isCompleted ? .secondary : .primary)
                 .invalidatableContent()
             
             Spacer()

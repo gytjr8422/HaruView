@@ -141,7 +141,7 @@ struct LargeWidgetView: View {
                                 } else {
                                     Button(intent: ToggleReminderIntent(reminderId: reminder.id)) {
                                         Image(systemName: reminder.isCompleted ? "checkmark.circle.fill" : "circle")
-                                            .foregroundStyle(reminder.isCompleted ? .haruPrimary : .gray)
+                                            .foregroundStyle(reminder.isCompleted ? .haruPrimary : .primary)
                                             .font(.system(size: 20))
                                             .contentTransition(.symbolEffect(.replace))
                                     }
@@ -154,7 +154,7 @@ struct LargeWidgetView: View {
                                     .font(.pretendardSemiBold(size: 12))
                                     .lineLimit(1)
                                     .strikethrough(reminder.isCompleted)
-                                    .foregroundStyle(reminder.isCompleted ? .gray : .haruTextPrimary)
+                                    .foregroundStyle(reminder.isCompleted ? .secondary : .primary)
                                     .invalidatableContent()
                             }
                             
