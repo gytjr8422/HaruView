@@ -218,6 +218,52 @@
         }
       }
     },
+    "haru_medium_reminders_widget" : {
+      "comment" : "Medium Reminders Widget name",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haru Reminders List"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ハル リマインダーリスト"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "하루 할 일 목록"
+          }
+        }
+      }
+    },
+    "haru_medium_reminders_widget_desc" : {
+      "comment" : "Medium Reminders Widget description",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today's reminders displayed in two columns"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日のリマインダーを2列で表示"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "오늘의 할 일을 2열로 표시"
+          }
+        }
+      }
+    },
     "haru_medium_widget" : {
       "comment" : "Medium Widget name",
       "localizations" : {

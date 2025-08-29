@@ -211,6 +211,20 @@ struct HaruMediumWidget: Widget {
     }
 }
 
+struct HaruMediumRemindersWidget: Widget {
+    let kind: String = "HaruMediumRemindersWidget"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: MediumListProvider()) { entry in
+            MediumRemindersWidget(entry: entry)
+                .containerBackground(Color.haruWidgetBackground, for: .widget)
+        }
+        .configurationDisplayName(NSLocalizedString("haru_medium_reminders_widget", comment: "Medium Reminders Widget name"))
+        .description(NSLocalizedString("haru_medium_reminders_widget_desc", comment: "Medium Reminders Widget description"))
+        .supportedFamilies([.systemMedium])
+    }
+}
+
 struct HaruLargeWidget: Widget {
     let kind: String = "HaruLargeWidget"
 

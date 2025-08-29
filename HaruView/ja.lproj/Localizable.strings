@@ -293,6 +293,26 @@
 "오늘의 캘린더 일정을 표시합니다" = "今日のカレンダーイベントを表示";
 "오늘의 미리알림을 표시합니다" = "今日のリマインダーを表示";
 
+// Widget Names
+"haru_calendar" = "HaruView カレンダー";
+"haru_calendar_desc" = "今月のカレンダーを表示します";
+"haru_events" = "HaruView 予定";
+"haru_events_desc" = "今日の予定を表示します";
+"haru_reminders" = "HaruView リマインダー";
+"haru_reminders_desc" = "今日のリマインダーを表示します";
+"haru_calendar_list" = "HaruView カレンダー+リスト";
+"haru_calendar_list_desc" = "カレンダーと今日の予定・リマインダーを一緒に表示します";
+"haru_weekly_schedule" = "HaruView 週間";
+"haru_weekly_schedule_desc" = "今週の予定とリマインダーを表示します";
+"haru_medium_widget" = "HaruView 予定+リマインダー";
+"haru_medium_widget_desc" = "今日の予定とリマインダーを一緒に表示します";
+"haru_medium_reminders_widget" = "HaruView リマインダーリスト";
+"haru_medium_reminders_widget_desc" = "今日のリマインダーを最大8個まで表示します";
+"haru_large_widget" = "HaruView 詳細";
+"haru_large_widget_desc" = "今日の予定とリマインダーを詳しく表示します";
+"haru_monthly_calendar" = "HaruView 月間カレンダー";
+"haru_monthly_calendar_desc" = "今月全体のカレンダーと予定を表示します";
+
 // Languages
 "한국어" = "韓国語";
 

@@ -293,6 +293,26 @@
 "오늘의 캘린더 일정을 표시합니다" = "Shows today's calendar events";
 "오늘의 미리알림을 표시합니다" = "Shows today's reminders";
 
+// Widget Names
+"haru_calendar" = "HaruView Calendar";
+"haru_calendar_desc" = "Shows this month's calendar";
+"haru_events" = "HaruView Events";
+"haru_events_desc" = "Shows today's events";
+"haru_reminders" = "HaruView Reminders";
+"haru_reminders_desc" = "Shows today's reminders";
+"haru_calendar_list" = "HaruView Calendar+List";
+"haru_calendar_list_desc" = "Shows calendar with today's events and reminders";
+"haru_weekly_schedule" = "HaruView Weekly";
+"haru_weekly_schedule_desc" = "Shows this week's events and reminders";
+"haru_medium_widget" = "HaruView Events+Reminders";
+"haru_medium_widget_desc" = "Shows today's events and reminders together";
+"haru_medium_reminders_widget" = "HaruView Reminders List";
+"haru_medium_reminders_widget_desc" = "Shows up to 8 reminders for today";
+"haru_large_widget" = "HaruView Large";
+"haru_large_widget_desc" = "Shows today's events and reminders in detail";
+"haru_monthly_calendar" = "HaruView Monthly Calendar";
+"haru_monthly_calendar_desc" = "Shows full month calendar with events";
+
 // Languages
 "한국어" = "Korean";
 

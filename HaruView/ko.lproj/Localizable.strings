@@ -292,6 +292,26 @@
 "오늘의 캘린더 일정을 표시합니다" = "오늘의 캘린더 일정을 표시합니다";
 "오늘의 미리알림을 표시합니다" = "오늘의 미리알림을 표시합니다";
 
+// Widget Names
+"haru_calendar" = "하루뷰 달력";
+"haru_calendar_desc" = "이번 달 달력을 표시합니다";
+"haru_events" = "하루뷰 일정";
+"haru_events_desc" = "오늘의 일정을 표시합니다";
+"haru_reminders" = "하루뷰 할 일";
+"haru_reminders_desc" = "오늘의 할 일을 표시합니다";
+"haru_calendar_list" = "하루뷰 달력+목록";
+"haru_calendar_list_desc" = "달력과 오늘의 일정/할 일을 함께 표시합니다";
+"haru_weekly_schedule" = "하루뷰 주간";
+"haru_weekly_schedule_desc" = "이번 주 일정과 할 일을 표시합니다";
+"haru_medium_widget" = "하루뷰 일정+할일";
+"haru_medium_widget_desc" = "오늘의 일정과 할 일을 함께 표시합니다";
+"haru_medium_reminders_widget" = "하루뷰 할 일 목록";
+"haru_medium_reminders_widget_desc" = "오늘의 할 일을 최대 8개까지 표시합니다";
+"haru_large_widget" = "하루뷰 상세";
+"haru_large_widget_desc" = "오늘의 일정과 할 일을 상세하게 표시합니다";
+"haru_monthly_calendar" = "하루뷰 월간 달력";
+"haru_monthly_calendar_desc" = "이번 달 전체 달력과 일정을 표시합니다";
+
 // Languages
 "한국어" = "한국어";
 
