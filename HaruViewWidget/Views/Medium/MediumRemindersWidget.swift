@@ -30,7 +30,6 @@ struct MediumRemindersWidget: View {
                 Rectangle()
                     .fill(.haruCardBorder)
                     .frame(width: 1)
-                    .padding(.vertical, 5)
                 
                 // 오른쪽: 할일 섹션 (계속)
                 RemindersSection(reminders: rightReminders, showTitle: false)
@@ -49,32 +48,8 @@ struct MediumRemindersWidget: View {
     }
     
     private var todayReminders: [ReminderItem] {
-        let calendar = Calendar.withUserWeekStartPreference()
-        let today = Date()
-        
-        // 오늘 할일 + 날짜 없는 할일 필터링
-        let filtered = entry.reminders.filter { reminder in
-            guard let dueDate = reminder.dueDate else { return true }
-            return calendar.isDate(dueDate, inSameDayAs: today)
-        }
-        
-        // 우선순위 정렬
-        return filtered.sorted { first, second in
-            // 완료되지 않은 할일 우선
-            if first.isCompleted != second.isCompleted {
-                return !first.isCompleted
-            }
-            
-            // 우선순위 순 (낮은 숫자가 높은 우선순위)
-            let priority1 = first.priority == 0 ? Int.max : first.priority
-            let priority2 = second.priority == 0 ? Int.max : second.priority
-            
-            if priority1 != priority2 {
-                return priority1 < priority2
-            }
-            
-            return first.title < second.title
-        }
+        // Provider에서 이미 올바른 "오늘 할일 + 날짜 없는 할일"을 제공
+        return entry.reminders
     }
 }
 
@@ -99,7 +74,8 @@ struct RemindersSection: View {
             // 할일 리스트
             if !reminders.isEmpty {
                 ForEach(Array(reminders.enumerated()), id: \.element.id) { index, reminder in
-                    HStack(spacing: 2) {
+                    VStack(alignment: .leading, spacing: 0) {
+                        HStack(spacing: 2) {
                         // iOS 18에서는 Toggle, iOS 17에서는 Button 사용
                         if #available(iOS 18, *) {
                             Toggle(isOn: reminder.isCompleted, intent: ToggleReminderIntent(reminderId: reminder.id)) {
@@ -126,10 +102,12 @@ struct RemindersSection: View {
                             .strikethrough(reminder.isCompleted)
                             .foregroundStyle(reminder.isCompleted ? .secondary : .primary)
                             .invalidatableContent()
-                    }
-                    
-                    if index < reminders.count - 1 {
-                        Divider()
+                        }
+                        
+                        if index < reminders.count - 1 {
+                            Divider()
+                                .padding(.vertical, 3)
+                        }
                     }
                 }
             }

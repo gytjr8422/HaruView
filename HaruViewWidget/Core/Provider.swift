@@ -266,11 +266,10 @@ struct Provider: AppIntentTimelineProvider {
                     self.eventStore.fetchReminders(matching: cmpPred) { comp in
                         bucket.append(contentsOf: comp ?? [])
                         
-                        // 달력 위젯용: 현재 월 전체 기간으로 확장
+                        // 오늘 할일용: 오늘 날짜 기준
                         let calendar = Calendar.withUserWeekStartPreference()
                         let now = Date()
-                        let monthStart = calendar.dateInterval(of: .month, for: now)?.start ?? now
-                        let monthEnd = calendar.dateInterval(of: .month, for: now)?.end ?? calendar.date(byAdding: .day, value: 1, to: now)!
+                        let today = calendar.startOfDay(for: now)
                         
                         let filtered = bucket.filter { rem in
                             guard let due = rem.dueDateComponents?.date else { 
@@ -293,13 +292,15 @@ struct Provider: AppIntentTimelineProvider {
                             
                             switch reminderType {
                             case .onDate:
-                                // 특정 날짜 할 일: 현재 월 내의 날짜만
-                                return due >= monthStart && due < monthEnd
+                                // 특정 날짜 할 일: 오늘 날짜만
+                                let dueDay = calendar.startOfDay(for: due)
+                                return calendar.isDate(dueDay, inSameDayAs: today)
                             case .untilDate:
-                                // 마감일까지 할 일: 마감일이 현재 월 내에 있거나 이후인 경우
-                                return due >= monthStart
+                                // 마감일까지 할 일: 마감일이 오늘 이후인 경우
+                                return due >= today
                             }
                         }
+                        
                         
                         let reminderItems = filtered
                             .map { reminder in
@@ -347,6 +348,7 @@ struct Provider: AppIntentTimelineProvider {
                             }
                             .sorted(by: reminderSortRule)
                             .prefix(maxCount)
+                        
                         
                         continuation.resume(returning: Array(reminderItems))
                     }
